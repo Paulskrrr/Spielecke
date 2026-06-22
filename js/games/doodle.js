@@ -214,7 +214,7 @@
     cctx.scale(dpr, dpr);
     cctx.lineJoin = "round";
     cctx.lineCap = "round";
-    cctx.lineWidth = 5;
+    cctx.lineWidth = 4;
     cctx.strokeStyle = "#241b4d";
     clearCanvas();
 

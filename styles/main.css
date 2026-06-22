@@ -757,6 +757,8 @@ body::before {
 .act-perform-actions { display: flex; gap: 12px; }
 .act-perform-actions .btn { flex: 1; min-height: 16vh; font-size: 1.3rem; }
 .act-result { text-align: center; }
+.act-drawplay { text-align: center; }
+.act-drawplay .doodle-canvas { margin-bottom: 10px; }
 
 /* ----- Chooser (spinning wheel) ----------------------------------------- */
 

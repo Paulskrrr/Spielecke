@@ -22,7 +22,7 @@
   var TYPES = ["explain", "draw", "charade"];
   var TYPE_INFO = {
     explain: { icon: "💬", label: "Explain", how: "Explain it — no gestures, don't say the word" },
-    draw: { icon: "✏️", label: "Draw", how: "Draw it on paper — no words or letters" },
+    draw: { icon: "✏️", label: "Draw", how: "Draw it — no words or letters" },
     charade: { icon: "🎭", label: "Charade", how: "Act it out — no talking, no sounds" },
   };
   var FIGURES = ["🦊", "🐲", "🦁", "🦄", "🤖", "👽", "🦖", "🐺", "🦅", "🐯"];
@@ -34,6 +34,8 @@
   var points = 0, curType = "", curWord = "";
   var timer = null, remaining = 0;
   var drinking = false;
+  // drawing board (for "draw" fields)
+  var canvas = null, cctx = null, drawing = false, lastX = 0, lastY = 0, drawFrozen = false;
 
   var module = {
     meta: {
@@ -55,6 +57,7 @@
     },
     unmount: function () {
       stopTimer();
+      teardownCanvas();
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; teams = null; board = [];
     },
@@ -195,37 +198,145 @@
       '  <p class="muted">One of you performs, the rest guess. Tap to see the word — don\'t show your team!</p>' +
       '  <button id="act-show" class="btn btn-primary btn-block btn-xl">Show the word 👀</button>' +
       "</section>";
-    els.querySelector("#act-show").addEventListener("click", renderPerform);
+    els.querySelector("#act-show").addEventListener("click", function () {
+      if (curType === "draw") renderDrawPreview(); else renderPerform();
+    });
   }
 
+  // explain / charade — word stays on screen for the performer
   function renderPerform() {
     var info = TYPE_INFO[curType];
-    remaining = ROUND_SECONDS;
     els.innerHTML =
       '<section class="screen act-perform">' +
-      '  <div class="act-hud"><span id="act-time" class="hud-time">' + remaining + "s</span>" +
+      '  <div class="act-hud"><span id="act-time" class="hud-time">' + ROUND_SECONDS + "s</span>" +
       '    <span class="hud-score act-' + curType + '">' + info.icon + " " + points + " pts</span></div>" +
       '  <div class="act-instruction">' + info.how + "</div>" +
       '  <div class="act-word-wrap"><div class="act-word">' + esc(curWord) + "</div></div>" +
-      '  <div class="act-perform-actions">' +
-      '    <button id="act-miss" class="btn btn-skip">Missed ❌</button>' +
-      '    <button id="act-got" class="btn btn-got">Guessed ✅</button>' +
-      "  </div>" +
+      actionButtons() +
       "</section>";
+    wireActions();
+    startCountdown(null);
+  }
 
+  // draw — performer reads the word privately, then draws on screen (team watches)
+  function renderDrawPreview() {
+    var info = TYPE_INFO.draw;
+    els.innerHTML =
+      '<section class="screen act-reveal">' +
+      '  <div class="act-type-banner act-draw">' + info.icon + " Draw · " + points + " pts</div>" +
+      '  <p class="muted">Only the drawer looks. Memorise it — then draw it for your team.</p>' +
+      '  <div class="act-word-wrap"><div class="act-word">' + esc(curWord) + "</div></div>" +
+      '  <button id="act-draw-start" class="btn btn-primary btn-block btn-xl">Start drawing 🖌️</button>' +
+      "</section>";
+    els.querySelector("#act-draw-start").addEventListener("click", renderDrawPlay);
+  }
+
+  function renderDrawPlay() {
+    els.innerHTML =
+      '<section class="screen act-drawplay">' +
+      '  <div class="act-hud"><span id="act-time" class="hud-time">' + ROUND_SECONDS + "s</span>" +
+      '    <span class="hud-score act-draw">✏️ ' + points + " pts</span></div>" +
+      '  <canvas id="act-canvas" class="doodle-canvas"></canvas>' +
+      '  <button id="act-clear" class="btn btn-skip btn-block">Clear 🧽</button>' +
+      actionButtons() +
+      "</section>";
+    setupCanvas();
+    els.querySelector("#act-clear").addEventListener("click", clearCanvas);
+    wireActions();
+    startCountdown(function () { drawFrozen = true; });
+  }
+
+  function actionButtons() {
+    return (
+      '<div class="act-perform-actions">' +
+      '  <button id="act-miss" class="btn btn-skip">Missed ❌</button>' +
+      '  <button id="act-got" class="btn btn-got">Guessed ✅</button>' +
+      "</div>"
+    );
+  }
+  function wireActions() {
     els.querySelector("#act-got").addEventListener("click", function () { finishTurn(true); });
     els.querySelector("#act-miss").addEventListener("click", function () { finishTurn(false); });
+  }
 
+  // 60s countdown. When it hits 0 the round is NOT auto-lost — time is just up
+  // (you can still decide win/lose; for draw you can no longer draw). onZero is
+  // an optional hook (e.g. freeze the canvas).
+  function startCountdown(onZero) {
+    remaining = ROUND_SECONDS;
+    stopTimer();
     timer = global.setInterval(function () {
       remaining--;
       var el = els && els.querySelector("#act-time");
-      if (el) { el.textContent = remaining + "s"; if (remaining <= 10) el.classList.add("hud-time--danger"); }
-      if (remaining <= 0) finishTurn(false);
+      if (el) {
+        if (remaining <= 0) { el.textContent = "⏰ TIME!"; el.classList.add("hud-time--danger"); }
+        else { el.textContent = remaining + "s"; if (remaining <= 10) el.classList.add("hud-time--danger"); }
+      }
+      if (remaining <= 0) { stopTimer(); if (onZero) onZero(); }
     }, 1000);
+  }
+
+  // --- Drawing board (Pointer Events: mouse + touch) -----------------------
+  function setupCanvas() {
+    canvas = els.querySelector("#act-canvas");
+    if (!canvas) return;
+    drawFrozen = false; drawing = false;
+    var rect = canvas.getBoundingClientRect();
+    var dpr = global.devicePixelRatio || 1;
+    var w = rect.width || 300, h = rect.height || 340;
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
+    cctx = canvas.getContext("2d");
+    cctx.scale(dpr, dpr);
+    cctx.lineJoin = "round"; cctx.lineCap = "round";
+    cctx.lineWidth = 4; cctx.strokeStyle = "#241b4d";
+    clearCanvas();
+    canvas.addEventListener("pointerdown", onDown);
+    canvas.addEventListener("pointermove", onMove);
+    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointercancel", onUp);
+    canvas.addEventListener("pointerleave", onUp);
+  }
+  function cpos(e) { var r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  function onDown(e) {
+    if (drawFrozen) return;
+    e.preventDefault(); drawing = true;
+    try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    var p = cpos(e); lastX = p.x; lastY = p.y;
+    cctx.beginPath(); cctx.arc(lastX, lastY, cctx.lineWidth / 2, 0, Math.PI * 2);
+    cctx.fillStyle = "#241b4d"; cctx.fill();
+  }
+  function onMove(e) {
+    if (!drawing || drawFrozen) return;
+    e.preventDefault();
+    var p = cpos(e);
+    cctx.beginPath(); cctx.moveTo(lastX, lastY); cctx.lineTo(p.x, p.y); cctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }
+  function onUp(e) {
+    if (drawing) { try { canvas.releasePointerCapture(e.pointerId); } catch (err) {} }
+    drawing = false;
+  }
+  function clearCanvas() {
+    if (!cctx || !canvas) return;
+    cctx.save(); cctx.setTransform(1, 0, 0, 1, 0, 0);
+    cctx.fillStyle = "#ffffff"; cctx.fillRect(0, 0, canvas.width, canvas.height);
+    cctx.restore();
+  }
+  function teardownCanvas() {
+    if (canvas) {
+      canvas.removeEventListener("pointerdown", onDown);
+      canvas.removeEventListener("pointermove", onMove);
+      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointercancel", onUp);
+      canvas.removeEventListener("pointerleave", onUp);
+    }
+    canvas = null; cctx = null; drawing = false; drawFrozen = false;
   }
 
   function finishTurn(success) {
     stopTimer();
+    teardownCanvas();
     var t = teams[current];
     var other = teams[1 - current];
     if (success) t.pos = Math.min(t.pos + points, FINISH);
