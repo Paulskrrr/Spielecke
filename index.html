@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <meta name="theme-color" content="#0a0a14" />
+  <title>Spielecke</title>
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <!-- Persistent app header: brand + roster badge + edit-players button -->
+  <header id="app-header" class="app-header"></header>
+
+  <!-- Screens (shelf / roster / game) mount here -->
+  <main id="app" class="app"></main>
+
+  <!--
+    Ordered classic <script> tags (no ES modules) so the app loads from a
+    plain file:// path as well as a GitHub Pages subpath. Order matters:
+    primitives first, then games, then screens, then the shell that boots.
+  -->
+  <script src="js/store.js"></script>
+  <script src="js/games/placeholder.js"></script>
+  <script src="js/registry.js"></script>
+  <script src="js/shelf.js"></script>
+  <script src="js/roster.js"></script>
+  <script src="js/shell.js"></script>
+</body>
+</html>
