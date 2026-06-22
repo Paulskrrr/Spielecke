@@ -41,26 +41,33 @@
 }
 
 * { box-sizing: border-box; }
+html { background: var(--paper); }
 html, body { margin: 0; padding: 0; }
 
 body {
   font-family: var(--font);
   color: var(--ink);
   min-height: 100vh;
-  /* confetti dots on warm paper */
-  background-color: var(--paper);
-  background-image:
-    radial-gradient(circle at 15% 20%, rgba(255, 95, 162, 0.22) 0 9px, transparent 10px),
-    radial-gradient(circle at 80% 12%, rgba(58, 160, 255, 0.22) 0 9px, transparent 10px),
-    radial-gradient(circle at 35% 70%, rgba(54, 211, 153, 0.22) 0 8px, transparent 9px),
-    radial-gradient(circle at 90% 60%, rgba(255, 207, 51, 0.30) 0 10px, transparent 11px),
-    radial-gradient(circle at 60% 90%, rgba(160, 107, 255, 0.20) 0 9px, transparent 10px),
-    radial-gradient(circle at 5% 85%, rgba(255, 138, 61, 0.22) 0 8px, transparent 9px);
-  background-size: 460px 460px;
-  background-attachment: fixed;
   padding:
     env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+
+/* Soft blurred Memphis 3D background, pinned behind everything.
+   A fixed pseudo-element (not background-attachment: fixed) avoids the iOS
+   zoom bug. A faint cream veil keeps the cards and text crisp. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(rgba(255, 247, 232, 0.35), rgba(255, 247, 232, 0.35)),
+    url("../assets/bg.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 /* ----- Sticker headings (.neon legacy name + .pop) ---------------------- */
