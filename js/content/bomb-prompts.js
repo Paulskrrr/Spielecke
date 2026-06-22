@@ -1,13 +1,14 @@
 /*
- * bomb.categories.js — content for The Bomb (spec §2.3)
+ * content/bomb-prompts.js — content for The Bomb (spec §2.3)
  *
- * EDIT ME. This file is pure content — no game logic. Add categories freely;
- * the gold is in the inside-jokes pool. Each entry is a prompt the table riffs
- * on out loud ("name a footballer who's played for Barça"). Keep them snappy.
+ * EDIT ME. Pure content, no game logic. These are CATEGORY PROMPTS (a different
+ * shape from the shared single-term database in terms.js) — each is a topic the
+ * table riffs on out loud ("name a footballer who's played for Barça"). Keep
+ * them snappy. The gold is in the inside-jokes pool.
  *
- * Pools let theme stay editable and become language-switchable later. To add a
- * pool, add a key here and it shows up as a selectable chip automatically.
- * `label` is what players see; the key is the internal id.
+ * Pools let theme stay editable and become language-switchable later. Add a key
+ * and it shows up as a selectable chip automatically. `label` is what players
+ * see; the key is the internal id.
  */
 (function (global) {
   "use strict";

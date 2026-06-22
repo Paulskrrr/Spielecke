@@ -30,6 +30,7 @@
     entry(Games.bomb),
     entry(Games.whoami),
     entry(Games.imposter),
+    entry(Games.wavelength),
     // Future games appended here (Liar's Numbers, Higher or Lower, ...).
   ];
 

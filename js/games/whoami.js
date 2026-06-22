@@ -7,7 +7,8 @@
  *
  * Drink outcome (hard requirement): fewer than TARGET correct => you drink.
  *
- * Content lives in whoami.content.js (Spielecke.WhoAmICategories).
+ * Content comes from the SHARED term database (content/terms.js,
+ * Spielecke.Terms) so Who Am I? and Imposter stay editable in one place.
  *
  * Contract: meta + mount + unmount. unmount() kills the timer and audio.
  */
@@ -75,7 +76,7 @@
   // --- Setup screen --------------------------------------------------------
   function renderSetup() {
     stopCountdown();
-    var pools = global.Spielecke.WhoAmICategories || {};
+    var pools = global.Spielecke.Terms || {};
 
     var poolChips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
       .concat(Object.keys(pools).map(function (k) {
@@ -192,13 +193,13 @@
 
   // --- Word queue ----------------------------------------------------------
   function buildQueue(pool) {
-    var pools = global.Spielecke.WhoAmICategories || {};
+    var pools = global.Spielecke.Terms || {};
     var keys = Object.keys(pools);
     var items;
     if (pool === "mixed" || !pools[pool]) {
-      items = keys.reduce(function (a, k) { return a.concat(pools[k].items || []); }, []);
+      items = keys.reduce(function (a, k) { return a.concat(pools[k].terms || []); }, []);
     } else {
-      items = (pools[pool].items || []).slice();
+      items = (pools[pool].terms || []).slice();
     }
     return shuffle(items.slice());
   }

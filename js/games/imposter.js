@@ -11,7 +11,8 @@
  * Drink outcome (hard requirement): imposter caught => imposter drinks;
  * imposter survives => everyone else drinks.
  *
- * Content lives in imposter.content.js (Spielecke.ImposterWords).
+ * Content comes from the SHARED term database (content/terms.js,
+ * Spielecke.Terms) so Imposter and Who Am I? stay editable in one place.
  */
 (function (global) {
   "use strict";
@@ -57,7 +58,7 @@
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = global.Spielecke.ImposterWords || {};
+    var pools = global.Spielecke.Terms || {};
 
     var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
       .concat(Object.keys(pools).map(function (k) {
@@ -203,7 +204,7 @@
 
   // --- Word picking --------------------------------------------------------
   function pickWord(pool) {
-    var pools = global.Spielecke.ImposterWords || {};
+    var pools = global.Spielecke.Terms || {};
     var keys = Object.keys(pools);
     if (!keys.length) return { word: "Beer", category: "Party" };
 
@@ -213,7 +214,7 @@
     } else {
       key = pool;
     }
-    var words = pools[key].words || [];
+    var words = pools[key].terms || [];
     var word = words.length ? words[Math.floor(Math.random() * words.length)] : "Beer";
     var category = (pools[key].label || key).replace(/^[^\w]+\s*/, ""); // strip leading emoji
     return { word: word, category: category };
