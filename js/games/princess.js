@@ -72,14 +72,16 @@
       ? { tag: "👑 PRINCESS", cls: "pt-princess", note: "For the girls" }
       : { tag: "🤴 KING", cls: "pt-king", note: "For the guys" };
     var prompt = nextPrompt(isPrincess);
+    var treatLabel = isPrincess ? "👑 Princess treatment" : "🤴 King treatment";
+    var treatWord = isPrincess ? "Princess" : "King";
 
     els.innerHTML =
       '<section class="screen pt-card ' + who.cls + '">' +
       '  <div class="pt-banner">' + who.tag + '<span class="pt-note">' + who.note + "</span></div>" +
       '  <div class="deck-prompt">' + esc(prompt) + "</div>" +
-      '  <p class="deck-rule">Princess treatment, or bare minimum?</p>' +
+      '  <p class="deck-rule">' + treatWord + " treatment, or bare minimum?</p>" +
       '  <div class="pt-actions">' +
-      '    <button id="pr-yes" class="btn btn-got">👑 Princess treatment</button>' +
+      '    <button id="pr-yes" class="btn btn-got">' + treatLabel + "</button>" +
       '    <button id="pr-no" class="btn btn-skip">😐 Bare minimum</button>' +
       "  </div>" +
       '  <button id="pr-home" class="btn btn-ghost btn-block">Back to shelf</button>' +

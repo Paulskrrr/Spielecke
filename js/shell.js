@@ -42,10 +42,18 @@
 
   // --- Screens -------------------------------------------------------------
 
+  // Jump back to the top whenever we change screens, so e.g. scrolling the
+  // shelf and tapping a game doesn't land you mid-page in that game.
+  function scrollTop() {
+    try { global.scrollTo(0, 0); } catch (e) { /* ignore */ }
+    if (contentEl) contentEl.scrollTop = 0;
+  }
+
   function showShelf() {
     teardownCurrent();
     S.Shelf.render(contentEl, { mountGame: mountGame });
     renderHeader();
+    scrollTop();
   }
 
   function showRoster() {
@@ -61,6 +69,7 @@
       refreshHeader: renderHeader,
     });
     renderHeader();
+    scrollTop();
   }
 
   function mountGame(meta) {
@@ -85,6 +94,7 @@
       contentEl.querySelector("#err-back").addEventListener("click", showShelf);
     }
     renderHeader();
+    scrollTop();
   }
 
   // --- Header --------------------------------------------------------------
