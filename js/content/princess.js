@@ -53,13 +53,17 @@
       label: "🔞 Spicy",
       princess: [
         "He always makes sure you finish first",
-        "[Paul fills in: princess, spicy]",
-        "[Princess spicy #2]",
+        "He sends a filthy text in the middle of your work day",
+        "He wakes you up with morning sex",
+        "He runs you a bath and gets in too",
+        "He's happy to go down with nothing in return",
       ],
       king: [
         "She sends him a cheeky pic during the day",
-        "[Paul fills in: king, spicy]",
-        "[King spicy #2]",
+        "She initiates more than half the time",
+        "She surprises him with a striptease",
+        "She lets him pick anything in the bedroom",
+        "She sexts him first while he's out",
       ],
     },
   };

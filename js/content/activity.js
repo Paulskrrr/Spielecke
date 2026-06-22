@@ -27,7 +27,8 @@
       words: [
         "Existential crisis", "Mile-high club", "Friends with benefits",
         "Midlife crisis", "Stockholm syndrome", "Imposter syndrome",
-        "[Paul: hard NSFW word]", "[Inside joke — hard]",
+        "Kama Sutra", "Dirty talk", "Roleplay", "Safe word", "Walk of shame",
+        "[Inside joke — hard]",
       ],
     },
   };

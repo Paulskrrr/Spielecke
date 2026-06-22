@@ -38,7 +38,10 @@
         "One-night stand", "Strip club", "Sexting", "Walk of shame",
         "Booty call", "Friends with benefits", "Skinny dipping",
         "Your ex's new partner", "A drunk text you regret",
-        "[Paul fills these in — go nasty]", "[Spicy local legend]",
+        "Threesome", "Lap dance", "Handcuffs", "Morning wood", "Quickie",
+        "Sugar daddy", "Safe word", "Wet dream", "Dirty talk", "Roleplay",
+        "Friend zone", "Netflix and chill", "Hickey", "Blue balls",
+        "Whipped cream", "Massage parlour", "Period sex", "Dad bod",
       ],
     },
     insideJokes: {

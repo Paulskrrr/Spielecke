@@ -37,7 +37,10 @@
         { left: "Bad date", right: "Great date" },
         { left: "Ick", right: "Hot" },
         { left: "Would never", right: "Absolutely would" },
-        { left: "[Paul fills in: tame]", right: "[Paul fills in: wild]" },
+        { left: "Prude", right: "Total freak" },
+        { left: "Soft & sensual", right: "Rough & nasty" },
+        { left: "Cute hookup", right: "Filthy hookup" },
+        { left: "Green flag", right: "Red flag in bed" },
       ],
     },
     insideJokes: {

@@ -360,11 +360,12 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
 
 ### Open content TODO (Paul)
 
-- `content/terms.js` → fill `nsfw` and `insideJokes` pools.
-- `content/bomb-prompts.js` → fill `insideJokes`.
-- `content/wavelength.js` → fill `spicy` and `insideJokes` pairs.
-- `content/nhie.js`, `content/most-likely.js` → fill `nsfw` and `insideJokes`.
-- `content/numbers.js` → fill `insideJokes` with real group stats.
-- `content/princess.js` → fill `nsfw` (princess + king).
-- `content/activity.js` → fill the hard tier `[placeholders]`.
-- `content/truth.js` → fill `nsfw` and `insideJokes`.
+The NSFW / filthy / spicy pools are all written. Only the **inside-jokes**
+placeholders are left for Paul to fill (they need real group context):
+
+- `content/terms.js` → `insideJokes`
+- `content/bomb-prompts.js` → `insideJokes`
+- `content/wavelength.js` → `insideJokes`
+- `content/nhie.js`, `content/most-likely.js`, `content/truth.js` → `insideJokes`
+- `content/numbers.js` → `insideJokes` (real group stats + numbers)
+- `content/activity.js` → the one `[Inside joke — hard]` word
