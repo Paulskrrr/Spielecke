@@ -28,7 +28,8 @@
 
   var GAMES = [
     entry(Games.bomb),
-    entry(Games.placeholder),
+    entry(Games.whoami),
+    entry(Games.imposter),
     // Future games appended here (Liar's Numbers, Higher or Lower, ...).
   ];
 

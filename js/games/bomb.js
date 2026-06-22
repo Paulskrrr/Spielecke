@@ -17,10 +17,12 @@
 (function (global) {
   "use strict";
 
+  // --- Fixed fuse: always random in this range, hidden from players -------
+  var FUSE_MIN = 20;  // seconds
+  var FUSE_MAX = 120; // seconds
+
   // --- Configurable defaults (spec §2.4); persisted per-game via context.store
   var DEFAULTS = {
-    fuseMin: 15, // seconds
-    fuseMax: 45,
     soundOn: true,
     pool: "mixed", // "mixed" = draw from all pools
   };
@@ -72,8 +74,6 @@
   // ========================================================================
   function loadSettings(store) {
     return {
-      fuseMin: clampInt(store.get("fuseMin", DEFAULTS.fuseMin), 3, 120, DEFAULTS.fuseMin),
-      fuseMax: clampInt(store.get("fuseMax", DEFAULTS.fuseMax), 3, 180, DEFAULTS.fuseMax),
       soundOn: store.get("soundOn", DEFAULTS.soundOn) !== false,
       pool: store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
     };
@@ -81,10 +81,6 @@
 
   function saveSettings() {
     if (!ctx) return;
-    // keep min <= max
-    if (settings.fuseMin > settings.fuseMax) settings.fuseMax = settings.fuseMin;
-    ctx.store.set("fuseMin", settings.fuseMin);
-    ctx.store.set("fuseMax", settings.fuseMax);
     ctx.store.set("soundOn", settings.soundOn);
     ctx.store.set("pool", settings.pool);
   }
@@ -123,13 +119,9 @@
       warn +
       '  <h3 class="bomb-sub">Category pool</h3>' +
       '  <div class="chip-row" id="bomb-pools">' + chips + "</div>" +
-      '  <h3 class="bomb-sub">Hidden fuse (seconds)</h3>' +
-      '  <div class="fuse-range">' +
-      stepper("min", settings.fuseMin) +
-      '    <span class="fuse-dash">–</span>' +
-      stepper("max", settings.fuseMax) +
-      "  </div>" +
-      '  <p class="muted small">Actual length is random in this range and hidden from players.</p>' +
+      '  <div class="fuse-note">⏱️ Fuse is random between <strong>' + FUSE_MIN +
+      "s</strong> and <strong>" + FUSE_MAX +
+      's</strong> — hidden from everyone.</div>' +
       '  <label class="toggle">' +
       '    <input type="checkbox" id="bomb-sound"' + (settings.soundOn ? " checked" : "") + " />" +
       "    <span>🔊 Ticking &amp; explosion sound</span>" +
@@ -147,14 +139,6 @@
       });
     });
 
-    // Fuse steppers
-    els.querySelectorAll("[data-step]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        var which = btn.getAttribute("data-step"); // "min-" / "min+" / "max-" / "max+"
-        adjustFuse(which);
-      });
-    });
-
     // Sound toggle
     els.querySelector("#bomb-sound").addEventListener("change", function (e) {
       settings.soundOn = e.target.checked;
@@ -163,32 +147,6 @@
 
     // Start
     els.querySelector("#bomb-start").addEventListener("click", startRound);
-  }
-
-  function stepper(which, value) {
-    return (
-      '<div class="stepper">' +
-      '  <button class="icon-btn" data-step="' + which + '-" aria-label="Less">−</button>' +
-      '  <span class="stepper__val" id="fuse-' + which + '">' + value + "</span>" +
-      '  <button class="icon-btn" data-step="' + which + '+" aria-label="More">+</button>' +
-      "</div>"
-    );
-  }
-
-  function adjustFuse(which) {
-    var delta = which.slice(-1) === "+" ? 5 : -5;
-    if (which.indexOf("min") === 0) {
-      settings.fuseMin = clampInt(settings.fuseMin + delta, 3, 120, settings.fuseMin);
-      if (settings.fuseMin > settings.fuseMax) settings.fuseMax = settings.fuseMin;
-    } else {
-      settings.fuseMax = clampInt(settings.fuseMax + delta, 3, 180, settings.fuseMax);
-      if (settings.fuseMax < settings.fuseMin) settings.fuseMin = settings.fuseMax;
-    }
-    saveSettings();
-    var minEl = els.querySelector("#fuse-min");
-    var maxEl = els.querySelector("#fuse-max");
-    if (minEl) minEl.textContent = settings.fuseMin;
-    if (maxEl) maxEl.textContent = settings.fuseMax;
   }
 
   function highlightPool() {
@@ -271,9 +229,7 @@
   // Fuse helpers
   // ========================================================================
   function randomFuseMs() {
-    var lo = settings.fuseMin;
-    var hi = Math.max(settings.fuseMax, lo);
-    var secs = lo + Math.random() * (hi - lo);
+    var secs = FUSE_MIN + Math.random() * (FUSE_MAX - FUSE_MIN);
     return Math.round(secs * 1000);
   }
 
@@ -414,12 +370,6 @@
   // ========================================================================
   // Utils
   // ========================================================================
-  function clampInt(v, lo, hi, fallback) {
-    var n = parseInt(v, 10);
-    if (isNaN(n)) n = fallback;
-    return Math.max(lo, Math.min(hi, n));
-  }
-
   function esc(s) {
     return String(s)
       .replace(/&/g, "&amp;")
