@@ -12,17 +12,24 @@
 
   var Games = (global.Spielecke && global.Spielecke.Games) || {};
 
+  // Helper: build a registry entry straight from a module's meta so the two
+  // never drift apart.
+  function entry(module) {
+    return {
+      id: module.meta.id,
+      name: module.meta.name,
+      tagline: module.meta.tagline,
+      icon: module.meta.icon,
+      minPlayers: module.meta.minPlayers,
+      isDrinkingGame: module.meta.isDrinkingGame,
+      module: module,
+    };
+  }
+
   var GAMES = [
-    {
-      id: Games.placeholder.meta.id,
-      name: Games.placeholder.meta.name,
-      tagline: Games.placeholder.meta.tagline,
-      icon: Games.placeholder.meta.icon,
-      minPlayers: Games.placeholder.meta.minPlayers,
-      isDrinkingGame: Games.placeholder.meta.isDrinkingGame,
-      module: Games.placeholder,
-    },
-    // Future games appended here (The Bomb, Liar's Numbers, ...).
+    entry(Games.bomb),
+    entry(Games.placeholder),
+    // Future games appended here (Liar's Numbers, Higher or Lower, ...).
   ];
 
   global.Spielecke = global.Spielecke || {};
