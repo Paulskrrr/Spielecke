@@ -37,6 +37,7 @@
     entry(Games.princess),
     entry(Games.doodle),
     entry(Games.activity),
+    entry(Games.quiz),
   ];
 
   global.Spielecke = global.Spielecke || {};

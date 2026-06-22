@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **10 games**.
+**Shipped (on `main`):** the shell + **11 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -30,6 +30,7 @@ next.
 - ✅ **Princess Treatment** — King/Princess debate deck
 - ✅ **Doodle Drama** — drawing telephone (canvas)
 - ✅ **Activity** — two-team board race (explain / draw / charade)
+- ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -116,9 +117,10 @@ js/
     numbers.js             Liar's Numbers question/answer bank
     princess.js            Princess Treatment prompts (by category × gender)
     activity.js            Activity words, tiered by points (2/3/4)
+    quiz.js                Quiz Out questions, an array of difficulty levels
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js
-    nhie.js  mostlikely.js  liars.js  princess.js  doodle.js  activity.js
+    nhie.js  mostlikely.js  liars.js  princess.js  doodle.js  activity.js  quiz.js
 assets/logo.svg            the "Pauls Spielecke" wordmark
 ```
 
@@ -186,6 +188,8 @@ Two shapes of content, by what the game needs:
   - Princess Treatment → *gendered prompts* (`princess.js`, `{ label, princess:[], king:[] }`).
   - Activity → *point-tiered words* (`activity.js`, `{ 2:{label,words}, 3:…, 4:… }`),
     type-agnostic — the field decides how you perform, the points decide difficulty.
+  - Quiz Out → *levelled multiple-choice* (`quiz.js`, an array of levels; each question
+    `{ q, options:[4], answer:index }`). Options are shuffled on screen.
 
 Inside-jokes and the spiciest NSFW entries are left as clearly-marked `[placeholders]` for
 Paul to fill.
@@ -291,6 +295,18 @@ finish 🏆 wins.
 - **Config:** team figures (persisted). Words tiered by points (`activity.js`).
 - **Outcome:** first team to complete the map wins. Not a drinking game.
 
+### 3.11 Quiz Out 🧠 (`quiz`, 2+) — drinking-capable
+
+Turn-based knockout quiz. Players take turns answering a 4-option question; a wrong answer
+costs a life. After every full round (each survivor has answered once) the difficulty climbs
+a level. Lose all hearts → out; last player standing wins. Uses the roster for turn order +
+per-player lives.
+
+- **Config:** hearts each (1–5, default 3), 🍻 drinking mode (wrong = drink too). Persisted.
+- **Flow:** "Pass to [Name]" (lives shown) → question + 4 shuffled options → correct = safe,
+  wrong = −1 heart (and drink in drinking mode) → next player; difficulty rises each round.
+- **Outcome:** last survivor wins.
+
 ---
 
 ## Resolved decisions
@@ -300,7 +316,7 @@ finish 🏆 wins.
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
-   Ever, Liar's Numbers.
+   Ever, Liar's Numbers, Quiz Out.
 3. **The Bomb pass model** → pure physical pass (no turn tracking).
 4. **The Bomb fuse** → always random 20–120s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
