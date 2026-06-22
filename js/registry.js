@@ -1,19 +1,19 @@
 /*
  * registry.js — the game registry (spec §1.2)
  *
- * The single list the shelf reads to render game cards. Adding a game later is:
+ * The single list the shelf reads to render game cards. Adding a game is:
  *   1. drop in its module file (js/games/<id>.js) + a <script> tag in index.html
- *   2. append one entry here pointing module -> that module
+ *   2. append one entry here via entry(Games.<id>)
  *
- * Each entry mirrors the module's meta plus the module reference itself.
+ * `supportsDrinking` (from each module's meta) means the game has an optional
+ * drinking mode you toggle in its setup — NOT that it's always a drinking game.
  */
 (function (global) {
   "use strict";
 
   var Games = (global.Spielecke && global.Spielecke.Games) || {};
 
-  // Helper: build a registry entry straight from a module's meta so the two
-  // never drift apart.
+  // Build a registry entry straight from a module's meta so they never drift.
   function entry(module) {
     return {
       id: module.meta.id,
@@ -21,17 +21,21 @@
       tagline: module.meta.tagline,
       icon: module.meta.icon,
       minPlayers: module.meta.minPlayers,
-      isDrinkingGame: module.meta.isDrinkingGame,
+      supportsDrinking: !!module.meta.supportsDrinking,
       module: module,
     };
   }
 
   var GAMES = [
     entry(Games.bomb),
+    entry(Games.mostlikely),
+    entry(Games.nhie),
     entry(Games.whoami),
     entry(Games.imposter),
     entry(Games.wavelength),
-    // Future games appended here (Liar's Numbers, Higher or Lower, ...).
+    entry(Games.liars),
+    entry(Games.princess),
+    entry(Games.doodle),
   ];
 
   global.Spielecke = global.Spielecke || {};

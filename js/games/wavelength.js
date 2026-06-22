@@ -37,7 +37,7 @@
       tagline: "Read the room. One clue, one dial — how close can they land?",
       icon: "📡",
       minPlayers: 3,
-      isDrinkingGame: true,
+      supportsDrinking: false,
     },
 
     mount: function (container, context) {
@@ -137,16 +137,17 @@
   // --- Reveal & outcome ----------------------------------------------------
   function renderReveal() {
     var d = Math.abs(guess - target);
+    var points = Math.max(0, 100 - d * 2); // closeness score, 0..100
     var emoji, title, line;
     if (d <= BULLSEYE) {
       emoji = "🎯"; title = "BULLSEYE!";
-      line = "The clue-giver's a legend — <strong>everyone else drinks!</strong> 🍻";
+      line = "The clue-giver's a legend — <strong>" + points + " points!</strong>";
     } else if (d <= MISS) {
       emoji = "👍"; title = "So close!";
-      line = "Decent reading. No drinks this round.";
+      line = "Decent reading — <strong>" + points + " points.</strong>";
     } else {
       emoji = "💀"; title = "Way off!";
-      line = "Total miss — <strong>the guessers drink!</strong> 🍺";
+      line = "Total miss — <strong>" + points + " points.</strong>";
     }
 
     els.innerHTML =

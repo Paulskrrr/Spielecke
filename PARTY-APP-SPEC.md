@@ -15,15 +15,20 @@ next.
 
 ## Status
 
-**Shipped (on `main`):**
+**Shipped (on `main`):** the shell + **9 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
-- ✅ **The Bomb** — hot-potato word game
+- ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
+- ✅ Shared term database for single-term games + optional drinking-mode toggle
+- ✅ **The Bomb** — hot-potato word game *(drinking-capable)*
+- ✅ **Most Likely To** — pointing deck *(drinking-capable)*
+- ✅ **Never Have I Ever** — confession deck *(drinking-capable)*
 - ✅ **Who Am I?** — Heads-Up / forehead guessing
 - ✅ **Imposter** — hidden-role secret word
 - ✅ **Wavelength** — spectrum/dial guessing
-- ✅ Shared term database for single-term games
-- ✅ Full "Spielecke" playground/toy-box visual identity
+- ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
+- ✅ **Princess Treatment** — King/Princess debate deck
+- ✅ **Doodle Drama** — drawing telephone (canvas)
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -40,8 +45,10 @@ settings/stats screen.
   their own screen" magic needs a broker/backend, which we ruled out.)
 - **Scales to ~10, flexible.** Player count is never load-bearing. Games work from ~3 up to
   ~12 without special-casing.
-- **Every game has a clean win/loss or drink outcome** so any of them doubles as a drinking
-  game. Hard requirement. (See each game's "Drink outcome" below.)
+- **Every game has a clean win/lose/score outcome.** Games are **plain by default** — not
+  everything is a drinking game. Games where it *fits* expose an optional **🍻 Drinking
+  mode** toggle in their setup (off by default, persisted); turning it on swaps the
+  resolution to "who drinks." Don't bolt a drink penalty onto a game where it doesn't fit.
 - **Content carries the theme, not code.** Group jokes, MMA, our topics — all live in
   editable data files, never hardcoded into game logic. New content is cheap to add.
 - **Language: English for UI and shell now.** Games may later carry English *or* German
@@ -100,11 +107,17 @@ js/
   shelf.js                 home / game-card grid
   roster.js                players screen
   content/                 DATA ONLY (no logic) — easy to edit
-    terms.js               SHARED single-term DB (Who Am I?, Imposter)
+    terms.js               SHARED single-term DB (Who Am I?, Imposter, Doodle Drama)
     bomb-prompts.js        The Bomb's category prompts
     wavelength.js          Wavelength's opposite pairs
+    nhie.js                Never Have I Ever prompts
+    most-likely.js         Most Likely To prompts
+    numbers.js             Liar's Numbers question/answer bank
+    princess.js            Princess Treatment prompts (by category × gender)
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js
+    nhie.js  mostlikely.js  liars.js  princess.js  doodle.js
+assets/logo.svg            the "Pauls Spielecke" wordmark
 ```
 
 **Adding a game** = drop a module in `js/games/`, add any content file in `js/content/`,
@@ -114,8 +127,9 @@ add the two `<script>` tags to `index.html`, and append one entry in `registry.j
 
 Each game is a self-contained object on `window.Spielecke.Games.<id>` exposing:
 
-- `meta` — `{ id, name, tagline, icon, minPlayers, isDrinkingGame }`. The registry builds
-  its entry straight from this so the two never drift.
+- `meta` — `{ id, name, tagline, icon, minPlayers, supportsDrinking }`. `supportsDrinking`
+  means the game offers an optional drinking-mode toggle — not that it's always a drinking
+  game. The registry builds its entry straight from this so the two never drift.
 - `mount(container, context)` — render into the given DOM node.
 - `unmount()` — tear down: clear **all** timers/intervals and close any audio. Critical.
 
@@ -158,12 +172,16 @@ Rules:
 Two shapes of content, by what the game needs:
 
 - **Shared single-term database** (`js/content/terms.js` → `Spielecke.Terms`): single
-  names/words/things that work both as something you describe *and* something you hint at.
-  Used by **Who Am I?** and **Imposter** so terms are managed in one place. Pools: `party`,
+  names/words/things that work to describe, hint at, *and* draw. Used by **Who Am I?**,
+  **Imposter**, and **Doodle Drama** so terms are managed in one place. Pools: `party`,
   `famous`, `nsfw`, `insideJokes`; each `{ label, terms: [...] }`. "Mixed" draws across all.
 - **Per-game content** when the shape differs:
   - The Bomb → category *prompts* (`bomb-prompts.js`, `{ label, prompts }`).
   - Wavelength → *opposite pairs* (`wavelength.js`, `{ label, pairs:[{left,right}] }`).
+  - Never Have I Ever / Most Likely To → *sentence predicates* (`nhie.js`, `most-likely.js`,
+    `{ label, prompts }`) — separate because the grammar differs from each other.
+  - Liar's Numbers → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
+  - Princess Treatment → *gendered prompts* (`princess.js`, `{ label, princess:[], king:[] }`).
 
 Inside-jokes and the spiciest NSFW entries are left as clearly-marked `[placeholders]` for
 Paul to fill.
@@ -172,66 +190,106 @@ Paul to fill.
 
 ## Part 3 — Games
 
-### 3.1 The Bomb 💣 (`bomb`, 3+ players)
+Outcomes below are the **plain** (default) framing. For drinking-capable games, the
+🍻 toggle swaps the resolution wording to drinks.
 
-Hot-potato. A category prompt shows; the device is the bomb. Holder says an answer out
-loud, taps the big **Pass**, hands the phone on. A hidden fuse counts down.
+### 3.1 The Bomb 💣 (`bomb`, 3+) — drinking-capable
 
-- **Pass model:** PURE PHYSICAL PASS (decided). The app runs the fuse only; it does **not**
-  track whose turn it is, so it can't name the loser — humans handle the handoff.
-- **Fuse:** always random between **20s and 120s** (decided — no longer configurable),
-  hidden from everyone. A cosmetic tick accelerates as it burns; detonation is driven by a
-  precise timer.
-- **Config:** category pool (default Mixed) and sound on/off. Persisted.
-- **Detonation:** big visual + Web Audio explosion + haptics → "🔥 Whoever's holding it
-  drinks!" → Next round / Change settings / Back to shelf.
-- **Drink outcome:** holder at detonation drinks.
+Hot-potato. A category prompt shows; the device is the bomb. Holder names an answer, taps
+the big **Pass**, hands the phone on. A hidden fuse counts down.
 
-### 3.2 Who Am I? 🙈 (`whoami`, 2+ players)
+- **Pass model:** pure physical pass — the app runs the fuse only, doesn't track turns.
+- **Fuse:** always random **20–120s**, hidden. Cosmetic accelerating tick; detonation on a
+  precise timer. Web Audio explosion + haptics.
+- **Config:** category pool, sound on/off, 🍻 drinking mode. Persisted.
+- **Outcome:** holder at detonation **loses the round** (drinking mode: drinks).
 
-Heads-Up style. Phone on your forehead (you can't see it); the table shouts clues. Tap
-**GOT IT** or **SKIP** against a visible countdown.
+### 3.2 Most Likely To 🫵 (`mostlikely`, 3+) — drinking-capable
 
-- **Config:** category pool (shared Terms, default Mixed), round length (30/60/90s), sound.
-- **Drink outcome:** score fewer than **3** correct in your turn → you drink.
-- Web Audio blips/buzzer (toggleable); timer + audio torn down on unmount.
+Pointing deck. Card shows "Most likely to ___"; on 3-2-1 everyone points.
 
-### 3.3 Imposter 🕵️ (`imposter`, 3+ players)
+- **Config:** category pool, 🍻 drinking mode.
+- **Outcome:** most fingers takes the **crown 👑** (drinking mode: drinks). Pointing/counting
+  is physical; the app shows the prompt + call.
+
+### 3.3 Never Have I Ever 🙊 (`nhie`, 2+) — drinking-capable
+
+Confession deck. Card shows "Never have I ever ___".
+
+- **Config:** category pool, 🍻 drinking mode.
+- **Outcome:** anyone who's done it **owns up** (drinking mode: drinks).
+
+### 3.4 Who Am I? 🙈 (`whoami`, 2+) — plain
+
+Heads-Up style. Phone on the forehead; the table shouts clues. **GOT IT** / **SKIP** against
+a visible countdown.
+
+- **Config:** category pool (shared Terms), round length (30/60/90s), sound.
+- **Outcome:** pure score — "You got N right!" (beat 3 for a 🎉).
+
+### 3.5 Imposter 🕵️ (`imposter`, 3+) — plain
 
 Hidden roles on one device. Everyone gets the same secret word except one random
-**imposter**, who only sees the category. Pass the phone so each player reveals their role
-privately (uses the shared roster for the pass order + names), then discuss, vote, unmask.
+**imposter**, who only sees the category. Pass to reveal each role privately (shared roster
+for order + names), then discuss, vote, unmask.
 
-- **Config:** word pool (shared Terms, default Mixed). Persisted.
-- **Flow:** Deal → per-player "Pass to [Name]" → reveal role → hide → … → discussion →
-  reveal imposter → outcome.
-- **Drink outcome:** imposter caught → imposter drinks; imposter fooled the table →
-  everyone else drinks.
+- **Config:** word pool (shared Terms).
+- **Outcome:** caught → the table wins; fooled → the imposter wins.
 
-### 3.4 Wavelength 📡 (`wavelength`, 3+ players)
+### 3.6 Wavelength 📡 (`wavelength`, 3+) — plain
 
-A spectrum between two opposites (e.g. Cold ↔ Hot). One **clue-giver** secretly sees a
-hidden target band on the dial and gives a one-line clue; the rest move a slider to guess.
+A spectrum between two opposites (e.g. Cold ↔ Hot). A **clue-giver** secretly sees a hidden
+target band and gives a clue; the rest slide a dial to guess.
 
-- **Config:** spectrum pool (`wavelength.js`, default Mixed). Persisted.
-- **Flow:** handover ("clue-giver only, everyone look away") → see target band → give clue
-  → hide → table slides the dial → lock in → reveal target vs guess → outcome.
-- **Drink outcome:** bullseye (within ±10) → clue-giver's a legend, everyone else drinks;
-  way off (beyond ±30) → the guessers drink; in between → no drinks.
+- **Config:** spectrum pool.
+- **Outcome:** closeness **score** (0–100). Bullseye ±10, miss beyond ±30.
+
+### 3.7 Liar's Numbers 🔢 (`liars`, 2+) — drinking-capable
+
+Numeric guessing on one device. A question with a number answer shows; the phone passes
+round and each player privately locks a guess; reveal sorts by distance. Uses the roster.
+
+- **Config:** question pool, 🍻 drinking mode.
+- **Outcome:** closest **wins 🏆**, furthest **loses 💀** (drinking mode: furthest drinks).
+
+### 3.8 Princess Treatment 👑 (`princess`, 1+) — plain
+
+Debate deck. Each round shows a thing a partner does; the table decides Princess Treatment
+👑 or Bare Minimum 😐. The target **alternates every round** between Princess (for the women)
+and King (for the men), with gender-specific prompts by category.
+
+- **Config:** category pool.
+- **Outcome:** none — it's a hot-takes / debate generator. No winner, no drinks.
+
+### 3.9 Doodle Drama 🎨 (`doodle`, 2+) — plain
+
+Drawing telephone. A secret word (shared Terms) goes to player 1, who **draws** it; player 2
+**guesses** from the drawing; player 3 draws that guess; and so on down the roster. Reveal
+the whole chain at the end.
+
+- **Tech:** HTML5 `<canvas>` + Pointer Events → same code for mouse (laptop) and finger
+  (mobile). Drawings kept in memory for the session (not localStorage — too big).
+- **Config:** word pool.
+- **Outcome:** none — reveal the carnage for laughs.
 
 ---
 
 ## Resolved decisions
 
-1. **App name + identity** → **Spielecke**, playground/toy-box look, NSFW content (see
-   Part 0 visual identity).
-2. **The Bomb pass model** → pure physical pass (no turn tracking).
-3. **The Bomb fuse** → always random 20–120s, not configurable.
-4. **Mobile vs desktop** → single responsive build, no separate files.
-5. **Module loading** → ordered classic `<script>` tags (no ES modules) for `file://`.
-6. **Content management** → shared single-term DB for games that fit; per-game files for
-   different shapes (prompts, pairs).
-7. **Stats/leaderboard** → not built, but `store.gameStore(id)` is namespaced so it can be
+1. **App name + identity** → **Pauls Spielecke**, playground/toy-box look + logo, NSFW
+   content (see Part 0 visual identity).
+2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
+   expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
+   penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
+   Ever, Liar's Numbers.
+3. **The Bomb pass model** → pure physical pass (no turn tracking).
+4. **The Bomb fuse** → always random 20–120s, not configurable.
+5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
+   Drama) via canvas + Pointer Events works on both.
+6. **Module loading** → ordered classic `<script>` tags (no ES modules) for `file://`.
+7. **Content management** → shared single-term DB for games that fit; per-game files for
+   different shapes (prompts, pairs, numbers, gendered prompts).
+8. **Stats/leaderboard** → not built, but `store.gameStore(id)` is namespaced so it can be
    added later without redesign.
 
 ---
@@ -240,14 +298,16 @@ hidden target band on the dial and gives a one-line clue; the rest move a slider
 
 Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / replace:
 
-- **Liar's Numbers** — all-number bluff (dodges the bilingual "tell" problem). Real stat
-  question, everyone says a fake number aloud, closest wins, furthest drinks.
-- **Higher or Lower** — themed fact chain, group votes by shouting, wrong = drink.
+- **Higher or Lower** — themed fact chain, group votes by shouting, wrong = out (or drink).
 - **Countdown Roulette** — random player picker assigns a themed task or drink.
 - **Odd-One-Out** — reflex flash-grid filler.
+- **Truth or Drink** — random player → a truth or take the drink.
 
 ### Open content TODO (Paul)
 
 - `content/terms.js` → fill `nsfw` and `insideJokes` pools.
 - `content/bomb-prompts.js` → fill `insideJokes`.
 - `content/wavelength.js` → fill `spicy` and `insideJokes` pairs.
+- `content/nhie.js`, `content/most-likely.js` → fill `nsfw` and `insideJokes`.
+- `content/numbers.js` → fill `insideJokes` with real group stats.
+- `content/princess.js` → fill `nsfw` (princess + king).

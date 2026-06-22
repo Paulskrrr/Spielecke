@@ -1,0 +1,127 @@
+/*
+ * games/princess.js — Princess Treatment
+ *
+ * A debate deck. Each round shows something a partner does; the table decides:
+ * Princess Treatment 👑 (above and beyond) or Bare Minimum 😐? The target
+ * alternates every round between Princess (aimed at the women) and King (aimed
+ * at the men), pulling gender-specific prompts, grouped by category.
+ *
+ * Not a drinking game — it's a hot-takes generator. No winner, no drinks.
+ * Content: content/princess.js (Spielecke.Princess).
+ */
+(function (global) {
+  "use strict";
+
+  var DEFAULTS = { pool: "mixed" };
+
+  var els = null, ctx = null, settings = null;
+  var isPrincess = true;          // current target; flips each round
+  var qPrincess = [], qKing = []; // per-gender shuffled queues
+
+  var module = {
+    meta: {
+      id: "princess",
+      name: "Princess Treatment",
+      tagline: "Going above and beyond, or just the bare minimum? Discuss.",
+      icon: "👑",
+      minPlayers: 1,
+      supportsDrinking: false,
+    },
+    mount: function (container, context) {
+      els = container; ctx = context;
+      settings = { pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool };
+      isPrincess = Math.random() < 0.5;
+      renderSetup();
+    },
+    unmount: function () {
+      if (els) { els.innerHTML = ""; els = null; }
+      ctx = null; settings = null; qPrincess = []; qKing = [];
+    },
+  };
+
+  function renderSetup() {
+    var pools = global.Spielecke.Princess || {};
+    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+      .concat(Object.keys(pools).map(function (k) {
+        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
+      })).join("");
+
+    els.innerHTML =
+      '<section class="screen game-setup">' +
+      '  <h2 class="screen-title pop">👑 Princess Treatment</h2>' +
+      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <p class="muted small">Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.</p>' +
+      '  <h3 class="sub">Category</h3>' +
+      '  <div class="chip-row" id="pr-pools">' + chips + "</div>" +
+      '  <button id="pr-start" class="btn btn-primary btn-block btn-xl">Start ▶️</button>' +
+      "</section>";
+
+    highlight("#pr-pools", settings.pool, "data-pool");
+    els.querySelectorAll("#pr-pools .chip").forEach(function (c) {
+      c.addEventListener("click", function () {
+        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
+        qPrincess = []; qKing = [];
+        highlight("#pr-pools", settings.pool, "data-pool");
+      });
+    });
+    els.querySelector("#pr-start").addEventListener("click", renderCard);
+  }
+
+  function renderCard() {
+    var who = isPrincess
+      ? { tag: "👑 PRINCESS", cls: "pt-princess", note: "For the girls" }
+      : { tag: "🤴 KING", cls: "pt-king", note: "For the guys" };
+    var prompt = nextPrompt(isPrincess);
+
+    els.innerHTML =
+      '<section class="screen pt-card ' + who.cls + '">' +
+      '  <div class="pt-banner">' + who.tag + '<span class="pt-note">' + who.note + "</span></div>" +
+      '  <div class="deck-prompt">' + esc(prompt) + "</div>" +
+      '  <p class="deck-rule">Princess treatment, or bare minimum?</p>' +
+      '  <div class="pt-actions">' +
+      '    <button id="pr-yes" class="btn btn-got">👑 Princess treatment</button>' +
+      '    <button id="pr-no" class="btn btn-skip">😐 Bare minimum</button>' +
+      "  </div>" +
+      '  <button id="pr-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      "</section>";
+
+    els.querySelector("#pr-yes").addEventListener("click", nextRound);
+    els.querySelector("#pr-no").addEventListener("click", nextRound);
+    els.querySelector("#pr-home").addEventListener("click", function () { ctx.goHome(); });
+  }
+
+  function nextRound() {
+    isPrincess = !isPrincess; // alternate target every round
+    renderCard();
+  }
+
+  function buildQueue(gender) {
+    var pools = global.Spielecke.Princess || {};
+    var keys = Object.keys(pools);
+    var sel = (settings.pool === "mixed" || !pools[settings.pool]) ? keys : [settings.pool];
+    var field = gender ? "princess" : "king";
+    var items = sel.reduce(function (a, k) { return a.concat(pools[k][field] || []); }, []);
+    return shuffle(items.slice());
+  }
+  function nextPrompt(gender) {
+    var q = gender ? qPrincess : qKing;
+    if (!q.length) {
+      q = buildQueue(gender);
+      if (gender) qPrincess = q; else qKing = q;
+    }
+    return q.length ? q.pop() : "Make one up!";
+  }
+  function shuffle(a) {
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    return a;
+  }
+  function highlight(sel, value, an) {
+    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
+  }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function attr(s) { return esc(s).replace(/'/g, "&#39;"); }
+
+  global.Spielecke = global.Spielecke || {};
+  global.Spielecke.Games = global.Spielecke.Games || {};
+  global.Spielecke.Games.princess = module;
+})(window);

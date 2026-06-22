@@ -38,7 +38,7 @@
       tagline: "Phone on your forehead. They shout, you guess. Beat the clock.",
       icon: "🙈",
       minPlayers: 2,
-      isDrinkingGame: true,
+      supportsDrinking: false,
     },
 
     mount: function (container, context) {
@@ -173,12 +173,12 @@
     var passed = score >= TARGET;
     els.innerHTML =
       '<section class="screen whoami-result">' +
-      '  <div class="result-emoji">' + (passed ? "🎉" : "🍺") + "</div>" +
+      '  <div class="result-emoji">' + (passed ? "🎉" : "😬") + "</div>" +
       '  <h2 class="result-title pop">' + score + " correct!</h2>" +
       '  <p class="result-sub">' +
       (passed
-        ? "Nailed it — pass the phone on."
-        : "Under " + TARGET + " — <strong>you drink!</strong>") +
+        ? "Nailed it — beat that, next player!"
+        : "Beatable — under " + TARGET + ". Pass it on.") +
       "</p>" +
       '  <div class="stack">' +
       '    <button id="wa-next" class="btn btn-primary btn-block btn-xl">Next player ▶️</button>' +

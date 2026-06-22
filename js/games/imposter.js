@@ -39,7 +39,7 @@
       tagline: "Everyone knows the word. One faker doesn't. Sniff them out.",
       icon: "🕵️",
       minPlayers: MIN_PLAYERS,
-      isDrinkingGame: true,
+      supportsDrinking: false,
     },
 
     mount: function (container, context) {
@@ -176,10 +176,10 @@
       "  </div>" +
       "</section>";
     els.querySelector("#im-caught").addEventListener("click", function () {
-      renderOutcome("🎯 Caught!", esc(players[imposterIndex]) + " drinks! 🍺");
+      renderOutcome("🎯 Caught!", "The table wins — " + esc(players[imposterIndex]) + " got busted!");
     });
     els.querySelector("#im-fooled").addEventListener("click", function () {
-      renderOutcome("🤡 Fooled!", "Everyone except " + esc(players[imposterIndex]) + " drinks! 🍺");
+      renderOutcome("🤡 Fooled!", esc(players[imposterIndex]) + " got away with it — imposter wins!");
     });
   }
 

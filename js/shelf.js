@@ -13,8 +13,8 @@
 
     var cards = games
       .map(function (game) {
-        var drinkBadge = game.isDrinkingGame
-          ? '<span class="badge badge-drink">🍻 drinking ✓</span>'
+        var drinkBadge = game.supportsDrinking
+          ? '<span class="badge badge-drink">🍻 drink mode</span>'
           : "";
         return (
           '<button class="game-card" data-id="' + escapeAttr(game.id) + '">' +

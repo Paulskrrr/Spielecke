@@ -46,7 +46,7 @@
       tagline: "Name it fast, pass it faster. Don't be holding it when it blows.",
       icon: "💣",
       minPlayers: 3,
-      isDrinkingGame: true,
+      supportsDrinking: true,
     },
 
     mount: function (container, context) {
@@ -76,6 +76,7 @@
     return {
       soundOn: store.get("soundOn", DEFAULTS.soundOn) !== false,
       pool: store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+      drinking: store.get("drinking", false) === true,
     };
   }
 
@@ -83,6 +84,7 @@
     if (!ctx) return;
     ctx.store.set("soundOn", settings.soundOn);
     ctx.store.set("pool", settings.pool);
+    ctx.store.set("drinking", settings.drinking);
   }
 
   // ========================================================================
@@ -126,6 +128,10 @@
       '    <input type="checkbox" id="bomb-sound"' + (settings.soundOn ? " checked" : "") + " />" +
       "    <span>🔊 Ticking &amp; explosion sound</span>" +
       "  </label>" +
+      '  <label class="toggle">' +
+      '    <input type="checkbox" id="bomb-drink"' + (settings.drinking ? " checked" : "") + " />" +
+      "    <span>🍻 Drinking mode</span>" +
+      "  </label>" +
       '  <button id="bomb-start" class="btn btn-primary btn-block btn-xl">ARM &amp; START 💥</button>' +
       "</section>";
 
@@ -142,6 +148,11 @@
     // Sound toggle
     els.querySelector("#bomb-sound").addEventListener("change", function (e) {
       settings.soundOn = e.target.checked;
+      saveSettings();
+    });
+
+    els.querySelector("#bomb-drink").addEventListener("change", function (e) {
+      settings.drinking = e.target.checked;
       saveSettings();
     });
 
@@ -210,7 +221,11 @@
       '<section class="screen bomb-boom">' +
       '  <div class="boom-flash">💥</div>' +
       '  <h2 class="boom-title">BOOM!</h2>' +
-      '  <p class="boom-sub">🔥 Whoever\'s holding it <strong>drinks!</strong></p>' +
+      '  <p class="boom-sub">' +
+      (settings.drinking
+        ? "🔥 Whoever's holding it <strong>drinks!</strong>"
+        : "🔥 Whoever's holding it <strong>loses the round!</strong>") +
+      "</p>" +
       '  <div class="boom-actions">' +
       '    <button id="bomb-next" class="btn btn-primary btn-block btn-xl">Next round 🔁</button>' +
       '    <button id="bomb-setup" class="btn btn-block">Change settings</button>' +
