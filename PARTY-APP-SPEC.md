@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **11 games**.
+**Shipped (on `main`):** the shell + **12 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -31,6 +31,7 @@ next.
 - ✅ **Doodle Drama** — drawing telephone (canvas)
 - ✅ **Activity** — two-team board race (explain / draw / charade)
 - ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
+- ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -118,9 +119,10 @@ js/
     princess.js            Princess Treatment prompts (by category × gender)
     activity.js            Activity words, tiered by points (2/3/4)
     quiz.js                Quiz Out questions, an array of difficulty levels
+    truth.js               Truth or Drink question pools
   games/                   one module per game (logic)
-    bomb.js  whoami.js  imposter.js  wavelength.js
-    nhie.js  mostlikely.js  liars.js  princess.js  doodle.js  activity.js  quiz.js
+    bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
+    liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js
 assets/logo.svg            the "Pauls Spielecke" wordmark
 ```
 
@@ -229,11 +231,13 @@ Confession deck. Card shows "Never have I ever ___".
 
 ### 3.4 Who Am I? 🙈 (`whoami`, 2+) — plain
 
-Heads-Up style. Phone on the forehead; the table shouts clues. **GOT IT** / **SKIP** against
-a visible countdown.
-
-- **Config:** category pool (shared Terms), round length (30/60/90s), sound.
-- **Outcome:** pure score — "You got N right!" (beat 3 for a 🎉).
+Heads-Up style. Two modes (toggle in setup):
+- **📚 Categories:** phone on the forehead, table shouts clues, **GOT IT** / **SKIP** against
+  a visible countdown. Config: category pool (shared Terms), round length (30/60/90s), sound.
+  Outcome: pure score — "You got N right!" (beat 3 for a 🎉).
+- **✍️ Custom sticky:** type one character/thing and it shows as a big **sticky note** to
+  hold on the forehead — a digital sticky note for when you don't have paper ones. No timer,
+  no score; "New character" to go again.
 
 ### 3.5 Imposter 🕵️ (`imposter`, 3+) — plain
 
@@ -307,6 +311,13 @@ per-player lives.
   wrong = −1 heart (and drink in drinking mode) → next player; difficulty rises each round.
 - **Outcome:** last survivor wins.
 
+### 3.12 Truth or Drink 🍸 (`truth`, 2+) — drinking-capable
+
+A random player (from the roster, no immediate repeat) gets a truth question.
+
+- **Config:** category pool, 🍻 drinking mode.
+- **Outcome:** plain — answer honestly. Drinking mode — answer, or drink to dodge.
+
 ---
 
 ## Resolved decisions
@@ -316,7 +327,7 @@ per-player lives.
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
-   Ever, Liar's Numbers, Quiz Out.
+   Ever, Liar's Numbers, Quiz Out, Truth or Drink.
 3. **The Bomb pass model** → pure physical pass (no turn tracking).
 4. **The Bomb fuse** → always random 20–120s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
@@ -336,7 +347,6 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
 - **Higher or Lower** — themed fact chain, group votes by shouting, wrong = out (or drink).
 - **Countdown Roulette** — random player picker assigns a themed task or drink.
 - **Odd-One-Out** — reflex flash-grid filler.
-- **Truth or Drink** — random player → a truth or take the drink.
 
 ### Open content TODO (Paul)
 
@@ -347,3 +357,4 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
 - `content/numbers.js` → fill `insideJokes` with real group stats.
 - `content/princess.js` → fill `nsfw` (princess + king).
 - `content/activity.js` → fill the hard tier `[placeholders]`.
+- `content/truth.js` → fill `nsfw` and `insideJokes`.

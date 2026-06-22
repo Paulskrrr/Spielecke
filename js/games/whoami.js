@@ -16,9 +16,9 @@
   "use strict";
 
   var ROUND_OPTIONS = [30, 60, 90]; // seconds
-  var TARGET = 3; // get at least this many or drink
+  var TARGET = 3; // beat this for a 🎉
 
-  var DEFAULTS = { roundSeconds: 60, pool: "mixed", soundOn: true };
+  var DEFAULTS = { roundSeconds: 60, pool: "mixed", soundOn: true, mode: "categories" };
 
   // Per-mount state
   var els = null;
@@ -64,6 +64,7 @@
       roundSeconds: rs,
       pool: store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
       soundOn: store.get("soundOn", DEFAULTS.soundOn) !== false,
+      mode: store.get("mode", DEFAULTS.mode) === "custom" ? "custom" : "categories",
     };
   }
   function saveSettings() {
@@ -71,6 +72,7 @@
     ctx.store.set("roundSeconds", settings.roundSeconds);
     ctx.store.set("pool", settings.pool);
     ctx.store.set("soundOn", settings.soundOn);
+    ctx.store.set("mode", settings.mode);
   }
 
   // --- Setup screen --------------------------------------------------------
@@ -78,27 +80,63 @@
     stopCountdown();
     var pools = global.Spielecke.Terms || {};
 
-    var poolChips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
-      })).join("");
+    var modeChips =
+      '<div class="chip-row" id="wa-modes">' +
+      '  <button class="chip" data-mode="categories">📚 Categories</button>' +
+      '  <button class="chip" data-mode="custom">✍️ Custom sticky</button>' +
+      "</div>";
 
-    var timeChips = ROUND_OPTIONS.map(function (s) {
-      return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
-    }).join("");
+    var body;
+    if (settings.mode === "custom") {
+      body =
+        '  <p class="muted small">No sticky notes handy? Type a character for your mate, hand them the phone, and they hold it to their forehead while you give clues.</p>' +
+        '  <input id="wa-custom" class="text-input" type="text" maxlength="60" placeholder="Type a character / thing…" />' +
+        '  <button id="wa-show" class="btn btn-primary btn-block btn-xl">Show on sticky note 🪧</button>';
+    } else {
+      var poolChips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+        .concat(Object.keys(pools).map(function (k) {
+          return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
+        })).join("");
+      var timeChips = ROUND_OPTIONS.map(function (s) {
+        return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
+      }).join("");
+      body =
+        '  <p class="muted small">Hold the phone to your forehead so you can’t see it. The table shouts clues. Tap <strong>GOT IT</strong> when you guess, <strong>SKIP</strong> to pass.</p>' +
+        '  <h3 class="sub">Category</h3>' +
+        '  <div class="chip-row" id="wa-pools">' + poolChips + "</div>" +
+        '  <h3 class="sub">Round length</h3>' +
+        '  <div class="chip-row" id="wa-times">' + timeChips + "</div>" +
+        '  <label class="toggle"><input type="checkbox" id="wa-sound"' + (settings.soundOn ? " checked" : "") + " /><span>🔊 Sounds</span></label>" +
+        '  <button id="wa-start" class="btn btn-primary btn-block btn-xl">START TURN ▶️</button>';
+    }
 
     els.innerHTML =
       '<section class="screen game-setup">' +
       '  <h2 class="screen-title pop">🙈 Who Am I?</h2>' +
       '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
-      '  <p class="muted small">Hold the phone to your forehead so you can’t see it. The table shouts clues. Tap <strong>GOT IT</strong> when you guess, <strong>SKIP</strong> to pass.</p>' +
-      '  <h3 class="sub">Category</h3>' +
-      '  <div class="chip-row" id="wa-pools">' + poolChips + "</div>" +
-      '  <h3 class="sub">Round length</h3>' +
-      '  <div class="chip-row" id="wa-times">' + timeChips + "</div>" +
-      '  <label class="toggle"><input type="checkbox" id="wa-sound"' + (settings.soundOn ? " checked" : "") + " /><span>🔊 Sounds</span></label>" +
-      '  <button id="wa-start" class="btn btn-primary btn-block btn-xl">START TURN ▶️</button>' +
+      modeChips +
+      body +
       "</section>";
+
+    highlight("#wa-modes", "mode", settings.mode, "data-mode");
+    els.querySelectorAll("#wa-modes .chip").forEach(function (c) {
+      c.addEventListener("click", function () {
+        settings.mode = c.getAttribute("data-mode"); saveSettings();
+        renderSetup();
+      });
+    });
+
+    if (settings.mode === "custom") {
+      var input = els.querySelector("#wa-custom");
+      input.focus();
+      var go = function () {
+        var v = (input.value || "").trim();
+        if (v) renderSticky(v);
+      };
+      els.querySelector("#wa-show").addEventListener("click", go);
+      input.addEventListener("keydown", function (e) { if (e.key === "Enter") go(); });
+      return;
+    }
 
     highlight("#wa-pools", "pool", settings.pool, "data-pool");
     highlight("#wa-times", "secs", String(settings.roundSeconds), "data-secs");
@@ -119,6 +157,19 @@
       settings.soundOn = e.target.checked; saveSettings();
     });
     els.querySelector("#wa-start").addEventListener("click", startTurn);
+  }
+
+  // --- Custom sticky-note mode --------------------------------------------
+  function renderSticky(text) {
+    els.innerHTML =
+      '<section class="screen whoami-sticky">' +
+      '  <p class="muted small">Forehead time! Others give clues.</p>' +
+      '  <div class="sticky-note"><span class="sticky-note__text">' + esc(text) + "</span></div>" +
+      '  <button id="wa-new" class="btn btn-primary btn-block btn-xl">New character ✍️</button>' +
+      '  <button id="wa-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      "</section>";
+    els.querySelector("#wa-new").addEventListener("click", renderSetup);
+    els.querySelector("#wa-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Play screen ---------------------------------------------------------

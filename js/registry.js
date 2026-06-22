@@ -38,6 +38,7 @@
     entry(Games.doodle),
     entry(Games.activity),
     entry(Games.quiz),
+    entry(Games.truth),
   ];
 
   global.Spielecke = global.Spielecke || {};
