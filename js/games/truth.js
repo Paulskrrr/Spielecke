@@ -79,7 +79,7 @@
 
     els.innerHTML =
       '<section class="screen deck-card">' +
-      '  <div class="deck-kicker pop">' + who + "</div>" +
+      '  <div class="deck-kicker">' + who + "</div>" +
       '  <div class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
       '  <p class="deck-rule">' + rule + "</p>" +
       '  <button id="tr-next" class="btn btn-primary btn-block btn-xl">Next ▶️</button>' +

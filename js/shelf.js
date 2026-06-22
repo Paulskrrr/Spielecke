@@ -19,7 +19,7 @@
         return (
           '<button class="game-card" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +
-          '  <span class="game-card__name neon">' + escapeHtml(game.name) + "</span>" +
+          '  <span class="game-card__name">' + escapeHtml(game.name) + "</span>" +
           '  <span class="game-card__tagline">' + escapeHtml(game.tagline || "") + "</span>" +
           '  <span class="game-card__meta">' +
           '    <span class="badge">👥 ' + escapeHtml(playerHint(game)) + "</span>" +
@@ -32,7 +32,7 @@
 
     container.innerHTML =
       '<section class="screen shelf-screen">' +
-      '  <h2 class="screen-title">Pick a game</h2>' +
+      '  <p class="shelf-tagline">' + games.length + " games of glorious chaos 🎉</p>" +
       '  <div class="game-grid">' + cards + "</div>" +
       "</section>";
 
