@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **13 games**.
+**Shipped (on `main`):** the shell + **14 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -33,6 +33,7 @@ next.
 - ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
 - ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
 - ✅ **Chooser** — spinning-wheel random person picker
+- ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -124,7 +125,8 @@ js/
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
-    (chooser has no content file — it just spins the roster)
+    reactionduel.js
+    (chooser & reactionduel have no content file)
 assets/logo.svg            the "Pauls Spielecke" wordmark
 ```
 
@@ -328,6 +330,21 @@ A spinning wheel that lands on a random person from the roster. SVG wheel (one c
 slice + name per player), CSS-rotate spin with a fixed pointer at the top. No content file —
 it just spins the roster. "Spin again" to re-roll. Handy as a picker for any other game.
 
+### 3.14 Reaction Duel ⚡ (`reaction`, 2+) — drinking-capable
+
+Two players, device flat between them; the screen splits into two tap zones (top half
+rotated 180° for the player across the table). Each round is a random **type** — and not
+just "tap fast":
+- **GO** — wait for green, then tap; early tap = false start.
+- **Bait** — fakes flash during the wait ("GO?", "✋ STOP"); tap one and you lose.
+- **Colour** — tap only on green; tapping another colour loses.
+- **Symbol** — tap only the 💣; tapping a decoy loses.
+
+Every type reduces to a `live` flag: tap while live → win; tap while not live → lose. First
+to the target score (3/5/7, default 5) wins. Uses the roster to name the two duelists (or
+Left/Right without one). Drinking mode → loser of each round drinks. No content file, no
+audio (a sound would leak a reflex cue); all timers cleared on round end + unmount.
+
 ---
 
 ## Resolved decisions
@@ -337,7 +354,7 @@ it just spins the roster. "Spin again" to re-roll. Handy as a picker for any oth
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
-   Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity.
+   Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity, Reaction Duel.
 3. **The Bomb pass model** → pure physical pass (no turn tracking).
 4. **The Bomb fuse** → always random 20–120s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
