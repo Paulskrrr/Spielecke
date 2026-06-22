@@ -33,6 +33,7 @@
   var current = 0;           // whose turn
   var points = 0, curType = "", curWord = "";
   var timer = null, remaining = 0;
+  var drinking = false;
 
   var module = {
     meta: {
@@ -41,10 +42,11 @@
       tagline: "Two teams. Explain, draw, act. First to the finish wins.",
       icon: "🗺️",
       minPlayers: 4,
-      supportsDrinking: false,
+      supportsDrinking: true,
     },
     mount: function (container, context) {
       els = container; ctx = context;
+      drinking = context.store.get("drinking", false) === true;
       teams = [
         { figure: context.store.get("fig0", FIGURES[0]), color: "blue", pos: 0 },
         { figure: context.store.get("fig1", FIGURES[1]), color: "red", pos: 0 },
@@ -77,6 +79,7 @@
       '  <div class="act-legend">' +
       legendItem("explain") + legendItem("draw") + legendItem("charade") +
       "  </div>" +
+      '  <label class="toggle"><input type="checkbox" id="act-drink"' + (drinking ? " checked" : "") + " /><span>🍻 Drinking mode (fail → you drink, win → they drink)</span></label>" +
       '  <button id="act-start" class="btn btn-primary btn-block btn-xl">Start game ▶️</button>' +
       "</section>";
 
@@ -90,6 +93,9 @@
     if (split) {
       els.querySelector("#act-shuffle").addEventListener("click", renderSetup);
     }
+    els.querySelector("#act-drink").addEventListener("change", function (e) {
+      drinking = e.target.checked; ctx.store.set("drinking", drinking);
+    });
     els.querySelector("#act-start").addEventListener("click", startGame);
   }
 
@@ -221,6 +227,7 @@
   function finishTurn(success) {
     stopTimer();
     var t = teams[current];
+    var other = teams[1 - current];
     if (success) t.pos = Math.min(t.pos + points, FINISH);
 
     if (t.pos >= FINISH) { renderWin(); return; }
@@ -232,8 +239,10 @@
       '  <h2 class="result-title pop">' + (success ? "+" + points + "!" : "No move") + "</h2>" +
       '  <p class="result-sub">' +
       (success
-        ? t.figure + " Team " + (current === 0 ? "A" : "B") + " moves " + points + " forward."
-        : "The word was <strong>" + esc(curWord) + "</strong>. " + t.figure + " stays put.") +
+        ? t.figure + " Team " + (current === 0 ? "A" : "B") + " moves " + points + " forward." +
+          (drinking ? " 🍺 " + other.figure + " Team " + (current === 0 ? "B" : "A") + " drinks!" : "")
+        : "The word was <strong>" + esc(curWord) + "</strong>. " + t.figure + " stays put." +
+          (drinking ? " 🍺 Team " + (current === 0 ? "A" : "B") + " drinks!" : "")) +
       "</p>" +
       '  <div class="act-board-wrap">' + renderBoard() + "</div>" +
       '  <button id="act-next" class="btn btn-primary btn-block btn-xl">Next team ▶️</button>' +

@@ -29,7 +29,7 @@ next.
 - ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
 - ✅ **Princess Treatment** — King/Princess debate deck
 - ✅ **Doodle Drama** — drawing telephone (canvas)
-- ✅ **Activity** — two-team board race (explain / draw / charade)
+- ✅ **Activity** — two-team board race (explain / draw / charade) *(drinking-capable)*
 - ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
 - ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
 - ✅ **Chooser** — spinning-wheel random person picker
@@ -287,7 +287,7 @@ the whole chain at the end.
 - **Config:** word pool.
 - **Outcome:** none — reveal the carnage for laughs.
 
-### 3.10 Activity 🗺️ (`activity`, 4+) — plain
+### 3.10 Activity 🗺️ (`activity`, 4+) — drinking-capable
 
 Two teams race along a map. Each field is a type shown by **icon + colour, never words**:
 💬 explain · ✏️ draw · 🎭 charade. On your turn you're on a field of one type; pick a
@@ -299,8 +299,9 @@ finish 🏆 wins.
   roster exists, a suggested split is shown with a 🔀 shuffle.
 - **Board:** 14 typed fields + finish, randomised each game. Responsive — compact wrapping
   tiles on mobile, a roomier two-column layout (board beside controls) on desktop.
-- **Config:** team figures (persisted). Words tiered by points (`activity.js`).
-- **Outcome:** first team to complete the map wins. Not a drinking game.
+- **Config:** team figures (persisted), 🍻 drinking mode. Words tiered by points (`activity.js`).
+- **Outcome:** first team to complete the map wins. Drinking mode — fail a round → your
+  team drinks; succeed → the other team drinks.
 
 ### 3.11 Quiz Out 🧠 (`quiz`, 2+) — drinking-capable
 
@@ -336,7 +337,7 @@ it just spins the roster. "Spin again" to re-roll. Handy as a picker for any oth
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
-   Ever, Liar's Numbers, Quiz Out, Truth or Drink.
+   Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity.
 3. **The Bomb pass model** → pure physical pass (no turn tracking).
 4. **The Bomb fuse** → always random 20–120s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
