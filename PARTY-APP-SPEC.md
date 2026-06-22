@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **9 games**.
+**Shipped (on `main`):** the shell + **10 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -29,6 +29,7 @@ next.
 - ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
 - ✅ **Princess Treatment** — King/Princess debate deck
 - ✅ **Doodle Drama** — drawing telephone (canvas)
+- ✅ **Activity** — two-team board race (explain / draw / charade)
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -114,9 +115,10 @@ js/
     most-likely.js         Most Likely To prompts
     numbers.js             Liar's Numbers question/answer bank
     princess.js            Princess Treatment prompts (by category × gender)
+    activity.js            Activity words, tiered by points (2/3/4)
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js
-    nhie.js  mostlikely.js  liars.js  princess.js  doodle.js
+    nhie.js  mostlikely.js  liars.js  princess.js  doodle.js  activity.js
 assets/logo.svg            the "Pauls Spielecke" wordmark
 ```
 
@@ -182,6 +184,8 @@ Two shapes of content, by what the game needs:
     `{ label, prompts }`) — separate because the grammar differs from each other.
   - Liar's Numbers → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
   - Princess Treatment → *gendered prompts* (`princess.js`, `{ label, princess:[], king:[] }`).
+  - Activity → *point-tiered words* (`activity.js`, `{ 2:{label,words}, 3:…, 4:… }`),
+    type-agnostic — the field decides how you perform, the points decide difficulty.
 
 Inside-jokes and the spiciest NSFW entries are left as clearly-marked `[placeholders]` for
 Paul to fill.
@@ -272,6 +276,21 @@ the whole chain at the end.
 - **Config:** word pool.
 - **Outcome:** none — reveal the carnage for laughs.
 
+### 3.10 Activity 🗺️ (`activity`, 4+) — plain
+
+Two teams race along a map. Each field is a type shown by **icon + colour, never words**:
+💬 explain · ✏️ draw · 🎭 charade. On your turn you're on a field of one type; pick a
+**2/3/4-point** word; one team member performs it that way while their team guesses, against
+a fixed **60s** clock. Guess in time → move forward by the point value. First team to the
+finish 🏆 wins.
+
+- **Teams:** two, each a "figure" token (tap to change) that moves along the board. If a
+  roster exists, a suggested split is shown with a 🔀 shuffle.
+- **Board:** 14 typed fields + finish, randomised each game. Responsive — compact wrapping
+  tiles on mobile, a roomier two-column layout (board beside controls) on desktop.
+- **Config:** team figures (persisted). Words tiered by points (`activity.js`).
+- **Outcome:** first team to complete the map wins. Not a drinking game.
+
 ---
 
 ## Resolved decisions
@@ -311,3 +330,4 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
 - `content/nhie.js`, `content/most-likely.js` → fill `nsfw` and `insideJokes`.
 - `content/numbers.js` → fill `insideJokes` with real group stats.
 - `content/princess.js` → fill `nsfw` (princess + king).
+- `content/activity.js` → fill the hard tier `[placeholders]`.

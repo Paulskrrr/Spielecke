@@ -578,6 +578,95 @@ body {
 .doodle-thumb { display: block; width: 100%; max-height: 320px; object-fit: contain; background: #fff; border-radius: 10px; }
 .dd-guesstext { font-size: 1.4rem; font-weight: 800; }
 
+/* ----- Activity --------------------------------------------------------- */
+
+/* type colours shared by tiles, banners, legend */
+.act-explain { background: var(--blue); color: #fff; }
+.act-draw { background: var(--green); color: var(--ink); }
+.act-charade { background: var(--pink); color: #fff; }
+.act-finish { background: var(--yellow); color: var(--ink); }
+
+.act-teams { display: flex; align-items: center; gap: 12px; margin: 16px 0; }
+.act-team {
+  flex: 1; text-align: center; padding: 14px 10px;
+  border: 4px solid var(--ink); border-radius: var(--radius); box-shadow: var(--pop);
+  background: #fff;
+}
+.act-team--blue { box-shadow: 0 5px 0 var(--ink); border-color: var(--blue); }
+.act-team--red { border-color: var(--red); }
+.act-vs { font-weight: 900; font-size: 1.2rem; color: var(--ink-soft); }
+.act-figure {
+  font-size: 2.4rem; line-height: 1; background: none; border: 0; cursor: pointer;
+  padding: 4px 8px; border-radius: 12px;
+}
+.act-figure:active { transform: scale(0.9); }
+.act-team__name { font-weight: 800; }
+.act-team__members { font-size: 0.8rem; margin-top: 4px; }
+
+.act-legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
+.act-legend__item {
+  font-size: 0.85rem; font-weight: 800; padding: 6px 12px;
+  border: 3px solid var(--ink); border-radius: 999px;
+}
+
+/* The board: wraps into rows; compact on mobile, larger on desktop */
+.act-board {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(42px, 1fr));
+  gap: 6px;
+  padding: 10px;
+  background: rgba(255,255,255,0.6);
+  border: 4px dashed var(--ink);
+  border-radius: var(--radius);
+}
+.act-tile {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  border: 3px solid var(--ink); border-radius: 12px;
+  font-size: 1.1rem;
+}
+.act-tile--start { box-shadow: inset 0 0 0 3px #fff; }
+.act-tile__icon { opacity: 0.9; }
+.act-tile__tokens {
+  position: absolute; bottom: -8px; right: -6px;
+  display: flex;
+}
+.act-token {
+  font-size: 1.3rem; line-height: 1;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,0.4));
+}
+.act-token--blue { transform: rotate(-6deg); }
+.act-token--red { transform: rotate(6deg); }
+
+.act-turn-head {
+  font-weight: 900; font-size: 1.2rem; text-align: center;
+  padding: 10px; border: 4px solid var(--ink); border-radius: 16px; margin-bottom: 12px;
+  background: #fff;
+}
+.act-type-banner {
+  text-align: center; font-weight: 900; font-size: 1.3rem;
+  padding: 12px; border: 4px solid var(--ink); border-radius: 16px; margin: 10px 0;
+}
+.act-points { display: flex; gap: 10px; margin: 12px 0; }
+.act-point {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 2px;
+  padding: 16px 8px;
+}
+.act-point__n { font-size: 1.8rem; font-weight: 900; }
+.act-point__l { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
+
+.act-reveal { text-align: center; }
+.act-perform { display: flex; flex-direction: column; min-height: 70vh; text-align: center; }
+.act-hud { display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 800; }
+.act-hud .hud-score { border: 3px solid var(--ink); }
+.act-instruction { font-weight: 800; margin: 14px 0; color: var(--ink-soft); }
+.act-word-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 16px 6px; }
+.act-word { font-size: clamp(2.2rem, 11vw, 4.5rem); font-weight: 900; line-height: 1.1; }
+.act-perform-actions { display: flex; gap: 12px; }
+.act-perform-actions .btn { flex: 1; min-height: 16vh; font-size: 1.3rem; }
+.act-result { text-align: center; }
+
 /* ----- Larger screens --------------------------------------------------- */
 
 @media (min-width: 600px) {
@@ -587,4 +676,18 @@ body {
   .whoami-actions .btn { min-height: 14vh; }
   .pt-actions { flex-direction: row; }
   .pt-actions .btn { flex: 1; }
+  .act-perform-actions .btn { min-height: 12vh; }
+}
+
+/* Desktop: nicer two-column turn layout + a roomier board */
+@media (min-width: 820px) {
+  .act-layout { display: flex; gap: 22px; align-items: flex-start; }
+  .act-board-wrap { flex: 1.3; }
+  .act-controls { flex: 1; }
+  .act-board {
+    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
+    gap: 10px; padding: 16px;
+  }
+  .act-tile { font-size: 1.5rem; border-radius: 14px; }
+  .act-token { font-size: 1.7rem; }
 }
