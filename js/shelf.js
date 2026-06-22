@@ -32,7 +32,6 @@
 
     container.innerHTML =
       '<section class="screen shelf-screen">' +
-      '  <p class="shelf-tagline">' + games.length + " games of glorious chaos 🎉</p>" +
       '  <div class="game-grid">' + cards + "</div>" +
       "</section>";
 
