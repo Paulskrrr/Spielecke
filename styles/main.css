@@ -41,7 +41,10 @@
 }
 
 * { box-sizing: border-box; }
-html { background: var(--paper); }
+/* Base colour behind everything = header purple, so the mobile overscroll
+   "rubber-band" gap above the sticky header shows purple, not the background
+   image. The visible viewport is still the Memphis image (body::before). */
+html { background: var(--purple); }
 html, body { margin: 0; padding: 0; }
 
 body {
