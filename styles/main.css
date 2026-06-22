@@ -705,6 +705,55 @@ body {
 .act-perform-actions .btn { flex: 1; min-height: 16vh; font-size: 1.3rem; }
 .act-result { text-align: center; }
 
+/* ----- Chooser (spinning wheel) ----------------------------------------- */
+
+.chooser-screen { text-align: center; }
+.wheel-wrap {
+  position: relative;
+  width: min(82vw, 380px);
+  margin: 18px auto 8px;
+  aspect-ratio: 1 / 1;
+}
+.wheel {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 6px solid var(--ink);
+  box-shadow: var(--pop-lg);
+  transform: rotate(0deg);
+  background: #fff;
+}
+.wheel-svg { display: block; width: 100%; height: 100%; }
+.wheel-label {
+  font-family: var(--font);
+  font-weight: 800;
+  font-size: 9px;
+  fill: #fff;
+  paint-order: stroke;
+  stroke: rgba(36, 27, 77, 0.55);
+  stroke-width: 0.6px;
+}
+/* fixed pointer at the top, pointing down into the wheel */
+.wheel-pointer {
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0; height: 0;
+  border-left: 16px solid transparent;
+  border-right: 16px solid transparent;
+  border-top: 28px solid var(--ink);
+  z-index: 2;
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.2));
+}
+.chooser-result {
+  font-size: clamp(1.6rem, 8vw, 2.6rem);
+  font-weight: 900;
+  min-height: 1.6em;
+  margin: 8px 0;
+}
+.chooser-name { color: var(--pink); }
+
 /* ----- Quiz Out --------------------------------------------------------- */
 
 .qz-pass, .qz-feedback, .qz-win { text-align: center; }

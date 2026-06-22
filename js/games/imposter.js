@@ -1,15 +1,15 @@
 /*
  * games/imposter.js — Imposter (one device, pass-around hidden roles)
  *
- * Everyone secretly gets the same SECRET WORD — except one random IMPOSTER who
- * only learns the category. Pass the phone around so each player reveals their
- * own role in private. Then talk it out, vote, and unmask the faker.
+ * Everyone secretly gets the same SECRET WORD — except the IMPOSTERS, who only
+ * learn the category. The number of imposters is chosen before dealing (1 up to
+ * the whole table). Pass the phone around so each player reveals their own role
+ * in private. Then talk it out, vote, and unmask the faker(s).
  *
  * Uses the shared roster for the pass order and player names (this is a game
  * that legitimately needs turns — the per-game choice, not a shell assumption).
  *
- * Drink outcome (hard requirement): imposter caught => imposter drinks;
- * imposter survives => everyone else drinks.
+ * Plain win/lose: imposter(s) caught => the table wins; fooled => imposters win.
  *
  * Content comes from the SHARED term database (content/terms.js,
  * Spielecke.Terms) so Imposter and Who Am I? stay editable in one place.
@@ -18,7 +18,7 @@
   "use strict";
 
   var MIN_PLAYERS = 3;
-  var DEFAULTS = { pool: "mixed" };
+  var DEFAULTS = { pool: "mixed", imposterCount: 1 };
 
   // Per-mount state
   var els = null;
@@ -26,7 +26,7 @@
   var settings = null;
 
   var players = [];     // names for this round
-  var imposterIndex = 0;
+  var imposterSet = {}; // { playerIndex: true } for imposters this round
   var secretWord = "";
   var secretCategory = "";
   var revealIdx = 0;    // whose turn to reveal during the pass phase
@@ -45,13 +45,16 @@
     mount: function (container, context) {
       els = container;
       ctx = context;
-      settings = { pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool };
+      settings = {
+        pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+        imposterCount: parseInt(context.store.get("imposterCount", DEFAULTS.imposterCount), 10) || 1,
+      };
       renderSetup();
     },
 
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; players = []; secretWord = ""; secretCategory = "";
+      ctx = null; settings = null; players = []; imposterSet = {}; secretWord = ""; secretCategory = "";
     },
   };
 
@@ -72,6 +75,20 @@
       : '<div class="roster-warn" style="display:block">⚠ Imposter needs at least ' +
         MIN_PLAYERS + " players. Add them from the header (👥 above).</div>";
 
+    // Clamp the imposter count to [1, number of players] (max = whole table).
+    var countSection = "";
+    if (enough) {
+      if (settings.imposterCount > roster.length) settings.imposterCount = roster.length;
+      if (settings.imposterCount < 1) settings.imposterCount = 1;
+      var countChips = [];
+      for (var n = 1; n <= roster.length; n++) {
+        countChips.push('<button class="chip" data-count="' + n + '">' + n + "</button>");
+      }
+      countSection =
+        '<h3 class="sub">How many imposters?</h3>' +
+        '<div class="chip-row" id="im-count">' + countChips.join("") + "</div>";
+    }
+
     els.innerHTML =
       '<section class="screen game-setup">' +
       '  <h2 class="screen-title pop">🕵️ Imposter</h2>' +
@@ -79,6 +96,7 @@
       rosterNote +
       '  <h3 class="sub">Word pool</h3>' +
       '  <div class="chip-row" id="im-pools">' + chips + "</div>" +
+      countSection +
       '  <button id="im-deal" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") +
       ">Deal roles 🎴</button>" +
       "</section>";
@@ -91,6 +109,16 @@
         highlight("#im-pools", settings.pool, "data-pool");
       });
     });
+    if (enough) {
+      highlight("#im-count", String(settings.imposterCount), "data-count");
+      els.querySelectorAll("#im-count .chip").forEach(function (c) {
+        c.addEventListener("click", function () {
+          settings.imposterCount = parseInt(c.getAttribute("data-count"), 10);
+          ctx.store.set("imposterCount", settings.imposterCount);
+          highlight("#im-count", String(settings.imposterCount), "data-count");
+        });
+      });
+    }
     var deal = els.querySelector("#im-deal");
     if (enough) deal.addEventListener("click", function () { dealRoles(roster); });
   }
@@ -98,12 +126,25 @@
   // --- Deal & reveal phase -------------------------------------------------
   function dealRoles(roster) {
     players = roster.map(function (p) { return p.name; });
-    imposterIndex = Math.floor(Math.random() * players.length);
+    var count = Math.max(1, Math.min(settings.imposterCount, players.length));
+    imposterSet = {};
+    // pick `count` distinct imposter indices
+    var idxs = players.map(function (_, i) { return i; });
+    for (var i = idxs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = idxs[i]; idxs[i] = idxs[j]; idxs[j] = t; }
+    idxs.slice(0, count).forEach(function (i) { imposterSet[i] = true; });
+
     var picked = pickWord(settings.pool);
     secretWord = picked.word;
     secretCategory = picked.category;
     revealIdx = 0;
     renderPassTo();
+  }
+
+  function imposterNames() {
+    return players.filter(function (_, i) { return imposterSet[i]; });
+  }
+  function imposterTotal() {
+    var n = 0; for (var k in imposterSet) if (imposterSet[k]) n++; return n;
   }
 
   function renderPassTo() {
@@ -122,14 +163,18 @@
 
   function showRole() {
     roleShown = true;
-    var isImposter = revealIdx === imposterIndex;
+    var isImposter = !!imposterSet[revealIdx];
     var last = revealIdx === players.length - 1;
+    var total = imposterTotal();
+    var allyNote = total > 1
+      ? "You’re 1 of " + total + " imposters — but who else?"
+      : "Blend in. Don’t get caught.";
     var body = isImposter
       ? '<div class="role-card role-card--imposter">' +
         '  <div class="role-label">You are the</div>' +
         '  <div class="role-big">IMPOSTER 🤫</div>' +
         '  <div class="role-hint">Category: <strong>' + esc(secretCategory) + "</strong></div>" +
-        '  <div class="role-note">Blend in. Don’t get caught.</div>' +
+        '  <div class="role-note">' + allyNote + "</div>" +
         "</div>"
       : '<div class="role-card">' +
         '  <div class="role-label">The secret word is</div>' +
@@ -164,22 +209,27 @@
   }
 
   function renderReveal() {
+    var names = imposterNames();
+    var plural = names.length > 1;
+    var joined = names.map(esc).join(" & ");
+    var title = plural ? joined + " were the imposters!" : joined + " was the imposter!";
+
     els.innerHTML =
       '<section class="screen imposter-reveal">' +
       '  <div class="reveal-emoji">🕵️</div>' +
-      '  <h2 class="result-title pop">' + esc(players[imposterIndex]) + " was the imposter!</h2>" +
+      '  <h2 class="result-title pop">' + title + "</h2>" +
       '  <p class="result-sub">The word was: <strong>' + esc(secretWord) + "</strong></p>" +
-      '  <p class="muted">Did the table catch them?</p>' +
+      '  <p class="muted">Did the table catch ' + (plural ? "them all" : "them") + "?</p>" +
       '  <div class="stack">' +
-      '    <button id="im-caught" class="btn btn-got btn-block btn-xl">We caught them 🎯</button>' +
+      '    <button id="im-caught" class="btn btn-got btn-block btn-xl">We caught ' + (plural ? "them all" : "them") + " 🎯</button>" +
       '    <button id="im-fooled" class="btn btn-skip btn-block btn-xl">They fooled us 🤡</button>' +
       "  </div>" +
       "</section>";
     els.querySelector("#im-caught").addEventListener("click", function () {
-      renderOutcome("🎯 Caught!", "The table wins — " + esc(players[imposterIndex]) + " got busted!");
+      renderOutcome("🎯 Caught!", "The table wins — " + joined + (plural ? " got busted!" : " got busted!"));
     });
     els.querySelector("#im-fooled").addEventListener("click", function () {
-      renderOutcome("🤡 Fooled!", esc(players[imposterIndex]) + " got away with it — imposter wins!");
+      renderOutcome("🤡 Fooled!", joined + (plural ? " got away with it — imposters win!" : " got away with it — imposter wins!"));
     });
   }
 

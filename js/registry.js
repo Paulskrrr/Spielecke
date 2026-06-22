@@ -39,6 +39,7 @@
     entry(Games.activity),
     entry(Games.quiz),
     entry(Games.truth),
+    entry(Games.chooser),
   ];
 
   global.Spielecke = global.Spielecke || {};

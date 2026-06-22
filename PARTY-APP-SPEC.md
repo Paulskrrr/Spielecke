@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **12 games**.
+**Shipped (on `main`):** the shell + **13 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -32,6 +32,7 @@ next.
 - ✅ **Activity** — two-team board race (explain / draw / charade)
 - ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
 - ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
+- ✅ **Chooser** — spinning-wheel random person picker
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -122,7 +123,8 @@ js/
     truth.js               Truth or Drink question pools
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
-    liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js
+    liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
+    (chooser has no content file — it just spins the roster)
 assets/logo.svg            the "Pauls Spielecke" wordmark
 ```
 
@@ -245,8 +247,9 @@ Hidden roles on one device. Everyone gets the same secret word except one random
 **imposter**, who only sees the category. Pass to reveal each role privately (shared roster
 for order + names), then discuss, vote, unmask.
 
-- **Config:** word pool (shared Terms).
-- **Outcome:** caught → the table wins; fooled → the imposter wins.
+- **Config:** word pool (shared Terms); **number of imposters** (1 up to the whole table,
+  chosen before dealing). Persisted.
+- **Outcome:** all imposter(s) caught → the table wins; fooled → the imposter(s) win.
 
 ### 3.6 Wavelength 📡 (`wavelength`, 3+) — plain
 
@@ -317,6 +320,12 @@ A random player (from the roster, no immediate repeat) gets a truth question.
 
 - **Config:** category pool, 🍻 drinking mode.
 - **Outcome:** plain — answer honestly. Drinking mode — answer, or drink to dodge.
+
+### 3.13 Chooser 🎡 (`chooser`, 2+) — plain
+
+A spinning wheel that lands on a random person from the roster. SVG wheel (one coloured
+slice + name per player), CSS-rotate spin with a fixed pointer at the top. No content file —
+it just spins the roster. "Spin again" to re-roll. Handy as a picker for any other game.
 
 ---
 
