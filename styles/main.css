@@ -92,23 +92,17 @@ body {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
   background: none;
   border: 0;
-  color: #fff;
   cursor: pointer;
-  font-size: 1.45rem;
-  font-weight: 800;
-  padding: 4px;
+  padding: 2px;
 }
-.brand__mark {
-  font-size: 1.2rem;
-  transform: rotate(-8deg);
-  display: inline-block;
-}
-.brand__name {
-  color: var(--yellow);
-  text-shadow: 2px 2px 0 var(--ink);
+.brand__logo {
+  height: 46px;
+  width: auto;
+  display: block;
+  /* lift it off the purple bar a touch */
+  filter: drop-shadow(0 2px 0 rgba(0, 0, 0, 0.25));
 }
 
 .players-badge {

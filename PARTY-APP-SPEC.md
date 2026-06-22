@@ -64,6 +64,10 @@ settings/stats screen.
 - **Childlike design, adult content.** Flashy and loud throughout.
 - **Fonts:** system rounded stack only (`Baloo 2` → `Comic Sans MS` → `Chalkboard SE` →
   `Trebuchet MS`). No external font loading (keeps it pure-static / file://-safe).
+- **Logo:** "Pauls Spielecke" wordmark — chunky 3D gold "Spielecke" with a black outline
+  and a red handwritten "Pauls" on top. Lives at `assets/logo.svg` (scalable, transparent
+  background), used in the header, page title, and favicon. Currently an SVG recreation of
+  Paul's artwork; swap in a traced/raster version later for pixel-perfect fidelity.
 
 ---
 
