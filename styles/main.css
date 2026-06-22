@@ -896,13 +896,35 @@ body::before {
 
 /* Desktop: nicer two-column turn layout + a roomier board */
 @media (min-width: 820px) {
-  .act-layout { display: flex; gap: 22px; align-items: flex-start; }
-  .act-board-wrap { flex: 1.3; }
-  .act-controls { flex: 1; }
-  .act-board {
-    grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-    gap: 10px; padding: 16px;
+  /* Activity uses the full screen on desktop, not the narrow app column.
+     Full-bleed out of the 880px .app, then centre a roomy inner layout. */
+  .act-turn, .act-result, .act-win {
+    width: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: max(24px, 4vw);
+    padding-right: max(24px, 4vw);
   }
-  .act-tile { font-size: 1.5rem; border-radius: 14px; }
-  .act-token { font-size: 1.7rem; }
+  .act-layout {
+    display: flex;
+    gap: 32px;
+    align-items: center;
+    justify-content: center;
+    max-width: 1280px;
+    margin: 0 auto;
+    min-height: 74vh;
+  }
+  .act-board-wrap { flex: 1.5; }
+  .act-controls { flex: 1; max-width: 460px; }
+  .act-board {
+    grid-template-columns: repeat(auto-fill, minmax(104px, 1fr));
+    gap: 14px; padding: 22px;
+  }
+  .act-tile { font-size: 2.1rem; border-radius: 16px; }
+  .act-token { font-size: 2.3rem; }
+  .act-type-banner { font-size: 1.5rem; }
+  .act-point { padding: 22px 8px; }
+  .act-point__n { font-size: 2.2rem; }
+  /* the board on result / win screens, centred and roomy */
+  .act-result .act-board-wrap, .act-win .act-board-wrap { max-width: 880px; margin: 0 auto; }
 }
