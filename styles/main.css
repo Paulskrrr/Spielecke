@@ -1038,6 +1038,21 @@ body::before {
 
 /* Desktop: nicer two-column turn layout + a roomier board */
 @media (min-width: 820px) {
+  /* The game shelf uses the full screen width on desktop, not the narrow app
+     column. Full-bleed out of the 880px .app, then let the grid grow more
+     columns to fill the row. */
+  .shelf-screen {
+    width: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: max(24px, 3vw);
+    padding-right: max(24px, 3vw);
+  }
+  .shelf-screen .game-grid {
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+  }
+
   /* Activity uses the full screen on desktop, not the narrow app column.
      Full-bleed out of the 880px .app, then centre a roomy inner layout. */
   .act-turn, .act-result, .act-win {
