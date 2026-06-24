@@ -883,6 +883,146 @@ body::before {
 .quiz-option:nth-child(3) { background: var(--orange); color: var(--ink); }
 .quiz-option:nth-child(4) { background: var(--pink); color: #fff; }
 
+/* ----- Hochadel --------------------------------------------------------- */
+
+.ha-screen { display: flex; flex-direction: column; }
+
+/* Edition select */
+.ha-edition-list { display: flex; flex-direction: column; gap: 14px; margin: 8px 0 6px; }
+.ha-edition {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  padding: 16px 18px; font-family: var(--font); font-weight: 800; color: #fff;
+  background: #1B3A6B; border: 4px solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--pop-lg); cursor: pointer;
+}
+.ha-edition:active { transform: translateY(4px); box-shadow: var(--pop); }
+.ha-edition--locked { background: #4a4668; cursor: default; opacity: 0.85; }
+.ha-edition--locked:active { transform: none; box-shadow: var(--pop-lg); }
+.ha-edition__icon {
+  font-size: 1.8rem; width: 52px; height: 52px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: #fff; border: 3px solid var(--ink); border-radius: 16px; box-shadow: 0 3px 0 var(--ink);
+}
+.ha-edition__name { flex: 1; font-size: 1.3rem; }
+.ha-edition__flag {
+  font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  padding: 4px 10px; border-radius: 999px; background: rgba(255,255,255,0.18);
+}
+.ha-edition__flag--go { background: var(--yellow); color: var(--ink); }
+.ha-hint { min-height: 1.2em; margin-top: 10px; }
+
+/* Turn order */
+.ha-order { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.ha-order__item {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px; font-weight: 800;
+  background: #fff; border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--pop);
+}
+.ha-order__no {
+  width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--purple); color: #fff; border: 2px solid var(--ink); border-radius: 999px; font-size: 0.9rem;
+}
+
+/* Standing ground rules strip (always visible) */
+.ha-rules-strip {
+  background: #2a2350; color: #fff; border: 3px solid var(--ink); border-radius: 16px;
+  padding: 12px 14px; margin-bottom: 14px; box-shadow: var(--pop);
+}
+.ha-rules-strip__head {
+  font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: var(--yellow); margin-bottom: 8px;
+}
+.ha-rule { font-size: 0.92rem; line-height: 1.4; margin: 4px 0; }
+.ha-rule strong { color: var(--yellow); }
+
+/* Table hub */
+.ha-turn {
+  display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 4px 0 12px;
+}
+.ha-turn__label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
+.ha-turn__name { font-size: 1.8rem; font-weight: 900; color: var(--purple); }
+.ha-draw-btn {
+  width: 100%; min-height: 22vh; font-family: var(--font); font-size: clamp(1.7rem, 8vw, 2.6rem);
+  font-weight: 900; color: #fff; background: var(--purple); border: 5px solid var(--ink);
+  border-radius: 28px; box-shadow: var(--pop-lg); cursor: pointer; margin-bottom: 18px;
+}
+.ha-draw-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--ink); }
+.ha-empty { margin: 4px 0 8px; }
+
+.ha-law-list, .ha-active-list { list-style: none; padding: 0; margin: 6px 0 8px; display: flex; flex-direction: column; gap: 8px; }
+.ha-law {
+  display: flex; flex-direction: column; gap: 2px; padding: 10px 14px;
+  background: #1B3A6B; color: #fff; border: 3px solid var(--ink); border-radius: 14px; box-shadow: var(--pop);
+}
+.ha-law strong { font-size: 1rem; }
+.ha-law span { font-size: 0.85rem; opacity: 0.92; }
+
+.ha-active {
+  padding: 10px 14px; background: #fff; border: 3px solid #C9A227; border-radius: 14px; box-shadow: var(--pop);
+}
+.ha-active__top { display: flex; align-items: baseline; gap: 8px; }
+.ha-active__holder {
+  font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: #fff; background: #C9A227; padding: 3px 9px; border-radius: 999px; border: 2px solid var(--ink);
+}
+.ha-active__name { font-weight: 900; }
+.ha-active__text { font-size: 0.86rem; margin: 6px 0 8px; line-height: 1.35; }
+.ha-active__btn { min-height: 44px; padding: 8px 16px; background: var(--yellow); }
+
+.ha-foot { margin-top: 18px; }
+
+/* The drawn card */
+.ha-draw-screen { min-height: 66vh; }
+.ha-draw-kicker { text-align: center; font-weight: 800; color: var(--ink-soft); margin-bottom: 12px; }
+.ha-bigcard {
+  flex: 1; display: flex; flex-direction: column; justify-content: center; gap: 14px; text-align: center;
+  padding: 28px 22px; margin-bottom: 18px; color: #fff;
+  background: var(--ha-c, var(--purple)); border: 5px solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--pop-lg);
+}
+.ha-bigcard__tag {
+  align-self: center; font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  padding: 5px 14px; border-radius: 999px; background: rgba(255,255,255,0.22); border: 2px solid rgba(255,255,255,0.5);
+}
+.ha-bigcard__title { font-size: clamp(1.8rem, 8vw, 3rem); font-weight: 900; line-height: 1.1; }
+.ha-bigcard__text { font-size: clamp(1.1rem, 4.5vw, 1.6rem); font-weight: 700; line-height: 1.35; }
+.ha-verse { font-style: italic; }
+/* gold card needs dark ink for contrast */
+.ha-card--aktiv { color: var(--ink); }
+.ha-card--aktiv .ha-bigcard__tag { background: rgba(36,27,77,0.14); border-color: rgba(36,27,77,0.35); }
+
+/* Mini-games */
+.ha-finger__status { text-align: center; font-size: 1.1rem; margin: 6px 0 0; }
+.ha-finger__caller { text-align: center; font-size: 1.3rem; margin: 4px 0 8px; }
+.ha-num-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.ha-num {
+  min-width: 48px; min-height: 48px; font-family: var(--font); font-size: 1.2rem; font-weight: 800;
+  color: var(--ink); background: #fff; border: 3px solid var(--ink); border-radius: 14px;
+  cursor: pointer; box-shadow: var(--pop);
+}
+.ha-num:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
+.ha-num--active { background: var(--purple); color: #fff; }
+.ha-reim__who { font-size: 1.2rem; font-weight: 900; }
+.ha-mini-result { text-align: center; }
+.ha-accuse { font-weight: 900; color: var(--red); }
+
+/* Sanduhr custom input */
+.ha-custom { display: flex; align-items: center; gap: 10px; font-weight: 800; margin: 16px 0; }
+.ha-custom .text-input { max-width: 140px; }
+
+/* Sanduhr expiry overlay */
+.ha-overlay {
+  position: fixed; inset: 0; z-index: 50; display: flex; align-items: center; justify-content: center;
+  padding: 24px; background: rgba(36,27,77,0.78);
+}
+.ha-overlay__box {
+  width: min(92vw, 420px); text-align: center; padding: 28px 22px;
+  background: var(--paper-2); border: 5px solid var(--ink); border-radius: var(--radius); box-shadow: var(--pop-lg);
+}
+.ha-overlay__emoji { font-size: clamp(3.5rem, 18vw, 6rem); animation: boom 0.5s ease-out; }
+.ha-overlay__title { font-size: 1.6rem; font-weight: 900; margin: 8px 0; }
+.ha-overlay__sub { font-size: 1.15rem; margin-bottom: 18px; }
+.ha-overlay__sub strong { color: var(--red); }
+
 /* ----- Larger screens --------------------------------------------------- */
 
 @media (min-width: 600px) {

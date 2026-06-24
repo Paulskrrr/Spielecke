@@ -41,6 +41,7 @@
     entry(Games.truth),
     entry(Games.chooser),
     entry(Games.reaction),
+    entry(Games.hochadel),
   ];
 
   global.Spielecke = global.Spielecke || {};
