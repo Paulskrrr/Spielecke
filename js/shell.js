@@ -103,7 +103,7 @@
     var count = Store.rosterGet().length;
     headerEl.innerHTML =
       '<button id="brand" class="brand" aria-label="Home">' +
-      '  <img class="brand__logo" src="assets/logo.svg" alt="Pauls Spielecke" />' +
+      '  <img class="brand__logo" src="assets/logo.png" alt="Pauls Spielecke" />' +
       "</button>" +
       '<button id="edit-players" class="players-badge">' +
       '  <span class="players-badge__count">' + count + "</span>" +
