@@ -55,7 +55,7 @@
       var saved = context.store.get("state", null);
       if (saved && saved.edition && saved.order && saved.order.length >= 2) {
         game = reconcile(saved);
-        renderTable();
+        renderGroundRules(renderTable);
       } else {
         renderEdition();
       }
@@ -205,9 +205,8 @@
       '  <h2 class="screen-title pop">Sitzordnung</h2>' +
       '  <p class="muted">Reihum wird gezogen. Verschiebe per Zufall, wenn du magst.</p>' +
       '  <ol class="ha-order">' + list + "</ol>" +
-      groundRulesHtml() +
       '  <button id="ha-shuffle" class="btn btn-block">🔀 Reihenfolge mischen</button>' +
-      '  <button id="ha-start" class="btn btn-primary btn-block btn-xl">An die Tafel ▶️</button>' +
+      '  <button id="ha-start" class="btn btn-primary btn-block btn-xl">Weiter ▶️</button>' +
       '  <button id="ha-back" class="btn btn-ghost btn-block">← Edition wählen</button>' +
       "</section>";
 
@@ -218,9 +217,39 @@
     els.querySelector("#ha-start").addEventListener("click", function () {
       game.turnIndex = 0;
       saveState();
-      renderTable();
+      renderGroundRules(renderTable);
     });
     els.querySelector("#ha-back").addEventListener("click", renderEdition);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Screen: the standing ground rules (spec §3) — shown on entry / after reset,
+  // not during the round itself.
+  // ---------------------------------------------------------------------------
+  function renderGroundRules(next) {
+    clearTickers();
+    els.innerHTML =
+      '<section class="screen ha-screen ha-intro">' +
+      '  <h2 class="screen-title pop">⚜️ Grundgesetze des Hofes</h2>' +
+      '  <p class="muted">Diese zwei Regeln gelten die ganze Runde — unabhängig vom Deck.</p>' +
+      groundRulesCardsHtml() +
+      '  <button id="ha-gr-next" class="btn btn-primary btn-block btn-xl">An die Tafel ▶️</button>' +
+      "</section>";
+    els.querySelector("#ha-gr-next").addEventListener("click", next);
+  }
+
+  function groundRulesCardsHtml() {
+    return '<div class="ha-grules">' + (data.groundRules || []).map(function (r) {
+      return (
+        '<div class="ha-grule">' +
+        '  <div class="ha-grule__crest">⚜️</div>' +
+        '  <div class="ha-grule__body">' +
+        '    <div class="ha-grule__title">' + esc(r.title) + "</div>" +
+        '    <div class="ha-grule__text">' + esc(r.text) + "</div>" +
+        "  </div>" +
+        "</div>"
+      );
+    }).join("") + "</div>";
   }
 
   // ---------------------------------------------------------------------------
@@ -261,13 +290,6 @@
     els.querySelectorAll("[data-trigger]").forEach(function (b) {
       b.addEventListener("click", function () { onTrigger(b.getAttribute("data-trigger")); });
     });
-  }
-
-  function groundRulesHtml() {
-    var items = (data.groundRules || []).map(function (r) {
-      return '<div class="ha-rule"><strong>' + esc(r.title) + "</strong> " + esc(r.text) + "</div>";
-    }).join("");
-    return '<div class="ha-rules-strip"><div class="ha-rules-strip__head">⚜️ Grundgesetze des Hofes</div>' + items + "</div>";
   }
 
   // Saphir laws shown as face-up cards (passive — not clickable).
@@ -652,7 +674,7 @@
       game.order = keepOrder;
       game.turnIndex = keepIdx % game.order.length;
       saveState();
-      renderTable();
+      renderGroundRules(renderTable);
     });
     els.querySelector("#ha-reset-no").addEventListener("click", renderTable);
   }
