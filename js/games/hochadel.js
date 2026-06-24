@@ -123,6 +123,7 @@
       edition: edition,
       order: rosterOrder(),
       turnIndex: 0,
+      dir: 1,           // turn direction (+1 / -1); flipped by „Wechsel der Winde"
       hofgesetze: [],   // [{ id, title, text }]
       active: [],       // [{ uid, cardId, title, text, power, holder }]
       uidSeq: 1,
@@ -137,6 +138,7 @@
     saved.discard = (saved.discard || []).filter(function (id) { return cardById[id]; });
     saved.hofgesetze = saved.hofgesetze || [];
     saved.active = saved.active || [];
+    if (saved.dir !== 1 && saved.dir !== -1) saved.dir = 1;
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
     if (typeof saved.turnIndex !== "number" || saved.turnIndex >= saved.order.length) saved.turnIndex = 0;
     if (saved.draw.length === 0 && saved.discard.length === 0) saved.draw = buildDeck(saved.edition);
@@ -146,8 +148,16 @@
   function saveState() { if (ctx) ctx.store.set("state", game); }
 
   function currentPlayer() { return game.order[game.turnIndex]; }
-  function nextTurn() { game.turnIndex = (game.turnIndex + 1) % game.order.length; }
+  function nextTurn() {
+    var n = game.order.length;
+    game.turnIndex = (game.turnIndex + game.dir + n) % n;
+  }
   function names() { return game.order.map(function (o) { return o.name; }); }
+  // Replace the {P} token with the drawer's name (used in card text/rules).
+  function fillName(text) {
+    var c = currentPlayer();
+    return String(text).replace(/\{P\}/g, c ? c.name : "der Zieher");
+  }
 
   function drawCard() {
     if (game.draw.length === 0) { game.draw = shuffle(game.discard); game.discard = []; }
@@ -387,7 +397,7 @@
       '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + t.colour + '">' +
       '    <div class="ha-bigcard__tag">' + esc(t.tag) + " · " + esc(t.label) + "</div>" +
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
-      '    <div class="ha-bigcard__text">' + esc(card.text) + "</div>" +
+      '    <div class="ha-bigcard__text">' + esc(fillName(card.text)) + "</div>" +
       "  </div>" +
       '  <button id="ha-resolve" class="btn btn-primary btn-block btn-xl" data-primary>' + esc(actLabel) + "</button>" +
       "</section>";
@@ -396,17 +406,18 @@
   }
 
   function resolveCard(card) {
+    if (card.effect === "reverse") game.dir = -game.dir;
     if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
-      game.hofgesetze.push({ id: card.id, title: card.title, text: card.text });
+      game.hofgesetze.push({ id: card.id, title: card.title, text: fillName(card.text) });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
       game.active.push({
         uid: "u" + (game.uidSeq++),
         cardId: card.id,
         title: card.title,
-        text: card.text,
+        text: fillName(card.text),
         power: card.power || null,
         holder: cur ? cur.name : "—",
       });
