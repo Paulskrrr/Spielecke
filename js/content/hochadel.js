@@ -29,11 +29,11 @@
   var GROUND_RULES = [
     {
       title: "Adelsnamen",
-      text: "Am Hofe spricht man sich nur mit Nachnamen an. Wer einen Vornamen ausspricht, dient.",
+      text: "Am Hofe spricht man sich nur mit Nachnamen an. Wer einen Vornamen ausspricht, muss einen Dienst erweisen.",
     },
     {
       title: "Der rechte Ruf",
-      text: "Es heißt nicht „trinken“, es heißt dienen. Wer sich verspricht, dient. (Anklage: „Spieker, dienen!!“)",
+      text: "Es heißt nicht „trinken“, es heißt dienen. Wer sich verspricht, muss einen Dienst erweisen.",
     },
     {
       title: "Höfische Zunge",
