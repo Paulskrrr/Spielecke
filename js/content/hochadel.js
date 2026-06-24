@@ -84,7 +84,7 @@
     { id: "s_greis", type: "sofort", title: "Der Greis",
       text: "Der Älteste am Hofe dient.", editions: ["koenige", "rapunzel"] },
     { id: "s_affaeren", type: "sofort", title: "Höfische Affären",
-      text: "Wer schon einen am Tisch geküsst hat, dient.", editions: ["koenige", "rapunzel"] },
+      text: "Wer schon einen am Tisch geküsst hat, dient.", editions: ["rapunzel"] },
     { id: "s_glied", type: "sofort", title: "Das schwächste Glied",
       text: "Bestimmt das schwächste Glied der Tafel. Es dient.", editions: ["koenige", "rapunzel"] },
     { id: "s_wasserfall", type: "sofort", title: "Der Wasserfall",
