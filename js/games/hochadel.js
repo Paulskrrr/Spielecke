@@ -153,10 +153,16 @@
     game.turnIndex = (game.turnIndex + game.dir + n) % n;
   }
   function names() { return game.order.map(function (o) { return o.name; }); }
-  // Replace the {P} token with the drawer's name (used in card text/rules).
+  // Fill card tokens: {P} -> the drawer's name, {VERS} -> a random opening verse.
   function fillName(text) {
     var c = currentPlayer();
-    return String(text).replace(/\{P\}/g, c ? c.name : "der Zieher");
+    var out = String(text).replace(/\{P\}/g, c ? c.name : "der Zieher");
+    if (out.indexOf("{VERS}") !== -1) {
+      var v = data.verses || [];
+      var verse = v.length ? v[Math.floor(Math.random() * v.length)] : "Der König spricht ein weises Wort,";
+      out = out.replace(/\{VERS\}/g, verse);
+    }
+    return out;
   }
 
   function drawCard() {
