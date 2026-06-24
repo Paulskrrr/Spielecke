@@ -1021,25 +1021,9 @@ body::before {
 }
 .ha-bigcard__title { font-size: clamp(1.8rem, 8vw, 3rem); font-weight: 900; line-height: 1.1; }
 .ha-bigcard__text { font-size: clamp(1.1rem, 4.5vw, 1.6rem); font-weight: 700; line-height: 1.35; }
-.ha-verse { font-style: italic; }
 /* gold card needs dark ink for contrast */
 .ha-card--aktiv { color: var(--ink); }
 .ha-card--aktiv .ha-bigcard__tag { background: rgba(36,27,77,0.14); border-color: rgba(36,27,77,0.35); }
-
-/* Mini-games */
-.ha-finger__status { text-align: center; font-size: 1.1rem; margin: 6px 0 0; }
-.ha-finger__caller { text-align: center; font-size: 1.3rem; margin: 4px 0 8px; }
-.ha-num-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
-.ha-num {
-  min-width: 48px; min-height: 48px; font-family: var(--font); font-size: 1.2rem; font-weight: 800;
-  color: var(--ink); background: #fff; border: 3px solid var(--ink); border-radius: 14px;
-  cursor: pointer; box-shadow: var(--pop);
-}
-.ha-num:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--ink); }
-.ha-num--active { background: var(--purple); color: #fff; }
-.ha-reim__who { font-size: 1.2rem; font-weight: 900; }
-.ha-mini-result { text-align: center; }
-.ha-accuse { font-weight: 900; color: var(--red); }
 
 /* Sanduhr custom input */
 .ha-custom { display: flex; align-items: center; gap: 10px; font-weight: 800; margin: 16px 0; }
@@ -1115,7 +1099,7 @@ body::before {
   .ha-table .ha-foot .btn { flex: 1; margin-top: 0; }
 
   /* Focused single-card screens stay centred and readable, not stretched. */
-  .ha-intro, .ha-draw-screen, .ha-finger, .ha-reim, .ha-trommel, .ha-mini-result {
+  .ha-intro, .ha-draw-screen {
     max-width: 640px; margin-left: auto; margin-right: auto;
   }
 

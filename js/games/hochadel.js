@@ -7,15 +7,21 @@
  *   sofort    (Karmesin)  execute once, then discard — the common card
  *   regel     (Saphir)    becomes a standing rule, accumulates in „Hofgesetze"
  *   aktiv     (Gold)      stays face-up with the drawer, self-triggered later
- *   minispiel (Purpur)    runs a guided mini-game to a loser, who dient
+ *   minispiel (Purpur)    a mini-game card the table plays themselves; the loser
+ *                         dient, then the card is completed like any other
+ *
+ * Minispiel cards are just cards — no in-app guided menu; the players run the
+ * game at the table and the host completes the card (spacebar or the button).
+ *
+ * Space/Enter always fires the current screen's primary action (draw / complete).
  *
  * The deck lives in content/hochadel.js as data, tagged per edition, so a future
  * edition = a swappable card set behind the same engine. The active edition is
  * „Diener & Könige"; „Rapunzel-Edition" is a locked stub on the start screen.
  *
  * Plugs into the shell via the Game Module Contract: reuses the shared roster
- * (context.players), the namespaced store (context.store), and goHome(). All
- * timers (Sanduhr, Reim-Timer) are tracked and cleared on unmount.
+ * (context.players), the namespaced store (context.store), and goHome(). The
+ * Sanduhr timer and the space-key listener are cleared/removed on unmount.
  */
 (function (global) {
   "use strict";
@@ -27,14 +33,12 @@
     aktiv:     { tag: "Gold",     label: "Aktive Karte",   colour: "#C9A227" },
     minispiel: { tag: "Purpur",   label: "Minispiel",      colour: "#5B2A86" },
   };
-  var REIM_SECONDS = 5;
 
   var els = null, ctx = null, data = null;
   var cardById = {};      // id -> card (from content)
   var game = null;        // full persisted game state
-  var mini = null;        // transient mini-game state
   var timers = [];        // setTimeout ids (Sanduhr) — survive between renders
-  var tickers = [];       // setInterval ids (Reim countdown) — cleared on nav
+  var tickers = [];       // setInterval ids — cleared on nav
 
   var module = {
     meta: {
@@ -52,6 +56,8 @@
       cardById = {};
       data.deck.forEach(function (c) { cardById[c.id] = c; });
 
+      global.addEventListener("keydown", onKeydown);
+
       var saved = context.store.get("state", null);
       if (saved && saved.edition && saved.order && saved.order.length >= 2) {
         game = reconcile(saved);
@@ -62,14 +68,26 @@
     },
     unmount: function () {
       clearAll();
+      global.removeEventListener("keydown", onKeydown);
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; data = null; game = null; mini = null; cardById = {};
+      ctx = null; data = null; game = null; cardById = {};
     },
   };
 
+  // Space (or Enter) always fires the screen's primary action — draw a card on
+  // the table, complete the drawn card, advance the intro, etc. The most recently
+  // rendered primary wins (e.g. the Sanduhr overlay over the table).
+  function onKeydown(e) {
+    if (e.code !== "Space" && e.key !== " " && e.key !== "Enter" && e.keyCode !== 32) return;
+    if (!els) return;
+    var tag = e.target && e.target.tagName;
+    if (tag === "INPUT" || tag === "TEXTAREA") return; // don't hijack typing
+    var btns = els.querySelectorAll("[data-primary]");
+    if (btns.length) { e.preventDefault(); btns[btns.length - 1].click(); }
+  }
+
   // --- timers --------------------------------------------------------------
   function after(ms, fn) { var id = global.setTimeout(fn, ms); timers.push(id); return id; }
-  function every(ms, fn) { var id = global.setInterval(fn, ms); tickers.push(id); return id; }
   function clearTickers() { tickers.forEach(function (t) { global.clearInterval(t); }); tickers = []; }
   function clearAll() {
     timers.forEach(function (t) { global.clearTimeout(t); });
@@ -206,7 +224,7 @@
       '  <p class="muted">Reihum wird gezogen. Verschiebe per Zufall, wenn du magst.</p>' +
       '  <ol class="ha-order">' + list + "</ol>" +
       '  <button id="ha-shuffle" class="btn btn-block">🔀 Reihenfolge mischen</button>' +
-      '  <button id="ha-start" class="btn btn-primary btn-block btn-xl">Weiter ▶️</button>' +
+      '  <button id="ha-start" class="btn btn-primary btn-block btn-xl" data-primary>Weiter ▶️</button>' +
       '  <button id="ha-back" class="btn btn-ghost btn-block">← Edition wählen</button>' +
       "</section>";
 
@@ -233,7 +251,7 @@
       '  <h2 class="screen-title pop">⚜️ Grundgesetze des Hofes</h2>' +
       '  <p class="muted">Diese zwei Regeln gelten die ganze Runde — unabhängig vom Deck.</p>' +
       groundRulesCardsHtml() +
-      '  <button id="ha-gr-next" class="btn btn-primary btn-block btn-xl">An die Tafel ▶️</button>' +
+      '  <button id="ha-gr-next" class="btn btn-primary btn-block btn-xl" data-primary>An die Tafel ▶️</button>' +
       "</section>";
     els.querySelector("#ha-gr-next").addEventListener("click", next);
   }
@@ -267,7 +285,7 @@
       "  </div>" +
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
-      '      <button id="ha-draw" class="ha-deck" aria-label="Karte ziehen">' +
+      '      <button id="ha-draw" class="ha-deck" aria-label="Karte ziehen" data-primary>' +
       '        <span class="ha-deck__crest">👑</span>' +
       '        <span class="ha-deck__label">Karte ziehen</span>' +
       "      </button>" +
@@ -348,7 +366,7 @@
       '  <h2 class="result-title pop">Das Deck ruht</h2>' +
       '  <p class="result-sub">Alle Karten sind im Spiel (Hofgesetze & aktive Karten). ' +
       "Setze das Spiel zurück für eine frische Runde.</p>" +
-      '  <button id="ha-back" class="btn btn-primary btn-block btn-xl">Zur Tafel</button>' +
+      '  <button id="ha-back" class="btn btn-primary btn-block btn-xl" data-primary>Zur Tafel</button>' +
       "</section>";
     els.querySelector("#ha-back").addEventListener("click", renderTable);
   }
@@ -357,11 +375,11 @@
     clearTickers();
     var t = TYPE_META[card.type];
     var cur = currentPlayer();
-    var actLabel, miniLaunch = false;
+    var actLabel;
     if (card.type === "sofort") actLabel = "Erledigt ✓";
     else if (card.type === "regel") actLabel = "Als Hofgesetz eintragen ✓";
     else if (card.type === "aktiv") actLabel = "An " + (cur ? cur.name : "den Halter") + " vergeben 👑";
-    else { actLabel = "Minispiel starten ▶️"; miniLaunch = true; }
+    else actLabel = "Verlierer dient ✓"; // minispiel: played at the table, then complete the card
 
     els.innerHTML =
       '<section class="screen ha-screen ha-draw-screen">' +
@@ -371,17 +389,14 @@
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
       '    <div class="ha-bigcard__text">' + esc(card.text) + "</div>" +
       "  </div>" +
-      '  <button id="ha-resolve" class="btn btn-primary btn-block btn-xl">' + esc(actLabel) + "</button>" +
+      '  <button id="ha-resolve" class="btn btn-primary btn-block btn-xl" data-primary>' + esc(actLabel) + "</button>" +
       "</section>";
 
-    els.querySelector("#ha-resolve").addEventListener("click", function () {
-      if (miniLaunch) { startMini(card); return; }
-      resolveCard(card);
-    });
+    els.querySelector("#ha-resolve").addEventListener("click", function () { resolveCard(card); });
   }
 
   function resolveCard(card) {
-    if (card.type === "sofort") {
+    if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
       game.hofgesetze.push({ id: card.id, title: card.title, text: card.text });
@@ -466,7 +481,7 @@
       '  <div class="ha-overlay__emoji">⏳</div>' +
       '  <div class="ha-overlay__title">Die Sanduhr ist abgelaufen!</div>' +
       '  <div class="ha-overlay__sub">Wer gerade spricht, <strong>dient!</strong></div>' +
-      '  <button class="btn btn-primary btn-block btn-xl">Verstanden</button>' +
+      '  <button class="btn btn-primary btn-block btn-xl" data-primary>Verstanden</button>' +
       "</div>";
     els.appendChild(ov);
     ov.querySelector("button").addEventListener("click", function () {
@@ -474,185 +489,6 @@
     });
   }
 
-  // ---------------------------------------------------------------------------
-  // Mini-games (spec §5.4) — each runs to a clear loser, who dient
-  // ---------------------------------------------------------------------------
-  function startMini(card) {
-    game.discard.push(card.id); // the minispiel card is spent once launched
-    saveState();
-    if (card.mini === "fingerschlacht") startFingerschlacht();
-    else if (card.mini === "reim") startReim();
-    else if (card.mini === "trommelfeuer") startTrommel();
-    else endMini();
-  }
-
-  function endMini() {
-    clearTickers();
-    mini = null;
-    nextTurn();
-    saveState();
-    renderTable();
-  }
-
-  function renderMiniResult(losers, emoji, title) {
-    clearTickers();
-    var accuse = losers.map(function (n) { return esc(n) + ", dienen!!"; }).join(" ");
-    els.innerHTML =
-      '<section class="screen ha-screen ha-mini-result">' +
-      '  <div class="result-emoji">' + (emoji || "🍷") + "</div>" +
-      '  <h2 class="result-title pop">' + esc(title || "Es ist entschieden") + "</h2>" +
-      '  <p class="result-sub ha-accuse">' + accuse + "</p>" +
-      '  <button id="ha-mini-done" class="btn btn-primary btn-block btn-xl">Weiter zur Tafel ▶️</button>' +
-      "</section>";
-    els.querySelector("#ha-mini-done").addEventListener("click", endMini);
-  }
-
-  // --- Die Fingerschlacht --------------------------------------------------
-  function startFingerschlacht() {
-    mini = { players: names(), callerIdx: 0, called: null, actual: null };
-    renderFinger();
-  }
-
-  function renderFinger() {
-    clearTickers();
-    if (mini.players.length <= 2) {
-      renderMiniResult(mini.players, "✌️", "Die letzten Zwei");
-      return;
-    }
-    var n = mini.players.length;
-    if (mini.callerIdx >= n) mini.callerIdx = 0;
-    var caller = mini.players[mini.callerIdx];
-
-    var calledRow = numRow(n, "called", mini.called);
-    var actualRow = numRow(n, "actual", mini.actual);
-    var ready = mini.called !== null && mini.actual !== null;
-
-    els.innerHTML =
-      '<section class="screen ha-screen ha-finger">' +
-      '  <div class="ha-bigcard ha-card--minispiel" style="--ha-c:' + TYPE_META.minispiel.colour + '">' +
-      '    <div class="ha-bigcard__tag">Purpur · Minispiel</div>' +
-      '    <div class="ha-bigcard__title">Die Fingerschlacht</div>' +
-      "  </div>" +
-      '  <p class="ha-finger__status">Noch <strong>' + n + "</strong> im Spiel.</p>" +
-      '  <p class="ha-finger__caller"><strong>' + esc(caller) + "</strong> ruft eine Zahl.</p>" +
-      '  <h3 class="sub">Genannte Zahl</h3>' + calledRow +
-      '  <h3 class="sub">Tatsächlich gehobene Daumen</h3>' + actualRow +
-      '  <button id="ha-finger-go" class="btn btn-primary btn-block btn-xl"' + (ready ? "" : " disabled") + ">Auswerten</button>" +
-      '  <p class="muted small">Triff die genannte Zahl die Daumen, scheidet der Rufer aus.</p>' +
-      "</section>";
-
-    els.querySelectorAll("[data-num]").forEach(function (b) {
-      b.addEventListener("click", function () {
-        var kind = b.getAttribute("data-kind");
-        mini[kind] = parseInt(b.getAttribute("data-num"), 10);
-        renderFinger();
-      });
-    });
-    els.querySelector("#ha-finger-go").addEventListener("click", function () {
-      if (mini.called === null || mini.actual === null) return;
-      var hit = mini.called === mini.actual;
-      if (hit) {
-        mini.players.splice(mini.callerIdx, 1); // rufer scheidet aus
-        if (mini.callerIdx >= mini.players.length) mini.callerIdx = 0;
-      } else {
-        mini.callerIdx = (mini.callerIdx + 1) % mini.players.length;
-      }
-      mini.called = null; mini.actual = null;
-      renderFinger();
-    });
-  }
-
-  function numRow(n, kind, sel) {
-    var btns = "";
-    for (var i = 0; i <= n; i++) {
-      btns += '<button class="ha-num' + (sel === i ? " ha-num--active" : "") + '" data-num="' + i +
-        '" data-kind="' + kind + '">' + i + "</button>";
-    }
-    return '<div class="ha-num-row">' + btns + "</div>";
-  }
-
-  // --- Reim oder Schmach ---------------------------------------------------
-  function startReim() {
-    var verses = data.verses || [];
-    var verse = verses.length ? verses[Math.floor(Math.random() * verses.length)] : "Der König spricht ein weises Wort,";
-    mini = { players: names(), idx: 0, verse: verse, remaining: REIM_SECONDS };
-    renderReim();
-  }
-
-  function renderReim() {
-    clearTickers();
-    var cur = mini.players[mini.idx];
-    mini.remaining = REIM_SECONDS;
-
-    els.innerHTML =
-      '<section class="screen ha-screen ha-reim">' +
-      '  <div class="ha-bigcard ha-card--minispiel" style="--ha-c:' + TYPE_META.minispiel.colour + '">' +
-      '    <div class="ha-bigcard__tag">Purpur · Reim oder Schmach</div>' +
-      '    <div class="ha-bigcard__text ha-verse">„' + esc(mini.verse) + "“</div>" +
-      "  </div>" +
-      '  <div class="play-hud"><span class="ha-reim__who">' + esc(cur) + " ist dran</span>" +
-      '    <span id="ha-reim-time" class="hud-time">' + mini.remaining + "s</span></div>" +
-      '  <p class="muted">Dichte in fünf Sekunden eine reimende Zeile.</p>' +
-      '  <div class="whoami-actions">' +
-      '    <button id="ha-reim-fail" class="btn btn-skip">Gestockt ❌</button>' +
-      '    <button id="ha-reim-ok" class="btn btn-got">Geschafft ✅</button>' +
-      "  </div>" +
-      '  <button id="ha-reim-quit" class="btn btn-ghost btn-block">Minispiel abbrechen</button>' +
-      "</section>";
-
-    els.querySelector("#ha-reim-ok").addEventListener("click", function () {
-      mini.idx = (mini.idx + 1) % mini.players.length;
-      renderReim();
-    });
-    els.querySelector("#ha-reim-fail").addEventListener("click", function () {
-      renderMiniResult([cur], "🍷", "Gestockt!");
-    });
-    els.querySelector("#ha-reim-quit").addEventListener("click", endMini);
-
-    every(1000, function () {
-      mini.remaining--;
-      var t = els && els.querySelector("#ha-reim-time");
-      if (t) {
-        t.textContent = mini.remaining + "s";
-        if (mini.remaining <= 2) t.classList.add("hud-time--danger");
-      }
-      if (mini.remaining <= 0) { renderMiniResult([cur], "⏱️", "Frist gerissen!"); }
-    });
-  }
-
-  // --- Trommelfeuer (light turn-policing, no timer per spec) ---------------
-  function startTrommel() {
-    mini = { players: names(), idx: 0 };
-    renderTrommel();
-  }
-
-  function renderTrommel() {
-    clearTickers();
-    var cur = mini.players[mini.idx];
-    els.innerHTML =
-      '<section class="screen ha-screen ha-trommel">' +
-      '  <div class="ha-bigcard ha-card--minispiel" style="--ha-c:' + TYPE_META.minispiel.colour + '">' +
-      '    <div class="ha-bigcard__tag">Purpur · Trommelfeuer</div>' +
-      '    <div class="ha-bigcard__text">Der Zieher ruft eine Kategorie. Reihum je ein Begriff im Takt — wer patzt oder wiederholt, dient.</div>' +
-      "  </div>" +
-      '  <div class="ha-turn"><span class="ha-turn__label">Am Wort</span>' +
-      '    <span class="ha-turn__name">' + esc(cur) + "</span></div>" +
-      '  <div class="whoami-actions">' +
-      '    <button id="ha-tr-fail" class="btn btn-skip">Patzer! ❌</button>' +
-      '    <button id="ha-tr-ok" class="btn btn-got">Weiter ➡️</button>' +
-      "  </div>" +
-      '  <button id="ha-tr-quit" class="btn btn-ghost btn-block">Minispiel abbrechen</button>' +
-      "</section>";
-
-    els.querySelector("#ha-tr-ok").addEventListener("click", function () {
-      mini.idx = (mini.idx + 1) % mini.players.length;
-      renderTrommel();
-    });
-    els.querySelector("#ha-tr-fail").addEventListener("click", function () {
-      renderMiniResult([cur], "🥁", "Patzer!");
-    });
-    els.querySelector("#ha-tr-quit").addEventListener("click", endMini);
-  }
 
   // ---------------------------------------------------------------------------
   // Reset (spec §4.6)
