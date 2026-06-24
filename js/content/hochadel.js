@@ -25,15 +25,19 @@
     { id: "rapunzel", name: "Rapunzel-Edition", subtitle: "bald verfügbar", icon: "👸", locked: true },
   ];
 
-  // The two standing ground rules — always on, independent of the deck (§3).
+  // The three standing ground rules — always on, independent of the deck (§3).
   var GROUND_RULES = [
     {
-      title: "Höfische Zunge",
-      text: "Am Hofe wird nicht geflucht. Wer flucht, dient.",
+      title: "Adelsnamen",
+      text: "Am Hofe spricht man sich nur mit Nachnamen an. Wer einen Vornamen ausspricht, dient.",
     },
     {
       title: "Der rechte Ruf",
       text: "Es heißt nicht „trinken“, es heißt dienen. Wer sich verspricht, dient. (Anklage: „Spieker, dienen!!“)",
+    },
+    {
+      title: "Höfische Zunge",
+      text: "Am Hofe wird nicht geflucht. Wer flucht, dient.",
     },
   ];
 
@@ -90,8 +94,7 @@
       text: "Verteile zwei Dienste frei unter den Anwesenden.", editions: ["koenige", "rapunzel"] },
 
     // --- 5.2 Passiv / Regeln (Saphir) — gelten bis Spielende -------------
-    { id: "r_adelsnamen", type: "regel", title: "Adelsnamen",
-      text: "Ab jetzt nur noch Nachnamen am Hofe. Vorname = dienen.", editions: ["koenige", "rapunzel"] },
+    // (Die „Adelsnamen“-Regel ist jetzt eine feste Grundregel, daher keine Karte.)
     { id: "r_trinkspruch", type: "regel", title: "Der Trinkspruch",
       text: "Vor jedem Dienst spricht man: „Zum Wohl, werte Herrschaften.“ Vergessen = dienen.",
       editions: ["koenige", "rapunzel"] },
