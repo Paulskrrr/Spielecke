@@ -395,7 +395,7 @@
       '<section class="screen ha-screen ha-draw-screen">' +
       '  <div class="ha-draw-kicker"><strong>' + esc(cur ? cur.name : "—") + "</strong> zieht …</div>" +
       '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + t.colour + '">' +
-      '    <div class="ha-bigcard__tag">' + esc(t.tag) + " · " + esc(t.label) + "</div>" +
+      '    <div class="ha-bigcard__tag">' + esc(t.label) + "</div>" +
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
       '    <div class="ha-bigcard__text">' + esc(fillName(card.text)) + "</div>" +
       "  </div>" +
