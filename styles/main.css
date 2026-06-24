@@ -940,35 +940,68 @@ body::before {
 }
 .ha-turn__label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
 .ha-turn__name { font-size: 1.8rem; font-weight: 900; color: var(--purple); }
-.ha-draw-btn {
-  width: 100%; min-height: 22vh; font-family: var(--font); font-size: clamp(1.7rem, 8vw, 2.6rem);
-  font-weight: 900; color: #fff; background: var(--purple); border: 5px solid var(--ink);
-  border-radius: 28px; box-shadow: var(--pop-lg); cursor: pointer; margin-bottom: 18px;
-}
-.ha-draw-btn:active { transform: translateY(6px); box-shadow: 0 2px 0 var(--ink); }
+.ha-table-main { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .ha-empty { margin: 4px 0 8px; }
 
-.ha-law-list, .ha-active-list { list-style: none; padding: 0; margin: 6px 0 8px; display: flex; flex-direction: column; gap: 8px; }
-.ha-law {
-  display: flex; flex-direction: column; gap: 2px; padding: 10px 14px;
-  background: #1B3A6B; color: #fff; border: 3px solid var(--ink); border-radius: 14px; box-shadow: var(--pop);
+/* Draw pile — looks like a stack of face-down cards */
+.ha-deck-zone { display: flex; flex-direction: column; align-items: center; }
+.ha-deck {
+  position: relative;
+  width: min(58vw, 220px);
+  aspect-ratio: 3 / 4;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  font-family: var(--font); font-weight: 900; color: #fff;
+  background:
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 12px, rgba(255,255,255,0) 12px 24px),
+    linear-gradient(160deg, #6d3aa0, #5B2A86);
+  border: 5px solid var(--ink); border-radius: 20px; box-shadow: var(--pop-lg);
+  cursor: pointer;
 }
-.ha-law strong { font-size: 1rem; }
-.ha-law span { font-size: 0.85rem; opacity: 0.92; }
+/* the two cards "under" the top one */
+.ha-deck::before, .ha-deck::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(160deg, #6d3aa0, #5B2A86);
+  border: 5px solid var(--ink); border-radius: 20px;
+}
+.ha-deck::before { transform: translate(7px, 9px) rotate(3.5deg); }
+.ha-deck::after { transform: translate(-7px, 6px) rotate(-3.5deg); }
+.ha-deck:active { transform: translateY(5px); box-shadow: var(--pop); }
+.ha-deck__crest {
+  font-size: clamp(2.6rem, 13vw, 4rem); line-height: 1;
+  width: 1.7em; height: 1.7em; display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.12); border: 3px solid rgba(255,255,255,0.5); border-radius: 50%;
+}
+.ha-deck__label { font-size: clamp(1.1rem, 4.5vw, 1.4rem); letter-spacing: 0.3px; }
+.ha-deck-count { margin-top: 12px; font-weight: 800; font-size: 0.82rem; color: var(--ink-soft); }
 
-.ha-active {
-  padding: 10px 14px; background: #fff; border: 3px solid #C9A227; border-radius: 14px; box-shadow: var(--pop);
-}
-.ha-active__top { display: flex; align-items: baseline; gap: 8px; }
-.ha-active__holder {
-  font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
-  color: #fff; background: #C9A227; padding: 3px 9px; border-radius: 999px; border: 2px solid var(--ink);
-}
-.ha-active__name { font-weight: 900; }
-.ha-active__text { font-size: 0.86rem; margin: 6px 0 8px; line-height: 1.35; }
-.ha-active__btn { min-height: 44px; padding: 8px 16px; background: var(--yellow); }
+/* Piles of face-up cards (active gold + saphir laws) */
+.ha-piles { width: 100%; display: flex; flex-direction: column; gap: 16px; }
+.ha-pile { min-width: 0; }
+.ha-hand { display: flex; flex-wrap: wrap; gap: 12px; }
 
-.ha-foot { margin-top: 18px; }
+.ha-card-mini {
+  position: relative; text-align: left;
+  width: 158px; min-height: 210px;
+  display: flex; flex-direction: column; gap: 6px;
+  padding: 12px 12px 10px; font-family: var(--font);
+  border: 4px solid var(--ink); border-radius: 16px; box-shadow: var(--pop);
+}
+.ha-card-mini--aktiv { background: linear-gradient(165deg, #f6dd86, #C9A227); color: var(--ink); cursor: pointer; }
+.ha-card-mini--aktiv:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.ha-card-mini--regel { background: linear-gradient(165deg, #2f558f, #1B3A6B); color: #fff; }
+.ha-card-mini__pip { position: absolute; top: 9px; right: 11px; font-size: 1.15rem; }
+.ha-card-mini__holder {
+  align-self: flex-start; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px;
+}
+.ha-card-mini__title { font-size: 1.05rem; font-weight: 900; line-height: 1.1; padding-right: 18px; }
+.ha-card-mini__text { font-size: 0.78rem; line-height: 1.32; flex: 1; }
+.ha-card-mini__hint {
+  margin-top: 2px; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+  opacity: 0.85; align-self: center;
+}
+
+.ha-foot { margin-top: 22px; }
 
 /* The drawn card */
 .ha-draw-screen { min-height: 66vh; }
@@ -1051,6 +1084,36 @@ body::before {
   .shelf-screen .game-grid {
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
     gap: 22px;
+  }
+
+  /* Hochadel table uses the full screen width on desktop: deck on the left,
+     the two card piles spread side-by-side on the right. */
+  .ha-table {
+    width: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: max(24px, 4vw);
+    padding-right: max(24px, 4vw);
+  }
+  .ha-table .ha-table-main {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 44px;
+    max-width: 1320px;
+    margin: 0 auto;
+  }
+  .ha-table .ha-deck-zone { flex: 0 0 auto; position: sticky; top: 92px; }
+  .ha-table .ha-piles { flex: 1; flex-direction: row; gap: 32px; }
+  .ha-table .ha-pile { flex: 1; }
+  .ha-table .ha-foot {
+    display: flex; gap: 12px; max-width: 560px; margin-left: auto; margin-right: auto;
+  }
+  .ha-table .ha-foot .btn { flex: 1; margin-top: 0; }
+
+  /* Focused single-card screens stay centred and readable, not stretched. */
+  .ha-draw-screen, .ha-finger, .ha-reim, .ha-trommel, .ha-mini-result {
+    max-width: 640px; margin-left: auto; margin-right: auto;
   }
 
   /* Activity uses the full screen on desktop, not the narrow app column.

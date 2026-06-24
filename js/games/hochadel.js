@@ -205,6 +205,7 @@
       '  <h2 class="screen-title pop">Sitzordnung</h2>' +
       '  <p class="muted">Reihum wird gezogen. Verschiebe per Zufall, wenn du magst.</p>' +
       '  <ol class="ha-order">' + list + "</ol>" +
+      groundRulesHtml() +
       '  <button id="ha-shuffle" class="btn btn-block">🔀 Reihenfolge mischen</button>' +
       '  <button id="ha-start" class="btn btn-primary btn-block btn-xl">An die Tafel ▶️</button>' +
       '  <button id="ha-back" class="btn btn-ghost btn-block">← Edition wählen</button>' +
@@ -231,14 +232,23 @@
 
     els.innerHTML =
       '<section class="screen ha-screen ha-table">' +
-      groundRulesHtml() +
       '  <div class="ha-turn">' +
       '    <span class="ha-turn__label">Am Zug</span>' +
       '    <span class="ha-turn__name">' + esc(cur ? cur.name : "—") + "</span>" +
       "  </div>" +
-      '  <button id="ha-draw" class="ha-draw-btn">🎴 Karte ziehen</button>' +
-      lawsHtml() +
+      '  <div class="ha-table-main">' +
+      '    <div class="ha-deck-zone">' +
+      '      <button id="ha-draw" class="ha-deck" aria-label="Karte ziehen">' +
+      '        <span class="ha-deck__crest">👑</span>' +
+      '        <span class="ha-deck__label">Karte ziehen</span>' +
+      "      </button>" +
+      '      <div class="ha-deck-count">' + game.draw.length + " im Stapel</div>" +
+      "    </div>" +
+      '    <div class="ha-piles">' +
       activeHtml() +
+      lawsHtml() +
+      "    </div>" +
+      "  </div>" +
       '  <div class="ha-foot">' +
       '    <button id="ha-reset" class="btn btn-ghost btn-block">↺ Spiel zurücksetzen</button>' +
       '    <button id="ha-home" class="btn btn-ghost btn-block">← Zurück zur Spielecke</button>' +
@@ -260,35 +270,44 @@
     return '<div class="ha-rules-strip"><div class="ha-rules-strip__head">⚜️ Grundgesetze des Hofes</div>' + items + "</div>";
   }
 
+  // Saphir laws shown as face-up cards (passive — not clickable).
   function lawsHtml() {
     var body;
     if (!game.hofgesetze.length) {
-      body = '<p class="ha-empty muted small">Noch keine Hofgesetze. Saphir-Karten landen hier.</p>';
+      body = '<p class="ha-empty muted small">Noch keine Hofgesetze.</p>';
     } else {
-      body = '<ul class="ha-law-list">' + game.hofgesetze.map(function (r) {
-        return '<li class="ha-law"><strong>' + esc(r.title) + "</strong><span>" + esc(r.text) + "</span></li>";
-      }).join("") + "</ul>";
+      body = '<div class="ha-hand">' + game.hofgesetze.map(function (r) {
+        return (
+          '<div class="ha-card-mini ha-card-mini--regel">' +
+          '  <span class="ha-card-mini__pip">📜</span>' +
+          '  <span class="ha-card-mini__title">' + esc(r.title) + "</span>" +
+          '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>" +
+          "</div>"
+        );
+      }).join("") + "</div>";
     }
-    return '<h3 class="sub">📜 Hofgesetze</h3>' + body;
+    return '<div class="ha-pile"><h3 class="sub">📜 Hofgesetze</h3>' + body + "</div>";
   }
 
+  // Gold active cards shown face-up; tapping the whole card resolves it.
   function activeHtml() {
     var body;
     if (!game.active.length) {
       body = '<p class="ha-empty muted small">Keine aktiven Karten. Gold-Karten liegen offen vor ihrem Halter.</p>';
     } else {
-      body = '<ul class="ha-active-list">' + game.active.map(function (a) {
+      body = '<div class="ha-hand">' + game.active.map(function (a) {
         return (
-          '<li class="ha-active">' +
-          '  <div class="ha-active__top"><span class="ha-active__holder">' + esc(a.holder) + "</span>" +
-          '    <span class="ha-active__name">' + esc(a.title) + "</span></div>" +
-          '  <div class="ha-active__text">' + esc(a.text) + "</div>" +
-          '  <button class="btn ha-active__btn" data-trigger="' + esc(a.uid) + '">Auslösen ⚡</button>' +
-          "</li>"
+          '<button class="ha-card-mini ha-card-mini--aktiv" data-trigger="' + esc(a.uid) + '">' +
+          '  <span class="ha-card-mini__pip">🪙</span>' +
+          '  <span class="ha-card-mini__holder">' + esc(a.holder) + "</span>" +
+          '  <span class="ha-card-mini__title">' + esc(a.title) + "</span>" +
+          '  <span class="ha-card-mini__text">' + esc(a.text) + "</span>" +
+          '  <span class="ha-card-mini__hint">Tippen zum Auslösen ⚡</span>' +
+          "</button>"
         );
-      }).join("") + "</ul>";
+      }).join("") + "</div>";
     }
-    return '<h3 class="sub">🪙 Aktive Karten</h3>' + body;
+    return '<div class="ha-pile"><h3 class="sub">🪙 Aktive Karten</h3>' + body + "</div>";
   }
 
   // ---------------------------------------------------------------------------
