@@ -1278,6 +1278,29 @@ body::before {
 .fd-result { margin: 16px 0; min-height: 24px; }
 .fd-win { font-size: 1.2rem; font-weight: 800; color: var(--green); }
 .fd-lose { font-size: 1.2rem; font-weight: 800; color: var(--red); }
+/* The drawn-cards history strip: horizontally scrollable, all cards side by
+   side. On desktop ~a dozen show at once inside the column; on mobile you swipe. */
+.fd-history-wrap { margin: 16px 0 6px; text-align: left; }
+.fd-history-head {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 800; font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 6px;
+}
+.fd-history-count { background: var(--ink); color: var(--yellow); border-radius: 999px; padding: 1px 9px; font-size: 0.85rem; }
+.fd-history {
+  display: flex; align-items: center; gap: 8px;
+  overflow-x: auto; overflow-y: hidden;
+  padding: 10px; min-height: 104px;
+  background: rgba(36, 27, 77, 0.06);
+  border: 3px solid var(--ink); border-radius: 14px;
+  -webkit-overflow-scrolling: touch;
+}
+.fd-histcard { flex: 0 0 auto; }
+.fd-histcard--new { animation: fd-cardpop 0.32s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes fd-cardpop { from { transform: translateY(8px) scale(0.78); opacity: 0; } to { transform: none; opacity: 1; } }
+.fd-history-empty { color: var(--ink-soft); font-size: 0.95rem; padding: 16px 6px; }
+.fd-history::-webkit-scrollbar { height: 10px; }
+.fd-history::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 999px; }
+.fd-history::-webkit-scrollbar-track { background: transparent; }
 
 /* ── Horse Race (pferderennen.js) ───────────────────────────────────────── */
 .hr-horses { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 6px 0 4px; }

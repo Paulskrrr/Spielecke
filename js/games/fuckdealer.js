@@ -190,6 +190,7 @@
       Cards.RANKS.map(function (r) { return '<button class="btn btn-rank" data-r="' + r + '">' + r + "</button>"; }).join("") +
       "  </div>" +
       '  <div class="fd-result" id="fd-result">&nbsp;</div>' +
+      "  " + historyHtml() +
       '  <button id="fd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
@@ -197,6 +198,31 @@
       b.addEventListener("click", function () { callRank(b.getAttribute("data-r")); });
     });
     els.querySelector("#fd-home").addEventListener("click", function () { ctx.goHome(); });
+    scrollHistoryEnd();
+  }
+
+  // The scrollable strip of every card drawn since the last shuffle, so the
+  // table can glance at what's already out (counting help). Oldest → newest,
+  // auto-scrolled to the freshest card; on desktop a dozen show at once, on
+  // mobile you swipe the strip.
+  function historyHtml() {
+    var inner = discard.length
+      ? discard.map(function (c) {
+          return '<div class="fd-histcard">' + Cards.faceHtml(c, { small: true }) + "</div>";
+        }).join("")
+      : '<div class="fd-history-empty">' + t("No cards drawn yet — the pile builds up here.") + "</div>";
+    return (
+      '<div class="fd-history-wrap">' +
+      '  <div class="fd-history-head">' + t("Cards drawn") +
+      '    <span class="fd-history-count" id="fd-history-count">' + discard.length + "</span></div>" +
+      '  <div class="fd-history" id="fd-history">' + inner + "</div>" +
+      "</div>"
+    );
+  }
+
+  function scrollHistoryEnd() {
+    var h = els && els.querySelector("#fd-history");
+    if (h) h.scrollLeft = h.scrollWidth;
   }
 
   function rankValue(rank) { return Cards.RANKS.indexOf(rank) + 2; }
@@ -249,6 +275,21 @@
 
   function advanceAfter() {
     discard.push(current);
+    // Slot the just-revealed card into the history strip live (it would also be
+    // rebuilt by the next renderRound, but this shows it landing immediately).
+    var hist = els.querySelector("#fd-history");
+    if (hist) {
+      var empty = hist.querySelector(".fd-history-empty");
+      if (empty) hist.innerHTML = "";
+      var node = document.createElement("div");
+      node.className = "fd-histcard fd-histcard--new";
+      node.innerHTML = Cards.faceHtml(current, { small: true });
+      hist.appendChild(node);
+      try { hist.scrollTo({ left: hist.scrollWidth, behavior: "smooth" }); }
+      catch (e) { hist.scrollLeft = hist.scrollWidth; }
+      var cnt = els.querySelector("#fd-history-count");
+      if (cnt) cnt.textContent = discard.length;
+    }
     var resEl = els.querySelector("#fd-result");
     var btn = document.createElement("button");
     btn.className = "btn btn-primary btn-block btn-xl";

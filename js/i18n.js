@@ -471,6 +471,8 @@
     "Spot on!": "Volltreffer!",
     "It was": "Es war",
     "Next card ▶️": "Nächste Karte ▶️",
+    "Cards drawn": "Gezogene Karten",
+    "No cards drawn yet — the pile builds up here.": "Noch keine Karten gezogen — hier wächst der Stapel.",
 
     // ── Horse Race (Pferderennen) ──────────────────────────────────────────
     "Horse Race": "Das Pferderennen",
