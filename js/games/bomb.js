@@ -19,7 +19,7 @@
 
   // --- Fixed fuse: always random in this range, hidden from players -------
   var FUSE_MIN = 20;  // seconds
-  var FUSE_MAX = 120; // seconds
+  var FUSE_MAX = 90;  // seconds
 
   // --- Configurable defaults (spec §2.4); persisted per-game via context.store
   var DEFAULTS = {
@@ -121,9 +121,7 @@
       warn +
       '  <h3 class="bomb-sub">Category pool</h3>' +
       '  <div class="chip-row" id="bomb-pools">' + chips + "</div>" +
-      '  <div class="fuse-note">⏱️ Fuse is random between <strong>' + FUSE_MIN +
-      "s</strong> and <strong>" + FUSE_MAX +
-      's</strong> — hidden from everyone.</div>' +
+      '  <div class="fuse-note">⏱️ The fuse is random — and hidden from everyone.</div>' +
       '  <label class="toggle">' +
       '    <input type="checkbox" id="bomb-sound"' + (settings.soundOn ? " checked" : "") + " />" +
       "    <span>🔊 Ticking &amp; explosion sound</span>" +

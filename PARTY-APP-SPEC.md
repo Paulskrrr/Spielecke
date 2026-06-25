@@ -77,9 +77,9 @@ settings/stats screen.
 - **Fonts:** system rounded stack only (`Baloo 2` → `Comic Sans MS` → `Chalkboard SE` →
   `Trebuchet MS`). No external font loading (keeps it pure-static / file://-safe).
 - **Logo:** "Pauls Spielecke" wordmark — chunky 3D gold "Spielecke" with a black outline
-  and a red handwritten "Pauls" on top. Lives at `assets/logo.svg` (scalable, transparent
-  background), used in the header, page title, and favicon. Currently an SVG recreation of
-  Paul's artwork; swap in a traced/raster version later for pixel-perfect fidelity.
+  and a red handwritten "Pauls" on top. Lives at `assets/logo.png` (transparent
+  background), used in the header, page title, and favicon. Cropped tight from Paul's
+  uploaded artwork with the white background keyed out.
 
 ---
 
@@ -127,7 +127,7 @@ js/
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
     reactionduel.js
     (chooser & reactionduel have no content file)
-assets/logo.svg            the "Pauls Spielecke" wordmark
+assets/logo.png            the "Pauls Spielecke" wordmark
 ```
 
 **Adding a game** = drop a module in `js/games/`, add any content file in `js/content/`,
