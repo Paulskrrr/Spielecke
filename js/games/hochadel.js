@@ -26,12 +26,14 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   // Heraldic palette + labels per card type (spec §2). No green (red-green-safe).
   var TYPE_META = {
-    sofort:    { tag: "Karmesin", label: "Sofort-Aktion", colour: "#9B1B30" },
-    regel:     { tag: "Saphir",   label: "Passiv / Regel", colour: "#1B3A6B" },
-    aktiv:     { tag: "Gold",     label: "Aktive Karte",   colour: "#C9A227" },
-    minispiel: { tag: "Purpur",   label: "Minispiel",      colour: "#5B2A86" },
+    sofort:    { tag: "Crimson", label: "Instant Action",  colour: "#9B1B30" },
+    regel:     { tag: "Sapphire", label: "Passive / Rule", colour: "#1B3A6B" },
+    aktiv:     { tag: "Gold",    label: "Active Card",     colour: "#C9A227" },
+    minispiel: { tag: "Purple",  label: "Mini-game",       colour: "#5B2A86" },
   };
 
   var els = null, ctx = null, data = null;
@@ -44,7 +46,7 @@
     meta: {
       id: "hochadel",
       name: "Hochadel",
-      tagline: "Höfisches Kartenspiel — wer sich vergeht, dient.",
+      tagline: "Royal court card game — transgressors serve.",
       icon: "👑",
       minPlayers: 2,
       supportsDrinking: false, // it IS a drinking game; no separate toggle needed
@@ -88,9 +90,9 @@
 
   // --- timers --------------------------------------------------------------
   function after(ms, fn) { var id = global.setTimeout(fn, ms); timers.push(id); return id; }
-  function clearTickers() { tickers.forEach(function (t) { global.clearInterval(t); }); tickers = []; }
+  function clearTickers() { tickers.forEach(function (id) { global.clearInterval(id); }); tickers = []; }
   function clearAll() {
-    timers.forEach(function (t) { global.clearTimeout(t); });
+    timers.forEach(function (id) { global.clearTimeout(id); });
     clearTickers();
     timers = [];
   }
@@ -100,7 +102,7 @@
     var a = arr.slice();
     for (var i = a.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
     }
     return a;
   }
@@ -156,7 +158,7 @@
   // Fill card tokens: {P} -> the drawer's name, {VERS} -> a random opening verse.
   function fillName(text) {
     var c = currentPlayer();
-    var out = String(text).replace(/\{P\}/g, c ? c.name : "der Zieher");
+    var out = String(text).replace(/\{P\}/g, c ? c.name : t("the drawer"));
     if (out.indexOf("{VERS}") !== -1) {
       var v = data.verses || [];
       var verse = v.length ? v[Math.floor(Math.random() * v.length)] : "Der König spricht ein weises Wort,";
@@ -193,9 +195,9 @@
 
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">👑 Hochadel</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
-      '  <h3 class="sub">Edition wählen</h3>' +
+      '  <h2 class="screen-title pop">👑 ' + t("Hochadel") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
+      '  <h3 class="sub">' + t("Choose Edition") + "</h3>" +
       '  <div class="ha-edition-list">' + cards + "</div>" +
       '  <p class="ha-hint muted small" id="ha-ed-hint"></p>' +
       "</section>";
@@ -204,7 +206,7 @@
       b.addEventListener("click", function () {
         if (b.getAttribute("data-locked")) {
           var hint = els.querySelector("#ha-ed-hint");
-          if (hint) hint.textContent = "Die Rapunzel-Edition ist bald verfügbar. 👸";
+          if (hint) hint.textContent = t("The Rapunzel Edition is coming soon. 👸");
           return;
         }
         game = newGame(b.getAttribute("data-ed"));
@@ -221,10 +223,9 @@
     if (game.order.length < 2) {
       els.innerHTML =
         '<section class="screen ha-screen">' +
-        '  <h2 class="screen-title pop">👑 Hochadel</h2>' +
-        '  <div class="fuse-note">Der Hof braucht mindestens <strong>2</strong> Anwesende. ' +
-        "Tippe oben rechts auf die Spielerzahl, um den Hofstaat zu ergänzen.</div>" +
-        '  <button id="ha-back" class="btn btn-block">← Edition wählen</button>' +
+        '  <h2 class="screen-title pop">👑 ' + t("Hochadel") + "</h2>" +
+        '  <div class="fuse-note">' + t("The court needs at least 2 players. Add them using the roster (top right).") + "</div>" +
+        '  <button id="ha-back" class="btn btn-block">' + t("← Choose Edition") + "</button>" +
         "</section>";
       els.querySelector("#ha-back").addEventListener("click", renderEdition);
       return;
@@ -236,12 +237,12 @@
 
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">Sitzordnung</h2>' +
-      '  <p class="muted">Reihum wird gezogen. Verschiebe per Zufall, wenn du magst.</p>' +
+      '  <h2 class="screen-title pop">' + t("Seating Order") + "</h2>" +
+      '  <p class="muted">' + t("Players take turns drawing. Shuffle if you like.") + "</p>" +
       '  <ol class="ha-order">' + list + "</ol>" +
-      '  <button id="ha-shuffle" class="btn btn-block">🔀 Reihenfolge mischen</button>' +
-      '  <button id="ha-start" class="btn btn-primary btn-block btn-xl" data-primary>Weiter ▶️</button>' +
-      '  <button id="ha-back" class="btn btn-ghost btn-block">← Edition wählen</button>' +
+      '  <button id="ha-shuffle" class="btn btn-block">' + t("🔀 Shuffle order") + "</button>" +
+      '  <button id="ha-start" class="btn btn-primary btn-block btn-xl" data-primary>' + t("Continue ▶️") + "</button>" +
+      '  <button id="ha-back" class="btn btn-ghost btn-block">' + t("← Choose Edition") + "</button>" +
       "</section>";
 
     els.querySelector("#ha-shuffle").addEventListener("click", function () {
@@ -264,10 +265,10 @@
     clearTickers();
     els.innerHTML =
       '<section class="screen ha-screen ha-intro">' +
-      '  <h2 class="screen-title pop">⚜️ Grundgesetze des Hofes</h2>' +
-      '  <p class="muted">Diese zwei Regeln gelten die ganze Runde — unabhängig vom Deck.</p>' +
+      '  <h2 class="screen-title pop">' + t("⚜️ Ground Rules") + "</h2>" +
+      '  <p class="muted">' + t("These rules apply for the whole game — independent of the deck.") + "</p>" +
       groundRulesCardsHtml() +
-      '  <button id="ha-gr-next" class="btn btn-primary btn-block btn-xl" data-primary>An die Tafel ▶️</button>' +
+      '  <button id="ha-gr-next" class="btn btn-primary btn-block btn-xl" data-primary>' + t("To the Table ▶️") + "</button>" +
       "</section>";
     els.querySelector("#ha-gr-next").addEventListener("click", next);
   }
@@ -296,16 +297,16 @@
     els.innerHTML =
       '<section class="screen ha-screen ha-table">' +
       '  <div class="ha-turn">' +
-      '    <span class="ha-turn__label">Am Zug</span>' +
+      '    <span class="ha-turn__label">' + t("Current player") + "</span>" +
       '    <span class="ha-turn__name">' + esc(cur ? cur.name : "—") + "</span>" +
       "  </div>" +
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
-      '      <button id="ha-draw" class="ha-deck" aria-label="Karte ziehen" data-primary>' +
+      '      <button id="ha-draw" class="ha-deck" aria-label="' + t("Draw card") + '" data-primary>' +
       '        <span class="ha-deck__crest">👑</span>' +
-      '        <span class="ha-deck__label">Karte ziehen</span>' +
+      '        <span class="ha-deck__label">' + t("Draw card") + "</span>" +
       "      </button>" +
-      '      <div class="ha-deck-count">' + game.draw.length + " im Stapel</div>" +
+      '      <div class="ha-deck-count">' + game.draw.length + t(" in deck") + "</div>" +
       "    </div>" +
       '    <div class="ha-piles">' +
       activeHtml() +
@@ -313,8 +314,8 @@
       "    </div>" +
       "  </div>" +
       '  <div class="ha-foot">' +
-      '    <button id="ha-reset" class="btn btn-ghost btn-block">↺ Spiel zurücksetzen</button>' +
-      '    <button id="ha-home" class="btn btn-ghost btn-block">← Zurück zur Spielecke</button>' +
+      '    <button id="ha-reset" class="btn btn-ghost btn-block">' + t("↺ Reset game") + "</button>" +
+      '    <button id="ha-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 
@@ -330,7 +331,7 @@
   function lawsHtml() {
     var body;
     if (!game.hofgesetze.length) {
-      body = '<p class="ha-empty muted small">Noch keine Hofgesetze.</p>';
+      body = '<p class="ha-empty muted small">' + t("No standing rules yet.") + "</p>";
     } else {
       body = '<div class="ha-hand">' + game.hofgesetze.map(function (r) {
         return (
@@ -342,14 +343,14 @@
         );
       }).join("") + "</div>";
     }
-    return '<div class="ha-pile"><h3 class="sub">📜 Hofgesetze</h3>' + body + "</div>";
+    return '<div class="ha-pile"><h3 class="sub">' + t("📜 Standing Rules") + "</h3>" + body + "</div>";
   }
 
   // Gold active cards shown face-up; tapping the whole card resolves it.
   function activeHtml() {
     var body;
     if (!game.active.length) {
-      body = '<p class="ha-empty muted small">Keine aktiven Karten. Gold-Karten liegen offen vor ihrem Halter.</p>';
+      body = '<p class="ha-empty muted small">' + t("No active cards. Gold cards stay face-up with their holder.") + "</p>";
     } else {
       body = '<div class="ha-hand">' + game.active.map(function (a) {
         return (
@@ -358,12 +359,12 @@
           '  <span class="ha-card-mini__holder">' + esc(a.holder) + "</span>" +
           '  <span class="ha-card-mini__title">' + esc(a.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(a.text) + "</span>" +
-          '  <span class="ha-card-mini__hint">Tippen zum Auslösen ⚡</span>' +
+          '  <span class="ha-card-mini__hint">' + t("Tap to activate ⚡") + "</span>" +
           "</button>"
         );
       }).join("") + "</div>";
     }
-    return '<div class="ha-pile"><h3 class="sub">🪙 Aktive Karten</h3>' + body + "</div>";
+    return '<div class="ha-pile"><h3 class="sub">' + t("🪙 Active Cards") + "</h3>" + body + "</div>";
   }
 
   // ---------------------------------------------------------------------------
@@ -379,29 +380,28 @@
     els.innerHTML =
       '<section class="screen ha-screen">' +
       '  <div class="result-emoji">🃏</div>' +
-      '  <h2 class="result-title pop">Das Deck ruht</h2>' +
-      '  <p class="result-sub">Alle Karten sind im Spiel (Hofgesetze & aktive Karten). ' +
-      "Setze das Spiel zurück für eine frische Runde.</p>" +
-      '  <button id="ha-back" class="btn btn-primary btn-block btn-xl" data-primary>Zur Tafel</button>' +
+      '  <h2 class="result-title pop">' + t("Deck at Rest") + "</h2>" +
+      '  <p class="result-sub">' + t("All cards are in play (Standing Rules & Active Cards). Reset for a fresh round.") + "</p>" +
+      '  <button id="ha-back" class="btn btn-primary btn-block btn-xl" data-primary>' + t("Back to Table") + "</button>" +
       "</section>";
     els.querySelector("#ha-back").addEventListener("click", renderTable);
   }
 
   function renderDrawn(card) {
     clearTickers();
-    var t = TYPE_META[card.type];
+    var typeMeta = TYPE_META[card.type];
     var cur = currentPlayer();
     var actLabel;
-    if (card.type === "sofort") actLabel = "Erledigt ✓";
-    else if (card.type === "regel") actLabel = "Als Hofgesetz eintragen ✓";
-    else if (card.type === "aktiv") actLabel = "An " + (cur ? cur.name : "den Halter") + " vergeben 👑";
-    else actLabel = "Verlierer dient ✓"; // minispiel: played at the table, then complete the card
+    if (card.type === "sofort") actLabel = t("Done ✓");
+    else if (card.type === "regel") actLabel = t("Add as standing rule ✓");
+    else if (card.type === "aktiv") actLabel = t("Assign to {name} 👑").replace("{name}", cur ? esc(cur.name) : t("the holder"));
+    else actLabel = t("Loser drinks ✓");
 
     els.innerHTML =
       '<section class="screen ha-screen ha-draw-screen">' +
-      '  <div class="ha-draw-kicker"><strong>' + esc(cur ? cur.name : "—") + "</strong> zieht …</div>" +
-      '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + t.colour + '">' +
-      '    <div class="ha-bigcard__tag">' + esc(t.label) + "</div>" +
+      '  <div class="ha-draw-kicker"><strong>' + esc(cur ? cur.name : "—") + "</strong>" + t(" draws …") + "</div>" +
+      '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + typeMeta.colour + '">' +
+      '    <div class="ha-bigcard__tag">' + esc(t(typeMeta.label)) + "</div>" +
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
       '    <div class="ha-bigcard__text">' + esc(fillName(card.text)) + "</div>" +
       "  </div>" +
@@ -461,14 +461,13 @@
     }).join("");
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">⏳ Die Sanduhr</h2>' +
-      '  <p class="muted">Setze heimlich eine Frist. Läuft sie ab, dient, wer gerade spricht. ' +
-      "Die anderen sollen nicht zusehen.</p>" +
+      '  <h2 class="screen-title pop">' + t("⌛ The Timer") + "</h2>" +
+      '  <p class="muted">' + t("Secretly set a time limit. When it runs out, whoever is speaking drinks. Don\'t let others watch.") + "</p>" +
       '  <div class="chip-row" id="ha-sec">' + chips + "</div>" +
-      '  <label class="ha-custom">Eigene Frist (Sek.): ' +
-      '    <input id="ha-sec-in" class="text-input" type="number" min="5" max="900" placeholder="z. B. 90" /></label>' +
-      '  <button id="ha-sand-go" class="btn btn-primary btn-block btn-xl">Heimlich starten 🤫</button>' +
-      '  <button id="ha-sand-cancel" class="btn btn-ghost btn-block">Abbrechen</button>' +
+      '  <label class="ha-custom">' + t("Custom time (sec.):") +
+      '    <input id="ha-sec-in" class="text-input" type="number" min="5" max="900" placeholder="' + t("e.g. 90") + '" /></label>' +
+      '  <button id="ha-sand-go" class="btn btn-primary btn-block btn-xl">' + t("Start secretly 🤫") + "</button>" +
+      '  <button id="ha-sand-cancel" class="btn btn-ghost btn-block">' + t("Cancel") + "</button>" +
       "</section>";
 
     els.querySelectorAll("#ha-sec .chip").forEach(function (c) {
@@ -496,9 +495,9 @@
     ov.innerHTML =
       '<div class="ha-overlay__box">' +
       '  <div class="ha-overlay__emoji">⏳</div>' +
-      '  <div class="ha-overlay__title">Die Sanduhr ist abgelaufen!</div>' +
-      '  <div class="ha-overlay__sub">Wer gerade spricht, <strong>dient!</strong></div>' +
-      '  <button class="btn btn-primary btn-block btn-xl" data-primary>Verstanden</button>' +
+      '  <div class="ha-overlay__title">' + t("Time\'s up!") + "</div>" +
+      '  <div class="ha-overlay__sub">' + t("Whoever is speaking drinks!") + "</div>" +
+      '  <button class="btn btn-primary btn-block btn-xl" data-primary>' + t("Got it") + "</button>" +
       "</div>";
     els.appendChild(ov);
     ov.querySelector("button").addEventListener("click", function () {
@@ -514,11 +513,10 @@
     clearTickers();
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">Spiel zurücksetzen?</h2>' +
-      '  <div class="fuse-note">Hofgesetze und aktive Karten gehen verloren, das Deck wird neu gemischt. ' +
-      "Edition und Sitzordnung bleiben.</div>" +
-      '  <button id="ha-reset-yes" class="btn btn-primary btn-block btn-xl">Ja, zurücksetzen</button>' +
-      '  <button id="ha-reset-no" class="btn btn-ghost btn-block">Abbrechen</button>' +
+      '  <h2 class="screen-title pop">' + t("Reset game?") + "</h2>" +
+      '  <div class="fuse-note">' + t("Standing rules and active cards will be lost; the deck gets reshuffled. Edition and seating order stay.") + "</div>" +
+      '  <button id="ha-reset-yes" class="btn btn-primary btn-block btn-xl">' + t("Yes, reset") + "</button>" +
+      '  <button id="ha-reset-no" class="btn btn-ghost btn-block">' + t("Cancel") + "</button>" +
       "</section>";
     els.querySelector("#ha-reset-yes").addEventListener("click", function () {
       clearAll();

@@ -11,6 +11,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var DEFAULTS = { pool: "mixed", drinking: false };
   var els = null, ctx = null, settings = null, queue = [];
 
@@ -39,19 +41,19 @@
 
   function renderSetup() {
     var pools = global.Spielecke.MostLikely || {};
-    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🫵 Most Likely To</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
-      '  <h3 class="sub">Category</h3>' +
+      '  <h2 class="screen-title pop">🫵 ' + t("Most Likely To") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
+      '  <h3 class="sub">' + t("Category") + "</h3>" +
       '  <div class="chip-row" id="ml-pools">' + chips + "</div>" +
-      '  <label class="toggle"><input type="checkbox" id="ml-drink"' + (settings.drinking ? " checked" : "") + " /><span>🍻 Drinking mode</span></label>" +
-      '  <button id="ml-start" class="btn btn-primary btn-block btn-xl">Start ▶️</button>' +
+      '  <label class="toggle"><input type="checkbox" id="ml-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode") + "</span></label>" +
+      '  <button id="ml-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
       "</section>";
 
     highlight("#ml-pools", settings.pool, "data-pool");
@@ -73,13 +75,13 @@
     var line = nextPrompt();
     els.innerHTML =
       '<section class="screen deck-card">' +
-      '  <div class="deck-kicker">Most likely to…</div>' +
+      '  <div class="deck-kicker">' + t("Most likely to…") + "</div>" +
       '  <div class="deck-prompt">' + esc(line) + "</div>" +
-      '  <p class="deck-rule">3… 2… 1… <strong>POINT! 🫵</strong><br/>' +
-      (settings.drinking ? "Most fingers <strong>drinks 🍺</strong>" : "Most fingers takes the <strong>crown 👑</strong>") +
+      '  <p class="deck-rule">' + t("3… 2… 1… POINT! 🫵") + "<br/>" +
+      (settings.drinking ? t("Most fingers drinks 🍺") : t("Most fingers takes the crown 👑")) +
       "</p>" +
-      '  <button id="ml-next" class="btn btn-primary btn-block btn-xl">Next ▶️</button>' +
-      '  <button id="ml-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '  <button id="ml-next" class="btn btn-primary btn-block btn-xl">' + t("Next ▶️") + "</button>" +
+      '  <button id="ml-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#ml-next").addEventListener("click", renderCard);
     els.querySelector("#ml-home").addEventListener("click", function () { ctx.goHome(); });
@@ -98,7 +100,7 @@
     return queue.length ? queue.pop() : "make something up!";
   }
   function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
   }
   function highlight(sel, value, an) {

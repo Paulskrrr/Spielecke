@@ -10,6 +10,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var COLORS = ["#ff4d5e", "#ff8a3d", "#ffcf33", "#36d399", "#3aa0ff", "#a06bff", "#ff5fa2"];
 
   var els = null, ctx = null;
@@ -45,22 +47,22 @@
     if (ns.length < 1) {
       els.innerHTML =
         '<section class="screen game-setup">' +
-        '  <h2 class="screen-title pop">🎡 Chooser</h2>' +
-        '  <div class="roster-warn" style="display:block">⚠ Add some players from the header (👥) to spin.</div>' +
+        '  <h2 class="screen-title pop">🎡 ' + t("Chooser") + "</h2>" +
+        '  <div class="roster-warn" style="display:block">' + t("⚠ Add some players from the header (👥) to spin.") + "</div>" +
         "</section>";
       return;
     }
 
     els.innerHTML =
       '<section class="screen chooser-screen">' +
-      '  <h2 class="screen-title pop">🎡 Chooser</h2>' +
+      '  <h2 class="screen-title pop">🎡 ' + t("Chooser") + "</h2>" +
       '  <div class="wheel-wrap">' +
       '    <div class="wheel-pointer"></div>' +
       '    <div id="chooser-wheel" class="wheel">' + wheelSvg(ns) + "</div>" +
       "  </div>" +
       '  <div id="chooser-result" class="chooser-result">&nbsp;</div>' +
-      '  <button id="chooser-spin" class="btn btn-primary btn-block btn-xl">SPIN 🎯</button>' +
-      '  <button id="chooser-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '  <button id="chooser-spin" class="btn btn-primary btn-block btn-xl">' + t("SPIN 🎯") + "</button>" +
+      '  <button id="chooser-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelector("#chooser-spin").addEventListener("click", spin);
@@ -107,7 +109,7 @@
 
     var n = ns.length, seg = 360 / n;
     var idx = Math.floor(Math.random() * n);
-    var center = idx * seg + seg / 2;                 // clockwise from top
+    var center = idx * seg + seg / 2;
     var jitter = (Math.random() * 2 - 1) * (seg * 0.35);
     var base = totalRotation + 360 * 5;
     var newTotal = base - (base % 360) + ((360 - center) % 360) + jitter;
@@ -125,7 +127,7 @@
       var rEl = els.querySelector("#chooser-result");
       if (rEl) rEl.innerHTML = '👉 <span class="chooser-name">' + esc(ns[idx]) + "</span>";
       var b = els.querySelector("#chooser-spin");
-      if (b) { b.disabled = false; b.textContent = "SPIN AGAIN 🎯"; }
+      if (b) { b.disabled = false; b.textContent = t("SPIN AGAIN 🎯"); }
     }, 4400);
   }
 

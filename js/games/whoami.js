@@ -15,6 +15,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var ROUND_OPTIONS = [30, 60, 90]; // seconds
   var TARGET = 3; // beat this for a 🎉
 
@@ -82,8 +84,8 @@
 
     var modeChips =
       '<div class="chip-row" id="wa-modes">' +
-      '  <button class="chip" data-mode="categories">📚 Categories</button>' +
-      '  <button class="chip" data-mode="custom">✍️ Custom sticky</button>' +
+      '  <button class="chip" data-mode="categories">' + t("📚 Categories") + "</button>" +
+      '  <button class="chip" data-mode="custom">' + t("✍️ Custom sticky") + "</button>" +
       "</div>";
 
     var body;
@@ -93,7 +95,7 @@
         '  <input id="wa-custom" class="text-input" type="text" maxlength="60" placeholder="Type a character / thing…" />' +
         '  <button id="wa-show" class="btn btn-primary btn-block btn-xl">Show on sticky note 🪧</button>';
     } else {
-      var poolChips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+      var poolChips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
         .concat(Object.keys(pools).map(function (k) {
           return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
         })).join("");
@@ -101,19 +103,19 @@
         return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
       }).join("");
       body =
-        '  <p class="muted small">Hold the phone to your forehead so you can’t see it. The table shouts clues. Tap <strong>GOT IT</strong> when you guess, <strong>SKIP</strong> to pass.</p>' +
-        '  <h3 class="sub">Category</h3>' +
-        '  <div class="chip-row" id="wa-pools">' + poolChips + "</div>" +
-        '  <h3 class="sub">Round length</h3>' +
-        '  <div class="chip-row" id="wa-times">' + timeChips + "</div>" +
-        '  <label class="toggle"><input type="checkbox" id="wa-sound"' + (settings.soundOn ? " checked" : "") + " /><span>🔊 Sounds</span></label>" +
-        '  <button id="wa-start" class="btn btn-primary btn-block btn-xl">START TURN ▶️</button>';
+        ‘  <p class="muted small">Hold the phone to your forehead so you can\’t see it. The table shouts clues. Tap <strong>’ + t("GOT IT ✅") + ‘</strong> when you guess, <strong>’ + t("SKIP ⏭️") + ‘</strong> to pass.</p>’ +
+        ‘  <h3 class="sub">’ + t("Category") + "</h3>" +
+        ‘  <div class="chip-row" id="wa-pools">’ + poolChips + "</div>" +
+        ‘  <h3 class="sub">’ + t("Round length") + "</h3>" +
+        ‘  <div class="chip-row" id="wa-times">’ + timeChips + "</div>" +
+        ‘  <label class="toggle"><input type="checkbox" id="wa-sound"’ + (settings.soundOn ? " checked" : "") + " /><span>" + t("🔊 Sounds") + "</span></label>" +
+        ‘  <button id="wa-start" class="btn btn-primary btn-block btn-xl">’ + t("START TURN ▶️") + "</button>";
     }
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🙈 Who Am I?</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title pop">🙈 ' + t("Who Am I?") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       modeChips +
       body +
       "</section>";
@@ -185,10 +187,10 @@
       '    <span id="wa-score" class="hud-score">✅ 0</span></div>' +
       '  <div class="whoami-word-wrap"><div id="wa-word" class="whoami-word">' + esc(nextWord()) + "</div></div>" +
       '  <div class="whoami-actions">' +
-      '    <button id="wa-skip" class="btn btn-skip">SKIP ⏭️</button>' +
-      '    <button id="wa-got" class="btn btn-got">GOT IT ✅</button>' +
+      '    <button id="wa-skip" class="btn btn-skip">' + t("SKIP ⏭️") + "</button>" +
+      '    <button id="wa-got" class="btn btn-got">' + t("GOT IT ✅") + "</button>" +
       "  </div>" +
-      '  <button id="wa-quit" class="btn btn-ghost btn-block">End turn early</button>' +
+      '  <button id="wa-quit" class="btn btn-ghost btn-block">' + t("End turn early") + "</button>" +
       "</section>";
 
     els.querySelector("#wa-got").addEventListener("click", function () {
@@ -225,16 +227,16 @@
     els.innerHTML =
       '<section class="screen whoami-result">' +
       '  <div class="result-emoji">' + (passed ? "🎉" : "😬") + "</div>" +
-      '  <h2 class="result-title pop">' + score + " correct!</h2>" +
+      '  <h2 class="result-title pop">' + score + t(" correct!") + "</h2>" +
       '  <p class="result-sub">' +
       (passed
-        ? "Nailed it — beat that, next player!"
-        : "Beatable — under " + TARGET + ". Pass it on.") +
+        ? t("Nailed it — beat that, next player!")
+        : t("Beatable — under {TARGET}. Pass it on.").replace("{TARGET}", TARGET)) +
       "</p>" +
       '  <div class="stack">' +
-      '    <button id="wa-next" class="btn btn-primary btn-block btn-xl">Next player ▶️</button>' +
-      '    <button id="wa-settings" class="btn btn-block">Change settings</button>' +
-      '    <button id="wa-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="wa-next" class="btn btn-primary btn-block btn-xl">' + t("Next player ▶️") + "</button>" +
+      '    <button id="wa-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
+      '    <button id="wa-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#wa-next").addEventListener("click", startTurn);

@@ -17,6 +17,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   // --- Fixed fuse: always random in this range, hidden from players -------
   var FUSE_MIN = 20;  // seconds
   var FUSE_MAX = 90;  // seconds
@@ -95,7 +97,7 @@
     var pools = global.Spielecke.BombCategories || {};
     var playerCount = (ctx.players || []).length;
 
-    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed (all)</button>']
+    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed (all)") + "</button>"]
       .concat(
         Object.keys(pools).map(function (key) {
           return (
@@ -116,21 +118,21 @@
 
     els.innerHTML =
       '<section class="screen bomb-setup">' +
-      '  <h2 class="screen-title neon">💣 The Bomb</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title neon">💣 ' + t("The Bomb") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       warn +
-      '  <h3 class="bomb-sub">Category pool</h3>' +
+      '  <h3 class="bomb-sub">' + t("Category pool") + "</h3>" +
       '  <div class="chip-row" id="bomb-pools">' + chips + "</div>" +
-      '  <div class="fuse-note">⏱️ The fuse is random — and hidden from everyone.</div>' +
+      '  <div class="fuse-note">' + t("⏱️ The fuse is random — and hidden from everyone.") + "</div>" +
       '  <label class="toggle">' +
       '    <input type="checkbox" id="bomb-sound"' + (settings.soundOn ? " checked" : "") + " />" +
-      "    <span>🔊 Ticking &amp; explosion sound</span>" +
+      "    <span>" + t("🔊 Ticking & explosion sound") + "</span>" +
       "  </label>" +
       '  <label class="toggle">' +
       '    <input type="checkbox" id="bomb-drink"' + (settings.drinking ? " checked" : "") + " />" +
-      "    <span>🍻 Drinking mode</span>" +
+      "    <span>" + t("🍻 Drinking mode") + "</span>" +
       "  </label>" +
-      '  <button id="bomb-start" class="btn btn-primary btn-block btn-xl">ARM &amp; START 💥</button>' +
+      '  <button id="bomb-start" class="btn btn-primary btn-block btn-xl">' + t("ARM & START 💥") + "</button>" +
       "</section>";
 
     // Pool chips
@@ -176,12 +178,12 @@
 
     els.innerHTML =
       '<section class="screen bomb-play">' +
-      '  <div class="bomb-status">💣 LIVE — pass it on!</div>' +
+      '  <div class="bomb-status">' + t("💣 LIVE — pass it on!") + "</div>" +
       '  <div class="bomb-prompt-wrap">' +
       '    <div class="bomb-prompt">' + esc(currentPrompt) + "</div>" +
       "  </div>" +
-      '  <button id="bomb-pass" class="btn btn-pass">PASS ➡️</button>' +
-      '  <button id="bomb-quit" class="btn btn-ghost btn-block">Give up · back to setup</button>' +
+      '  <button id="bomb-pass" class="btn btn-pass">' + t("PASS ➡️") + "</button>" +
+      '  <button id="bomb-quit" class="btn btn-ghost btn-block">' + t("Give up · back to setup") + "</button>" +
       "</section>";
 
     setupAudio();
@@ -218,16 +220,16 @@
     els.innerHTML =
       '<section class="screen bomb-boom">' +
       '  <div class="boom-flash">💥</div>' +
-      '  <h2 class="boom-title">BOOM!</h2>' +
+      '  <h2 class="boom-title">' + t("BOOM!") + "</h2>" +
       '  <p class="boom-sub">' +
       (settings.drinking
-        ? "🔥 Whoever's holding it <strong>drinks!</strong>"
-        : "🔥 Whoever's holding it <strong>loses the round!</strong>") +
+        ? t("🔥 Whoever's holding it drinks!")
+        : t("🔥 Whoever's holding it loses the round!")) +
       "</p>" +
       '  <div class="boom-actions">' +
-      '    <button id="bomb-next" class="btn btn-primary btn-block btn-xl">Next round 🔁</button>' +
-      '    <button id="bomb-setup" class="btn btn-block">Change settings</button>' +
-      '    <button id="bomb-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="bomb-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
+      '    <button id="bomb-setup" class="btn btn-block">' + t("Change settings") + "</button>" +
+      '    <button id="bomb-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 

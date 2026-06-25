@@ -6,28 +6,23 @@
  * Everyone else moves a slider to where they think the target is. Reveal, then
  * judge by distance.
  *
- * Drink outcome (hard requirement):
- *   - bullseye  => clue-giver's a legend, everyone else drinks
- *   - way off   => the guessers drink
- *   - in between => no drinks
- *
- * Content lives in content/wavelength.js (Spielecke.WavelengthSpectrums) —
- * opposite pairs, a different shape from the shared term database.
+ * Content lives in content/wavelength.js (Spielecke.WavelengthSpectrums).
  */
 (function (global) {
   "use strict";
 
-  var BULLSEYE = 10; // |guess - target| within this = nailed it
-  var MISS = 30;     // beyond this = way off
-  var TARGET_BAND = BULLSEYE; // half-width of the highlighted target zone
+  function t(k) { return global.Spielecke.t(k); }
+
+  var BULLSEYE = 10;
+  var MISS = 30;
+  var TARGET_BAND = BULLSEYE;
   var DEFAULTS = { pool: "mixed" };
 
-  // Per-mount state
   var els = null;
   var ctx = null;
   var settings = null;
-  var spectrum = null;  // { left, right }
-  var target = 50;      // 0..100 centre
+  var spectrum = null;
+  var target = 50;
   var guess = 50;
 
   var module = {
@@ -56,19 +51,19 @@
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     var pools = global.Spielecke.WavelengthSpectrums || {};
-    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">📡 Wavelength</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title pop">📡 ' + t("Wavelength") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       '  <p class="muted small">One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.</p>' +
-      '  <h3 class="sub">Spectrum pool</h3>' +
+      '  <h3 class="sub">' + t("Spectrum pool") + "</h3>" +
       '  <div class="chip-row" id="wl-pools">' + chips + "</div>" +
-      '  <button id="wl-start" class="btn btn-primary btn-block btn-xl">Start round 🎯</button>' +
+      '  <button id="wl-start" class="btn btn-primary btn-block btn-xl">' + t("Start round 🎯") + "</button>" +
       "</section>";
 
     highlight("#wl-pools", settings.pool, "data-pool");
@@ -85,7 +80,6 @@
   // --- Round: clue-giver sees the hidden target ----------------------------
   function startRound() {
     spectrum = pickSpectrum(settings.pool);
-    // keep the band fully on the dial
     target = Math.round(TARGET_BAND + Math.random() * (100 - 2 * TARGET_BAND));
     guess = 50;
     renderHandover();
@@ -95,9 +89,9 @@
     els.innerHTML =
       '<section class="screen wl-handover">' +
       '  <div class="pass-emoji">🙈</div>' +
-      '  <h2 class="pass-name pop">Clue-giver only</h2>' +
+      '  <h2 class="pass-name pop">' + t("Clue-giver only") + "</h2>" +
       '  <p class="muted">Everyone else: look away! One person picks up the phone to see the secret target.</p>' +
-      '  <button id="wl-show" class="btn btn-primary btn-block btn-xl">Show me the target 🎯</button>' +
+      '  <button id="wl-show" class="btn btn-primary btn-block btn-xl">' + t("Show me the target 🎯") + "</button>" +
       "</section>";
     els.querySelector("#wl-show").addEventListener("click", renderTarget);
   }
@@ -105,11 +99,11 @@
   function renderTarget() {
     els.innerHTML =
       '<section class="screen wl-target">' +
-      '  <h2 class="screen-title pop">Give a clue!</h2>' +
+      '  <h2 class="screen-title pop">' + t("Give a clue!") + "</h2>" +
       poles(spectrum) +
       track({ showTarget: true }) +
       '  <p class="muted small">Think of a clue between the two ends that points right at the band — then hide and let the table guess.</p>' +
-      '  <button id="wl-hide" class="btn btn-block btn-xl">Hide & let them guess 🤐</button>' +
+      '  <button id="wl-hide" class="btn btn-block btn-xl">' + t("Hide & let them guess 🤐") + "</button>" +
       "</section>";
     els.querySelector("#wl-hide").addEventListener("click", renderGuess);
   }
@@ -118,11 +112,11 @@
   function renderGuess() {
     els.innerHTML =
       '<section class="screen wl-guess">' +
-      '  <h2 class="screen-title pop">Where is it?</h2>' +
+      '  <h2 class="screen-title pop">' + t("Where is it?") + "</h2>" +
       poles(spectrum) +
       track({ showTarget: false, showGuess: true }) +
       '  <input id="wl-slider" class="wl-slider" type="range" min="0" max="100" value="' + guess + '" />' +
-      '  <button id="wl-lock" class="btn btn-primary btn-block btn-xl">Lock it in 🔒</button>' +
+      '  <button id="wl-lock" class="btn btn-primary btn-block btn-xl">' + t("Lock it in 🔒") + "</button>" +
       "</section>";
 
     var slider = els.querySelector("#wl-slider");
@@ -137,17 +131,17 @@
   // --- Reveal & outcome ----------------------------------------------------
   function renderReveal() {
     var d = Math.abs(guess - target);
-    var points = Math.max(0, 100 - d * 2); // closeness score, 0..100
+    var points = Math.max(0, 100 - d * 2);
     var emoji, title, line;
     if (d <= BULLSEYE) {
-      emoji = "🎯"; title = "BULLSEYE!";
-      line = "The clue-giver's a legend — <strong>" + points + " points!</strong>";
+      emoji = "🎯"; title = t("BULLSEYE!");
+      line = t("The clue-giver's a legend — ") + "<strong>" + points + t(" points!") + "</strong>";
     } else if (d <= MISS) {
-      emoji = "👍"; title = "So close!";
-      line = "Decent reading — <strong>" + points + " points.</strong>";
+      emoji = "👍"; title = t("So close!");
+      line = t("Decent reading — ") + "<strong>" + points + t(" points.") + "</strong>";
     } else {
-      emoji = "💀"; title = "Way off!";
-      line = "Total miss — <strong>" + points + " points.</strong>";
+      emoji = "💀"; title = t("Way off!");
+      line = t("Total miss — ") + "<strong>" + points + t(" points.") + "</strong>";
     }
 
     els.innerHTML =
@@ -158,9 +152,9 @@
       track({ showTarget: true, showGuess: true }) +
       '  <p class="result-sub">' + line + "</p>" +
       '  <div class="stack">' +
-      '    <button id="wl-next" class="btn btn-primary btn-block btn-xl">Next round 🔁</button>' +
-      '    <button id="wl-settings" class="btn btn-block">Change pool</button>' +
-      '    <button id="wl-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="wl-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
+      '    <button id="wl-settings" class="btn btn-block">' + t("Change pool") + "</button>" +
+      '    <button id="wl-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#wl-next").addEventListener("click", startRound);
@@ -214,9 +208,7 @@
       c.classList.toggle("chip--active", c.getAttribute(attrName) === value);
     });
   }
-  function esc(s) {
-    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }
 
   global.Spielecke = global.Spielecke || {};

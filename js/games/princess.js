@@ -12,11 +12,13 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var DEFAULTS = { pool: "mixed" };
 
   var els = null, ctx = null, settings = null;
-  var isPrincess = true;          // current target; flips each round
-  var qPrincess = [], qKing = []; // per-gender shuffled queues
+  var isPrincess = true;
+  var qPrincess = [], qKing = [];
 
   var module = {
     meta: {
@@ -41,19 +43,19 @@
 
   function renderSetup() {
     var pools = global.Spielecke.Princess || {};
-    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">👑 Princess Treatment</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title pop">👑 ' + t("Princess Treatment") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       '  <p class="muted small">Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.</p>' +
-      '  <h3 class="sub">Category</h3>' +
+      '  <h3 class="sub">' + t("Category") + "</h3>" +
       '  <div class="chip-row" id="pr-pools">' + chips + "</div>" +
-      '  <button id="pr-start" class="btn btn-primary btn-block btn-xl">Start ▶️</button>' +
+      '  <button id="pr-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
       "</section>";
 
     highlight("#pr-pools", settings.pool, "data-pool");
@@ -69,22 +71,24 @@
 
   function renderCard() {
     var who = isPrincess
-      ? { tag: "👑 PRINCESS", cls: "pt-princess", note: "For the girls" }
-      : { tag: "🤴 KING", cls: "pt-king", note: "For the guys" };
+      ? { tag: "👑 PRINCESS", cls: "pt-princess", note: t("For the girls") }
+      : { tag: "🤴 KING", cls: "pt-king", note: t("For the guys") };
     var prompt = nextPrompt(isPrincess);
-    var treatLabel = isPrincess ? "👑 Princess treatment" : "🤴 King treatment";
-    var treatWord = isPrincess ? "Princess" : "King";
+    var treatLabel = isPrincess ? t("👑 Princess treatment") : t("🤴 King treatment");
+    var treatWord = isPrincess
+      ? t("Princess treatment, or bare minimum?")
+      : t("King treatment, or bare minimum?");
 
     els.innerHTML =
       '<section class="screen pt-card ' + who.cls + '">' +
-      '  <div class="pt-banner">' + who.tag + '<span class="pt-note">' + who.note + "</span></div>" +
+      '  <div class="pt-banner">' + who.tag + '<span class="pt-note">' + esc(who.note) + "</span></div>" +
       '  <div class="deck-prompt">' + esc(prompt) + "</div>" +
-      '  <p class="deck-rule">' + treatWord + " treatment, or bare minimum?</p>" +
+      '  <p class="deck-rule">' + treatWord + "</p>" +
       '  <div class="pt-actions">' +
       '    <button id="pr-yes" class="btn btn-got">' + treatLabel + "</button>" +
-      '    <button id="pr-no" class="btn btn-skip">😐 Bare minimum</button>' +
+      '    <button id="pr-no" class="btn btn-skip">' + t("😐 Bare minimum") + "</button>" +
       "  </div>" +
-      '  <button id="pr-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '  <button id="pr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelector("#pr-yes").addEventListener("click", nextRound);
@@ -93,7 +97,7 @@
   }
 
   function nextRound() {
-    isPrincess = !isPrincess; // alternate target every round
+    isPrincess = !isPrincess;
     renderCard();
   }
 
@@ -114,7 +118,7 @@
     return q.length ? q.pop() : "Make one up!";
   }
   function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
   }
   function highlight(sel, value, an) {

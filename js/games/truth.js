@@ -10,6 +10,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var DEFAULTS = { pool: "mixed", drinking: false };
 
   var els = null, ctx = null, settings = null;
@@ -40,19 +42,19 @@
 
   function renderSetup() {
     var pools = global.Spielecke.TruthQuestions || {};
-    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🍸 Truth or Drink</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
-      '  <h3 class="sub">Category</h3>' +
+      '  <h2 class="screen-title pop">🍸 ' + t("Truth or Drink") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
+      '  <h3 class="sub">' + t("Category") + "</h3>" +
       '  <div class="chip-row" id="tr-pools">' + chips + "</div>" +
-      '  <label class="toggle"><input type="checkbox" id="tr-drink"' + (settings.drinking ? " checked" : "") + " /><span>🍻 Drinking mode (dodge by drinking)</span></label>" +
-      '  <button id="tr-start" class="btn btn-primary btn-block btn-xl">Start ▶️</button>' +
+      '  <label class="toggle"><input type="checkbox" id="tr-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode (dodge by drinking)") + "</span></label>" +
+      '  <button id="tr-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
       "</section>";
 
     highlight("#tr-pools", settings.pool, "data-pool");
@@ -72,18 +74,15 @@
 
   function renderCard() {
     var name = pickName();
-    var who = name ? "👉 " + esc(name) : "👉 Whoever drew it";
-    var rule = settings.drinking
-      ? "Answer honestly, or take a 🍺 drink to dodge."
-      : "Answer honestly!";
+    var who = name ? "👉 " + esc(name) : "👉 " + t("Whoever drew it");
 
     els.innerHTML =
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + who + "</div>" +
       '  <div class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
-      '  <p class="deck-rule">' + rule + "</p>" +
-      '  <button id="tr-next" class="btn btn-primary btn-block btn-xl">Next ▶️</button>' +
-      '  <button id="tr-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '  <p class="deck-rule">' + (settings.drinking ? t("Answer honestly, or take a 🍺 drink to dodge.") : t("Answer honestly!")) + "</p>" +
+      '  <button id="tr-next" class="btn btn-primary btn-block btn-xl">' + t("Next ▶️") + "</button>" +
+      '  <button id="tr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#tr-next").addEventListener("click", renderCard);
     els.querySelector("#tr-home").addEventListener("click", function () { ctx.goHome(); });
@@ -113,7 +112,7 @@
     return queue.length ? queue.pop() : "Make one up!";
   }
   function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; }
+    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
   }
   function highlight(sel, value, an) {
