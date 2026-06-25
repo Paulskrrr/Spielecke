@@ -148,25 +148,26 @@
     starwars_hard: {
       label: "⭐ Star Wars – Hard",
       terms: [
-        // Clone Wars – deeper cuts
-        "Quinlan Vos", "Savage Opress", "Mother Talzin", "Pre Vizsla",
-        "Bo-Katan Kryze", "Satine Kryze", "Fives", "Echo", "Crosshair",
-        "Hunter", "Omega", "Commander Wolffe", "Commander Bly",
-        "Barriss Offee", "Luminara Unduli", "Depa Billaba", "Even Piell",
-        // Rebels / Other
+        // Clone Wars & Rebels characters
+        "Savage Opress", "Bo-Katan Kryze", "Barriss Offee",
         "Kanan Jarrus", "Ezra Bridger", "Sabine Wren", "Hera Syndulla",
-        "Admiral Thrawn", "Wilhuff Tarkin",
+        "Admiral Thrawn", "Grand Inquisitor",
+        // Mandalorian & newer shows
+        "Din Djarin", "Fennec Shand", "Greef Karga", "The Armorer",
+        "Omega",
+        // Rogue One
+        "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
+        // Classic deeper cuts
+        "Grand Moff Tarkin", "Cal Kestis",
         // Planets
         "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
-        "Mustafar", "Utapau", "Kashyyyk", "Ryloth", "Lothal", "Umbara",
-        "Christophsis", "Mortis",
-        // Weapons & Ships
-        "Darksaber", "Holocron", "Kyber Crystal", "AT-AT", "LAAT Gunship",
-        "Slave I", "Star Destroyer", "Millennium Falcon",
-        // Famous phrases & concepts
-        "Order 66", "I am your father", "This is the Way",
-        "May the Force be with you", "It's a trap!", "Do or do not",
-        "Rule of Two", "Youngling", "Midi-Chlorians",
+        "Mustafar", "Kashyyyk", "Ryloth", "Lothal", "Scarif", "Nevarro",
+        // Ships & Weapons
+        "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
+        "Star Destroyer", "AT-AT", "Razor Crest", "Thermal Detonator",
+        // Concepts
+        "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
+        "Force Ghost", "The Clone Wars",
       ],
     },
 
