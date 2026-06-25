@@ -56,7 +56,7 @@
         // Hitman
         "Agent 47",
         // Clash of Clans
-        "Barbarian", "Town Hall",
+        "Electro Dragon", "Town Hall",
       ],
     },
 
