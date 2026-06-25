@@ -18,6 +18,48 @@
   "use strict";
 
   var TERMS = {
+    football: {
+      label: "⚽ Fußball",
+      terms: [
+        // Spieler
+        "Messi", "Ronaldo", "Neymar", "Mbappé", "Haaland",
+        "Lewandowski", "Salah", "De Bruyne", "Kimmich", "Müller",
+        "Neuer", "Kroos",
+        // Vereine
+        "FC Bayern", "Real Madrid", "FC Barcelona", "Manchester City",
+        "Liverpool", "Paris Saint-Germain", "Borussia Dortmund",
+        "Arsenal", "Juventus", "Chelsea",
+        // Begriffe & Konzepte
+        "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
+        "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
+        "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
+      ],
+    },
+
+    videogames: {
+      label: "🎮 Video Games",
+      terms: [
+        // Allgemein
+        "Respawn", "Boss Fight", "Easter Egg", "Noob", "Speedrun",
+        "Loot Box", "Cheat Code", "LAN Party",
+        // Minecraft
+        "Creeper", "Steve", "Enderman", "Diamond Pickaxe",
+        "Nether Portal", "Ender Dragon", "Herobrine", "Redstone", "Dirt House",
+        // Counter-Strike
+        "AWP", "Headshot", "Rush B", "Flashbang",
+        "Knife Round", "Smoke Grenade", "Bomb Defusal",
+        // Overwatch
+        "Bastion", "Tracer", "Reinhardt", "Mercy",
+        "D.Va", "Genji", "Widowmaker", "Payload",
+        // League of Legends
+        "Yasuo", "Teemo", "Jungle", "Baron Nashor", "Dragon", "Nexus", "Gank",
+        // Hitman
+        "Agent 47", "Disguise",
+        // Clash of Clans
+        "Barbarian", "Town Hall",
+      ],
+    },
+
     general: {
       label: "🌍 General",
       terms: [
