@@ -66,10 +66,11 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var rosterNote = enough
-      ? '<p class="muted small">Players this round (' + roster.length + "): " +
-        esc(roster.map(function (p) { return p.name; }).join(", ")) + "</p>"
-      : '<div class="roster-warn" style="display:block">⚠ Imposter needs at least ' +
-        MIN_PLAYERS + " players. Add them from the header (👥 above).</div>";
+      ? '<p class="muted small">' + t("Players ({n}): {names}")
+          .replace("{n}", roster.length)
+          .replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      : '<div class="roster-warn" style="display:block">' +
+        t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     var countSection = "";
     if (enough) {
@@ -146,7 +147,7 @@
     var name = players[revealIdx];
     els.innerHTML =
       '<section class="screen imposter-pass">' +
-      '  <div class="pass-step">Player ' + (revealIdx + 1) + " of " + players.length + "</div>" +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", revealIdx + 1).replace("{n}", players.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
       '  <p class="muted">' + t("Only {name} should look. Everyone else: no peeking.").replace("{name}", esc(name)) + "</p>" +
@@ -167,13 +168,13 @@
       ? '<div class="role-card role-card--imposter">' +
         '  <div class="role-label">' + t("You are the") + "</div>" +
         '  <div class="role-big">' + t("IMPOSTER 🤫") + "</div>" +
-        '  <div class="role-hint">Category: <strong>' + esc(secretCategory) + "</strong></div>" +
+        '  <div class="role-hint">' + t("Category") + ": <strong>" + esc(secretCategory) + "</strong></div>" +
         '  <div class="role-note">' + allyNote + "</div>" +
         "</div>"
       : '<div class="role-card">' +
         '  <div class="role-label">' + t("The secret word is") + "</div>" +
         '  <div class="role-big">' + esc(secretWord) + "</div>" +
-        '  <div class="role-hint">Category: ' + esc(secretCategory) + "</div>" +
+        '  <div class="role-hint">' + t("Category") + ": " + esc(secretCategory) + "</div>" +
         '  <div class="role-note">' + t("Hint at it — never say it.") + "</div>" +
         "</div>";
 
@@ -193,8 +194,7 @@
     els.innerHTML =
       '<section class="screen imposter-talk">' +
       '  <h2 class="screen-title pop">' + t("🗣️ Talk it out") + "</h2>" +
-      '  <p>Go round the table. Each person says <strong>one word</strong> hinting at the secret. ' +
-      "The imposter is faking it. After a round or two, <strong>vote</strong> on who the faker is.</p>" +
+      '  <p>' + t("Go round the table. Each person says <strong>one word</strong> hinting at the secret. The imposter is faking it. After a round or two, <strong>vote</strong> on who the faker is.") + "</p>" +
       '  <button id="im-reveal2" class="btn btn-primary btn-block btn-xl">' + t("Reveal the imposter 🔦") + "</button>" +
       '  <button id="im-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
@@ -217,7 +217,7 @@
       '  <p class="result-sub">' + t("The word was: ") + "<strong>" + esc(secretWord) + "</strong></p>" +
       '  <p class="muted">' + (plural ? t("Did the table catch them all?") : t("Did the table catch them?")) + "</p>" +
       '  <div class="stack">' +
-      '    <button id="im-caught" class="btn btn-got btn-block btn-xl">' + t("We caught {pronoun} 🎯").replace("{pronoun}", plural ? "them all" : "them") + "</button>" +
+      '    <button id="im-caught" class="btn btn-got btn-block btn-xl">' + t("We caught {pronoun} 🎯").replace("{pronoun}", plural ? t("them all") : t("them")) + "</button>" +
       '    <button id="im-fooled" class="btn btn-skip btn-block btn-xl">' + t("They fooled us 🤡") + "</button>" +
       "  </div>" +
       "</section>";

@@ -55,7 +55,7 @@
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">Players (' + roster.length + "): " + esc(roster.map(function (p) { return p.name; }).join(", ")) + "</p>"
+      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     var hearts = HEART_OPTIONS.map(function (h) {
@@ -125,7 +125,7 @@
     els.innerHTML =
       '<section class="screen qz-pass">' +
       '  <div class="qz-hud"><span class="badge">' + t("Round {n}").replace("{n}", round + 1) + "</span>" +
-      (settings.drinking ? '<span class="badge badge-drink">🍻 drink</span>' : "") +
+      (settings.drinking ? '<span class="badge badge-drink">' + t("🍻 drink") + "</span>" : "") +
       "  </div>" +
       '  <div class="pass-emoji">🧠</div>' +
       '  <h2 class="pass-name pop">' + esc(currentPlayer.name) + "</h2>" +
@@ -190,10 +190,10 @@
       sub = t("Safe — well played.");
     } else if (eliminated) {
       sub = t("Answer: ") + "<strong>" + esc(correctText) + "</strong>. 💀 <strong>" + esc(currentPlayer.name) +
-        "</strong>" + t(" is OUT!") + (settings.drinking ? " 🍺 Drink!" : "");
+        "</strong>" + t(" is OUT!") + (settings.drinking ? t(" 🍺 Drink!") : "");
     } else {
       sub = t("Answer: ") + "<strong>" + esc(correctText) + "</strong>. −1 ❤️" +
-        (settings.drinking ? " 🍺 Drink!" : "");
+        (settings.drinking ? t(" 🍺 Drink!") : "");
     }
 
     els.innerHTML =
@@ -211,7 +211,7 @@
     els.innerHTML =
       '<section class="screen qz-win">' +
       '  <div class="boom-flash">🏆</div>' +
-      '  <h2 class="boom-title">' + (winner ? esc(winner.name) + t(" wins!") : "Game over") + "</h2>" +
+      '  <h2 class="boom-title">' + (winner ? esc(winner.name) + t(" wins!") : t("Game over")) + "</h2>" +
       '  <p class="result-sub">' + (winner ? t("Last one standing — quiz champion!") : t("Everyone\'s out!")) + "</p>" +
       '  <div class="stack">' +
       '    <button id="qz-again" class="btn btn-primary btn-block btn-xl">' + t("Play again 🔁") + "</button>" +

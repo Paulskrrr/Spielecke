@@ -53,7 +53,7 @@
       '<section class="screen game-setup">' +
       '  <h2 class="screen-title pop">👑 ' + t("Princess Treatment") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
-      '  <p class="muted small">Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.</p>' +
+      '  <p class="muted small">' + t("Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.") + "</p>" +
       '  <h3 class="sub">' + t("Category") + "</h3>" +
       '  <div class="chip-row" id="pr-pools">' + chips + "</div>" +
       '  <button id="pr-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
@@ -72,8 +72,8 @@
 
   function renderCard() {
     var who = isPrincess
-      ? { tag: "👑 PRINCESS", cls: "pt-princess", note: t("For the girls") }
-      : { tag: "🤴 KING", cls: "pt-king", note: t("For the guys") };
+      ? { tag: t("👑 PRINCESS"), cls: "pt-princess", note: t("For the girls") }
+      : { tag: t("🤴 KING"), cls: "pt-king", note: t("For the guys") };
     var prompt = nextPrompt(isPrincess);
     var treatLabel = isPrincess ? t("👑 Princess treatment") : t("🤴 King treatment");
     var treatWord = isPrincess
@@ -116,7 +116,7 @@
       q = buildQueue(gender);
       if (gender) qPrincess = q; else qKing = q;
     }
-    return q.length ? q.pop() : "Make one up!";
+    return q.length ? q.pop() : t("Make one up!");
   }
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }

@@ -111,9 +111,12 @@
 
     var warn =
       playerCount > 0 && playerCount < module.meta.minPlayers
-        ? '<div class="roster-warn" style="display:block">⚠ The Bomb is best with ' +
-          module.meta.minPlayers +
-          "+ players. Add more from the header.</div>"
+        ? '<div class="roster-warn" style="display:block">' +
+          t("⚠ The Bomb is best with {n}+ players. Add more from the header.").replace(
+            "{n}",
+            module.meta.minPlayers
+          ) +
+          "</div>"
         : "";
 
     els.innerHTML =
@@ -251,7 +254,7 @@
   function pickPrompt(pool) {
     var pools = categories();
     var keys = Object.keys(pools);
-    if (!keys.length) return "Name something. Anything. Go!";
+    if (!keys.length) return t("Name something. Anything. Go!");
 
     var list;
     if (pool === "mixed" || !pools[pool]) {
@@ -261,7 +264,7 @@
     } else {
       list = pools[pool].prompts || [];
     }
-    if (!list.length) return "Name something. Anything. Go!";
+    if (!list.length) return t("Name something. Anything. Go!");
     return list[Math.floor(Math.random() * list.length)];
   }
 

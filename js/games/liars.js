@@ -54,7 +54,7 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">Players (' + roster.length + "): " + esc(roster.map(function (p) { return p.name; }).join(", ")) + "</p>"
+      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
@@ -94,10 +94,10 @@
     var name = players[idx];
     els.innerHTML =
       '<section class="screen ln-pass">' +
-      '  <div class="pass-step">Player ' + (idx + 1) + " of " + players.length + "</div>" +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", idx + 1).replace("{n}", players.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
-      '  <p class="muted">Lock your guess in private — don\'t let the others copy.</p>' +
+      '  <p class="muted">' + t("Lock your guess in private — don't let the others copy.") + "</p>" +
       '  <button id="ln-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — reveal").replace("{name}", esc(name)) + "</button>" +
       "</section>";
     els.querySelector("#ln-go").addEventListener("click", renderEntry);
@@ -107,7 +107,7 @@
     var name = players[idx];
     els.innerHTML =
       '<section class="screen ln-entry">' +
-      '  <h3 class="sub">' + esc(name) + "'s guess</h3>" +
+      '  <h3 class="sub">' + t("{name}'s guess").replace("{name}", esc(name)) + "</h3>" +
       '  <div class="ln-question">' + esc(question.q) + "</div>" +
       '  <input id="ln-input" class="text-input ln-input" type="number" inputmode="numeric" placeholder="' + t("Your number") + '" />' +
       '  <button id="ln-lock" class="btn btn-primary btn-block btn-xl">' + t("Lock it in 🔒") + "</button>" +
@@ -138,7 +138,7 @@
       return (
         '<li class="ln-row' + (i === 0 ? " ln-row--win" : (i === ranked.length - 1 ? " ln-row--lose" : "")) + '">' +
         '<span class="ln-row__name">' + tag + " " + esc(g.name) + "</span>" +
-        '<span class="ln-row__guess">' + fmt(g.guess) + ' <span class="muted">(off ' + fmt(d) + ")</span></span>" +
+        '<span class="ln-row__guess">' + fmt(g.guess) + ' <span class="muted">' + t("(off {n})").replace("{n}", fmt(d)) + "</span></span>" +
         "</li>"
       );
     }).join("");
@@ -170,11 +170,11 @@
   function pickQuestion(pool) {
     var poolMap = pools();
     var keys = Object.keys(poolMap);
-    if (!keys.length) return { q: "Pick a number 1–100", a: 50 };
+    if (!keys.length) return { q: t("Pick a number 1–100"), a: 50 };
     var list = (pool === "mixed" || !poolMap[pool])
       ? keys.reduce(function (acc, k) { return acc.concat(poolMap[k].questions || []); }, [])
       : (poolMap[pool].questions || []);
-    if (!list.length) return { q: "Pick a number 1–100", a: 50 };
+    if (!list.length) return { q: t("Pick a number 1–100"), a: 50 };
     return list[Math.floor(Math.random() * list.length)];
   }
 

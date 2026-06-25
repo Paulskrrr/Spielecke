@@ -92,9 +92,9 @@
     var body;
     if (settings.mode === "custom") {
       body =
-        '  <p class="muted small">No sticky notes handy? Type a character for your mate, hand them the phone, and they hold it to their forehead while you give clues.</p>' +
-        '  <input id="wa-custom" class="text-input" type="text" maxlength="60" placeholder="Type a character / thing…" />' +
-        '  <button id="wa-show" class="btn btn-primary btn-block btn-xl">Show on sticky note 🪧</button>';
+        '  <p class="muted small">' + t("No sticky notes handy? Type a character for your mate, hand them the phone, and they hold it to their forehead while you give clues.") + "</p>" +
+        '  <input id="wa-custom" class="text-input" type="text" maxlength="60" placeholder="' + attr(t("Type a character / thing…")) + '" />' +
+        '  <button id="wa-show" class="btn btn-primary btn-block btn-xl">' + t("Show on sticky note 🪧") + "</button>";
     } else {
       var poolChips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
         .concat(Object.keys(pools).map(function (k) {
@@ -104,7 +104,7 @@
         return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
       }).join("");
       body =
-        '  <p class="muted small">Hold the phone to your forehead so you can\'t see it. The table shouts clues. Tap <strong>' + t("GOT IT ✅") + '</strong> when you guess, <strong>' + t("SKIP ⏭️") + '</strong> to pass.</p>' +
+        '  <p class="muted small">' + t("Hold the phone to your forehead so you can't see it. The table shouts clues. Tap") + ' <strong>' + t("GOT IT ✅") + '</strong> ' + t("when you guess,") + ' <strong>' + t("SKIP ⏭️") + '</strong> ' + t("to pass.") + '</p>' +
         '  <h3 class="sub">' + t("Category") + "</h3>" +
         '  <div class="chip-row" id="wa-pools">' + poolChips + "</div>" +
         '  <h3 class="sub">' + t("Round length") + "</h3>" +
@@ -166,10 +166,10 @@
   function renderSticky(text) {
     els.innerHTML =
       '<section class="screen whoami-sticky">' +
-      '  <p class="muted small">Forehead time! Others give clues.</p>' +
+      '  <p class="muted small">' + t("Forehead time! Others give clues.") + "</p>" +
       '  <div class="sticky-note"><span class="sticky-note__text">' + esc(text) + "</span></div>" +
-      '  <button id="wa-new" class="btn btn-primary btn-block btn-xl">New character ✍️</button>' +
-      '  <button id="wa-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '  <button id="wa-new" class="btn btn-primary btn-block btn-xl">' + t("New character ✍️") + "</button>" +
+      '  <button id="wa-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#wa-new").addEventListener("click", renderSetup);
     els.querySelector("#wa-home").addEventListener("click", function () { ctx.goHome(); });

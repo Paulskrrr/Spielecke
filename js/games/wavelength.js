@@ -61,7 +61,7 @@
       '<section class="screen game-setup">' +
       '  <h2 class="screen-title pop">📡 ' + t("Wavelength") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
-      '  <p class="muted small">One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.</p>' +
+      '  <p class="muted small">' + t("One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.") + "</p>" +
       '  <h3 class="sub">' + t("Spectrum pool") + "</h3>" +
       '  <div class="chip-row" id="wl-pools">' + chips + "</div>" +
       '  <button id="wl-start" class="btn btn-primary btn-block btn-xl">' + t("Start round 🎯") + "</button>" +
@@ -91,7 +91,7 @@
       '<section class="screen wl-handover">' +
       '  <div class="pass-emoji">🙈</div>' +
       '  <h2 class="pass-name pop">' + t("Clue-giver only") + "</h2>" +
-      '  <p class="muted">Everyone else: look away! One person picks up the phone to see the secret target.</p>' +
+      '  <p class="muted">' + t("Everyone else: look away! One person picks up the phone to see the secret target.") + "</p>" +
       '  <button id="wl-show" class="btn btn-primary btn-block btn-xl">' + t("Show me the target 🎯") + "</button>" +
       "</section>";
     els.querySelector("#wl-show").addEventListener("click", renderTarget);
@@ -103,7 +103,7 @@
       '  <h2 class="screen-title pop">' + t("Give a clue!") + "</h2>" +
       poles(spectrum) +
       track({ showTarget: true }) +
-      '  <p class="muted small">Think of a clue between the two ends that points right at the band — then hide and let the table guess.</p>' +
+      '  <p class="muted small">' + t("Think of a clue between the two ends that points right at the band — then hide and let the table guess.") + "</p>" +
       '  <button id="wl-hide" class="btn btn-block btn-xl">' + t("Hide & let them guess 🤐") + "</button>" +
       "</section>";
     els.querySelector("#wl-hide").addEventListener("click", renderGuess);

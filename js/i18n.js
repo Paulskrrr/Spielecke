@@ -333,6 +333,49 @@
     "{name} wins the round! 🏆": "{name} gewinnt die Runde! 🏆",
     "Scoreboard": "Punktestand",
 
+    // ── In-game UI: raw strings localised across games ─────────────────────
+    // Who Am I?
+    "No sticky notes handy? Type a character for your mate, hand them the phone, and they hold it to their forehead while you give clues.": "Keine Zettel zur Hand? Tipp einen Begriff für deinen Kumpel ein, gib ihm das Handy, und er hält es sich an die Stirn, während du Tipps gibst.",
+    "Type a character / thing…": "Tipp eine Person / Sache ein…",
+    "Show on sticky note 🪧": "Auf Zettel zeigen 🪧",
+    "Hold the phone to your forehead so you can't see it. The table shouts clues. Tap": "Halt dir das Handy an die Stirn, sodass du es nicht sehen kannst. Die Runde ruft Tipps. Tippe",
+    "when you guess,": "wenn du es errätst,",
+    "to pass.": "zum Überspringen.",
+    "Forehead time! Others give clues.": "Stirn-Zeit! Die anderen geben Tipps.",
+    // Imposter
+    "them all": "alle",
+    "them": "ihn/sie",
+    "Go round the table. Each person says <strong>one word</strong> hinting at the secret. The imposter is faking it. After a round or two, <strong>vote</strong> on who the faker is.": "Geht reihum. Jeder sagt <strong>ein Wort</strong>, das auf das geheime Wort anspielt. Der Imposter tut nur so. Nach ein, zwei Runden <strong>stimmt ab</strong>, wer der Faker ist.",
+    // The Bomb
+    "⚠ The Bomb is best with {n}+ players. Add more from the header.": "⚠ Die Bombe ist am besten mit {n}+ Spielern. Oben (👥) mehr hinzufügen.",
+    "Name something. Anything. Go!": "Nenn irgendwas. Egal was. Los!",
+    // Wavelength
+    "One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.": "Ein Spieler sieht einen versteckten Punkt auf dem Dial und gibt einen Ein-Satz-Tipp zwischen den beiden Enden. Alle anderen schieben den Regler zu ihrem Tipp. Volltreffer = Ruhm, voll daneben = saufen.",
+    "Everyone else: look away! One person picks up the phone to see the secret target.": "Alle anderen: weggucken! Einer schnappt sich das Handy, um das geheime Ziel zu sehen.",
+    "Think of a clue between the two ends that points right at the band — then hide and let the table guess.": "Überleg dir einen Tipp zwischen den beiden Enden, der genau auf das Band zeigt — dann versteck es und lass den Tisch raten.",
+    // Princess Treatment
+    "Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.": "Jede Runde wechselt zwischen 👑 Prinzessin (für die Mädels) und 🤴 König (für die Jungs). Lest den Spruch vor, dann entscheidet der Tisch.",
+    "Make one up!": "Denk dir was aus!",
+    "👑 PRINCESS": "👑 PRINZESSIN",
+    "🤴 KING": "🤴 KÖNIG",
+    // Liar's Numbers
+    "Lock your guess in private — don't let the others copy.": "Tippe deine Zahl heimlich ein — keiner darf abschauen.",
+    "{name}'s guess": "{name}s Tipp",
+    "(off {n})": "({n} daneben)",
+    "Pick a number 1–100": "Wähle eine Zahl von 1–100",
+    // Activity
+    "VS": "VS",
+    "Team A": "Team A",
+    "Team B": "Team B",
+    "No move": "Kein Zug",
+    "{n} pts": "{n} Pkt.",
+    // Quiz Out
+    " 🍺 Drink!": " 🍺 Trinken!",
+    "Game over": "Spiel vorbei",
+    "🍻 drink": "🍻 Trinken",
+    // Truth or Drink
+    "Whoever drew it": "Wer sie gezogen hat",
+
     // ── Hochadel (English keys; German values) ─────────────────────────────
     "Choose Edition": "Edition wählen",
     "The Rapunzel Edition is coming soon. 👸": "Die Rapunzel-Edition ist bald verfügbar. 👸",

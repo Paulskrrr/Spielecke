@@ -77,7 +77,7 @@
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       '  <div class="act-teams">' +
       teamSetupCard(0, split && split[0]) +
-      '    <div class="act-vs">VS</div>' +
+      '    <div class="act-vs">' + t("VS") + "</div>" +
       teamSetupCard(1, split && split[1]) +
       "  </div>" +
       (split ? '<button id="act-shuffle" class="btn btn-block">' + t("🔀 Shuffle teams") + "</button>" : "") +
@@ -109,7 +109,7 @@
     return (
       '<div class="act-team act-team--' + team.color + '">' +
       '  <button id="act-fig' + i + '" class="act-figure" aria-label="Change figure">' + team.figure + "</button>" +
-      '  <div class="act-team__name">Team ' + (i === 0 ? "A" : "B") + "</div>" +
+      '  <div class="act-team__name">' + t(i === 0 ? "Team A" : "Team B") + "</div>" +
       (members && members.length
         ? '<div class="act-team__members">' + esc(members.join(", ")) + "</div>"
         : '<div class="act-team__members muted">' + t("tap figure to change") + "</div>") +
@@ -156,14 +156,14 @@
     var team = teams[current];
     curType = board[team.pos];
     var info = TYPE_INFO[curType];
-    var teamLabel = current === 0 ? "A" : "B";
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
 
     els.innerHTML =
       '<section class="screen act-turn">' +
       '  <div class="act-layout">' +
       '    <div class="act-board-wrap">' + renderBoard() + "</div>" +
       '    <div class="act-controls">' +
-      '      <div class="act-turn-head act-team--' + team.color + '">' + team.figure + " Team " + teamLabel + t("'s turn") + "</div>" +
+      '      <div class="act-turn-head act-team--' + team.color + '">' + team.figure + " " + teamLabel + t("'s turn") + "</div>" +
       '      <div class="act-type-banner act-' + curType + '">' + info.icon + " " + t(info.label) + "</div>" +
       '      <p class="muted">' + t("Pick how risky:") + "</p>" +
       '      <div class="act-points">' +
@@ -192,13 +192,13 @@
   function renderReveal() {
     var team = teams[current];
     var info = TYPE_INFO[curType];
-    var teamLabel = current === 0 ? "A" : "B";
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
     curWord = pickWord(points);
     els.innerHTML =
       '<section class="screen act-reveal">' +
       '  <div class="pass-emoji">' + team.figure + "</div>" +
-      '  <h2 class="pass-name pop">Team ' + teamLabel + " — " + t("performer only") + "</h2>" +
-      '  <div class="act-type-banner act-' + curType + '">' + info.icon + " " + t(info.label) + " · " + points + " pts</div>" +
+      '  <h2 class="pass-name pop">' + teamLabel + " — " + t("performer only") + "</h2>" +
+      '  <div class="act-type-banner act-' + curType + '">' + info.icon + " " + t(info.label) + " · " + t("{n} pts").replace("{n}", points) + "</div>" +
       '  <p class="muted">' + t("One of you performs, the rest guess. Tap to see the word — don\'t show your team!") + "</p>" +
       '  <button id="act-show" class="btn btn-primary btn-block btn-xl">' + t("Show the word 👀") + "</button>" +
       "</section>";
@@ -213,7 +213,7 @@
     els.innerHTML =
       '<section class="screen act-perform">' +
       '  <div class="act-hud"><span id="act-time" class="hud-time">' + ROUND_SECONDS + "s</span>" +
-      '    <span class="hud-score act-' + curType + '">' + info.icon + " " + points + " pts</span></div>" +
+      '    <span class="hud-score act-' + curType + '">' + info.icon + " " + t("{n} pts").replace("{n}", points) + "</span></div>" +
       '  <div class="act-instruction">' + t(info.how) + "</div>" +
       '  <div class="act-word-wrap"><div class="act-word">' + esc(curWord) + "</div></div>" +
       actionButtons() +
@@ -227,7 +227,7 @@
     var info = TYPE_INFO.draw;
     els.innerHTML =
       '<section class="screen act-reveal">' +
-      '  <div class="act-type-banner act-draw">' + info.icon + " " + t(info.label) + " · " + points + " pts</div>" +
+      '  <div class="act-type-banner act-draw">' + info.icon + " " + t(info.label) + " · " + t("{n} pts").replace("{n}", points) + "</div>" +
       '  <p class="muted">' + t("Only the drawer looks. Memorise it — then draw it for your team.") + "</p>" +
       '  <div class="act-word-wrap"><div class="act-word">' + esc(curWord) + "</div></div>" +
       '  <button id="act-draw-start" class="btn btn-primary btn-block btn-xl">' + t("Start drawing 🖌️") + "</button>" +
@@ -239,7 +239,7 @@
     els.innerHTML =
       '<section class="screen act-drawplay">' +
       '  <div class="act-hud"><span id="act-time" class="hud-time">' + ROUND_SECONDS + "s</span>" +
-      '    <span class="hud-score act-draw">✏️ ' + points + " pts</span></div>" +
+      '    <span class="hud-score act-draw">✏️ ' + t("{n} pts").replace("{n}", points) + "</span></div>" +
       '  <canvas id="act-canvas" class="doodle-canvas"></canvas>' +
       '  <button id="act-clear" class="btn btn-skip btn-block">' + t("Clear 🧹") + "</button>" +
       actionButtons() +
@@ -343,8 +343,8 @@
     teardownCanvas();
     var team = teams[current];
     var other = teams[1 - current];
-    var teamLabel = current === 0 ? "A" : "B";
-    var otherLabel = current === 0 ? "B" : "A";
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
+    var otherLabel = t(current === 0 ? "Team B" : "Team A");
     if (success) team.pos = Math.min(team.pos + points, FINISH);
 
     if (team.pos >= FINISH) { renderWin(); return; }
@@ -352,13 +352,13 @@
     els.innerHTML =
       '<section class="screen act-result">' +
       '  <div class="result-emoji">' + (success ? "✅" : "❌") + "</div>" +
-      '  <h2 class="result-title pop">' + (success ? "+" + points + "!" : "No move") + "</h2>" +
+      '  <h2 class="result-title pop">' + (success ? "+" + points + "!" : t("No move")) + "</h2>" +
       '  <p class="result-sub">' +
       (success
-        ? team.figure + " Team " + teamLabel + " " + t("moves {n} forward.").replace("{n}", points) +
-          (drinking ? " 🍺 " + other.figure + " Team " + otherLabel + " " + t("drinks!") : "")
+        ? team.figure + " " + teamLabel + " " + t("moves {n} forward.").replace("{n}", points) +
+          (drinking ? " 🍺 " + other.figure + " " + otherLabel + " " + t("drinks!") : "")
         : t("The word was {word}.").replace("{word}", "<strong>" + esc(curWord) + "</strong>") + " " + team.figure + " " + t("stays put.") +
-          (drinking ? " 🍺 Team " + teamLabel + " " + t("drinks!") : "")) +
+          (drinking ? " 🍺 " + teamLabel + " " + t("drinks!") : "")) +
       "</p>" +
       '  <div class="act-board-wrap">' + renderBoard() + "</div>" +
       '  <button id="act-next" class="btn btn-primary btn-block btn-xl">' + t("Next team ▶️") + "</button>" +
@@ -371,12 +371,12 @@
 
   function renderWin() {
     var team = teams[current];
-    var teamLabel = current === 0 ? "A" : "B";
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
     els.innerHTML =
       '<section class="screen act-win">' +
       '  <div class="boom-flash">🏆</div>' +
       '  <h2 class="boom-title">' + team.figure + t(" wins!") + "</h2>" +
-      '  <p class="result-sub">Team ' + teamLabel + " " + t("completed the map first!") + "</p>" +
+      '  <p class="result-sub">' + teamLabel + " " + t("completed the map first!") + "</p>" +
       '  <div class="act-board-wrap">' + renderBoard() + "</div>" +
       '  <div class="stack">' +
       '    <button id="act-again" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
