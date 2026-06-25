@@ -18,6 +18,27 @@
   "use strict";
 
   var TERMS = {
+    general: {
+      label: "🌍 General",
+      terms: [
+        // Everyday objects
+        "Toothbrush", "Alarm clock", "Umbrella", "Sunglasses", "Remote control",
+        "Scissors", "Microwave", "Washing machine", "Stapler", "Lighter",
+        // Food & drink
+        "Pizza", "Sushi", "Ice cream", "Burger", "Popcorn",
+        "Coffee", "Beer", "Nutella", "Avocado", "Bacon",
+        // Animals
+        "Penguin", "Dolphin", "Flamingo", "Sloth", "Octopus",
+        "Panda", "Kangaroo", "Hamster", "Giraffe", "Crow",
+        // Places & situations
+        "Sauna", "Dentist", "Airport", "Casino", "Gym",
+        "Roller coaster", "Flea market", "Traffic jam", "Power outage", "Hospital",
+        // Experiences
+        "First date", "Job interview", "Hangover", "Moving apartment",
+        "Surprise party", "Road trip", "All-nighter", "Sunburn",
+      ],
+    },
+
     party: {
       label: "🎉 Party",
       terms: [
