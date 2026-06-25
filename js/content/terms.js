@@ -54,7 +54,7 @@
         // League of Legends
         "Yasuo", "Teemo", "Jungle", "Baron Nashor", "Dragon", "Nexus", "Gank",
         // Hitman
-        "Agent 47", "Disguise",
+        "Agent 47",
         // Clash of Clans
         "Barbarian", "Town Hall",
       ],
