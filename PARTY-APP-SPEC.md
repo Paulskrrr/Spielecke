@@ -35,7 +35,6 @@ next.
 - ✅ **Chooser** — spinning-wheel random person picker
 - ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
 - ✅ **Rank It** — privately rank the same set; drift from the group's consensus loses *(drinking-capable)*
-- ✅ **Meme Maker** — everyone captions a meme prompt, the table votes the funniest
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -125,11 +124,10 @@ js/
     quiz.js                Quiz Out questions, an array of difficulty levels
     truth.js               Truth or Drink question pools
     rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
-    meme.js                Meme Maker prompts ({ label, prompts:[{ image, setup }] })
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
-    reactionduel.js  rankit.js  meme.js
+    reactionduel.js  rankit.js
     (chooser & reactionduel have no content file)
 assets/logo.png            the "Pauls Spielecke" wordmark
 ```
@@ -366,17 +364,6 @@ footrule). Closest to the group is the most in sync; furthest off loses.
 - **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }] }`).
 - **Outcome:** least drift **wins 👑**, most drift **loses 💀** (drinking mode: drinks). If the
   whole table ranks identically, it's a draw — nobody wins or loses.
-
-### 3.16 Meme Maker 😹 (`meme`, 3+) — plain
-
-A meme prompt shows: a big emoji "image" + a caption challenge. The phone passes round and each
-player privately types their funniest caption. Then the table **votes**: all captions show
-anonymously (shuffled), the group taps the best, and its author scores a point. A running
-scoreboard rides along the session.
-
-- **Config:** prompt pool. (3+ so voting works without picking your own.)
-- **Content:** `content/meme.js` (`{ label, prompts:[{ image, setup }] }`).
-- **Outcome:** funniest caption wins the round; the session scoreboard tracks who's ahead.
 
 ---
 

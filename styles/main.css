@@ -1084,50 +1084,6 @@ body::before {
 .ri-prow--lose .muted { color: rgba(255,255,255,0.8); }
 .ri-prow__name { font-weight: 800; }
 
-/* ----- Meme Maker ------------------------------------------------------- */
-
-.mm-pass, .mm-entry, .mm-vote, .mm-reveal { text-align: center; }
-.mm-image { font-size: clamp(4rem, 22vw, 8rem); line-height: 1; margin: 8px 0; }
-.mm-image--sm { font-size: clamp(3rem, 16vw, 5.5rem); margin: 4px 0; }
-.mm-setup {
-  font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 800; line-height: 1.25;
-  margin: 4px auto 14px; max-width: 620px;
-}
-.mm-input { text-align: center; font-size: 1.2rem; font-weight: 700; margin-bottom: 14px; }
-
-.mm-answers { display: flex; flex-direction: column; gap: 12px; margin: 8px 0; }
-.mm-answer {
-  display: flex; align-items: center; gap: 12px; text-align: left;
-  padding: 14px 16px; font-family: var(--font); font-size: 1.1rem; font-weight: 700; color: var(--ink);
-  background: #fff; border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--pop); cursor: pointer;
-}
-.mm-answer:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
-.mm-answer__no {
-  width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-  background: var(--purple); color: #fff; border: 2px solid var(--ink); border-radius: 12px; font-weight: 900;
-}
-.mm-answer__text { flex: 1; }
-
-.mm-result-list { list-style: none; padding: 0; margin: 14px 0; display: flex; flex-direction: column; gap: 10px; }
-.mm-result-card {
-  padding: 12px 16px; background: #fff; border: 3px solid var(--ink); border-radius: 16px; text-align: left;
-}
-.mm-result-card--win { background: var(--green); box-shadow: var(--pop); }
-.mm-result-card__text { font-size: 1.15rem; font-weight: 800; line-height: 1.25; }
-.mm-result-card__by { font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); margin-top: 4px; }
-.mm-result-card--win .mm-result-card__by { color: var(--ink); }
-
-.mm-scores { list-style: none; padding: 0; margin: 8px auto 4px; max-width: 460px; display: flex; flex-direction: column; gap: 8px; }
-.mm-score-row {
-  display: flex; justify-content: space-between; gap: 10px; padding: 10px 16px;
-  background: #fff; border: 3px solid var(--ink); border-radius: 14px; font-weight: 800;
-}
-.mm-score-row--lead { background: var(--yellow); }
-.mm-score-row__pts {
-  min-width: 32px; text-align: center; background: var(--ink); color: #fff;
-  border-radius: 999px; padding: 0 10px;
-}
-
 /* ----- Larger screens --------------------------------------------------- */
 
 @media (min-width: 600px) {
@@ -1140,7 +1096,6 @@ body::before {
   .act-perform-actions .btn { min-height: 12vh; }
   .quiz-options { grid-template-columns: 1fr 1fr; }
   .ri-pool { max-width: 620px; margin-left: auto; margin-right: auto; }
-  .mm-answers { max-width: 620px; margin-left: auto; margin-right: auto; }
 }
 
 /* Desktop: nicer two-column turn layout + a roomier board */

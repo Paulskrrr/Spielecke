@@ -71,8 +71,6 @@
     "Royal court card game — transgressors serve.": "Höfisches Kartenspiel — wer sich vergeht, dient.",
     "Rank It": "Rank It",
     "Everyone ranks the same five. Drift from the group and you lose.": "Alle ranken dieselben fünf. Wer vom Schwarm abweicht, verliert.",
-    "Meme Maker": "Meme Maker",
-    "Caption the chaos. Funniest one wins the round.": "Texte das Chaos. Der lustigste Spruch gewinnt.",
 
     // ── Common ─────────────────────────────────────────────────────────────
     "Back to shelf": "Zur Spielecke",
@@ -322,16 +320,6 @@
     "drifted furthest.": "wich am weitesten ab.",
     "Who drifted?": "Wer weicht ab?",
     "off by {n}": "{n} daneben",
-
-    // ── Meme Maker ─────────────────────────────────────────────────────────
-    "Write your caption in private — keep it secret.": "Schreib deinen Spruch heimlich — nicht zeigen.",
-    "I'm {name} — write": "Ich bin {name} — schreiben",
-    "{name}'s caption": "{name}s Spruch",
-    "Your caption…": "Dein Spruch…",
-    "Vote for the funniest 🏆": "Wählt den lustigsten 🏆",
-    "Tap the caption the table loves most.": "Tippt den Spruch, den der Tisch am besten findet.",
-    "{name} wins the round! 🏆": "{name} gewinnt die Runde! 🏆",
-    "Scoreboard": "Punktestand",
 
     // ── In-game UI: raw strings localised across games ─────────────────────
     // Who Am I?
