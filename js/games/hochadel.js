@@ -27,6 +27,11 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  // Pick the current language's subtree from the bilingual content bundle
+  // (mirrors the Rank It accessor: every content read goes through Spielecke.L).
+  function content() {
+    return global.Spielecke.L(global.Spielecke.Hochadel) || { editions: [], groundRules: [], verses: [], deck: [] };
+  }
 
   // Heraldic palette + labels per card type (spec §2). No green (red-green-safe).
   var TYPE_META = {
@@ -54,7 +59,7 @@
     mount: function (container, context) {
       els = container;
       ctx = context;
-      data = global.Spielecke.Hochadel || { editions: [], groundRules: [], verses: [], deck: [] };
+      data = content();
       cardById = {};
       data.deck.forEach(function (c) { cardById[c.id] = c; });
 
