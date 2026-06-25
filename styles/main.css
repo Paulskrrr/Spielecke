@@ -604,6 +604,34 @@ body::before {
 }
 .deck-rule { font-size: 1.15rem; font-weight: 700; margin: 0 0 16px; }
 
+/* ----- Tappable design elements (act as the button themselves) ---------- */
+.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tappable:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+/* A small "tap me" hint shown under/inside a tappable element */
+.tap-hint {
+  font-size: 0.9rem; font-weight: 800; color: var(--ink-soft);
+  letter-spacing: 0.3px; margin-top: 12px;
+  animation: tap-hint-pulse 1.6s ease-in-out infinite;
+}
+@keyframes tap-hint-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* The flash-card prompt becomes the "next" button: toy-block press on tap. */
+.deck-prompt.tappable {
+  transition: transform 0.09s ease, box-shadow 0.09s ease;
+  flex: none; width: 100%;
+}
+.deck-prompt.tappable:active { transform: translateY(8px); box-shadow: 0 0 0 var(--ink); }
+.deck-card .deck-tapwrap { flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+.deck-card .deck-tapwrap .deck-prompt { flex: 1; }
+
+/* Chooser wheel as the spin trigger */
+.wheel.tappable, .wheel-wrap.tappable { transition: transform 0.09s ease; }
+.wheel-wrap.tappable:active { transform: scale(0.97); }
+
+/* Fuck the Dealer: the revealed card advances to the next one */
+.pkflip.tappable { transition: transform 0.09s ease; }
+.pkflip.tappable:active { transform: translateY(6px) scale(0.98); }
+
 /* ----- Liar's Numbers --------------------------------------------------- */
 
 .ln-pass, .ln-entry { text-align: center; }

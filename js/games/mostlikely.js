@@ -70,14 +70,16 @@
     els.innerHTML =
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + t("Most likely to…") + "</div>" +
-      '  <div class="deck-prompt">' + esc(line) + "</div>" +
+      '  <div class="deck-tapwrap">' +
+      '    <div id="ml-card" class="deck-prompt">' + esc(line) + "</div>" +
+      "  </div>" +
       '  <p class="deck-rule">' + t("3… 2… 1… POINT! 🫵") + "<br/>" +
       (settings.drinking ? t("Most fingers drinks 🍺") : t("Most fingers takes the crown 👑")) +
       "</p>" +
-      '  <button id="ml-next" class="btn btn-primary btn-block btn-xl">' + t("Next ▶️") + "</button>" +
+      '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
       '  <button id="ml-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
-    els.querySelector("#ml-next").addEventListener("click", renderCard);
+    global.Spielecke.tappable(els.querySelector("#ml-card"), renderCard);
     els.querySelector("#ml-home").addEventListener("click", function () { ctx.goHome(); });
   }
 

@@ -292,16 +292,20 @@
         catch (e) { /* older browsers: leave scroll as-is */ }
       }
     }
-    var resEl = els.querySelector("#fd-result");
-    var btn = document.createElement("button");
-    btn.className = "btn btn-primary btn-block btn-xl";
-    btn.textContent = t("Next card ▶️");
-    btn.addEventListener("click", function () {
+    // Tap the just-revealed card itself to move on — no separate button.
+    function goNext() {
       guesserIdx = (guesserIdx + 1) % names().length;
       if (guesserIdx === dealerIdx) guesserIdx = (guesserIdx + 1) % names().length; // dealer doesn't guess
       nextCard();
-    });
-    if (resEl) resEl.appendChild(btn);
+    }
+    global.Spielecke.tappable(els.querySelector("#fd-flip"), goNext);
+    var resEl = els.querySelector("#fd-result");
+    if (resEl) {
+      var hint = document.createElement("div");
+      hint.className = "tap-hint";
+      hint.textContent = t("👆 Tap the card to continue");
+      resEl.appendChild(hint);
+    }
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────

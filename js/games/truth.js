@@ -72,12 +72,14 @@
     els.innerHTML =
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + who + "</div>" +
-      '  <div class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
+      '  <div class="deck-tapwrap">' +
+      '    <div id="tr-card" class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
+      "  </div>" +
       '  <p class="deck-rule">' + (settings.drinking ? t("Answer honestly, or take a 🍺 drink to dodge.") : t("Answer honestly!")) + "</p>" +
-      '  <button id="tr-next" class="btn btn-primary btn-block btn-xl">' + t("Next ▶️") + "</button>" +
+      '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
       '  <button id="tr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
-    els.querySelector("#tr-next").addEventListener("click", renderCard);
+    global.Spielecke.tappable(els.querySelector("#tr-card"), renderCard);
     els.querySelector("#tr-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
