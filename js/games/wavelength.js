@@ -15,9 +15,15 @@
   function pools() { return global.Spielecke.L(global.Spielecke.WavelengthSpectrums) || {}; }
   function Pools() { return global.Spielecke.Pools; }
 
-  var BULLSEYE = 10;
-  var MISS = 30;
-  var TARGET_BAND = BULLSEYE;
+  // Concentric scoring zones, measured as half-width (%) out from the target
+  // centre. The closer you land to the middle, the more you score — so a sharp
+  // read beats one that just clips the edge. Ordered centre → outermost.
+  var ZONES = [
+    { half: 4,  pts: 4, cls: "bull" },
+    { half: 10, pts: 3, cls: "near" },
+    { half: 18, pts: 2, cls: "far" },
+  ];
+  var MAX_HALF = ZONES[ZONES.length - 1].half; // keep the whole target on-track
 
   var els = null;
   var ctx = null;
@@ -72,7 +78,7 @@
   // --- Round: clue-giver sees the hidden target ----------------------------
   function startRound() {
     spectrum = pickSpectrum();
-    target = Math.round(TARGET_BAND + Math.random() * (100 - 2 * TARGET_BAND));
+    target = Math.round(MAX_HALF + Math.random() * (100 - 2 * MAX_HALF));
     guess = 50;
     renderHandover();
   }
@@ -106,8 +112,10 @@
       '<section class="screen wl-guess">' +
       '  <h2 class="screen-title pop">' + t("Where is it?") + "</h2>" +
       poles(spectrum) +
+      '  <div class="wl-dial">' +
       track({ showTarget: false, showGuess: true }) +
-      '  <input id="wl-slider" class="wl-slider" type="range" min="0" max="100" value="' + guess + '" />' +
+      '    <input id="wl-slider" class="wl-slider" type="range" min="0" max="100" value="' + guess + '" />' +
+      "  </div>" +
       '  <button id="wl-lock" class="btn btn-primary btn-block btn-xl">' + t("Lock it in 🔒") + "</button>" +
       "</section>";
 
@@ -115,7 +123,7 @@
     slider.addEventListener("input", function () {
       guess = parseInt(slider.value, 10);
       var marker = els.querySelector("#wl-guess-marker");
-      if (marker) marker.style.left = guess + "%";
+      if (marker) marker.style.setProperty("--pos", guess + "%");
     });
     els.querySelector("#wl-lock").addEventListener("click", renderReveal);
   }
@@ -123,18 +131,23 @@
   // --- Reveal & outcome ----------------------------------------------------
   function renderReveal() {
     var d = Math.abs(guess - target);
-    var points = Math.max(0, 100 - d * 2);
-    var emoji, title, line;
-    if (d <= BULLSEYE) {
+    var zone = zoneFor(d);
+    var points = zone ? zone.pts : 0;
+    var emoji, title, lead, end;
+    if (zone && zone.cls === "bull") {
       emoji = "🎯"; title = t("BULLSEYE!");
-      line = t("The clue-giver's a legend — ") + "<strong>" + points + t(" points!") + "</strong>";
-    } else if (d <= MISS) {
-      emoji = "👍"; title = t("So close!");
-      line = t("Decent reading — ") + "<strong>" + points + t(" points.") + "</strong>";
+      lead = t("The clue-giver's a legend — "); end = t(" points!");
+    } else if (zone && zone.cls === "near") {
+      emoji = "🔥"; title = t("So close!");
+      lead = t("Great read — "); end = t(" points.");
+    } else if (zone) {
+      emoji = "👍"; title = t("On the board!");
+      lead = t("Decent reading — "); end = t(" points.");
     } else {
       emoji = "💀"; title = t("Way off!");
-      line = t("Total miss — ") + "<strong>" + points + t(" points.") + "</strong>";
+      lead = t("Total miss — "); end = t(" points.");
     }
+    var line = lead + "<strong>" + points + end + "</strong>";
 
     els.innerHTML =
       '<section class="screen wl-reveal">' +
@@ -164,16 +177,29 @@
     );
   }
 
+  function zoneFor(d) {
+    for (var i = 0; i < ZONES.length; i++) {
+      if (d <= ZONES[i].half) return ZONES[i];
+    }
+    return null;
+  }
+
   function track(opts) {
     var parts = ['<div class="wl-track">'];
     if (opts.showTarget) {
-      parts.push(
-        '<div class="wl-band" style="left:' + (target - TARGET_BAND) + "%;width:" +
-        (2 * TARGET_BAND) + '%"></div>'
-      );
+      // Render widest zone first so the narrower, higher-scoring rings layer on
+      // top of it — giving the nested "target" look.
+      for (var i = ZONES.length - 1; i >= 0; i--) {
+        var z = ZONES[i];
+        parts.push(
+          '<div class="wl-zone wl-zone--' + z.cls + '" style="--start:' +
+          (target - z.half) + "%;--size:" + (2 * z.half) + '%"></div>'
+        );
+      }
+      parts.push('<div class="wl-center" style="--pos:' + target + '%"></div>');
     }
     if (opts.showGuess) {
-      parts.push('<div id="wl-guess-marker" class="wl-marker" style="left:' + guess + '%"></div>');
+      parts.push('<div id="wl-guess-marker" class="wl-marker" style="--pos:' + guess + '%"></div>');
     }
     parts.push("</div>");
     return parts.join("");
