@@ -54,7 +54,7 @@
       tagline: "Royal court card game — transgressors serve.",
       icon: "👑",
       minPlayers: 2,
-      supportsDrinking: false, // it IS a drinking game; no separate toggle needed
+      supportsDrinking: true, // it IS a drinking game — show the Trinkspiel marker
     },
     mount: function (container, context) {
       els = container;

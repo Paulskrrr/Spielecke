@@ -24,7 +24,7 @@
       tagline: "Spin the wheel. Let fate pick the victim.",
       icon: "🎡",
       minPlayers: 2,
-      supportsDrinking: false,
+      supportsDrinking: true,
     },
     mount: function (container, context) {
       els = container; ctx = context;

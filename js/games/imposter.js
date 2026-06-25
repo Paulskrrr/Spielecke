@@ -35,7 +35,7 @@
       tagline: "Everyone knows the word. One faker doesn't. Sniff them out.",
       icon: "🕵️",
       minPlayers: MIN_PLAYERS,
-      supportsDrinking: false,
+      supportsDrinking: true,
     },
 
     mount: function (container, context) {
