@@ -33,6 +33,10 @@
         "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
         "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
         "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
+        // FC Barcelona
+        "Remontada", "Camp Nou", "La Masia", "Tiki-Taka",
+        "Xavi", "Iniesta", "Puyol", "Guardiola",
+        "Pedri", "Lamine Yamal",
       ],
     },
 
