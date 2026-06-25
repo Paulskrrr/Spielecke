@@ -16,6 +16,8 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function Pools() { return global.Spielecke.Pools; }
+  function poolKey() { return (settings.pools || []).slice().sort().join(","); }
 
   var ROUND_OPTIONS = [30, 60, 90]; // seconds
   var TARGET = 3; // beat this for a 🎉
@@ -65,7 +67,7 @@
     if (ROUND_OPTIONS.indexOf(rs) === -1) rs = DEFAULTS.roundSeconds;
     return {
       roundSeconds: rs,
-      pool: store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+      pools: Pools().load(store, poolsFor()),
       soundOn: store.get("soundOn", DEFAULTS.soundOn) !== false,
       mode: store.get("mode", DEFAULTS.mode) === "custom" ? "custom" : "categories",
     };
@@ -73,7 +75,7 @@
   function saveSettings() {
     if (!ctx) return;
     ctx.store.set("roundSeconds", settings.roundSeconds);
-    ctx.store.set("pool", settings.pool);
+    Pools().save(ctx.store, settings.pools);
     ctx.store.set("soundOn", settings.soundOn);
     ctx.store.set("mode", settings.mode);
   }
@@ -96,10 +98,7 @@
         '  <input id="wa-custom" class="text-input" type="text" maxlength="60" placeholder="' + attr(t("Type a character / thing…")) + '" />' +
         '  <button id="wa-show" class="btn btn-primary btn-block btn-xl">' + t("Show on sticky note 🪧") + "</button>";
     } else {
-      var poolChips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-        .concat(Object.keys(pools).map(function (k) {
-          return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
-        })).join("");
+      var poolChips = Pools().chipsHtml(pools, t);
       var timeChips = ROUND_OPTIONS.map(function (s) {
         return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
       }).join("");
@@ -141,15 +140,12 @@
       return;
     }
 
-    highlight("#wa-pools", "pool", settings.pool, "data-pool");
     highlight("#wa-times", "secs", String(settings.roundSeconds), "data-secs");
 
-    els.querySelectorAll("#wa-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); saveSettings();
-        highlight("#wa-pools", "pool", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#wa-pools"), poolsFor(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; saveSettings(); },
+      function () { queue = []; });
     els.querySelectorAll("#wa-times .chip").forEach(function (c) {
       c.addEventListener("click", function () {
         settings.roundSeconds = parseInt(c.getAttribute("data-secs"), 10); saveSettings();
@@ -179,9 +175,9 @@
   function startTurn() {
     score = 0;
     remaining = settings.roundSeconds;
-    if (!queue.length || queuePool !== settings.pool) {
-      queue = buildQueue(settings.pool);
-      queuePool = settings.pool;
+    if (!queue.length || queuePool !== poolKey()) {
+      queue = buildQueue();
+      queuePool = poolKey();
     }
     setupAudio();
 
@@ -249,19 +245,11 @@
   }
 
   // --- Word queue ----------------------------------------------------------
-  function buildQueue(pool) {
-    var pools = poolsFor();
-    var keys = Object.keys(pools);
-    var items;
-    if (pool === "mixed" || !pools[pool]) {
-      items = keys.reduce(function (a, k) { return a.concat(pools[k].terms || []); }, []);
-    } else {
-      items = (pools[pool].terms || []).slice();
-    }
-    return shuffle(items.slice());
+  function buildQueue() {
+    return shuffle(Pools().gather(settings.pools, poolsFor(), "terms").slice());
   }
   function nextWord() {
-    if (!queue.length) queue = buildQueue(settings.pool);
+    if (!queue.length) queue = buildQueue();
     return queue.length ? queue.pop() : "Make one up!";
   }
   function shuffle(a) {

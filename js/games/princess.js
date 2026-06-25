@@ -14,8 +14,7 @@
 
   function t(k) { return global.Spielecke.t(k); }
   function pools() { return global.Spielecke.L(global.Spielecke.Princess) || {}; }
-
-  var DEFAULTS = { pool: "mixed" };
+  function Pools() { return global.Spielecke.Pools; }
 
   var els = null, ctx = null, settings = null;
   var isPrincess = true;
@@ -32,7 +31,7 @@
     },
     mount: function (container, context) {
       els = container; ctx = context;
-      settings = { pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool };
+      settings = { pools: Pools().load(context.store, pools()) };
       isPrincess = Math.random() < 0.5;
       renderSetup();
     },
@@ -43,11 +42,7 @@
   };
 
   function renderSetup() {
-    var p = pools();
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(p).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(p[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(pools(), t);
 
     els.innerHTML =
       '<section class="screen game-setup">' +
@@ -59,14 +54,10 @@
       '  <button id="pr-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
       "</section>";
 
-    highlight("#pr-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#pr-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
-        qPrincess = []; qKing = [];
-        highlight("#pr-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#pr-pools"), pools(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { qPrincess = []; qKing = []; });
     els.querySelector("#pr-start").addEventListener("click", renderCard);
   }
 
@@ -103,12 +94,8 @@
   }
 
   function buildQueue(gender) {
-    var p = pools();
-    var keys = Object.keys(p);
-    var sel = (settings.pool === "mixed" || !p[settings.pool]) ? keys : [settings.pool];
     var field = gender ? "princess" : "king";
-    var items = sel.reduce(function (a, k) { return a.concat(p[k][field] || []); }, []);
-    return shuffle(items.slice());
+    return shuffle(Pools().gather(settings.pools, pools(), field).slice());
   }
   function nextPrompt(gender) {
     var q = gender ? qPrincess : qKing;
@@ -121,9 +108,6 @@
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
-  }
-  function highlight(sel, value, an) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }

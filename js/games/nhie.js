@@ -10,8 +10,8 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
-
-  var DEFAULTS = { pool: "mixed", drinking: false };
+  function poolsOf() { return global.Spielecke.L(global.Spielecke.NHIE) || {}; }
+  function Pools() { return global.Spielecke.Pools; }
 
   var els = null, ctx = null, settings = null;
   var queue = [];
@@ -28,7 +28,7 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+        pools: Pools().load(context.store, poolsOf()),
         drinking: context.store.get("drinking", false) === true,
       };
       renderSetup();
@@ -40,11 +40,7 @@
   };
 
   function renderSetup() {
-    var pools = global.Spielecke.L(global.Spielecke.NHIE) || {};
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(poolsOf(), t);
 
     els.innerHTML =
       '<section class="screen game-setup">' +
@@ -56,18 +52,15 @@
       '  <button id="ni-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
       "</section>";
 
-    highlight("#ni-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#ni-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
-        highlight("#ni-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#ni-pools"), poolsOf(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { queue = []; });
     els.querySelector("#ni-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
     els.querySelector("#ni-start").addEventListener("click", function () {
-      queue = buildQueue(settings.pool); renderCard();
+      queue = buildQueue(); renderCard();
     });
   }
 
@@ -87,24 +80,16 @@
     els.querySelector("#ni-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
-  function buildQueue(pool) {
-    var pools = global.Spielecke.L(global.Spielecke.NHIE) || {};
-    var keys = Object.keys(pools);
-    var items = (pool === "mixed" || !pools[pool])
-      ? keys.reduce(function (a, k) { return a.concat(pools[k].prompts || []); }, [])
-      : (pools[pool].prompts || []).slice();
-    return shuffle(items.slice());
+  function buildQueue() {
+    return shuffle(Pools().gather(settings.pools, poolsOf(), "prompts").slice());
   }
   function nextPrompt() {
-    if (!queue.length) queue = buildQueue(settings.pool);
+    if (!queue.length) queue = buildQueue();
     return queue.length ? queue.pop() : "make something up!";
   }
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
-  }
-  function highlight(sel, value, an) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }

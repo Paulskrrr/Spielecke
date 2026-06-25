@@ -13,11 +13,11 @@
 
   function t(k) { return global.Spielecke.t(k); }
   function pools() { return global.Spielecke.L(global.Spielecke.WavelengthSpectrums) || {}; }
+  function Pools() { return global.Spielecke.Pools; }
 
   var BULLSEYE = 10;
   var MISS = 30;
   var TARGET_BAND = BULLSEYE;
-  var DEFAULTS = { pool: "mixed" };
 
   var els = null;
   var ctx = null;
@@ -39,7 +39,7 @@
     mount: function (container, context) {
       els = container;
       ctx = context;
-      settings = { pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool };
+      settings = { pools: Pools().load(context.store, pools()) };
       renderSetup();
     },
 
@@ -51,11 +51,7 @@
 
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
-    var poolMap = pools();
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(poolMap).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(poolMap[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(pools(), t);
 
     els.innerHTML =
       '<section class="screen game-setup">' +
@@ -67,20 +63,15 @@
       '  <button id="wl-start" class="btn btn-primary btn-block btn-xl">' + t("Start round 🎯") + "</button>" +
       "</section>";
 
-    highlight("#wl-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#wl-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool");
-        ctx.store.set("pool", settings.pool);
-        highlight("#wl-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#wl-pools"), pools(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
     els.querySelector("#wl-start").addEventListener("click", startRound);
   }
 
   // --- Round: clue-giver sees the hidden target ----------------------------
   function startRound() {
-    spectrum = pickSpectrum(settings.pool);
+    spectrum = pickSpectrum();
     target = Math.round(TARGET_BAND + Math.random() * (100 - 2 * TARGET_BAND));
     guess = 50;
     renderHandover();
@@ -189,26 +180,13 @@
   }
 
   // --- Spectrum picking ----------------------------------------------------
-  function pickSpectrum(pool) {
-    var poolMap = pools();
-    var keys = Object.keys(poolMap);
-    if (!keys.length) return { left: "Cold", right: "Hot" };
-    var list;
-    if (pool === "mixed" || !poolMap[pool]) {
-      list = keys.reduce(function (a, k) { return a.concat(poolMap[k].pairs || []); }, []);
-    } else {
-      list = poolMap[pool].pairs || [];
-    }
+  function pickSpectrum() {
+    var list = Pools().gather(settings.pools, pools(), "pairs");
     if (!list.length) return { left: "Cold", right: "Hot" };
     return list[Math.floor(Math.random() * list.length)];
   }
 
   // --- Utils ---------------------------------------------------------------
-  function highlight(sel, value, attrName) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) {
-      c.classList.toggle("chip--active", c.getAttribute(attrName) === value);
-    });
-  }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }
 

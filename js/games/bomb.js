@@ -26,8 +26,8 @@
   // --- Configurable defaults (spec §2.4); persisted per-game via context.store
   var DEFAULTS = {
     soundOn: true,
-    pool: "mixed", // "mixed" = draw from all pools
   };
+  function Pools() { return global.Spielecke.Pools; }
 
   // --- Per-mount state (reset every mount) --------------------------------
   var els = null;        // container
@@ -77,7 +77,7 @@
   function loadSettings(store) {
     return {
       soundOn: store.get("soundOn", DEFAULTS.soundOn) !== false,
-      pool: store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+      pools: Pools().load(store, categories()),
       drinking: store.get("drinking", false) === true,
     };
   }
@@ -85,7 +85,7 @@
   function saveSettings() {
     if (!ctx) return;
     ctx.store.set("soundOn", settings.soundOn);
-    ctx.store.set("pool", settings.pool);
+    Pools().save(ctx.store, settings.pools);
     ctx.store.set("drinking", settings.drinking);
   }
 
@@ -94,20 +94,9 @@
   // ========================================================================
   function renderSetup() {
     stopFuse();
-    var pools = categories();
     var playerCount = (ctx.players || []).length;
 
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed (all)") + "</button>"]
-      .concat(
-        Object.keys(pools).map(function (key) {
-          return (
-            '<button class="chip" data-pool="' + attr(key) + '">' +
-            esc(pools[key].label || key) +
-            "</button>"
-          );
-        })
-      )
-      .join("");
+    var chips = Pools().chipsHtml(categories(), t);
 
     var warn =
       playerCount > 0 && playerCount < module.meta.minPlayers
@@ -138,15 +127,10 @@
       '  <button id="bomb-start" class="btn btn-primary btn-block btn-xl">' + t("ARM & START 💥") + "</button>" +
       "</section>";
 
-    // Pool chips
-    highlightPool();
-    els.querySelectorAll("#bomb-pools .chip").forEach(function (chip) {
-      chip.addEventListener("click", function () {
-        settings.pool = chip.getAttribute("data-pool");
-        saveSettings();
-        highlightPool();
-      });
-    });
+    // Pool chips (multi-select)
+    Pools().bind(els.querySelector("#bomb-pools"), categories(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; saveSettings(); });
 
     // Sound toggle
     els.querySelector("#bomb-sound").addEventListener("change", function (e) {
@@ -163,20 +147,11 @@
     els.querySelector("#bomb-start").addEventListener("click", startRound);
   }
 
-  function highlightPool() {
-    els.querySelectorAll("#bomb-pools .chip").forEach(function (chip) {
-      chip.classList.toggle(
-        "chip--active",
-        chip.getAttribute("data-pool") === settings.pool
-      );
-    });
-  }
-
   // ========================================================================
   // Screen: Playing (spec §2.2 steps 3–4)
   // ========================================================================
   function startRound() {
-    currentPrompt = pickPrompt(settings.pool);
+    currentPrompt = pickPrompt();
     var fuseMs = randomFuseMs();
 
     els.innerHTML =
@@ -251,19 +226,8 @@
     return Math.round(secs * 1000);
   }
 
-  function pickPrompt(pool) {
-    var pools = categories();
-    var keys = Object.keys(pools);
-    if (!keys.length) return t("Name something. Anything. Go!");
-
-    var list;
-    if (pool === "mixed" || !pools[pool]) {
-      list = keys.reduce(function (acc, k) {
-        return acc.concat(pools[k].prompts || []);
-      }, []);
-    } else {
-      list = pools[pool].prompts || [];
-    }
+  function pickPrompt() {
+    var list = Pools().gather(settings.pools, categories(), "prompts");
     if (!list.length) return t("Name something. Anything. Go!");
     return list[Math.floor(Math.random() * list.length)];
   }
