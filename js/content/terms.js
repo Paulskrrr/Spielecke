@@ -65,6 +65,27 @@
         "Whipped cream", "Massage parlour", "Period sex", "Dad bod",
       ],
     },
+    doodle_hard: {
+      label: "🎨 Doodle – Hard",
+      terms: [
+        // Absurd animal combos
+        "Frog in a car", "Penguin on a skateboard", "Shark in a bathtub",
+        "Bear in a business suit", "Dinosaur on a bicycle", "Elephant in an elevator",
+        "Octopus driving a bus", "Giraffe in a submarine", "Panda in a sauna",
+        "Horse at a wedding", "Crocodile doing yoga", "Turtle on a treadmill",
+        "Snake in a library", "Wolf playing violin", "Hippo at a desk",
+        "Cat giving a TED Talk", "Dog judging a cooking show", "Fish playing guitar",
+        "Monkey on a rollercoaster", "Chicken in space",
+        // Tricky abstract concepts
+        "Loneliness", "Jealousy", "Procrastination", "Déjà vu", "Awkward silence",
+        "Monday morning", "Fear of missing out", "Democracy", "The internet",
+        // Visual paradoxes & impossible things
+        "Fire underwater", "Man falling upwards", "Invisible man eating soup",
+        "The end of a rainbow", "The last cookie", "A dream inside a dream",
+        "Someone being watched without knowing it",
+      ],
+    },
+
     starwars_easy: {
       label: "⭐ Star Wars – Easy",
       terms: [
