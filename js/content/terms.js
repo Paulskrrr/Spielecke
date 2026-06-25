@@ -129,7 +129,7 @@
     },
 
     marvel: {
-      label: "🦸 Marvel (bis 2022)",
+      label: "🦸 Marvel",
       terms: [
         // Avengers core
         "Iron Man", "Captain America", "Thor", "Black Widow", "Hulk",
