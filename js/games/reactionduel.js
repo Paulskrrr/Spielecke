@@ -17,6 +17,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var TARGETS = [3, 5, 7];
   var DEFAULTS = { target: 5, drinking: false };
 
@@ -27,18 +29,22 @@
   var TARGET_SYM = "💣";
   var DECOYS = ["🎉", "🍺", "🔥", "🎲", "⭐", "🍕", "💀", "🍑", "👻", "🦊"];
 
-  var ROUND_RULES = {
-    go: "Wait for 🟢 GREEN — then TAP!",
-    bait: "TAP on GREEN — don’t fall for the fakes! 🪤",
-    colour: "TAP only when it turns 🟢 GREEN",
-    symbol: "TAP only the " + TARGET_SYM,
-  };
-  var LOSE_REASON = {
-    go: "jumped the gun! 🏁",
-    bait: "took the bait! 🪤",
-    colour: "tapped the wrong colour! 🎨",
-    symbol: "tapped the wrong thing! ❌",
-  };
+  function getRoundRules() {
+    return {
+      go:     t("Wait for 🟢 GREEN — then TAP!"),
+      bait:   t("TAP on GREEN — don't fall for the fakes! 🪤"),
+      colour: t("TAP only when it turns 🟢 GREEN"),
+      symbol: t("TAP only the 💣"),
+    };
+  }
+  function getLoseReasons() {
+    return {
+      go:     t("jumped the gun! 🏁"),
+      bait:   t("took the bait! 🪤"),
+      colour: t("tapped the wrong colour! 🎨"),
+      symbol: t("tapped the wrong thing! ❌"),
+    };
+  }
 
   var els = null, ctx = null, settings = null;
   var duel = null;            // [{ name }, { name }] left(top) / right(bottom)
@@ -77,7 +83,7 @@
 
   // --- timers --------------------------------------------------------------
   function after(ms, fn) { var id = global.setTimeout(fn, ms); timers.push(id); return id; }
-  function clearAll() { timers.forEach(function (t) { global.clearTimeout(t); }); timers = []; }
+  function clearAll() { timers.forEach(function (id) { global.clearTimeout(id); }); timers = []; }
   function rand(lo, hi) { return lo + Math.random() * (hi - lo); }
 
   // --- Setup ---------------------------------------------------------------
@@ -98,24 +104,23 @@
       ? '<div class="rd-duelists">' +
         duelCard(0, "blue") + '<div class="act-vs">VS</div>' + duelCard(1, "red") +
         "</div>" +
-        '<button id="rd-shuffle" class="btn btn-block">🔀 Shuffle players</button>'
-      : '<p class="muted small">Tip: add players in the header to duel by name. For now it’s ' +
-        '<strong>Left</strong> vs <strong>Right</strong>.</p>';
+        '<button id="rd-shuffle" class="btn btn-block">' + t("🔀 Shuffle players") + "</button>"
+      : '<p class="muted small">' + t("Lay the phone flat between two players. Each owns one half of the screen.") + "</p>";
 
-    var targetChips = TARGETS.map(function (t) {
-      return '<button class="chip" data-target="' + t + '">First to ' + t + "</button>";
+    var targetChips = TARGETS.map(function (n) {
+      return '<button class="chip" data-target="' + n + '">' + t("First to {n}").replace("{n}", n) + "</button>";
     }).join("");
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">⚡ Reaction Duel</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
-      '  <p class="muted small">Lay the phone flat between two players. Each owns one half of the screen.</p>' +
+      '  <h2 class="screen-title pop">⚡ ' + t("Reaction Duel") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
+      '  <p class="muted small">' + t("Lay the phone flat between two players. Each owns one half of the screen.") + "</p>" +
       pickers +
-      '  <h3 class="sub">Match length</h3>' +
+      '  <h3 class="sub">' + t("Match length") + "</h3>" +
       '  <div class="chip-row" id="rd-targets">' + targetChips + "</div>" +
-      '  <label class="toggle"><input type="checkbox" id="rd-drink"' + (settings.drinking ? " checked" : "") + " /><span>🍻 Drinking mode (loser drinks)</span></label>" +
-      '  <button id="rd-start" class="btn btn-primary btn-block btn-xl">Start duel ▶️</button>' +
+      '  <label class="toggle"><input type="checkbox" id="rd-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode (loser drinks)") + "</span></label>" +
+      '  <button id="rd-start" class="btn btn-primary btn-block btn-xl">' + t("Start duel ▶️") + "</button>" +
       "</section>";
 
     if (hasRoster) {
@@ -147,7 +152,7 @@
     return (
       '<div class="act-team act-team--' + color + '">' +
       '  <button id="rd-' + (side === 0 ? "l" : "r") + '" class="rd-pick">' + esc(duel[side].name) + "</button>" +
-      '  <div class="act-team__members muted">tap to change</div>' +
+      '  <div class="act-team__members muted">' + t("tap to change") + "</div>" +
       "</div>"
     );
   }
@@ -177,7 +182,7 @@
       h.addEventListener("click", onTap); // fallback (e.g. non-pointer envs/tests)
     });
 
-    paint("rd-ready", "Get ready…\n" + ROUND_RULES[roundType]);
+    paint("rd-ready", t("Get ready…") + "\n" + getRoundRules()[roundType]);
     after(1700, armRound);
   }
 
@@ -195,10 +200,10 @@
     if (phase !== "ready") return;
     phase = "armed"; live = false;
     if (roundType === "go") {
-      paint("rd-wait", "Wait…");
+      paint("rd-wait", t("Wait…"));
       after(rand(1500, 4200), goLive);
     } else if (roundType === "bait") {
-      paint("rd-wait", "Wait…");
+      paint("rd-wait", t("Wait…"));
       scheduleBaits();
     } else if (roundType === "colour") {
       colourTick();
@@ -212,19 +217,19 @@
   function scheduleBaits() {
     // 2–3 fakes during the wait, then the real GO
     var n = 2 + Math.floor(Math.random() * 2);
-    var t = 0;
+    var delay = 0;
     for (var i = 0; i < n; i++) {
-      t += rand(700, 1300);
-      (function (delay) {
-        after(delay, function () {
+      delay += rand(700, 1300);
+      (function (d) {
+        after(d, function () {
           if (phase !== "armed" || live) return;
-          var fakes = ["GO? 🤔", "✋ STOP", "almost…", "NOW? 👀"];
+          var fakes = [t("GO? 🤔"), t("✋ STOP"), t("almost…"), t("NOW? 👀")];
           paint("rd-bait", fakes[Math.floor(Math.random() * fakes.length)]);
-          after(360, function () { if (phase === "armed" && !live) paint("rd-wait", "Wait…"); });
+          after(360, function () { if (phase === "armed" && !live) paint("rd-wait", t("Wait…")); });
         });
-      })(t);
+      })(delay);
     }
-    after(t + rand(800, 1500), goLive);
+    after(delay + rand(800, 1500), goLive);
   }
 
   function colourTick() {
@@ -252,9 +257,9 @@
     var side = parseInt((e.currentTarget || e.target).getAttribute("data-side"), 10);
     if (isNaN(side)) return;
     if (live) {
-      resolve(side, 1 - side, "too slow! 🐢");
+      resolve(side, 1 - side, t("too slow! 🐢"));
     } else {
-      resolve(1 - side, side, LOSE_REASON[roundType]);
+      resolve(1 - side, side, getLoseReasons()[roundType]);
     }
   }
 
@@ -270,13 +275,13 @@
     els.innerHTML =
       '<section class="screen rd-result">' +
       '  <div class="result-emoji">⚡</div>' +
-      '  <h2 class="result-title pop">' + esc(duel[winner].name) + " wins the round!</h2>" +
+      '  <h2 class="result-title pop">' + esc(duel[winner].name) + t(" wins the round!") + "</h2>" +
       '  <p class="result-sub">' + esc(duel[loser].name) + " " + loserReason +
       (settings.drinking ? "<br/>🍺 <strong>" + esc(duel[loser].name) + " drinks!</strong>" : "") +
       "</p>" +
       '  <div class="rd-scoreline">' + scoreLine() + "</div>" +
-      '  <button id="rd-next" class="btn btn-primary btn-block btn-xl">Next round ▶️</button>' +
-      '  <button id="rd-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '  <button id="rd-next" class="btn btn-primary btn-block btn-xl">' + t("Next round ▶️") + "</button>" +
+      '  <button id="rd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#rd-next").addEventListener("click", startRound);
     els.querySelector("#rd-home").addEventListener("click", function () { ctx.goHome(); });
@@ -286,12 +291,12 @@
     els.innerHTML =
       '<section class="screen rd-win">' +
       '  <div class="boom-flash">🏆</div>' +
-      '  <h2 class="boom-title">' + esc(duel[winner].name) + " wins!</h2>" +
+      '  <h2 class="boom-title">' + esc(duel[winner].name) + t(" wins!") + "</h2>" +
       '  <p class="result-sub">Took the duel ' + scores[winner] + "–" + scores[1 - winner] + "</p>" +
       '  <div class="stack">' +
-      '    <button id="rd-again" class="btn btn-primary btn-block btn-xl">Rematch 🔁</button>' +
-      '    <button id="rd-setup" class="btn btn-block">Change players</button>' +
-      '    <button id="rd-home2" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="rd-again" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
+      '    <button id="rd-setup" class="btn btn-block">' + t("Change players") + "</button>" +
+      '    <button id="rd-home2" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#rd-again").addEventListener("click", function () { scores = [0, 0]; startRound(); });

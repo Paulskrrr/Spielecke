@@ -15,6 +15,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var MIN_PLAYERS = 2;
   var DEFAULTS = { pool: "mixed" };
 
@@ -48,25 +50,25 @@
   function renderSetup() {
     teardownCanvas();
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = global.Spielecke.Terms || {};
-    var chips = ['<button class="chip" data-pool="mixed">🎯 Mixed</button>']
+    var pools = poolsFor();
+    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
       })).join("");
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">Chain order (' + roster.length + "): " + esc(roster.map(function (p) { return p.name; }).join(" → ")) + "</p>"
-      : '<div class="roster-warn" style="display:block">⚠ Needs at least ' + MIN_PLAYERS + " players. Add them from the header (👥).</div>";
+      ? '<p class="muted small">' + t("Chain order ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(" → "))) + "</p>"
+      : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🎨 Doodle Drama</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title pop">🎨 ' + t("Doodle Drama") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       note +
-      '  <h3 class="sub">Word pool</h3>' +
+      '  <h3 class="sub">' + t("Word pool") + "</h3>" +
       '  <div class="chip-row" id="dd-pools">' + chips + "</div>" +
-      '  <button id="dd-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">Start drawing 🖌️</button>" +
+      '  <button id="dd-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start drawing 🖌️") + "</button>" +
       "</section>";
 
     highlight("#dd-pools", settings.pool, "data-pool");
@@ -97,12 +99,11 @@
     var task = isDrawStep(step) ? "draw" : "guess";
     els.innerHTML =
       '<section class="screen dd-pass">' +
-      '  <div class="pass-step">Player ' + (step + 1) + " of " + players.length + "</div>" +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", step + 1).replace("{n}", players.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
-      '  <h2 class="pass-name pop">Pass to ' + esc(name) + "</h2>" +
-      '  <p class="muted">No peeking from anyone else — ' + esc(name) +
-      " is about to " + task + ".</p>" +
-      '  <button id="dd-go" class="btn btn-primary btn-block btn-xl">I\'m ' + esc(name) + " — go</button>" +
+      '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
+      '  <p class="muted">' + t("No peeking — {name} is about to {task}.").replace("{name}", esc(name)).replace("{task}", t(task)) + "</p>" +
+      '  <button id="dd-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — go").replace("{name}", esc(name)) + "</button>" +
       "</section>";
     els.querySelector("#dd-go").addEventListener("click", function () {
       if (isDrawStep(step)) renderDraw(); else renderGuess();
@@ -114,11 +115,11 @@
     var prevText = chain[chain.length - 1].value; // seed word or previous guess
     els.innerHTML =
       '<section class="screen dd-draw">' +
-      '  <div class="dd-target">Draw: <strong>' + esc(prevText) + "</strong></div>" +
+      '  <div class="dd-target">' + t("Draw: ") + "<strong>" + esc(prevText) + "</strong></div>" +
       '  <canvas id="dd-canvas" class="doodle-canvas"></canvas>' +
       '  <div class="dd-tools">' +
-      '    <button id="dd-clear" class="btn btn-skip">Clear 🧽</button>' +
-      '    <button id="dd-done" class="btn btn-got">Done ✅</button>' +
+      '    <button id="dd-clear" class="btn btn-skip">' + t("Clear 🧹") + "</button>" +
+      '    <button id="dd-done" class="btn btn-got">' + t("Done ✅") + "</button>" +
       "  </div>" +
       "</section>";
     setupCanvas();
@@ -135,10 +136,10 @@
     var prevImg = chain[chain.length - 1].value; // a drawing dataURL
     els.innerHTML =
       '<section class="screen dd-guess">' +
-      '  <div class="dd-target">What is this?</div>' +
+      '  <div class="dd-target">' + t("What is this?") + "</div>" +
       '  <img class="doodle-show" src="' + prevImg + '" alt="drawing to guess" />' +
-      '  <input id="dd-input" class="text-input" type="text" placeholder="Your guess…" maxlength="40" />' +
-      '  <button id="dd-submit" class="btn btn-primary btn-block btn-xl">Lock guess 🔒</button>' +
+      '  <input id="dd-input" class="text-input" type="text" placeholder="' + t("Your guess…") + '" maxlength="40" />' +
+      '  <button id="dd-submit" class="btn btn-primary btn-block btn-xl">' + t("Lock guess 🔒") + "</button>" +
       "</section>";
     var input = els.querySelector("#dd-input");
     input.focus();
@@ -158,17 +159,17 @@
 
   // --- Reveal --------------------------------------------------------------
   function renderReveal() {
-    var items = ['<div class="dd-seed">The word was: <strong>' + esc(secretWord) + "</strong></div>"];
+    var items = ['<div class="dd-seed">' + t("The word was: ") + "<strong>" + esc(secretWord) + "</strong></div>"];
     for (var i = 1; i < chain.length; i++) {
       var e = chain[i];
       if (e.kind === "drawing") {
         items.push(
-          '<div class="dd-item"><div class="dd-by">' + esc(e.by) + ' drew:</div>' +
+          '<div class="dd-item"><div class="dd-by">' + t("{name} drew:").replace("{name}", esc(e.by)) + "</div>" +
           '<img class="doodle-thumb" src="' + e.value + '" alt="drawing" /></div>'
         );
       } else {
         items.push(
-          '<div class="dd-item"><div class="dd-by">' + esc(e.by) + ' guessed:</div>' +
+          '<div class="dd-item"><div class="dd-by">' + t("{name} guessed:").replace("{name}", esc(e.by)) + "</div>" +
           '<div class="dd-guesstext">' + esc(e.value) + "</div></div>"
         );
       }
@@ -177,19 +178,19 @@
     for (var j = chain.length - 1; j >= 1; j--) { if (chain[j].kind === "guess") { lastGuess = chain[j].value; break; } }
     var verdict = lastGuess
       ? (lastGuess.toLowerCase() === secretWord.toLowerCase()
-          ? "🎉 The chain survived!"
-          : "💀 From <strong>" + esc(secretWord) + "</strong> to <strong>" + esc(lastGuess) + "</strong>.")
+          ? t("🎉 The chain survived!")
+          : "💀 " + t("From {a} to {b}.").replace("{a}", "<strong>" + esc(secretWord) + "</strong>").replace("{b}", "<strong>" + esc(lastGuess) + "</strong>"))
       : "";
 
     els.innerHTML =
       '<section class="screen dd-reveal">' +
-      '  <h2 class="result-title pop">The chain 🎨</h2>' +
+      '  <h2 class="result-title pop">' + t("The chain 🎨") + "</h2>" +
       (verdict ? '<p class="result-sub">' + verdict + "</p>" : "") +
       '  <div class="dd-chain">' + items.join("") + "</div>" +
       '  <div class="stack">' +
-      '    <button id="dd-again" class="btn btn-primary btn-block btn-xl">New chain 🔁</button>' +
-      '    <button id="dd-settings" class="btn btn-block">Change pool</button>' +
-      '    <button id="dd-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="dd-again" class="btn btn-primary btn-block btn-xl">' + t("New chain 🔁") + "</button>" +
+      '    <button id="dd-settings" class="btn btn-block">' + t("Change pool") + "</button>" +
+      '    <button id="dd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#dd-again").addEventListener("click", function () {
@@ -204,10 +205,12 @@
   function setupCanvas() {
     canvas = els.querySelector("#dd-canvas");
     if (!canvas) return;
-    var rect = canvas.getBoundingClientRect();
     var dpr = global.devicePixelRatio || 1;
-    var w = rect.width || 300;
-    var h = rect.height || 340;
+    // Use the CONTENT box (clientWidth/Height excludes the 4px border), not the
+    // border-box from getBoundingClientRect — otherwise the bitmap is sized for
+    // the outer edge and gets squeezed into the content box, drifting the cursor.
+    var w = canvas.clientWidth || 300;
+    var h = canvas.clientHeight || 340;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     cctx = canvas.getContext("2d");
@@ -227,7 +230,9 @@
 
   function pos(e) {
     var r = canvas.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    // r.left/top sit on the OUTER border edge; the drawing origin is the content
+    // box, so shift inward by the border width (clientLeft/clientTop).
+    return { x: e.clientX - r.left - canvas.clientLeft, y: e.clientY - r.top - canvas.clientTop };
   }
   function onDown(e) {
     e.preventDefault();
@@ -275,8 +280,14 @@
   }
 
   // --- Utils ---------------------------------------------------------------
+  // Shared term pools this game should offer (includes drawing-only pools).
+  function poolsFor() {
+    return global.Spielecke.termPoolsFor
+      ? global.Spielecke.termPoolsFor("doodle")
+      : (global.Spielecke.Terms || {});
+  }
   function pickWord(pool) {
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
     var keys = Object.keys(pools);
     if (!keys.length) return "cat";
     var list = (pool === "mixed" || !pools[pool])

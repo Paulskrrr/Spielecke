@@ -34,6 +34,7 @@ next.
 - ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
 - ✅ **Chooser** — spinning-wheel random person picker
 - ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
+- ✅ **Rank It** — privately rank the same set; drift from the group's consensus loses *(drinking-capable)*
 
 **Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
 settings/stats screen.
@@ -122,10 +123,11 @@ js/
     activity.js            Activity words, tiered by points (2/3/4)
     quiz.js                Quiz Out questions, an array of difficulty levels
     truth.js               Truth or Drink question pools
+    rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
   games/                   one module per game (logic)
     bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
-    reactionduel.js
+    reactionduel.js  rankit.js
     (chooser & reactionduel have no content file)
 assets/logo.png            the "Pauls Spielecke" wordmark
 ```
@@ -183,8 +185,13 @@ Two shapes of content, by what the game needs:
 
 - **Shared single-term database** (`js/content/terms.js` → `Spielecke.Terms`): single
   names/words/things that work to describe, hint at, *and* draw. Used by **Who Am I?**,
-  **Imposter**, and **Doodle Drama** so terms are managed in one place. Pools: `party`,
-  `famous`, `nsfw`, `insideJokes`; each `{ label, terms: [...] }`. "Mixed" draws across all.
+  **Imposter**, and **Doodle Drama** so terms are managed in one place. Each pool is
+  `{ label, terms: [...] }`; "Mixed" draws across all. A pool may carry an optional
+  `games: [...]` allow-list scoping it to specific games — e.g. `doodle_hard` (multi-word
+  scenes + abstract concepts that you can *draw* but can't put on a forehead or use as an
+  Imposter word) is tagged `games: ["doodle"]` so it only shows up in Doodle Drama. Games
+  read their pools via `Spielecke.termPoolsFor(id)`, which filters the chips **and** the
+  "Mixed" draw so a scoped pool never leaks into a game it doesn't belong to.
 - **Per-game content** when the shape differs:
   - The Bomb → category *prompts* (`bomb-prompts.js`, `{ label, prompts }`).
   - Wavelength → *opposite pairs* (`wavelength.js`, `{ label, pairs:[{left,right}] }`).
@@ -344,6 +351,19 @@ Every type reduces to a `live` flag: tap while live → win; tap while not live 
 to the target score (3/5/7, default 5) wins. Uses the roster to name the two duelists (or
 Left/Right without one). Drinking mode → loser of each round drinks. No content file, no
 audio (a sound would leak a reflex cue); all timers cleared on round end + unmount.
+
+### 3.15 Rank It 🥇 (`rankit`, 2+) — drinking-capable
+
+One device, one shared list. A set shows with an axis to rank along (best → worst, biggest →
+smallest). The phone passes round; each player privately taps the items into their own order
+and locks it. Reveal builds the **group's consensus** (items sorted by average position) and
+measures each player's **drift** from it (sum of per-item rank distance — the Spearman
+footrule). Closest to the group is the most in sync; furthest off loses.
+
+- **Config:** category pool, 🍻 drinking mode. Item count per set is flexible.
+- **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }] }`).
+- **Outcome:** least drift **wins 👑**, most drift **loses 💀** (drinking mode: drinks). If the
+  whole table ranks identically, it's a draw — nobody wins or loses.
 
 ---
 

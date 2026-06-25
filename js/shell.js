@@ -14,6 +14,7 @@
 
   var S = global.Spielecke;
   var Store = S.Store;
+  function t(k) { return S.t(k); }
 
   var headerEl = null;
   var contentEl = null;
@@ -89,8 +90,8 @@
     } catch (e) {
       currentGame = null;
       contentEl.innerHTML =
-        '<section class="screen"><p class="muted">This game failed to load.</p>' +
-        '<button id="err-back" class="btn btn-primary btn-block">← Back to shelf</button></section>';
+        '<section class="screen"><p class="muted">' + t("This game failed to load.") + '</p>' +
+        '<button id="err-back" class="btn btn-primary btn-block">' + t("← Back to shelf") + '</button></section>';
       contentEl.querySelector("#err-back").addEventListener("click", showShelf);
     }
     renderHeader();
@@ -107,9 +108,8 @@
       "</button>" +
       '<button id="edit-players" class="players-badge">' +
       '  <span class="players-badge__count">' + count + "</span>" +
-      '  <span class="players-badge__label">' +
-      (count === 1 ? "player" : "players") + "</span>" +
-      '  <span class="players-badge__edit">Edit</span>' +
+      '  <span class="players-badge__label">' + t(count === 1 ? "player" : "players") + "</span>" +
+      '  <span class="players-badge__edit">' + t("Edit") + "</span>" +
       "</button>";
 
     headerEl.querySelector("#brand").addEventListener("click", showShelf);

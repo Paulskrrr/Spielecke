@@ -187,7 +187,7 @@ body::before {
   min-height: 172px;
   border: 4px solid var(--ink);
   border-radius: var(--radius);
-  color: var(--ink);
+  color: #fff;
   cursor: pointer;
   box-shadow: var(--pop-lg);
   transition: transform 0.16s cubic-bezier(0.2, 1.4, 0.4, 1), box-shadow 0.16s ease;
@@ -203,13 +203,14 @@ body::before {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.28), transparent 62%);
   pointer-events: none;
 }
-/* each card a different crayon colour + a subtle playful tilt + readable text */
-.game-card:nth-child(6n + 1) { background: var(--yellow); color: var(--ink); transform: rotate(-1deg); }
-.game-card:nth-child(6n + 2) { background: var(--green);  color: var(--ink); transform: rotate(1deg); }
-.game-card:nth-child(6n + 3) { background: var(--blue);   color: #fff;       transform: rotate(-1deg); }
-.game-card:nth-child(6n + 4) { background: var(--pink);   color: #fff;       transform: rotate(1deg); }
-.game-card:nth-child(6n + 5) { background: var(--orange); color: var(--ink); transform: rotate(-1.5deg); }
-.game-card:nth-child(6n + 6) { background: var(--purple); color: #fff;       transform: rotate(1.5deg); }
+/* each card a different crayon colour + a subtle playful tilt; text is always
+   white (legibility on the lighter cards comes from the text-shadow below) */
+.game-card:nth-child(6n + 1) { background: var(--yellow); transform: rotate(-1deg); }
+.game-card:nth-child(6n + 2) { background: var(--green);  transform: rotate(1deg); }
+.game-card:nth-child(6n + 3) { background: var(--blue);   transform: rotate(-1deg); }
+.game-card:nth-child(6n + 4) { background: var(--pink);   transform: rotate(1deg); }
+.game-card:nth-child(6n + 5) { background: var(--orange); transform: rotate(-1.5deg); }
+.game-card:nth-child(6n + 6) { background: var(--purple); transform: rotate(1.5deg); }
 
 .game-card:hover,
 .game-card:focus-visible {
@@ -237,9 +238,13 @@ body::before {
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.2px;
-  text-shadow: 0 2px 0 rgba(36, 27, 77, 0.18);
+  /* dark halo keeps the white name readable on the lighter (yellow/green/orange) cards */
+  text-shadow: 0 1px 3px rgba(36, 27, 77, 0.55), 0 2px 0 rgba(36, 27, 77, 0.3);
 }
-.game-card__tagline { font-size: 0.82rem; color: inherit; opacity: 0.82; flex: 1; line-height: 1.3; }
+.game-card__tagline {
+  font-size: 0.82rem; color: inherit; opacity: 0.95; flex: 1; line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(36, 27, 77, 0.5);
+}
 .game-card__meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 
 .badge {
@@ -1043,6 +1048,64 @@ body::before {
 .ha-overlay__sub { font-size: 1.15rem; margin-bottom: 18px; }
 .ha-overlay__sub strong { color: var(--red); }
 
+/* ----- Rank It ---------------------------------------------------------- */
+
+.ri-pass, .ri-rank, .ri-reveal { text-align: center; }
+.ri-title {
+  font-size: clamp(1.4rem, 5.5vw, 2rem); font-weight: 900; line-height: 1.2;
+  margin: 10px 0 4px; padding: 16px; background: #fff; border: 4px solid var(--ink);
+  border-radius: var(--radius); box-shadow: var(--pop);
+}
+/* Vertical-axis drag-and-drop: a labeled rail on the left, draggable cards stacked
+   along it. Slot 0 (top) is #1, the last slot is last. */
+.ri-axis { display: grid; grid-template-columns: auto 1fr; gap: 12px; margin: 14px 0; text-align: left; }
+.ri-axis__rail {
+  display: flex; flex-direction: column; justify-content: space-between; align-items: center;
+  width: 30px; padding: 4px 0; border-radius: 999px;
+  background: linear-gradient(var(--green), #fff 45%, #fff 55%, var(--red));
+  border: 3px solid var(--ink);
+}
+.ri-axis__pole {
+  writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
+  font-weight: 800; font-size: 0.72rem; line-height: 1; padding: 6px 0;
+  max-height: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.ri-axis__pole--bot { color: var(--red); }
+.ri-cards { position: relative; }
+.ri-card {
+  position: absolute; left: 0; right: 0; top: 0; box-sizing: border-box;
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px;
+  font-weight: 800; box-shadow: var(--pop); cursor: grab;
+  touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.ri-card--drag { cursor: grabbing; z-index: 5; box-shadow: 0 10px 22px rgba(0,0,0,0.28); border-color: var(--purple); }
+.ri-card__no {
+  width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--ink); color: #fff; border-radius: 999px; font-size: 0.9rem;
+}
+.ri-card__label { flex: 1 1 auto; }
+.ri-card__grip { flex-shrink: 0; color: var(--ink-soft); font-size: 1.2rem; letter-spacing: -2px; }
+
+.ri-consensus { list-style: none; padding: 0; margin: 8px 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.ri-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; font-weight: 800; text-align: left;
+}
+.ri-row__no {
+  width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--purple); color: #fff; border-radius: 999px; font-size: 0.85rem;
+}
+.ri-players { list-style: none; padding: 0; margin: 8px 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.ri-prow {
+  display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; font-weight: 700;
+}
+.ri-prow--win { background: var(--green); }
+.ri-prow--lose { background: var(--red); color: #fff; }
+.ri-prow--lose .muted { color: rgba(255,255,255,0.8); }
+.ri-prow__name { font-weight: 800; }
+
 /* ----- Larger screens --------------------------------------------------- */
 
 @media (min-width: 600px) {
@@ -1054,6 +1117,7 @@ body::before {
   .pt-actions .btn { flex: 1; }
   .act-perform-actions .btn { min-height: 12vh; }
   .quiz-options { grid-template-columns: 1fr 1fr; }
+  .ri-axis { max-width: 620px; margin-left: auto; margin-right: auto; }
 }
 
 /* Desktop: nicer two-column turn layout + a roomier board */

@@ -88,11 +88,21 @@
     };
   }
 
+  // --- Global app settings (language, etc.) ----------------------------------
+  function appGet(key, fallback) {
+    return readJSON(key, fallback !== undefined ? fallback : null);
+  }
+  function appSet(key, value) {
+    writeJSON(key, value);
+  }
+
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Store = {
     rosterGet: rosterGet,
     rosterSet: rosterSet,
     gameStore: gameStore,
+    appGet: appGet,
+    appSet: appSet,
     // true when persistence is real (not the in-memory fallback)
     isPersistent: !!backend,
   };

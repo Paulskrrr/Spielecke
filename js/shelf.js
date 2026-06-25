@@ -8,19 +8,21 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   function render(container, ctx) {
     var games = global.Spielecke.GAMES || [];
 
     var cards = games
       .map(function (game) {
         var drinkBadge = game.supportsDrinking
-          ? '<span class="badge badge-drink">🍻 drink mode</span>'
+          ? '<span class="badge badge-drink">' + t("🍻 drink mode") + "</span>"
           : "";
         return (
           '<button class="game-card" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +
-          '  <span class="game-card__name">' + escapeHtml(game.name) + "</span>" +
-          '  <span class="game-card__tagline">' + escapeHtml(game.tagline || "") + "</span>" +
+          '  <span class="game-card__name">' + escapeHtml(t(game.name) || game.name) + "</span>" +
+          '  <span class="game-card__tagline">' + escapeHtml(t(game.tagline || "") || game.tagline || "") + "</span>" +
           '  <span class="game-card__meta">' +
           '    <span class="badge">👥 ' + escapeHtml(playerHint(game)) + "</span>" +
           drinkBadge +

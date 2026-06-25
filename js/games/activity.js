@@ -16,6 +16,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var TYPED = 14;            // number of playable fields
   var FINISH = TYPED;        // index of the finish tile (reach it to win)
   var ROUND_SECONDS = 60;    // always 60s
@@ -71,22 +73,22 @@
 
     els.innerHTML =
       '<section class="screen act-setup">' +
-      '  <h2 class="screen-title pop">🗺️ Activity</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title pop">🗺️ ' + t("Activity") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       '  <div class="act-teams">' +
       teamSetupCard(0, split && split[0]) +
-      '    <div class="act-vs">VS</div>' +
+      '    <div class="act-vs">' + t("VS") + "</div>" +
       teamSetupCard(1, split && split[1]) +
       "  </div>" +
-      (split ? '<button id="act-shuffle" class="btn btn-block">🔀 Shuffle teams</button>' : "") +
+      (split ? '<button id="act-shuffle" class="btn btn-block">' + t("🔀 Shuffle teams") + "</button>" : "") +
       '  <div class="act-legend">' +
       legendItem("explain") + legendItem("draw") + legendItem("charade") +
       "  </div>" +
-      '  <label class="toggle"><input type="checkbox" id="act-drink"' + (drinking ? " checked" : "") + " /><span>🍻 Drinking mode (fail → you drink, win → they drink)</span></label>" +
-      '  <button id="act-start" class="btn btn-primary btn-block btn-xl">Start game ▶️</button>' +
+      '  <label class="toggle"><input type="checkbox" id="act-drink"' + (drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode (fail → you drink, win → they drink)") + "</span></label>" +
+      '  <button id="act-start" class="btn btn-primary btn-block btn-xl">' + t("Start game ▶️") + "</button>" +
       "</section>";
 
-    teams.forEach(function (t, i) {
+    teams.forEach(function (team, i) {
       els.querySelector("#act-fig" + i).addEventListener("click", function () {
         cycleFigure(i);
         ctx.store.set("fig" + i, teams[i].figure);
@@ -103,14 +105,14 @@
   }
 
   function teamSetupCard(i, members) {
-    var t = teams[i];
+    var team = teams[i];
     return (
-      '<div class="act-team act-team--' + t.color + '">' +
-      '  <button id="act-fig' + i + '" class="act-figure" aria-label="Change figure">' + t.figure + "</button>" +
-      '  <div class="act-team__name">Team ' + (i === 0 ? "A" : "B") + "</div>" +
+      '<div class="act-team act-team--' + team.color + '">' +
+      '  <button id="act-fig' + i + '" class="act-figure" aria-label="Change figure">' + team.figure + "</button>" +
+      '  <div class="act-team__name">' + t(i === 0 ? "Team A" : "Team B") + "</div>" +
       (members && members.length
         ? '<div class="act-team__members">' + esc(members.join(", ")) + "</div>"
-        : '<div class="act-team__members muted">tap figure to change</div>') +
+        : '<div class="act-team__members muted">' + t("tap figure to change") + "</div>") +
       "</div>"
     );
   }
@@ -119,7 +121,7 @@
     var info = TYPE_INFO[type];
     return (
       '<span class="act-legend__item act-' + type + '">' +
-      info.icon + " " + info.label + "</span>"
+      info.icon + " " + t(info.label) + "</span>"
     );
   }
 
@@ -134,7 +136,7 @@
 
   function suggestSplit(roster) {
     var names = roster.map(function (p) { return p.name; });
-    for (var i = names.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = names[i]; names[i] = names[j]; names[j] = t; }
+    for (var i = names.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = names[i]; names[i] = names[j]; names[j] = tmp; }
     var a = [], b = [];
     names.forEach(function (n, i) { (i % 2 === 0 ? a : b).push(n); });
     return [a, b];
@@ -151,22 +153,23 @@
 
   function renderTurn() {
     stopTimer();
-    var t = teams[current];
-    curType = board[t.pos];
+    var team = teams[current];
+    curType = board[team.pos];
     var info = TYPE_INFO[curType];
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
 
     els.innerHTML =
       '<section class="screen act-turn">' +
       '  <div class="act-layout">' +
       '    <div class="act-board-wrap">' + renderBoard() + "</div>" +
       '    <div class="act-controls">' +
-      '      <div class="act-turn-head act-team--' + t.color + '">' + t.figure + " Team " + (current === 0 ? "A" : "B") + "’s turn</div>" +
-      '      <div class="act-type-banner act-' + curType + '">' + info.icon + " " + info.label + "</div>" +
-      '      <p class="muted">Your field is a <strong>' + info.label + '</strong> field. Pick how risky:</p>' +
+      '      <div class="act-turn-head act-team--' + team.color + '">' + team.figure + " " + teamLabel + t("'s turn") + "</div>" +
+      '      <div class="act-type-banner act-' + curType + '">' + info.icon + " " + t(info.label) + "</div>" +
+      '      <p class="muted">' + t("Pick how risky:") + "</p>" +
       '      <div class="act-points">' +
       pointBtn(2) + pointBtn(3) + pointBtn(4) +
       "      </div>" +
-      '      <button id="act-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '      <button id="act-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "    </div>" +
       "  </div>" +
       "</section>";
@@ -183,20 +186,21 @@
   function pointBtn(p) {
     return '<button class="btn act-point" data-pts="' + p + '">' +
       '<span class="act-point__n">' + p + "</span>" +
-      '<span class="act-point__l">points</span></button>';
+      '<span class="act-point__l">' + t("points") + "</span></button>";
   }
 
   function renderReveal() {
-    var t = teams[current];
+    var team = teams[current];
     var info = TYPE_INFO[curType];
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
     curWord = pickWord(points);
     els.innerHTML =
       '<section class="screen act-reveal">' +
-      '  <div class="pass-emoji">' + t.figure + "</div>" +
-      '  <h2 class="pass-name pop">Team ' + (current === 0 ? "A" : "B") + " — performer only</h2>" +
-      '  <div class="act-type-banner act-' + curType + '">' + info.icon + " " + info.label + " · " + points + " pts</div>" +
-      '  <p class="muted">One of you performs, the rest guess. Tap to see the word — don\'t show your team!</p>' +
-      '  <button id="act-show" class="btn btn-primary btn-block btn-xl">Show the word 👀</button>' +
+      '  <div class="pass-emoji">' + team.figure + "</div>" +
+      '  <h2 class="pass-name pop">' + teamLabel + " — " + t("performer only") + "</h2>" +
+      '  <div class="act-type-banner act-' + curType + '">' + info.icon + " " + t(info.label) + " · " + t("{n} pts").replace("{n}", points) + "</div>" +
+      '  <p class="muted">' + t("One of you performs, the rest guess. Tap to see the word — don\'t show your team!") + "</p>" +
+      '  <button id="act-show" class="btn btn-primary btn-block btn-xl">' + t("Show the word 👀") + "</button>" +
       "</section>";
     els.querySelector("#act-show").addEventListener("click", function () {
       if (curType === "draw") renderDrawPreview(); else renderPerform();
@@ -209,8 +213,8 @@
     els.innerHTML =
       '<section class="screen act-perform">' +
       '  <div class="act-hud"><span id="act-time" class="hud-time">' + ROUND_SECONDS + "s</span>" +
-      '    <span class="hud-score act-' + curType + '">' + info.icon + " " + points + " pts</span></div>" +
-      '  <div class="act-instruction">' + info.how + "</div>" +
+      '    <span class="hud-score act-' + curType + '">' + info.icon + " " + t("{n} pts").replace("{n}", points) + "</span></div>" +
+      '  <div class="act-instruction">' + t(info.how) + "</div>" +
       '  <div class="act-word-wrap"><div class="act-word">' + esc(curWord) + "</div></div>" +
       actionButtons() +
       "</section>";
@@ -223,10 +227,10 @@
     var info = TYPE_INFO.draw;
     els.innerHTML =
       '<section class="screen act-reveal">' +
-      '  <div class="act-type-banner act-draw">' + info.icon + " Draw · " + points + " pts</div>" +
-      '  <p class="muted">Only the drawer looks. Memorise it — then draw it for your team.</p>' +
+      '  <div class="act-type-banner act-draw">' + info.icon + " " + t(info.label) + " · " + t("{n} pts").replace("{n}", points) + "</div>" +
+      '  <p class="muted">' + t("Only the drawer looks. Memorise it — then draw it for your team.") + "</p>" +
       '  <div class="act-word-wrap"><div class="act-word">' + esc(curWord) + "</div></div>" +
-      '  <button id="act-draw-start" class="btn btn-primary btn-block btn-xl">Start drawing 🖌️</button>' +
+      '  <button id="act-draw-start" class="btn btn-primary btn-block btn-xl">' + t("Start drawing 🖌️") + "</button>" +
       "</section>";
     els.querySelector("#act-draw-start").addEventListener("click", renderDrawPlay);
   }
@@ -235,9 +239,9 @@
     els.innerHTML =
       '<section class="screen act-drawplay">' +
       '  <div class="act-hud"><span id="act-time" class="hud-time">' + ROUND_SECONDS + "s</span>" +
-      '    <span class="hud-score act-draw">✏️ ' + points + " pts</span></div>" +
+      '    <span class="hud-score act-draw">✏️ ' + t("{n} pts").replace("{n}", points) + "</span></div>" +
       '  <canvas id="act-canvas" class="doodle-canvas"></canvas>' +
-      '  <button id="act-clear" class="btn btn-skip btn-block">Clear 🧽</button>' +
+      '  <button id="act-clear" class="btn btn-skip btn-block">' + t("Clear 🧹") + "</button>" +
       actionButtons() +
       "</section>";
     setupCanvas();
@@ -249,8 +253,8 @@
   function actionButtons() {
     return (
       '<div class="act-perform-actions">' +
-      '  <button id="act-miss" class="btn btn-skip">Missed ❌</button>' +
-      '  <button id="act-got" class="btn btn-got">Guessed ✅</button>' +
+      '  <button id="act-miss" class="btn btn-skip">' + t("Missed ❌") + "</button>" +
+      '  <button id="act-got" class="btn btn-got">' + t("Guessed ✅") + "</button>" +
       "</div>"
     );
   }
@@ -281,9 +285,10 @@
     canvas = els.querySelector("#act-canvas");
     if (!canvas) return;
     drawFrozen = false; drawing = false;
-    var rect = canvas.getBoundingClientRect();
     var dpr = global.devicePixelRatio || 1;
-    var w = rect.width || 300, h = rect.height || 340;
+    // Content box (clientWidth/Height) excludes the 4px border — sizing the
+    // bitmap to the border-box instead would squeeze it and drift the cursor.
+    var w = canvas.clientWidth || 300, h = canvas.clientHeight || 340;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     cctx = canvas.getContext("2d");
@@ -297,7 +302,7 @@
     canvas.addEventListener("pointercancel", onUp);
     canvas.addEventListener("pointerleave", onUp);
   }
-  function cpos(e) { var r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  function cpos(e) { var r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left - canvas.clientLeft, y: e.clientY - r.top - canvas.clientTop }; }
   function onDown(e) {
     if (drawFrozen) return;
     e.preventDefault(); drawing = true;
@@ -337,26 +342,27 @@
   function finishTurn(success) {
     stopTimer();
     teardownCanvas();
-    var t = teams[current];
+    var team = teams[current];
     var other = teams[1 - current];
-    if (success) t.pos = Math.min(t.pos + points, FINISH);
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
+    var otherLabel = t(current === 0 ? "Team B" : "Team A");
+    if (success) team.pos = Math.min(team.pos + points, FINISH);
 
-    if (t.pos >= FINISH) { renderWin(); return; }
+    if (team.pos >= FINISH) { renderWin(); return; }
 
-    var info = TYPE_INFO[curType];
     els.innerHTML =
       '<section class="screen act-result">' +
       '  <div class="result-emoji">' + (success ? "✅" : "❌") + "</div>" +
-      '  <h2 class="result-title pop">' + (success ? "+" + points + "!" : "No move") + "</h2>" +
+      '  <h2 class="result-title pop">' + (success ? "+" + points + "!" : t("No move")) + "</h2>" +
       '  <p class="result-sub">' +
       (success
-        ? t.figure + " Team " + (current === 0 ? "A" : "B") + " moves " + points + " forward." +
-          (drinking ? " 🍺 " + other.figure + " Team " + (current === 0 ? "B" : "A") + " drinks!" : "")
-        : "The word was <strong>" + esc(curWord) + "</strong>. " + t.figure + " stays put." +
-          (drinking ? " 🍺 Team " + (current === 0 ? "A" : "B") + " drinks!" : "")) +
+        ? team.figure + " " + teamLabel + " " + t("moves {n} forward.").replace("{n}", points) +
+          (drinking ? " 🍺 " + other.figure + " " + otherLabel + " " + t("drinks!") : "")
+        : t("The word was {word}.").replace("{word}", "<strong>" + esc(curWord) + "</strong>") + " " + team.figure + " " + t("stays put.") +
+          (drinking ? " 🍺 " + teamLabel + " " + t("drinks!") : "")) +
       "</p>" +
       '  <div class="act-board-wrap">' + renderBoard() + "</div>" +
-      '  <button id="act-next" class="btn btn-primary btn-block btn-xl">Next team ▶️</button>' +
+      '  <button id="act-next" class="btn btn-primary btn-block btn-xl">' + t("Next team ▶️") + "</button>" +
       "</section>";
     els.querySelector("#act-next").addEventListener("click", function () {
       current = 1 - current;
@@ -365,17 +371,18 @@
   }
 
   function renderWin() {
-    var t = teams[current];
+    var team = teams[current];
+    var teamLabel = t(current === 0 ? "Team A" : "Team B");
     els.innerHTML =
       '<section class="screen act-win">' +
       '  <div class="boom-flash">🏆</div>' +
-      '  <h2 class="boom-title">' + t.figure + " wins!</h2>" +
-      '  <p class="result-sub">Team ' + (current === 0 ? "A" : "B") + " completed the map first!</p>" +
+      '  <h2 class="boom-title">' + team.figure + t(" wins!") + "</h2>" +
+      '  <p class="result-sub">' + teamLabel + " " + t("completed the map first!") + "</p>" +
       '  <div class="act-board-wrap">' + renderBoard() + "</div>" +
       '  <div class="stack">' +
-      '    <button id="act-again" class="btn btn-primary btn-block btn-xl">Rematch 🔁</button>' +
-      '    <button id="act-setup" class="btn btn-block">Change teams</button>' +
-      '    <button id="act-home2" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="act-again" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
+      '    <button id="act-setup" class="btn btn-block">' + t("Change teams") + "</button>" +
+      '    <button id="act-home2" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#act-again").addEventListener("click", startGame);
@@ -391,7 +398,7 @@
       var type = isFinish ? "finish" : board[i];
       var icon = isFinish ? "🏆" : TYPE_INFO[type].icon;
       var tokens = teams
-        .map(function (t) { return t.pos === i ? '<span class="act-token act-token--' + t.color + '">' + t.figure + "</span>" : ""; })
+        .map(function (team) { return team.pos === i ? '<span class="act-token act-token--' + team.color + '">' + team.figure + "</span>" : ""; })
         .join("");
       var startCls = i === 0 ? " act-tile--start" : "";
       tiles.push(
@@ -406,7 +413,7 @@
 
   // --- Helpers -------------------------------------------------------------
   function pickWord(p) {
-    var pools = global.Spielecke.ActivityWords || {};
+    var pools = global.Spielecke.L(global.Spielecke.ActivityWords) || {};
     var tier = pools[p] || pools[2] || { words: ["Beer"] };
     var words = tier.words || ["Beer"];
     return words[Math.floor(Math.random() * words.length)];

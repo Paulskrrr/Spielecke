@@ -13,6 +13,8 @@
 (function (global) {
   "use strict";
 
+  function t(k) { return global.Spielecke.t(k); }
+
   var MIN_PLAYERS = 2;
   var HEART_OPTIONS = [1, 2, 3, 4, 5];
   var LEVEL_NAMES = ["Warm-up", "Easy", "Medium", "Hard", "Brutal", "Insane"];
@@ -53,22 +55,22 @@
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">Players (' + roster.length + "): " + esc(roster.map(function (p) { return p.name; }).join(", ")) + "</p>"
-      : '<div class="roster-warn" style="display:block">⚠ Needs at least ' + MIN_PLAYERS + " players. Add them from the header (👥).</div>";
+      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     var hearts = HEART_OPTIONS.map(function (h) {
-      return '<button class="chip" data-hearts="' + h + '">' + h + " " + (h === 1 ? "❤️" : "❤️") + "</button>";
+      return '<button class="chip" data-hearts="' + h + '">' + h + " ❤️</button>";
     }).join("");
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🧠 Quiz Out</h2>' +
-      '  <p class="muted">' + esc(module.meta.tagline) + "</p>" +
+      '  <h2 class="screen-title pop">🧠 ' + t("Quiz Out") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       note +
-      '  <h3 class="sub">Hearts each</h3>' +
+      '  <h3 class="sub">' + t("Hearts each") + "</h3>" +
       '  <div class="chip-row" id="qz-hearts">' + hearts + "</div>" +
-      '  <label class="toggle"><input type="checkbox" id="qz-drink"' + (settings.drinking ? " checked" : "") + " /><span>🍻 Drinking mode (wrong = drink too)</span></label>" +
-      '  <button id="qz-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">Start quiz ▶️</button>" +
+      '  <label class="toggle"><input type="checkbox" id="qz-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode (wrong = drink too)") + "</span></label>" +
+      '  <button id="qz-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start quiz ▶️") + "</button>" +
       "</section>";
 
     highlight("#qz-hearts", String(settings.hearts), "data-hearts");
@@ -108,27 +110,29 @@
     renderPass();
   }
 
+  function questions() { return global.Spielecke.L(global.Spielecke.QuizQuestions) || []; }
+
   function levelIndex() {
-    var max = (global.Spielecke.QuizQuestions || []).length - 1;
+    var max = questions().length - 1;
     return Math.max(0, Math.min(round, max));
   }
   function levelName() {
     var i = levelIndex();
-    return LEVEL_NAMES[i] || ("Level " + (i + 1));
+    return t(LEVEL_NAMES[i] || ("Level " + (i + 1)));
   }
 
   function renderPass() {
     els.innerHTML =
       '<section class="screen qz-pass">' +
-      '  <div class="qz-hud"><span class="badge">Round ' + (round + 1) + "</span>" +
-      (settings.drinking ? '<span class="badge badge-drink">🍻 drink</span>' : "") +
+      '  <div class="qz-hud"><span class="badge">' + t("Round {n}").replace("{n}", round + 1) + "</span>" +
+      (settings.drinking ? '<span class="badge badge-drink">' + t("🍻 drink") + "</span>" : "") +
       "  </div>" +
       '  <div class="pass-emoji">🧠</div>' +
       '  <h2 class="pass-name pop">' + esc(currentPlayer.name) + "</h2>" +
       '  <div class="qz-lives">' + hearts(currentPlayer) + "</div>" +
-      '  <p class="muted">Difficulty: <strong>' + esc(levelName()) + "</strong> · " +
-      active().length + " left in the game</p>" +
-      '  <button id="qz-go" class="btn btn-primary btn-block btn-xl">I\'m ' + esc(currentPlayer.name) + " — go</button>" +
+      '  <p class="muted">' + t("Difficulty: {level}").replace("{level}", "<strong>" + esc(levelName()) + "</strong>") + " · " +
+      active().length + t(" left in the game") + "</p>" +
+      '  <button id="qz-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — go").replace("{name}", esc(currentPlayer.name)) + "</button>" +
       "</section>";
     els.querySelector("#qz-go").addEventListener("click", renderQuestion);
   }
@@ -183,22 +187,22 @@
     var eliminated = !ok && currentPlayer.lives <= 0;
     var sub;
     if (ok) {
-      sub = "Safe — well played.";
+      sub = t("Safe — well played.");
     } else if (eliminated) {
-      sub = "Answer: <strong>" + esc(correctText) + "</strong>. 💀 <strong>" + esc(currentPlayer.name) +
-        "</strong> is OUT!" + (settings.drinking ? " 🍺 Drink!" : "");
+      sub = t("Answer: ") + "<strong>" + esc(correctText) + "</strong>. 💀 <strong>" + esc(currentPlayer.name) +
+        "</strong>" + t(" is OUT!") + (settings.drinking ? t(" 🍺 Drink!") : "");
     } else {
-      sub = "Answer: <strong>" + esc(correctText) + "</strong>. −1 heart." +
-        (settings.drinking ? " 🍺 Drink!" : "");
+      sub = t("Answer: ") + "<strong>" + esc(correctText) + "</strong>. −1 ❤️" +
+        (settings.drinking ? t(" 🍺 Drink!") : "");
     }
 
     els.innerHTML =
       '<section class="screen qz-feedback">' +
       '  <div class="result-emoji">' + (ok ? "✅" : (eliminated ? "💀" : "❌")) + "</div>" +
-      '  <h2 class="result-title pop">' + (ok ? "Correct!" : "Wrong!") + "</h2>" +
+      '  <h2 class="result-title pop">' + (ok ? t("Correct!") : t("Wrong!")) + "</h2>" +
       '  <p class="result-sub">' + sub + "</p>" +
       '  <div class="qz-lives">' + hearts(currentPlayer) + "</div>" +
-      '  <button id="qz-next" class="btn btn-primary btn-block btn-xl">Next player ▶️</button>' +
+      '  <button id="qz-next" class="btn btn-primary btn-block btn-xl">' + t("Next player ▶️") + "</button>" +
       "</section>";
     els.querySelector("#qz-next").addEventListener("click", nextTurn);
   }
@@ -207,12 +211,12 @@
     els.innerHTML =
       '<section class="screen qz-win">' +
       '  <div class="boom-flash">🏆</div>' +
-      '  <h2 class="boom-title">' + (winner ? esc(winner.name) + " wins!" : "Game over") + "</h2>" +
-      '  <p class="result-sub">' + (winner ? "Last one standing — quiz champion!" : "Everyone's out!") + "</p>" +
+      '  <h2 class="boom-title">' + (winner ? esc(winner.name) + t(" wins!") : t("Game over")) + "</h2>" +
+      '  <p class="result-sub">' + (winner ? t("Last one standing — quiz champion!") : t("Everyone\'s out!")) + "</p>" +
       '  <div class="stack">' +
-      '    <button id="qz-again" class="btn btn-primary btn-block btn-xl">Play again 🔁</button>' +
-      '    <button id="qz-settings" class="btn btn-block">Change settings</button>' +
-      '    <button id="qz-home" class="btn btn-ghost btn-block">Back to shelf</button>' +
+      '    <button id="qz-again" class="btn btn-primary btn-block btn-xl">' + t("Play again 🔁") + "</button>" +
+      '    <button id="qz-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
+      '    <button id="qz-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#qz-again").addEventListener("click", function () {
@@ -225,7 +229,7 @@
 
   // --- Questions -----------------------------------------------------------
   function pickQuestion(level) {
-    var levels = global.Spielecke.QuizQuestions || [];
+    var levels = questions();
     var pool = levels[level] || levels[0] || [];
     if (!pool.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
     var u = used[level] = used[level] || {};
@@ -238,8 +242,8 @@
   }
 
   function shuffleOptions(q) {
-    var arr = q.options.map(function (t, i) { return { text: t, correct: i === q.answer }; });
-    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = arr[i]; arr[i] = arr[j]; arr[j] = t; }
+    var arr = q.options.map(function (o, i) { return { text: o, correct: i === q.answer }; });
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
     return arr;
   }
 
