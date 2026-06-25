@@ -16,9 +16,9 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function Pools() { return global.Spielecke.Pools; }
 
   var MIN_PLAYERS = 2;
-  var DEFAULTS = { pool: "mixed" };
 
   var els = null, ctx = null, settings = null;
   var players = [], secretWord = "", chain = [], step = 0;
@@ -36,7 +36,7 @@
     },
     mount: function (container, context) {
       els = container; ctx = context;
-      settings = { pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool };
+      settings = { pools: Pools().load(context.store, poolsFor()) };
       renderSetup();
     },
     unmount: function () {
@@ -50,11 +50,7 @@
   function renderSetup() {
     teardownCanvas();
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = poolsFor();
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(poolsFor(), t);
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
@@ -71,20 +67,16 @@
       '  <button id="dd-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start drawing 🖌️") + "</button>" +
       "</section>";
 
-    highlight("#dd-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#dd-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
-        highlight("#dd-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#dd-pools"), poolsFor(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
     var start = els.querySelector("#dd-start");
     if (enough) start.addEventListener("click", function () { startChain(roster); });
   }
 
   function startChain(roster) {
     players = roster.map(function (p) { return p.name; });
-    secretWord = pickWord(settings.pool);
+    secretWord = pickWord();
     chain = [{ kind: "seed", value: secretWord }];
     step = 0;
     renderPassTo();
@@ -286,18 +278,10 @@
       ? global.Spielecke.termPoolsFor("doodle")
       : (global.Spielecke.Terms || {});
   }
-  function pickWord(pool) {
-    var pools = poolsFor();
-    var keys = Object.keys(pools);
-    if (!keys.length) return "cat";
-    var list = (pool === "mixed" || !pools[pool])
-      ? keys.reduce(function (a, k) { return a.concat(pools[k].terms || []); }, [])
-      : (pools[pool].terms || []);
+  function pickWord() {
+    var list = Pools().gather(settings.pools, poolsFor(), "terms");
     if (!list.length) return "cat";
     return list[Math.floor(Math.random() * list.length)];
-  }
-  function highlight(sel, value, an) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }

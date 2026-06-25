@@ -132,15 +132,6 @@ body::before {
 .players-badge:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
 .players-badge__count { font-size: 1.2rem; }
 .players-badge__label { font-size: 0.8rem; }
-.players-badge__edit {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  background: var(--ink);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 999px;
-  margin-left: 4px;
-}
 
 /* ----- Layout & screens ------------------------------------------------- */
 
@@ -612,6 +603,34 @@ body::before {
   background-repeat: no-repeat;
 }
 .deck-rule { font-size: 1.15rem; font-weight: 700; margin: 0 0 16px; }
+
+/* ----- Tappable design elements (act as the button themselves) ---------- */
+.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.tappable:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+/* A small "tap me" hint shown under/inside a tappable element */
+.tap-hint {
+  font-size: 0.9rem; font-weight: 800; color: var(--ink-soft);
+  letter-spacing: 0.3px; margin-top: 12px;
+  animation: tap-hint-pulse 1.6s ease-in-out infinite;
+}
+@keyframes tap-hint-pulse { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* The flash-card prompt becomes the "next" button: toy-block press on tap. */
+.deck-prompt.tappable {
+  transition: transform 0.09s ease, box-shadow 0.09s ease;
+  flex: none; width: 100%;
+}
+.deck-prompt.tappable:active { transform: translateY(8px); box-shadow: 0 0 0 var(--ink); }
+.deck-card .deck-tapwrap { flex: 1; display: flex; flex-direction: column; justify-content: center; width: 100%; }
+.deck-card .deck-tapwrap .deck-prompt { flex: 1; }
+
+/* Chooser wheel as the spin trigger */
+.wheel.tappable, .wheel-wrap.tappable { transition: transform 0.09s ease; }
+.wheel-wrap.tappable:active { transform: scale(0.97); }
+
+/* Fuck the Dealer: the revealed card advances to the next one */
+.pkflip.tappable { transition: transform 0.09s ease; }
+.pkflip.tappable:active { transform: translateY(6px) scale(0.98); }
 
 /* ----- Liar's Numbers --------------------------------------------------- */
 
@@ -1199,3 +1218,150 @@ body::before {
   /* the board on result / win screens, centred and roomy */
   .act-result .act-board-wrap, .act-win .act-board-wrap { max-width: 880px; margin: 0 auto; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════
+   Kartenklassiker — shared 52-card deck face + flip (cards.js)
+   ════════════════════════════════════════════════════════════════════════ */
+.pkcard {
+  position: relative;
+  width: 86px; height: 122px;
+  background: var(--paper-2);
+  border: 3px solid var(--ink);
+  border-radius: 10px;
+  box-shadow: 0 4px 0 var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800;
+  user-select: none;
+}
+.pkcard--sm { width: 60px; height: 86px; border-radius: 8px; box-shadow: 0 3px 0 var(--ink); }
+.pkcard--red { color: #e0294e; }
+.pkcard--black { color: var(--ink); }
+.pkcard__pip { font-size: 2.4rem; line-height: 1; }
+.pkcard--sm .pkcard__pip { font-size: 1.7rem; }
+.pkcard__corner {
+  position: absolute; display: flex; flex-direction: column; align-items: center;
+  font-size: 0.82rem; line-height: 0.95; font-weight: 800;
+}
+.pkcard--sm .pkcard__corner { font-size: 0.66rem; }
+.pkcard__corner i { font-style: normal; }
+.pkcard__corner--tl { top: 5px; left: 6px; }
+.pkcard__corner--br { bottom: 5px; right: 6px; transform: rotate(180deg); }
+.pkcard--back {
+  background:
+    repeating-linear-gradient(45deg, var(--purple) 0 8px, #8a52ef 8px 16px);
+  color: #fff;
+}
+.pkcard__crest { font-size: 1.2rem; text-align: center; opacity: 0.9; line-height: 1; }
+.pkcard--sm .pkcard__crest { font-size: 0.85rem; }
+
+.pkflip { width: 86px; height: 122px; perspective: 800px; }
+.pkflip--sm { width: 60px; height: 86px; }
+.pkflip__inner {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+.pkflip.is-flipped .pkflip__inner { transform: rotateY(180deg); }
+.pkflip__face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.pkflip__face .pkcard { width: 100%; height: 100%; box-shadow: 0 3px 0 var(--ink); }
+.pkflip__front { transform: rotateY(180deg); }
+
+/* ── Ride the Bus (busfahrt.js) ─────────────────────────────────────────── */
+.bf-screen { text-align: center; }
+.bf-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+.bf-driver { font-weight: 800; font-size: 1.2rem; color: var(--purple); }
+.bf-rung { font-weight: 800; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 3px 12px; }
+.bf-row { display: flex; justify-content: center; gap: 10px; margin: 8px 0 18px; min-height: 90px; }
+.bf-slot { display: flex; align-items: flex-start; justify-content: center; }
+.bf-slot--live { transform: translateY(-4px); }
+.bf-q { font-size: 1.25rem; font-weight: 800; margin: 6px 0 16px; }
+.bf-guesses { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.btn-guess { flex: 1 1 40%; min-width: 120px; background: var(--blue); color: #fff; font-size: 1.2rem; }
+.bf-guesses .btn-guess:nth-child(2) { background: var(--ink); }
+.bf-guesses .btn-guess:nth-child(3) { background: var(--green); color: var(--ink); }
+.bf-guesses .btn-guess:nth-child(4) { background: var(--pink); }
+.bf-result { margin: 16px 0; min-height: 24px; }
+.bf-fail { font-size: 1.2rem; font-weight: 800; color: var(--red); margin-bottom: 12px; }
+.bf-sips { background: var(--yellow); color: var(--ink); border-radius: 6px; padding: 1px 8px; }
+.bf-escape .bf-q { font-size: 1.15rem; font-weight: 600; }
+
+/* ── Fuck the Dealer (fuckdealer.js) ────────────────────────────────────── */
+.fd-screen { text-align: center; }
+.fd-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.fd-deck { font-weight: 800; background: var(--ink); color: var(--yellow); border-radius: 999px; padding: 3px 12px; }
+.fd-cardwrap { display: flex; justify-content: center; margin: 10px 0; }
+.fd-turn { font-size: 1.15rem; margin: 8px 0; }
+.fd-hint { font-size: 1.2rem; font-weight: 800; background: var(--paper-2); border: 3px solid var(--ink); border-radius: 12px; padding: 8px 12px; margin: 10px auto; display: inline-block; }
+.fd-ranks { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; }
+.btn-rank { flex: 1 1 18%; min-width: 56px; background: var(--blue); color: #fff; font-size: 1.1rem; padding: 14px 8px; }
+.fd-result { margin: 16px 0; min-height: 24px; }
+.fd-win { font-size: 1.2rem; font-weight: 800; color: var(--green); }
+.fd-lose { font-size: 1.2rem; font-weight: 800; color: var(--red); }
+/* The drawn-cards history strip: horizontally scrollable, all cards side by
+   side. On desktop ~a dozen show at once inside the column; on mobile you swipe. */
+.fd-history-wrap { margin: 16px 0 6px; text-align: left; }
+.fd-history-head {
+  display: flex; align-items: center; gap: 8px;
+  font-weight: 800; font-size: 0.95rem; color: var(--ink-soft); margin-bottom: 6px;
+}
+.fd-history-count { background: var(--ink); color: var(--yellow); border-radius: 999px; padding: 1px 9px; font-size: 0.85rem; }
+.fd-history {
+  display: flex; align-items: center; gap: 8px;
+  overflow-x: auto; overflow-y: hidden;
+  padding: 10px; min-height: 104px;
+  background: rgba(36, 27, 77, 0.06);
+  border: 3px solid var(--ink); border-radius: 14px;
+  -webkit-overflow-scrolling: touch;
+}
+.fd-histcard { flex: 0 0 auto; }
+.fd-histcard--new { animation: fd-cardpop 0.32s cubic-bezier(0.2, 1.4, 0.4, 1); }
+@keyframes fd-cardpop { from { transform: translateY(8px) scale(0.78); opacity: 0; } to { transform: none; opacity: 1; } }
+.fd-history-empty { color: var(--ink-soft); font-size: 0.95rem; padding: 16px 6px; }
+.fd-history::-webkit-scrollbar { height: 10px; }
+.fd-history::-webkit-scrollbar-thumb { background: var(--purple); border-radius: 999px; }
+.fd-history::-webkit-scrollbar-track { background: transparent; }
+
+/* ── Horse Race (pferderennen.js) ───────────────────────────────────────── */
+.hr-horses { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 6px 0 4px; }
+.hr-horsechip { font-size: 1.3rem; font-weight: 800; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 10px; padding: 4px 10px; }
+.hr-suit--red { color: #e0294e; }
+.hr-suit--black { color: var(--ink); }
+.hr-bets { display: flex; flex-direction: column; gap: 8px; }
+.hr-betrow { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 12px; padding: 6px 10px; }
+.hr-betname { font-weight: 800; }
+.hr-betsuits { display: flex; gap: 6px; }
+.hr-suit {
+  width: 40px; height: 40px; font-size: 1.3rem; font-weight: 800;
+  background: var(--paper); border: 2px solid var(--ink); border-radius: 8px; cursor: pointer;
+}
+.hr-suit--on { background: var(--yellow); box-shadow: inset 0 0 0 2px var(--ink); transform: translateY(1px); }
+.hr-board { display: flex; flex-direction: column; gap: 10px; margin: 6px 0 14px; }
+.hr-lane { display: flex; align-items: center; gap: 8px; }
+.hr-lanetag { font-size: 1.3rem; font-weight: 800; width: 28px; text-align: center; }
+.hr-track {
+  position: relative; flex: 1; height: 44px;
+  background: repeating-linear-gradient(90deg, #efe7d4 0 22px, #e7ddc6 22px 44px);
+  border: 3px solid var(--ink); border-radius: 10px;
+}
+.hr-horse {
+  position: absolute; top: 50%; transform: translate(-50%, -50%);
+  font-size: 1.7rem; line-height: 1;
+  transition: left 0.45s cubic-bezier(0.3, 0.8, 0.4, 1);
+  z-index: 3; filter: drop-shadow(0 1px 0 var(--ink));
+}
+.hr-finish { position: absolute; right: 0; top: 50%; transform: translate(50%, -50%); font-size: 1.3rem; z-index: 2; }
+.hr-hurdle {
+  position: absolute; top: -3px; bottom: -3px; width: 0;
+  border-left: 3px dashed var(--ink-soft);
+  display: flex; align-items: center; justify-content: center; z-index: 1;
+}
+.hr-hurdle--flipped { border-left-style: solid; border-left-color: var(--ink); }
+.hr-hurdle-suit { font-size: 1.1rem; font-weight: 800; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 6px; padding: 0 4px; }
+.hr-info { display: flex; align-items: center; gap: 14px; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
+.hr-commentary { font-weight: 800; font-size: 1.1rem; min-height: 1.4em; flex: 1; text-align: center; min-width: 180px; }
+.hr-deckcount { font-size: 0.9rem; color: var(--ink-soft); }
+.hr-controls { margin-top: 8px; }
+.hr-payouts { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.hr-pay { font-size: 1.1rem; font-weight: 700; border: 2px solid var(--ink); border-radius: 10px; padding: 8px 12px; }
+.hr-pay--win { background: var(--green); color: var(--ink); }
+.hr-pay--lose { background: var(--paper-2); }

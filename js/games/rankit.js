@@ -14,9 +14,9 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function Pools() { return global.Spielecke.Pools; }
 
   var MIN_PLAYERS = 2;
-  var DEFAULTS = { pool: "mixed", drinking: false };
 
   var els = null, ctx = null, settings = null;
   var players = [], set = null, rankings = [], idx = 0, current = [];
@@ -33,7 +33,7 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+        pools: Pools().load(context.store, sets()),
         drinking: context.store.get("drinking", false) === true,
       };
       renderSetup();
@@ -46,11 +46,7 @@
 
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = sets();
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(sets(), t);
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
@@ -68,13 +64,9 @@
       '  <button id="ri-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start round ▶️") + "</button>" +
       "</section>";
 
-    highlight("#ri-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#ri-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
-        highlight("#ri-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#ri-pools"), sets(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
     els.querySelector("#ri-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -84,7 +76,7 @@
 
   function startRound(roster) {
     players = roster.map(function (p) { return p.name; });
-    set = pickSet(settings.pool);
+    set = pickSet();
     rankings = [];
     idx = 0;
     current = [];
@@ -320,22 +312,14 @@
     els.querySelector("#ri-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
-  function pickSet(pool) {
-    var pools = sets();
-    var keys = Object.keys(pools);
-    if (!keys.length) return { title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] };
-    var list = (pool === "mixed" || !pools[pool])
-      ? keys.reduce(function (acc, k) { return acc.concat(pools[k].sets || []); }, [])
-      : (pools[pool].sets || []);
+  function pickSet() {
+    var list = Pools().gather(settings.pools, sets(), "sets");
     if (!list.length) return { title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] };
     return list[Math.floor(Math.random() * list.length)];
   }
 
   // Current-language pools from the bilingual { de, en } content bundle.
   function sets() { return global.Spielecke.L(global.Spielecke.RankItSets) || {}; }
-  function highlight(sel, value, an) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
-  }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }
 

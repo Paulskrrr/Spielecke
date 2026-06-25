@@ -24,7 +24,7 @@
       tagline: "Spin the wheel. Let fate pick the victim.",
       icon: "🎡",
       minPlayers: 2,
-      supportsDrinking: false,
+      supportsDrinking: true,
     },
     mount: function (container, context) {
       els = container; ctx = context;
@@ -56,16 +56,16 @@
     els.innerHTML =
       '<section class="screen chooser-screen">' +
       '  <h2 class="screen-title pop">🎡 ' + t("Chooser") + "</h2>" +
-      '  <div class="wheel-wrap">' +
+      '  <div id="chooser-wheelwrap" class="wheel-wrap">' +
       '    <div class="wheel-pointer"></div>' +
       '    <div id="chooser-wheel" class="wheel">' + wheelSvg(ns) + "</div>" +
       "  </div>" +
       '  <div id="chooser-result" class="chooser-result">&nbsp;</div>' +
-      '  <button id="chooser-spin" class="btn btn-primary btn-block btn-xl">' + t("SPIN 🎯") + "</button>" +
+      '  <div id="chooser-hint" class="tap-hint">' + t("👆 Tap to spin") + "</div>" +
       '  <button id="chooser-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
-    els.querySelector("#chooser-spin").addEventListener("click", spin);
+    global.Spielecke.tappable(els.querySelector("#chooser-wheelwrap"), spin);
     els.querySelector("#chooser-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
@@ -102,8 +102,8 @@
     var ns = names();
     if (!ns.length) return;
     spinning = true;
-    var spinBtn = els.querySelector("#chooser-spin");
-    spinBtn.disabled = true;
+    var hintEl = els.querySelector("#chooser-hint");
+    if (hintEl) hintEl.style.visibility = "hidden";
     var resultEl = els.querySelector("#chooser-result");
     resultEl.innerHTML = "&nbsp;";
 
@@ -126,8 +126,8 @@
       if (!els) return;
       var rEl = els.querySelector("#chooser-result");
       if (rEl) rEl.innerHTML = '👉 <span class="chooser-name">' + esc(ns[idx]) + "</span>";
-      var b = els.querySelector("#chooser-spin");
-      if (b) { b.disabled = false; b.textContent = t("SPIN AGAIN 🎯"); }
+      var hintEl = els.querySelector("#chooser-hint");
+      if (hintEl) { hintEl.style.visibility = "visible"; hintEl.textContent = t("👆 Tap to spin again"); }
     }, 4400);
   }
 

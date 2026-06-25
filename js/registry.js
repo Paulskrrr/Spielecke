@@ -43,6 +43,9 @@
     entry(Games.reaction),
     entry(Games.rankit),
     entry(Games.hochadel),
+    entry(Games.busfahrt),
+    entry(Games.fuckdealer),
+    entry(Games.pferderennen),
   ];
 
   global.Spielecke = global.Spielecke || {};

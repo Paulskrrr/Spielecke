@@ -12,8 +12,7 @@
 
   function t(k) { return global.Spielecke.t(k); }
   function pools() { return global.Spielecke.L(global.Spielecke.TruthQuestions) || {}; }
-
-  var DEFAULTS = { pool: "mixed", drinking: false };
+  function Pools() { return global.Spielecke.Pools; }
 
   var els = null, ctx = null, settings = null;
   var queue = [], lastName = null;
@@ -30,7 +29,7 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+        pools: Pools().load(context.store, pools()),
         drinking: context.store.get("drinking", false) === true,
       };
       renderSetup();
@@ -42,11 +41,7 @@
   };
 
   function renderSetup() {
-    var p = pools();
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(p).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(p[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(pools(), t);
 
     els.innerHTML =
       '<section class="screen game-setup">' +
@@ -58,18 +53,15 @@
       '  <button id="tr-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +
       "</section>";
 
-    highlight("#tr-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#tr-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
-        highlight("#tr-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#tr-pools"), pools(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { queue = []; });
     els.querySelector("#tr-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
     els.querySelector("#tr-start").addEventListener("click", function () {
-      queue = buildQueue(settings.pool); renderCard();
+      queue = buildQueue(); renderCard();
     });
   }
 
@@ -80,12 +72,14 @@
     els.innerHTML =
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + who + "</div>" +
-      '  <div class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
+      '  <div class="deck-tapwrap">' +
+      '    <div id="tr-card" class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
+      "  </div>" +
       '  <p class="deck-rule">' + (settings.drinking ? t("Answer honestly, or take a 🍺 drink to dodge.") : t("Answer honestly!")) + "</p>" +
-      '  <button id="tr-next" class="btn btn-primary btn-block btn-xl">' + t("Next ▶️") + "</button>" +
+      '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
       '  <button id="tr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
-    els.querySelector("#tr-next").addEventListener("click", renderCard);
+    global.Spielecke.tappable(els.querySelector("#tr-card"), renderCard);
     els.querySelector("#tr-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
@@ -100,24 +94,16 @@
     return name;
   }
 
-  function buildQueue(pool) {
-    var p = pools();
-    var keys = Object.keys(p);
-    var items = (pool === "mixed" || !p[pool])
-      ? keys.reduce(function (a, k) { return a.concat(p[k].prompts || []); }, [])
-      : (p[pool].prompts || []).slice();
-    return shuffle(items.slice());
+  function buildQueue() {
+    return shuffle(Pools().gather(settings.pools, pools(), "prompts").slice());
   }
   function nextPrompt() {
-    if (!queue.length) queue = buildQueue(settings.pool);
+    if (!queue.length) queue = buildQueue();
     return queue.length ? queue.pop() : "Make one up!";
   }
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
-  }
-  function highlight(sel, value, an) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }

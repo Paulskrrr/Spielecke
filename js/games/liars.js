@@ -14,9 +14,9 @@
 
   function t(k) { return global.Spielecke.t(k); }
   function pools() { return global.Spielecke.L(global.Spielecke.NumberQuestions) || {}; }
+  function Pools() { return global.Spielecke.Pools; }
 
   var MIN_PLAYERS = 2;
-  var DEFAULTS = { pool: "mixed", drinking: false };
 
   var els = null, ctx = null, settings = null;
   var players = [], question = null, guesses = [], idx = 0;
@@ -33,7 +33,7 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+        pools: Pools().load(context.store, pools()),
         drinking: context.store.get("drinking", false) === true,
       };
       renderSetup();
@@ -46,11 +46,7 @@
 
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var poolMap = pools();
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(poolMap).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(poolMap[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(pools(), t);
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
@@ -68,13 +64,9 @@
       '  <button id="ln-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start round ▶️") + "</button>" +
       "</section>";
 
-    highlight("#ln-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#ln-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool"); ctx.store.set("pool", settings.pool);
-        highlight("#ln-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#ln-pools"), pools(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
     els.querySelector("#ln-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -84,7 +76,7 @@
 
   function startRound(roster) {
     players = roster.map(function (p) { return p.name; });
-    question = pickQuestion(settings.pool);
+    question = pickQuestion();
     guesses = [];
     idx = 0;
     renderPassTo();
@@ -167,22 +159,14 @@
     els.querySelector("#ln-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
-  function pickQuestion(pool) {
-    var poolMap = pools();
-    var keys = Object.keys(poolMap);
-    if (!keys.length) return { q: t("Pick a number 1–100"), a: 50 };
-    var list = (pool === "mixed" || !poolMap[pool])
-      ? keys.reduce(function (acc, k) { return acc.concat(poolMap[k].questions || []); }, [])
-      : (poolMap[pool].questions || []);
+  function pickQuestion() {
+    var list = Pools().gather(settings.pools, pools(), "questions");
     if (!list.length) return { q: t("Pick a number 1–100"), a: 50 };
     return list[Math.floor(Math.random() * list.length)];
   }
 
   function fmt(n) {
     return (Math.round(n * 100) / 100).toLocaleString("en-US");
-  }
-  function highlight(sel, value, an) {
-    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
   function attr(s) { return esc(s).replace(/'/g, "&#39;"); }

@@ -14,8 +14,10 @@
 
   function t(k) { return global.Spielecke.t(k); }
 
+  function Pools() { return global.Spielecke.Pools; }
+
   var MIN_PLAYERS = 3;
-  var DEFAULTS = { pool: "mixed", imposterCount: 1 };
+  var DEFAULTS = { imposterCount: 1 };
 
   var els = null;
   var ctx = null;
@@ -35,14 +37,14 @@
       tagline: "Everyone knows the word. One faker doesn't. Sniff them out.",
       icon: "🕵️",
       minPlayers: MIN_PLAYERS,
-      supportsDrinking: false,
+      supportsDrinking: true,
     },
 
     mount: function (container, context) {
       els = container;
       ctx = context;
       settings = {
-        pool: context.store.get("pool", DEFAULTS.pool) || DEFAULTS.pool,
+        pools: Pools().load(context.store, poolsFor()),
         imposterCount: parseInt(context.store.get("imposterCount", DEFAULTS.imposterCount), 10) || 1,
       };
       renderSetup();
@@ -57,12 +59,7 @@
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = poolsFor();
-
-    var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
-      })).join("");
+    var chips = Pools().chipsHtml(poolsFor(), t);
 
     var enough = roster.length >= MIN_PLAYERS;
     var rosterNote = enough
@@ -97,14 +94,9 @@
       ">" + t("Deal roles 🂴") + "</button>" +
       "</section>";
 
-    highlight("#im-pools", settings.pool, "data-pool");
-    els.querySelectorAll("#im-pools .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.pool = c.getAttribute("data-pool");
-        ctx.store.set("pool", settings.pool);
-        highlight("#im-pools", settings.pool, "data-pool");
-      });
-    });
+    Pools().bind(els.querySelector("#im-pools"), poolsFor(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
     if (enough) {
       highlight("#im-count", String(settings.imposterCount), "data-count");
       els.querySelectorAll("#im-count .chip").forEach(function (c) {
@@ -128,7 +120,7 @@
     for (var i = idxs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = idxs[i]; idxs[i] = idxs[j]; idxs[j] = tmp; }
     idxs.slice(0, count).forEach(function (i) { imposterSet[i] = true; });
 
-    var picked = pickWord(settings.pool);
+    var picked = pickWord();
     secretWord = picked.word;
     secretCategory = picked.category;
     revealIdx = 0;
@@ -249,17 +241,12 @@
   }
 
   // --- Word picking --------------------------------------------------------
-  function pickWord(pool) {
+  function pickWord() {
     var pools = poolsFor();
-    var keys = Object.keys(pools);
+    var keys = Pools().resolve(settings.pools, pools); // valid selected pools (or all)
     if (!keys.length) return { word: "Beer", category: "Party" };
 
-    var key;
-    if (pool === "mixed" || !pools[pool]) {
-      key = keys[Math.floor(Math.random() * keys.length)];
-    } else {
-      key = pool;
-    }
+    var key = keys[Math.floor(Math.random() * keys.length)];
     var words = pools[key].terms || [];
     var word = words.length ? words[Math.floor(Math.random() * words.length)] : "Beer";
     var category = (pools[key].label || key).replace(/^[^\w]+\s*/, "");
