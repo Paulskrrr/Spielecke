@@ -51,8 +51,8 @@
     "Owning up is the easy part. The stories aren't.": "Das Zugeben ist das Einfachste. Die Geschichten nicht.",
     "Most Likely To": "Most Likely To",
     "Point on three. No takebacks.": "Auf drei zeigen. Kein Zurück.",
-    "Liar's Numbers": "Lügner-Zahlen",
-    "Everyone guesses a number. Closest wins, furthest eats it.": "Alle raten eine Zahl. Wer am nächsten liegt, gewinnt.",
+    // Liar's Numbers: name + tagline intentionally have NO German entry, so t()
+    // falls back to the English key — this game always shows as "Liar's Numbers".
     "Princess Treatment": "Princess Treatment",
     "Going above and beyond, or just the bare minimum? Discuss.": "Mehr als nötig oder nur das Minimum? Diskutiert.",
     "Doodle Drama": "Doodle Drama",

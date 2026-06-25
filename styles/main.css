@@ -187,7 +187,7 @@ body::before {
   min-height: 172px;
   border: 4px solid var(--ink);
   border-radius: var(--radius);
-  color: var(--ink);
+  color: #fff;
   cursor: pointer;
   box-shadow: var(--pop-lg);
   transition: transform 0.16s cubic-bezier(0.2, 1.4, 0.4, 1), box-shadow 0.16s ease;
@@ -203,13 +203,14 @@ body::before {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.28), transparent 62%);
   pointer-events: none;
 }
-/* each card a different crayon colour + a subtle playful tilt + readable text */
-.game-card:nth-child(6n + 1) { background: var(--yellow); color: var(--ink); transform: rotate(-1deg); }
-.game-card:nth-child(6n + 2) { background: var(--green);  color: var(--ink); transform: rotate(1deg); }
-.game-card:nth-child(6n + 3) { background: var(--blue);   color: #fff;       transform: rotate(-1deg); }
-.game-card:nth-child(6n + 4) { background: var(--pink);   color: #fff;       transform: rotate(1deg); }
-.game-card:nth-child(6n + 5) { background: var(--orange); color: var(--ink); transform: rotate(-1.5deg); }
-.game-card:nth-child(6n + 6) { background: var(--purple); color: #fff;       transform: rotate(1.5deg); }
+/* each card a different crayon colour + a subtle playful tilt; text is always
+   white (legibility on the lighter cards comes from the text-shadow below) */
+.game-card:nth-child(6n + 1) { background: var(--yellow); transform: rotate(-1deg); }
+.game-card:nth-child(6n + 2) { background: var(--green);  transform: rotate(1deg); }
+.game-card:nth-child(6n + 3) { background: var(--blue);   transform: rotate(-1deg); }
+.game-card:nth-child(6n + 4) { background: var(--pink);   transform: rotate(1deg); }
+.game-card:nth-child(6n + 5) { background: var(--orange); transform: rotate(-1.5deg); }
+.game-card:nth-child(6n + 6) { background: var(--purple); transform: rotate(1.5deg); }
 
 .game-card:hover,
 .game-card:focus-visible {
@@ -237,9 +238,13 @@ body::before {
   font-weight: 800;
   line-height: 1.05;
   letter-spacing: -0.2px;
-  text-shadow: 0 2px 0 rgba(36, 27, 77, 0.18);
+  /* dark halo keeps the white name readable on the lighter (yellow/green/orange) cards */
+  text-shadow: 0 1px 3px rgba(36, 27, 77, 0.55), 0 2px 0 rgba(36, 27, 77, 0.3);
 }
-.game-card__tagline { font-size: 0.82rem; color: inherit; opacity: 0.82; flex: 1; line-height: 1.3; }
+.game-card__tagline {
+  font-size: 0.82rem; color: inherit; opacity: 0.95; flex: 1; line-height: 1.3;
+  text-shadow: 0 1px 2px rgba(36, 27, 77, 0.5);
+}
 .game-card__meta { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 2px; }
 
 .badge {
