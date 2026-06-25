@@ -13,6 +13,7 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function pools() { return global.Spielecke.L(global.Spielecke.NumberQuestions) || {}; }
 
   var MIN_PLAYERS = 2;
   var DEFAULTS = { pool: "mixed", drinking: false };
@@ -45,10 +46,10 @@
 
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = global.Spielecke.NumberQuestions || {};
+    var poolMap = pools();
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
+      .concat(Object.keys(poolMap).map(function (k) {
+        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(poolMap[k].label || k) + "</button>";
       })).join("");
 
     var enough = roster.length >= MIN_PLAYERS;
@@ -167,12 +168,12 @@
   }
 
   function pickQuestion(pool) {
-    var pools = global.Spielecke.NumberQuestions || {};
-    var keys = Object.keys(pools);
+    var poolMap = pools();
+    var keys = Object.keys(poolMap);
     if (!keys.length) return { q: "Pick a number 1–100", a: 50 };
-    var list = (pool === "mixed" || !pools[pool])
-      ? keys.reduce(function (acc, k) { return acc.concat(pools[k].questions || []); }, [])
-      : (pools[pool].questions || []);
+    var list = (pool === "mixed" || !poolMap[pool])
+      ? keys.reduce(function (acc, k) { return acc.concat(poolMap[k].questions || []); }, [])
+      : (poolMap[pool].questions || []);
     if (!list.length) return { q: "Pick a number 1–100", a: 50 };
     return list[Math.floor(Math.random() * list.length)];
   }

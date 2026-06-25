@@ -110,8 +110,10 @@
     renderPass();
   }
 
+  function questions() { return global.Spielecke.L(global.Spielecke.QuizQuestions) || []; }
+
   function levelIndex() {
-    var max = (global.Spielecke.QuizQuestions || []).length - 1;
+    var max = questions().length - 1;
     return Math.max(0, Math.min(round, max));
   }
   function levelName() {
@@ -227,7 +229,7 @@
 
   // --- Questions -----------------------------------------------------------
   function pickQuestion(level) {
-    var levels = global.Spielecke.QuizQuestions || [];
+    var levels = questions();
     var pool = levels[level] || levels[0] || [];
     if (!pool.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
     var u = used[level] = used[level] || {};

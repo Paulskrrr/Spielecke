@@ -11,6 +11,7 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function pools() { return global.Spielecke.L(global.Spielecke.TruthQuestions) || {}; }
 
   var DEFAULTS = { pool: "mixed", drinking: false };
 
@@ -41,10 +42,10 @@
   };
 
   function renderSetup() {
-    var pools = global.Spielecke.TruthQuestions || {};
+    var p = pools();
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
+      .concat(Object.keys(p).map(function (k) {
+        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(p[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
@@ -100,11 +101,11 @@
   }
 
   function buildQueue(pool) {
-    var pools = global.Spielecke.TruthQuestions || {};
-    var keys = Object.keys(pools);
-    var items = (pool === "mixed" || !pools[pool])
-      ? keys.reduce(function (a, k) { return a.concat(pools[k].prompts || []); }, [])
-      : (pools[pool].prompts || []).slice();
+    var p = pools();
+    var keys = Object.keys(p);
+    var items = (pool === "mixed" || !p[pool])
+      ? keys.reduce(function (a, k) { return a.concat(p[k].prompts || []); }, [])
+      : (p[pool].prompts || []).slice();
     return shuffle(items.slice());
   }
   function nextPrompt() {

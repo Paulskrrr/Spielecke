@@ -12,6 +12,7 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function pools() { return global.Spielecke.L(global.Spielecke.WavelengthSpectrums) || {}; }
 
   var BULLSEYE = 10;
   var MISS = 30;
@@ -50,10 +51,10 @@
 
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
-    var pools = global.Spielecke.WavelengthSpectrums || {};
+    var poolMap = pools();
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
+      .concat(Object.keys(poolMap).map(function (k) {
+        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(poolMap[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
@@ -189,14 +190,14 @@
 
   // --- Spectrum picking ----------------------------------------------------
   function pickSpectrum(pool) {
-    var pools = global.Spielecke.WavelengthSpectrums || {};
-    var keys = Object.keys(pools);
+    var poolMap = pools();
+    var keys = Object.keys(poolMap);
     if (!keys.length) return { left: "Cold", right: "Hot" };
     var list;
-    if (pool === "mixed" || !pools[pool]) {
-      list = keys.reduce(function (a, k) { return a.concat(pools[k].pairs || []); }, []);
+    if (pool === "mixed" || !poolMap[pool]) {
+      list = keys.reduce(function (a, k) { return a.concat(poolMap[k].pairs || []); }, []);
     } else {
-      list = pools[pool].pairs || [];
+      list = poolMap[pool].pairs || [];
     }
     if (!list.length) return { left: "Cold", right: "Hot" };
     return list[Math.floor(Math.random() * list.length)];

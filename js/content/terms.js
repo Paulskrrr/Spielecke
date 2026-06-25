@@ -16,6 +16,12 @@
  * with no `games` field shows up everywhere. Use `Spielecke.termPoolsFor(id)`
  * to read the pools a given game should offer (it also filters "mixed").
  *
+ * BILINGUAL: TERMS is a { de, en } bundle. Both subtrees have identical pool
+ * keys. Proper-noun pools (football, videogames, famous, starwars_*, marvel,
+ * onepiece) keep identical `terms` arrays across languages — only labels with
+ * English words are translated. Common-word pools (general, party, nsfw,
+ * doodle_hard) have their terms translated to natural German.
+ *
  * (The Bomb and Wavelength use different content shapes — prompts and opposite
  * pairs — so they keep their own files.)
  */
@@ -23,225 +29,443 @@
   "use strict";
 
   var TERMS = {
-    football: {
-      label: "⚽ Fußball",
-      terms: [
-        // Spieler
-        "Messi", "Ronaldo", "Neymar", "Mbappé", "Haaland",
-        "Lewandowski", "Salah", "De Bruyne", "Kimmich", "Müller",
-        "Neuer", "Kroos",
-        // Vereine
-        "FC Bayern", "Real Madrid", "FC Barcelona", "Manchester City",
-        "Liverpool", "Paris Saint-Germain", "Borussia Dortmund",
-        "Arsenal", "Juventus", "Chelsea",
-        // Begriffe & Konzepte
-        "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
-        "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
-        "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
-        // FC Barcelona
-        "Remontada", "Camp Nou", "La Masia", "Tiki-Taka",
-        "Xavi", "Iniesta", "Puyol", "Guardiola",
-        "Pedri", "Lamine Yamal",
-      ],
+    en: {
+      football: {
+        label: "⚽ Fußball",
+        terms: [
+          // Spieler
+          "Messi", "Ronaldo", "Neymar", "Mbappé", "Haaland",
+          "Lewandowski", "Salah", "De Bruyne", "Kimmich", "Müller",
+          "Neuer", "Kroos",
+          // Vereine
+          "FC Bayern", "Real Madrid", "FC Barcelona", "Manchester City",
+          "Liverpool", "Paris Saint-Germain", "Borussia Dortmund",
+          "Arsenal", "Juventus", "Chelsea",
+          // Begriffe & Konzepte
+          "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
+          "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
+          "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
+          // FC Barcelona
+          "Remontada", "Camp Nou", "La Masia", "Tiki-Taka",
+          "Xavi", "Iniesta", "Puyol", "Guardiola",
+          "Pedri", "Lamine Yamal",
+        ],
+      },
+
+      videogames: {
+        label: "🎮 Video Games",
+        terms: [
+          // Allgemein
+          "Respawn", "Boss Fight", "Easter Egg", "Noob", "Speedrun",
+          "Loot Box", "Cheat Code", "LAN Party",
+          // Minecraft
+          "Creeper", "Steve", "Enderman", "Diamond Pickaxe",
+          "Nether Portal", "Ender Dragon", "Herobrine", "Redstone", "Dirt House",
+          // Counter-Strike
+          "AWP", "Headshot", "Rush B", "Flashbang",
+          "Knife Round", "Smoke Grenade", "Bomb Defusal",
+          // Overwatch
+          "Bastion", "Tracer", "Reinhardt", "Mercy",
+          "D.Va", "Genji", "Widowmaker", "Payload",
+          // League of Legends
+          "Yasuo", "Teemo", "Jungle", "Baron Nashor", "Dragon", "Nexus", "Gank",
+          // Hitman
+          "Agent 47",
+          // Clash of Clans
+          "Electro Dragon", "Town Hall",
+        ],
+      },
+
+      general: {
+        label: "🌍 General",
+        terms: [
+          // Everyday objects
+          "Toothbrush", "Alarm clock", "Umbrella", "Sunglasses", "Remote control",
+          "Scissors", "Microwave", "Washing machine", "Stapler", "Lighter",
+          // Food & drink
+          "Pizza", "Sushi", "Ice cream", "Burger", "Popcorn",
+          "Coffee", "Beer", "Nutella", "Avocado", "Bacon",
+          // Animals
+          "Penguin", "Dolphin", "Flamingo", "Sloth", "Octopus",
+          "Panda", "Kangaroo", "Hamster", "Giraffe", "Crow",
+          // Places & situations
+          "Sauna", "Dentist", "Airport", "Casino", "Gym",
+          "Roller coaster", "Flea market", "Traffic jam", "Power outage", "Hospital",
+          // Experiences
+          "First date", "Job interview", "Hangover", "Moving apartment",
+          "Surprise party", "Road trip", "All-nighter", "Sunburn",
+        ],
+      },
+
+      party: {
+        label: "🎉 Party",
+        terms: [
+          "Beer pong", "Hangover", "Tequila shot", "Nightclub", "Karaoke",
+          "Designated driver", "Kebab at 4am", "Pre-game", "Shots", "Group chat",
+        ],
+      },
+      famous: {
+        label: "🌟 Famous",
+        terms: [
+          "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
+          "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
+        ],
+      },
+      nsfw: {
+        label: "🔞 Filth",
+        terms: [
+          "One-night stand", "Strip club", "Sexting", "Walk of shame",
+          "Booty call", "Friends with benefits", "Skinny dipping",
+          "Your ex's new partner", "A drunk text you regret",
+          "Threesome", "Lap dance", "Handcuffs", "Morning wood", "Quickie",
+          "Sugar daddy", "Safe word", "Wet dream", "Dirty talk", "Roleplay",
+          "Friend zone", "Netflix and chill", "Hickey", "Blue balls",
+          "Whipped cream", "Massage parlour", "Period sex", "Dad bod",
+        ],
+      },
+      doodle_hard: {
+        label: "🎨 Doodle – Hard",
+        // Drawing-only: multi-word scenes ("Frog in a car") and abstract concepts
+        // ("Loneliness") are great to DRAW but make no sense as a Who Am I? identity
+        // or an Imposter secret word — so this pool is offered to Doodle Drama only.
+        games: ["doodle"],
+        terms: [
+          // Absurd animal combos
+          "Frog in a car", "Penguin on a skateboard", "Shark in a bathtub",
+          "Bear in a business suit", "Dinosaur on a bicycle", "Elephant in an elevator",
+          "Octopus driving a bus", "Giraffe in a submarine", "Panda in a sauna",
+          "Horse at a wedding", "Crocodile doing yoga", "Turtle on a treadmill",
+          "Snake in a library", "Wolf playing violin", "Hippo at a desk",
+          "Cat giving a TED Talk", "Dog judging a cooking show", "Fish playing guitar",
+          "Monkey on a rollercoaster", "Chicken in space",
+          // Tricky abstract concepts
+          "Loneliness", "Jealousy", "Procrastination", "Déjà vu", "Awkward silence",
+          "Monday morning", "Fear of missing out", "Democracy", "The internet",
+          // Visual paradoxes & impossible things
+          "Fire underwater", "Man falling upwards", "Invisible man eating soup",
+          "The end of a rainbow", "The last cookie", "A dream inside a dream",
+          "Someone being watched without knowing it",
+        ],
+      },
+
+      starwars_easy: {
+        label: "⭐ Star Wars – Easy",
+        terms: [
+          // Films
+          "Darth Vader", "Luke Skywalker", "Yoda", "Princess Leia", "Han Solo",
+          "Obi-Wan Kenobi", "Chewbacca", "R2-D2", "C-3PO", "Emperor Palpatine",
+          "Boba Fett", "Jango Fett", "Anakin Skywalker", "Padmé Amidala",
+          "Qui-Gon Jinn", "Mace Windu", "Count Dooku", "General Grievous",
+          "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "Poe Dameron", "BB-8",
+          "Snoke", "Lando Calrissian", "Jabba the Hutt", "Admiral Ackbar",
+          "Darth Maul", "The Mandalorian", "Grogu",
+          // Clone Wars (well-known)
+          "Ahsoka Tano", "Captain Rex", "Commander Cody", "Asajj Ventress",
+          "Cad Bane", "Hondo Ohnaka", "Plo Koon", "Aayla Secura", "Kit Fisto",
+        ],
+      },
+
+      starwars_hard: {
+        // Scoped to the films + The Clone Wars (animated): hard but iconic. No
+        // Rebels / newer live-action / game-only deep cuts — those are a different
+        // angle and easy to miss if you haven't watched those shows.
+        label: "⭐ Star Wars – Hard",
+        terms: [
+          // Prequel & Original trilogy characters (deep cuts)
+          "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
+          "Bossk", "IG-88", "Grand Moff Tarkin",
+          // The Clone Wars (animated)
+          "Savage Opress", "Barriss Offee", "Embo",
+          // Rogue One
+          "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
+          // Planets
+          "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
+          "Mustafar", "Kashyyyk", "Ryloth", "Scarif", "Jedha",
+          // Ships & Weapons
+          "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
+          "Star Destroyer", "AT-AT", "Thermal Detonator",
+          // Concepts & lore
+          "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
+          "Force Ghost", "The Clone Wars", "Carbonite", "Sarlacc", "Kessel Run",
+        ],
+      },
+
+      marvel: {
+        label: "🦸 Marvel",
+        terms: [
+          // Avengers core
+          "Iron Man", "Captain America", "Thor", "Black Widow", "Hulk",
+          "Hawkeye", "Nick Fury",
+          // Phase 1–3 heroes
+          "Spider-Man", "Doctor Strange", "Black Panther", "Ant-Man",
+          "Captain Marvel", "War Machine", "Falcon", "Winter Soldier",
+          "Scarlet Witch", "Vision", "Quicksilver", "Valkyrie",
+          // Guardians
+          "Star-Lord", "Gamora", "Drax", "Groot", "Rocket Raccoon",
+          "Nebula", "Mantis", "Yondu",
+          // Villains
+          "Thanos", "Loki", "Ultron", "Hela", "Killmonger", "Ego",
+          "Mysterio", "Vulture", "Red Skull", "Ronan", "Aldrich Killian",
+          "Agatha Harkness",
+          // Supporting
+          "Shuri", "Okoye", "Wong", "Happy Hogan", "Pepper Potts",
+          "Nick Fury", "Phil Coulson", "Agent Hill",
+          // Netflix / TV
+          "Daredevil", "Jessica Jones", "Luke Cage", "Punisher",
+          "Kingpin", "Elektra",
+        ],
+      },
+
+      onepiece: {
+        label: "🏴‍☠️ One Piece",
+        terms: [
+          // Straw Hat crew
+          "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Sanji",
+          "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe",
+          // Red-Hair & Whitebeard crews
+          "Shanks", "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
+          // Warlords & Allies
+          "Trafalgar Law", "Boa Hancock", "Crocodile",
+          "Donquixote Doflamingo", "Bartholomew Kuma", "Gecko Moria",
+          "Buggy", "Mihawk",
+          // Marine & Navy
+          "Monkey D. Garp", "Akainu", "Aokiji", "Kizaru", "Sengoku",
+          "Smoker", "Tashigi", "Coby",
+          // Villains & Antagonists
+          "Arlong", "Enel", "Rob Lucci", "Katakuri", "Big Mom", "Kaido",
+          "Blackbeard", "King", "Queen", "Jack",
+          // Others
+          "Yamato", "Nefertari Vivi", "Bon Clay", "Perona", "Ivankov",
+          "Silvers Rayleigh", "Gol D. Roger",
+        ],
+      },
     },
 
-    videogames: {
-      label: "🎮 Video Games",
-      terms: [
-        // Allgemein
-        "Respawn", "Boss Fight", "Easter Egg", "Noob", "Speedrun",
-        "Loot Box", "Cheat Code", "LAN Party",
-        // Minecraft
-        "Creeper", "Steve", "Enderman", "Diamond Pickaxe",
-        "Nether Portal", "Ender Dragon", "Herobrine", "Redstone", "Dirt House",
-        // Counter-Strike
-        "AWP", "Headshot", "Rush B", "Flashbang",
-        "Knife Round", "Smoke Grenade", "Bomb Defusal",
-        // Overwatch
-        "Bastion", "Tracer", "Reinhardt", "Mercy",
-        "D.Va", "Genji", "Widowmaker", "Payload",
-        // League of Legends
-        "Yasuo", "Teemo", "Jungle", "Baron Nashor", "Dragon", "Nexus", "Gank",
-        // Hitman
-        "Agent 47",
-        // Clash of Clans
-        "Electro Dragon", "Town Hall",
-      ],
-    },
+    de: {
+      football: {
+        label: "⚽ Fußball",
+        // Proper nouns — identical to en.
+        terms: [
+          // Spieler
+          "Messi", "Ronaldo", "Neymar", "Mbappé", "Haaland",
+          "Lewandowski", "Salah", "De Bruyne", "Kimmich", "Müller",
+          "Neuer", "Kroos",
+          // Vereine
+          "FC Bayern", "Real Madrid", "FC Barcelona", "Manchester City",
+          "Liverpool", "Paris Saint-Germain", "Borussia Dortmund",
+          "Arsenal", "Juventus", "Chelsea",
+          // Begriffe & Konzepte
+          "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
+          "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
+          "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
+          // FC Barcelona
+          "Remontada", "Camp Nou", "La Masia", "Tiki-Taka",
+          "Xavi", "Iniesta", "Puyol", "Guardiola",
+          "Pedri", "Lamine Yamal",
+        ],
+      },
 
-    general: {
-      label: "🌍 General",
-      terms: [
-        // Everyday objects
-        "Toothbrush", "Alarm clock", "Umbrella", "Sunglasses", "Remote control",
-        "Scissors", "Microwave", "Washing machine", "Stapler", "Lighter",
-        // Food & drink
-        "Pizza", "Sushi", "Ice cream", "Burger", "Popcorn",
-        "Coffee", "Beer", "Nutella", "Avocado", "Bacon",
-        // Animals
-        "Penguin", "Dolphin", "Flamingo", "Sloth", "Octopus",
-        "Panda", "Kangaroo", "Hamster", "Giraffe", "Crow",
-        // Places & situations
-        "Sauna", "Dentist", "Airport", "Casino", "Gym",
-        "Roller coaster", "Flea market", "Traffic jam", "Power outage", "Hospital",
-        // Experiences
-        "First date", "Job interview", "Hangover", "Moving apartment",
-        "Surprise party", "Road trip", "All-nighter", "Sunburn",
-      ],
-    },
+      videogames: {
+        label: "🎮 Videospiele",
+        // Proper nouns — identical to en.
+        terms: [
+          // Allgemein
+          "Respawn", "Boss Fight", "Easter Egg", "Noob", "Speedrun",
+          "Loot Box", "Cheat Code", "LAN Party",
+          // Minecraft
+          "Creeper", "Steve", "Enderman", "Diamond Pickaxe",
+          "Nether Portal", "Ender Dragon", "Herobrine", "Redstone", "Dirt House",
+          // Counter-Strike
+          "AWP", "Headshot", "Rush B", "Flashbang",
+          "Knife Round", "Smoke Grenade", "Bomb Defusal",
+          // Overwatch
+          "Bastion", "Tracer", "Reinhardt", "Mercy",
+          "D.Va", "Genji", "Widowmaker", "Payload",
+          // League of Legends
+          "Yasuo", "Teemo", "Jungle", "Baron Nashor", "Dragon", "Nexus", "Gank",
+          // Hitman
+          "Agent 47",
+          // Clash of Clans
+          "Electro Dragon", "Town Hall",
+        ],
+      },
 
-    party: {
-      label: "🎉 Party",
-      terms: [
-        "Beer pong", "Hangover", "Tequila shot", "Nightclub", "Karaoke",
-        "Designated driver", "Kebab at 4am", "Pre-game", "Shots", "Group chat",
-      ],
-    },
-    famous: {
-      label: "🌟 Famous",
-      terms: [
-        "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
-        "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
-      ],
-    },
-    nsfw: {
-      label: "🔞 Filth",
-      terms: [
-        "One-night stand", "Strip club", "Sexting", "Walk of shame",
-        "Booty call", "Friends with benefits", "Skinny dipping",
-        "Your ex's new partner", "A drunk text you regret",
-        "Threesome", "Lap dance", "Handcuffs", "Morning wood", "Quickie",
-        "Sugar daddy", "Safe word", "Wet dream", "Dirty talk", "Roleplay",
-        "Friend zone", "Netflix and chill", "Hickey", "Blue balls",
-        "Whipped cream", "Massage parlour", "Period sex", "Dad bod",
-      ],
-    },
-    doodle_hard: {
-      label: "🎨 Doodle – Hard",
-      // Drawing-only: multi-word scenes ("Frog in a car") and abstract concepts
-      // ("Loneliness") are great to DRAW but make no sense as a Who Am I? identity
-      // or an Imposter secret word — so this pool is offered to Doodle Drama only.
-      games: ["doodle"],
-      terms: [
-        // Absurd animal combos
-        "Frog in a car", "Penguin on a skateboard", "Shark in a bathtub",
-        "Bear in a business suit", "Dinosaur on a bicycle", "Elephant in an elevator",
-        "Octopus driving a bus", "Giraffe in a submarine", "Panda in a sauna",
-        "Horse at a wedding", "Crocodile doing yoga", "Turtle on a treadmill",
-        "Snake in a library", "Wolf playing violin", "Hippo at a desk",
-        "Cat giving a TED Talk", "Dog judging a cooking show", "Fish playing guitar",
-        "Monkey on a rollercoaster", "Chicken in space",
-        // Tricky abstract concepts
-        "Loneliness", "Jealousy", "Procrastination", "Déjà vu", "Awkward silence",
-        "Monday morning", "Fear of missing out", "Democracy", "The internet",
-        // Visual paradoxes & impossible things
-        "Fire underwater", "Man falling upwards", "Invisible man eating soup",
-        "The end of a rainbow", "The last cookie", "A dream inside a dream",
-        "Someone being watched without knowing it",
-      ],
-    },
+      general: {
+        label: "🌍 Allgemein",
+        terms: [
+          // Alltagsgegenstände
+          "Zahnbürste", "Wecker", "Regenschirm", "Sonnenbrille", "Fernbedienung",
+          "Schere", "Mikrowelle", "Waschmaschine", "Tacker", "Feuerzeug",
+          // Essen & Trinken
+          "Pizza", "Sushi", "Eis", "Burger", "Popcorn",
+          "Kaffee", "Bier", "Nutella", "Avocado", "Speck",
+          // Tiere
+          "Pinguin", "Delfin", "Flamingo", "Faultier", "Tintenfisch",
+          "Panda", "Känguru", "Hamster", "Giraffe", "Krähe",
+          // Orte & Situationen
+          "Sauna", "Zahnarzt", "Flughafen", "Casino", "Fitnessstudio",
+          "Achterbahn", "Flohmarkt", "Stau", "Stromausfall", "Krankenhaus",
+          // Erlebnisse
+          "Erstes Date", "Vorstellungsgespräch", "Kater", "Umzug",
+          "Überraschungsparty", "Roadtrip", "Durchmachen", "Sonnenbrand",
+        ],
+      },
 
-    starwars_easy: {
-      label: "⭐ Star Wars – Easy",
-      terms: [
-        // Films
-        "Darth Vader", "Luke Skywalker", "Yoda", "Princess Leia", "Han Solo",
-        "Obi-Wan Kenobi", "Chewbacca", "R2-D2", "C-3PO", "Emperor Palpatine",
-        "Boba Fett", "Jango Fett", "Anakin Skywalker", "Padmé Amidala",
-        "Qui-Gon Jinn", "Mace Windu", "Count Dooku", "General Grievous",
-        "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "Poe Dameron", "BB-8",
-        "Snoke", "Lando Calrissian", "Jabba the Hutt", "Admiral Ackbar",
-        "Darth Maul", "The Mandalorian", "Grogu",
-        // Clone Wars (well-known)
-        "Ahsoka Tano", "Captain Rex", "Commander Cody", "Asajj Ventress",
-        "Cad Bane", "Hondo Ohnaka", "Plo Koon", "Aayla Secura", "Kit Fisto",
-      ],
-    },
+      party: {
+        label: "🎉 Party",
+        terms: [
+          "Bier-Pong", "Kater", "Tequila-Shot", "Nachtclub", "Karaoke",
+          "Schlafmütze (Fahrer)", "Döner um 4 Uhr", "Vorglühen", "Shots", "Gruppenchat",
+        ],
+      },
+      famous: {
+        label: "🌟 Berühmt",
+        // Proper nouns — identical to en.
+        terms: [
+          "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
+          "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
+        ],
+      },
+      nsfw: {
+        label: "🔞 Versaut",
+        terms: [
+          "One-Night-Stand", "Stripclub", "Sexting", "Walk of Shame",
+          "Booty Call", "Freundschaft Plus", "Nacktbaden",
+          "Der neue Partner deines Ex", "Eine betrunkene Nachricht, die du bereust",
+          "Dreier", "Lapdance", "Handschellen", "Morgenlatte", "Quickie",
+          "Sugar Daddy", "Safeword", "Feuchter Traum", "Dirty Talk", "Rollenspiel",
+          "Friendzone", "Netflix and Chill", "Knutschfleck", "Blaue Eier",
+          "Schlagsahne", "Massagesalon", "Sex während der Periode", "Dad Bod",
+        ],
+      },
+      doodle_hard: {
+        label: "🎨 Doodle – Schwer",
+        // Drawing-only: multi-word scenes and abstract concepts are great to DRAW
+        // but make no sense as a Who Am I? identity or Imposter secret word — so
+        // this pool is offered to Doodle Drama only.
+        games: ["doodle"],
+        terms: [
+          // Absurde Tier-Kombis
+          "Frosch im Auto", "Pinguin auf einem Skateboard", "Hai in der Badewanne",
+          "Bär im Anzug", "Dinosaurier auf einem Fahrrad", "Elefant im Aufzug",
+          "Tintenfisch fährt Bus", "Giraffe in einem U-Boot", "Panda in der Sauna",
+          "Pferd auf einer Hochzeit", "Krokodil macht Yoga", "Schildkröte auf dem Laufband",
+          "Schlange in einer Bibliothek", "Wolf spielt Geige", "Nilpferd am Schreibtisch",
+          "Katze hält einen TED-Talk", "Hund bewertet eine Kochshow", "Fisch spielt Gitarre",
+          "Affe auf einer Achterbahn", "Huhn im Weltall",
+          // Knifflige abstrakte Konzepte
+          "Einsamkeit", "Eifersucht", "Aufschieberitis", "Déjà-vu", "Peinliche Stille",
+          "Montagmorgen", "Angst, etwas zu verpassen", "Demokratie", "Das Internet",
+          // Visuelle Paradoxa & Unmögliches
+          "Feuer unter Wasser", "Mann fällt nach oben", "Unsichtbarer Mann isst Suppe",
+          "Das Ende eines Regenbogens", "Der letzte Keks", "Ein Traum in einem Traum",
+          "Jemand wird beobachtet, ohne es zu wissen",
+        ],
+      },
 
-    starwars_hard: {
-      // Scoped to the films + The Clone Wars (animated): hard but iconic. No
-      // Rebels / newer live-action / game-only deep cuts — those are a different
-      // angle and easy to miss if you haven't watched those shows.
-      label: "⭐ Star Wars – Hard",
-      terms: [
-        // Prequel & Original trilogy characters (deep cuts)
-        "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
-        "Bossk", "IG-88", "Grand Moff Tarkin",
-        // The Clone Wars (animated)
-        "Savage Opress", "Barriss Offee", "Embo",
-        // Rogue One
-        "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
-        // Planets
-        "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
-        "Mustafar", "Kashyyyk", "Ryloth", "Scarif", "Jedha",
-        // Ships & Weapons
-        "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
-        "Star Destroyer", "AT-AT", "Thermal Detonator",
-        // Concepts & lore
-        "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
-        "Force Ghost", "The Clone Wars", "Carbonite", "Sarlacc", "Kessel Run",
-      ],
-    },
+      starwars_easy: {
+        label: "⭐ Star Wars – Leicht",
+        // Proper nouns — identical to en.
+        terms: [
+          // Films
+          "Darth Vader", "Luke Skywalker", "Yoda", "Princess Leia", "Han Solo",
+          "Obi-Wan Kenobi", "Chewbacca", "R2-D2", "C-3PO", "Emperor Palpatine",
+          "Boba Fett", "Jango Fett", "Anakin Skywalker", "Padmé Amidala",
+          "Qui-Gon Jinn", "Mace Windu", "Count Dooku", "General Grievous",
+          "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "Poe Dameron", "BB-8",
+          "Snoke", "Lando Calrissian", "Jabba the Hutt", "Admiral Ackbar",
+          "Darth Maul", "The Mandalorian", "Grogu",
+          // Clone Wars (well-known)
+          "Ahsoka Tano", "Captain Rex", "Commander Cody", "Asajj Ventress",
+          "Cad Bane", "Hondo Ohnaka", "Plo Koon", "Aayla Secura", "Kit Fisto",
+        ],
+      },
 
-    marvel: {
-      label: "🦸 Marvel",
-      terms: [
-        // Avengers core
-        "Iron Man", "Captain America", "Thor", "Black Widow", "Hulk",
-        "Hawkeye", "Nick Fury",
-        // Phase 1–3 heroes
-        "Spider-Man", "Doctor Strange", "Black Panther", "Ant-Man",
-        "Captain Marvel", "War Machine", "Falcon", "Winter Soldier",
-        "Scarlet Witch", "Vision", "Quicksilver", "Valkyrie",
-        // Guardians
-        "Star-Lord", "Gamora", "Drax", "Groot", "Rocket Raccoon",
-        "Nebula", "Mantis", "Yondu",
-        // Villains
-        "Thanos", "Loki", "Ultron", "Hela", "Killmonger", "Ego",
-        "Mysterio", "Vulture", "Red Skull", "Ronan", "Aldrich Killian",
-        "Agatha Harkness",
-        // Supporting
-        "Shuri", "Okoye", "Wong", "Happy Hogan", "Pepper Potts",
-        "Nick Fury", "Phil Coulson", "Agent Hill",
-        // Netflix / TV
-        "Daredevil", "Jessica Jones", "Luke Cage", "Punisher",
-        "Kingpin", "Elektra",
-      ],
-    },
+      starwars_hard: {
+        label: "⭐ Star Wars – Schwer",
+        // Proper nouns — identical to en.
+        terms: [
+          // Prequel & Original trilogy characters (deep cuts)
+          "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
+          "Bossk", "IG-88", "Grand Moff Tarkin",
+          // The Clone Wars (animated)
+          "Savage Opress", "Barriss Offee", "Embo",
+          // Rogue One
+          "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
+          // Planets
+          "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
+          "Mustafar", "Kashyyyk", "Ryloth", "Scarif", "Jedha",
+          // Ships & Weapons
+          "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
+          "Star Destroyer", "AT-AT", "Thermal Detonator",
+          // Concepts & lore
+          "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
+          "Force Ghost", "The Clone Wars", "Carbonite", "Sarlacc", "Kessel Run",
+        ],
+      },
 
-    onepiece: {
-      label: "🏴‍☠️ One Piece",
-      terms: [
-        // Straw Hat crew
-        "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Sanji",
-        "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe",
-        // Red-Hair & Whitebeard crews
-        "Shanks", "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
-        // Warlords & Allies
-        "Trafalgar Law", "Boa Hancock", "Crocodile",
-        "Donquixote Doflamingo", "Bartholomew Kuma", "Gecko Moria",
-        "Buggy", "Mihawk",
-        // Marine & Navy
-        "Monkey D. Garp", "Akainu", "Aokiji", "Kizaru", "Sengoku",
-        "Smoker", "Tashigi", "Coby",
-        // Villains & Antagonists
-        "Arlong", "Enel", "Rob Lucci", "Katakuri", "Big Mom", "Kaido",
-        "Blackbeard", "King", "Queen", "Jack",
-        // Others
-        "Yamato", "Nefertari Vivi", "Bon Clay", "Perona", "Ivankov",
-        "Silvers Rayleigh", "Gol D. Roger",
-      ],
+      marvel: {
+        label: "🦸 Marvel",
+        // Proper nouns — identical to en.
+        terms: [
+          // Avengers core
+          "Iron Man", "Captain America", "Thor", "Black Widow", "Hulk",
+          "Hawkeye", "Nick Fury",
+          // Phase 1–3 heroes
+          "Spider-Man", "Doctor Strange", "Black Panther", "Ant-Man",
+          "Captain Marvel", "War Machine", "Falcon", "Winter Soldier",
+          "Scarlet Witch", "Vision", "Quicksilver", "Valkyrie",
+          // Guardians
+          "Star-Lord", "Gamora", "Drax", "Groot", "Rocket Raccoon",
+          "Nebula", "Mantis", "Yondu",
+          // Villains
+          "Thanos", "Loki", "Ultron", "Hela", "Killmonger", "Ego",
+          "Mysterio", "Vulture", "Red Skull", "Ronan", "Aldrich Killian",
+          "Agatha Harkness",
+          // Supporting
+          "Shuri", "Okoye", "Wong", "Happy Hogan", "Pepper Potts",
+          "Nick Fury", "Phil Coulson", "Agent Hill",
+          // Netflix / TV
+          "Daredevil", "Jessica Jones", "Luke Cage", "Punisher",
+          "Kingpin", "Elektra",
+        ],
+      },
+
+      onepiece: {
+        label: "🏴‍☠️ One Piece",
+        // Proper nouns — identical to en.
+        terms: [
+          // Straw Hat crew
+          "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Sanji",
+          "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe",
+          // Red-Hair & Whitebeard crews
+          "Shanks", "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
+          // Warlords & Allies
+          "Trafalgar Law", "Boa Hancock", "Crocodile",
+          "Donquixote Doflamingo", "Bartholomew Kuma", "Gecko Moria",
+          "Buggy", "Mihawk",
+          // Marine & Navy
+          "Monkey D. Garp", "Akainu", "Aokiji", "Kizaru", "Sengoku",
+          "Smoker", "Tashigi", "Coby",
+          // Villains & Antagonists
+          "Arlong", "Enel", "Rob Lucci", "Katakuri", "Big Mom", "Kaido",
+          "Blackbeard", "King", "Queen", "Jack",
+          // Others
+          "Yamato", "Nefertari Vivi", "Bon Clay", "Perona", "Ivankov",
+          "Silvers Rayleigh", "Gol D. Roger",
+        ],
+      },
     },
   };
 
-  // Pools a given game should offer: everything, minus pools whose `games`
-  // allow-list excludes this game. Used for both the category chips AND the
-  // "mixed" draw, so a game-restricted pool never leaks into either.
+  // Pools a given game should offer (current language), minus pools whose
+  // `games` allow-list excludes this game. Filters both chips and "Mixed".
   function termPoolsFor(gameId) {
+    var byLang = global.Spielecke.L(TERMS) || {};
     var out = {};
-    Object.keys(TERMS).forEach(function (k) {
-      var allow = TERMS[k].games;
-      if (!allow || allow.indexOf(gameId) !== -1) out[k] = TERMS[k];
+    Object.keys(byLang).forEach(function (k) {
+      var allow = byLang[k].games;
+      if (!allow || allow.indexOf(gameId) !== -1) out[k] = byLang[k];
     });
     return out;
   }

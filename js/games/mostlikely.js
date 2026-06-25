@@ -40,7 +40,7 @@
   };
 
   function renderSetup() {
-    var pools = global.Spielecke.MostLikely || {};
+    var pools = global.Spielecke.L(global.Spielecke.MostLikely) || {};
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
@@ -88,7 +88,7 @@
   }
 
   function buildQueue(pool) {
-    var pools = global.Spielecke.MostLikely || {};
+    var pools = global.Spielecke.L(global.Spielecke.MostLikely) || {};
     var keys = Object.keys(pools);
     var items = (pool === "mixed" || !pools[pool])
       ? keys.reduce(function (a, k) { return a.concat(pools[k].prompts || []); }, [])

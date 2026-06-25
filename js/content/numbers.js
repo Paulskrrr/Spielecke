@@ -5,11 +5,15 @@
  * each guess a number; closest wins, furthest loses (or drinks). All-number, so
  * it dodges any language "tell". Keep answers factual; add a unit in the
  * question if helpful. `a` must be a number.
+ *
+ * Bilingual: exports { de: <German>, en: <English> }. Same keys/structure in
+ * both; every numeric answer `a` is IDENTICAL between de and en. Module reads
+ * via Spielecke.L(...).
  */
 (function (global) {
   "use strict";
 
-  var NUMBERS = {
+  var EN = {
     general: {
       label: "🎲 General",
       questions: [
@@ -50,6 +54,47 @@
     },
   };
 
+  var DE = {
+    general: {
+      label: "🎲 Allgemein",
+      questions: [
+        { q: "Wie viele Tasten hat ein Standard-Klavier?", a: 88 },
+        { q: "Wie viele Knochen hat der erwachsene menschliche Körper?", a: 206 },
+        { q: "Wie viele Länder sind in der EU (2024)?", a: 27 },
+        { q: "Wie viele Minuten hat eine ganze Woche? (Tausender okay)", a: 10080 },
+        { q: "Wie viele Herzen hat ein Oktopus?", a: 3 },
+        { q: "In welchem Jahr kam das erste iPhone raus?", a: 2007 },
+      ],
+    },
+    body: {
+      label: "🧠 Körper & Wissenschaft",
+      questions: [
+        { q: "Durchschnittliche Körpertemperatur des Menschen in °C?", a: 37 },
+        { q: "Wie viele Zähne hat ein Erwachsener?", a: 32 },
+        { q: "Wie viele Chromosomen hat der Mensch?", a: 46 },
+        { q: "Wie viele Liter Blut hat ein durchschnittlicher Erwachsener?", a: 5 },
+        { q: "Wie viele Muskeln braucht man zum Lächeln? (ungefähr)", a: 12 },
+      ],
+    },
+    world: {
+      label: "🌍 Welt",
+      questions: [
+        { q: "Höhe des Eiffelturms in Metern?", a: 330 },
+        { q: "Über wie viele Zeitzonen erstreckt sich Russland?", a: 11 },
+        { q: "Anzahl der Jupitermonde (bekannt, ungefähr)?", a: 95 },
+        { q: "Wie viele Spieler stehen insgesamt auf einem Fußballfeld?", a: 22 },
+        { q: "In welchem Jahr fiel die Berliner Mauer?", a: 1989 },
+      ],
+    },
+    insideJokes: {
+      label: "😎 Insider",
+      questions: [
+        { q: "[Gruppen-Statistik-Frage — echte Zahl einsetzen]", a: 0 },
+        { q: "[Wie oft ist __ schon passiert?]", a: 0 },
+      ],
+    },
+  };
+
   global.Spielecke = global.Spielecke || {};
-  global.Spielecke.NumberQuestions = NUMBERS;
+  global.Spielecke.NumberQuestions = { de: DE, en: EN };
 })(window);

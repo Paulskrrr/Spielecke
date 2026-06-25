@@ -412,7 +412,7 @@
 
   // --- Helpers -------------------------------------------------------------
   function pickWord(p) {
-    var pools = global.Spielecke.ActivityWords || {};
+    var pools = global.Spielecke.L(global.Spielecke.ActivityWords) || {};
     var tier = pools[p] || pools[2] || { words: ["Beer"] };
     var words = tier.words || ["Beer"];
     return words[Math.floor(Math.random() * words.length)];

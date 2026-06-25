@@ -94,7 +94,7 @@
   // ========================================================================
   function renderSetup() {
     stopFuse();
-    var pools = global.Spielecke.BombCategories || {};
+    var pools = categories();
     var playerCount = (ctx.players || []).length;
 
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed (all)") + "</button>"]
@@ -249,7 +249,7 @@
   }
 
   function pickPrompt(pool) {
-    var pools = global.Spielecke.BombCategories || {};
+    var pools = categories();
     var keys = Object.keys(pools);
     if (!keys.length) return "Name something. Anything. Go!";
 
@@ -396,6 +396,8 @@
   function attr(s) {
     return esc(s).replace(/'/g, "&#39;");
   }
+
+  function categories() { return global.Spielecke.L(global.Spielecke.BombCategories) || {}; }
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

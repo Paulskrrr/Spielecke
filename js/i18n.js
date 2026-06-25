@@ -314,6 +314,7 @@
     "Tap the items in order — top of the list first.": "Tippe die Dinge der Reihe nach an — Platz 1 zuerst.",
     "Nothing picked yet.": "Noch nichts gewählt.",
     "↺ Reset": "↺ Zurücksetzen",
+    "Players ({n}): {names}": "Spieler ({n}): {names}",
     "The group has spoken": "Der Schwarm hat entschieden",
     "A perfect match — the whole table agrees! 🤝": "Perfekte Übereinstimmung — der ganze Tisch ist sich einig! 🤝",
     "is the most in sync.": "liegt am nächsten am Schwarm.",
@@ -399,8 +400,22 @@
     return (DE.hasOwnProperty(key) ? DE[key] : key);
   }
 
+  // Pick the current language's subtree from a bilingual content bundle shaped
+  // { de: <content>, en: <content> }. Games wrap their top-level content read in
+  // L(...) and everything underneath stays plain strings, so module logic that
+  // walks .label / .prompts / .items / .q etc. is unchanged. Falls back across
+  // languages, and returns the value untouched if it isn't a bundle (so a plain
+  // English content file keeps working until it's converted).
+  function L(bundle) {
+    if (!bundle || typeof bundle !== "object") return bundle;
+    if (!bundle.de && !bundle.en) return bundle; // not a {de,en} bundle
+    var lang = getLang();
+    return bundle[lang] || bundle.en || bundle.de;
+  }
+
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.t = t;
+  global.Spielecke.L = L;
   global.Spielecke.getLang = getLang;
   global.Spielecke.setLang = setLang;
 })(window);

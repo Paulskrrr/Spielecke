@@ -13,6 +13,7 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function pools() { return global.Spielecke.L(global.Spielecke.Princess) || {}; }
 
   var DEFAULTS = { pool: "mixed" };
 
@@ -42,10 +43,10 @@
   };
 
   function renderSetup() {
-    var pools = global.Spielecke.Princess || {};
+    var p = pools();
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
-      .concat(Object.keys(pools).map(function (k) {
-        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
+      .concat(Object.keys(p).map(function (k) {
+        return '<button class="chip" data-pool="' + attr(k) + '">' + esc(p[k].label || k) + "</button>";
       })).join("");
 
     els.innerHTML =
@@ -102,11 +103,11 @@
   }
 
   function buildQueue(gender) {
-    var pools = global.Spielecke.Princess || {};
-    var keys = Object.keys(pools);
-    var sel = (settings.pool === "mixed" || !pools[settings.pool]) ? keys : [settings.pool];
+    var p = pools();
+    var keys = Object.keys(p);
+    var sel = (settings.pool === "mixed" || !p[settings.pool]) ? keys : [settings.pool];
     var field = gender ? "princess" : "king";
-    var items = sel.reduce(function (a, k) { return a.concat(pools[k][field] || []); }, []);
+    var items = sel.reduce(function (a, k) { return a.concat(p[k][field] || []); }, []);
     return shuffle(items.slice());
   }
   function nextPrompt(gender) {

@@ -46,7 +46,7 @@
 
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = global.Spielecke.RankItSets || {};
+    var pools = sets();
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
@@ -54,7 +54,7 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">Players (' + roster.length + "): " + esc(roster.map(function (p) { return p.name; }).join(", ")) + "</p>"
+      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
@@ -95,7 +95,7 @@
     var name = players[idx];
     els.innerHTML =
       '<section class="screen ri-pass">' +
-      '  <div class="pass-step">Player ' + (idx + 1) + " of " + players.length + "</div>" +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", idx + 1).replace("{n}", players.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
       '  <p class="muted">' + t("Build your ranking in private — don\'t let the others copy.") + "</p>" +
@@ -236,7 +236,7 @@
   }
 
   function pickSet(pool) {
-    var pools = global.Spielecke.RankItSets || {};
+    var pools = sets();
     var keys = Object.keys(pools);
     if (!keys.length) return { title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] };
     var list = (pool === "mixed" || !pools[pool])
@@ -246,6 +246,8 @@
     return list[Math.floor(Math.random() * list.length)];
   }
 
+  // Current-language pools from the bilingual { de, en } content bundle.
+  function sets() { return global.Spielecke.L(global.Spielecke.RankItSets) || {}; }
   function highlight(sel, value, an) {
     els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
