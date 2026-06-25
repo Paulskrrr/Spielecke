@@ -106,10 +106,9 @@
       '<button id="brand" class="brand" aria-label="Home">' +
       '  <img class="brand__logo" src="assets/logo.png" alt="Pauls Spielecke" />' +
       "</button>" +
-      '<button id="edit-players" class="players-badge">' +
+      '<button id="edit-players" class="players-badge" aria-label="' + t("Edit") + '">' +
       '  <span class="players-badge__count">' + count + "</span>" +
       '  <span class="players-badge__label">' + t(count === 1 ? "player" : "players") + "</span>" +
-      '  <span class="players-badge__edit">' + t("Edit") + "</span>" +
       "</button>";
 
     headerEl.querySelector("#brand").addEventListener("click", showShelf);

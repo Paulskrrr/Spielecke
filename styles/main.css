@@ -132,15 +132,6 @@ body::before {
 .players-badge:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
 .players-badge__count { font-size: 1.2rem; }
 .players-badge__label { font-size: 0.8rem; }
-.players-badge__edit {
-  font-size: 0.72rem;
-  text-transform: uppercase;
-  background: var(--ink);
-  color: #fff;
-  padding: 2px 8px;
-  border-radius: 999px;
-  margin-left: 4px;
-}
 
 /* ----- Layout & screens ------------------------------------------------- */
 
