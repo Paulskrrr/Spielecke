@@ -50,7 +50,7 @@
   function renderSetup() {
     teardownCanvas();
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
         return '<button class="chip" data-pool="' + attr(k) + '">' + esc(pools[k].label || k) + "</button>";
@@ -276,8 +276,14 @@
   }
 
   // --- Utils ---------------------------------------------------------------
+  // Shared term pools this game should offer (includes drawing-only pools).
+  function poolsFor() {
+    return global.Spielecke.termPoolsFor
+      ? global.Spielecke.termPoolsFor("doodle")
+      : (global.Spielecke.Terms || {});
+  }
   function pickWord(pool) {
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
     var keys = Object.keys(pools);
     if (!keys.length) return "cat";
     var list = (pool === "mixed" || !pools[pool])

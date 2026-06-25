@@ -41,6 +41,8 @@
     entry(Games.truth),
     entry(Games.chooser),
     entry(Games.reaction),
+    entry(Games.rankit),
+    entry(Games.meme),
     entry(Games.hochadel),
   ];
 

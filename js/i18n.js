@@ -69,6 +69,10 @@
     "Two players, one screen. Fastest wins — unless it's a trap.": "Zwei Spieler, ein Bildschirm. Wer schneller ist, gewinnt — außer es ist eine Falle.",
     "Hochadel": "Hochadel",
     "Royal court card game — transgressors serve.": "Höfisches Kartenspiel — wer sich vergeht, dient.",
+    "Rank It": "Rank It",
+    "Everyone ranks the same five. Drift from the group and you lose.": "Alle ranken dieselben fünf. Wer vom Schwarm abweicht, verliert.",
+    "Meme Maker": "Meme Maker",
+    "Caption the chaos. Funniest one wins the round.": "Texte das Chaos. Der lustigste Spruch gewinnt.",
 
     // ── Common ─────────────────────────────────────────────────────────────
     "Back to shelf": "Zur Spielecke",
@@ -303,6 +307,30 @@
     "✋ STOP": "✋ STOP",
     "almost…": "fast…",
     "NOW? 👀": "JETZT? 👀",
+
+    // ── Rank It ────────────────────────────────────────────────────────────
+    "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
+    "{name}'s ranking": "{name}s Ranking",
+    "Tap the items in order — top of the list first.": "Tippe die Dinge der Reihe nach an — Platz 1 zuerst.",
+    "Nothing picked yet.": "Noch nichts gewählt.",
+    "↺ Reset": "↺ Zurücksetzen",
+    "The group has spoken": "Der Schwarm hat entschieden",
+    "A perfect match — the whole table agrees! 🤝": "Perfekte Übereinstimmung — der ganze Tisch ist sich einig! 🤝",
+    "is the most in sync.": "liegt am nächsten am Schwarm.",
+    "drifted furthest — drink!": "wich am weitesten ab — trinken!",
+    "drifted furthest.": "wich am weitesten ab.",
+    "Who drifted?": "Wer weicht ab?",
+    "off by {n}": "{n} daneben",
+
+    // ── Meme Maker ─────────────────────────────────────────────────────────
+    "Write your caption in private — keep it secret.": "Schreib deinen Spruch heimlich — nicht zeigen.",
+    "I'm {name} — write": "Ich bin {name} — schreiben",
+    "{name}'s caption": "{name}s Spruch",
+    "Your caption…": "Dein Spruch…",
+    "Vote for the funniest 🏆": "Wählt den lustigsten 🏆",
+    "Tap the caption the table loves most.": "Tippt den Spruch, den der Tisch am besten findet.",
+    "{name} wins the round! 🏆": "{name} gewinnt die Runde! 🏆",
+    "Scoreboard": "Punktestand",
 
     // ── Hochadel (English keys; German values) ─────────────────────────────
     "Choose Edition": "Edition wählen",

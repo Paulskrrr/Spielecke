@@ -9,7 +9,12 @@
  * Each entry must work BOTH as something you can describe to others AND as a
  * word you can hint at without saying. Keep them short and shoutable. Pools are
  * themed; "mixed" in-game draws across all of them. Add a pool here and it
- * shows up in both games automatically.
+ * shows up in every game that uses this DB automatically.
+ *
+ * A pool may carry an optional `games: [...]` allow-list of game ids it belongs
+ * to (e.g. drawing-only prompts that don't work as a forehead guess). A pool
+ * with no `games` field shows up everywhere. Use `Spielecke.termPoolsFor(id)`
+ * to read the pools a given game should offer (it also filters "mixed").
  *
  * (The Bomb and Wavelength use different content shapes — prompts and opposite
  * pairs — so they keep their own files.)
@@ -113,6 +118,10 @@
     },
     doodle_hard: {
       label: "🎨 Doodle – Hard",
+      // Drawing-only: multi-word scenes ("Frog in a car") and abstract concepts
+      // ("Loneliness") are great to DRAW but make no sense as a Who Am I? identity
+      // or an Imposter secret word — so this pool is offered to Doodle Drama only.
+      games: ["doodle"],
       terms: [
         // Absurd animal combos
         "Frog in a car", "Penguin on a skateboard", "Shark in a bathtub",
@@ -226,6 +235,19 @@
     },
   };
 
+  // Pools a given game should offer: everything, minus pools whose `games`
+  // allow-list excludes this game. Used for both the category chips AND the
+  // "mixed" draw, so a game-restricted pool never leaks into either.
+  function termPoolsFor(gameId) {
+    var out = {};
+    Object.keys(TERMS).forEach(function (k) {
+      var allow = TERMS[k].games;
+      if (!allow || allow.indexOf(gameId) !== -1) out[k] = TERMS[k];
+    });
+    return out;
+  }
+
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Terms = TERMS;
+  global.Spielecke.termPoolsFor = termPoolsFor;
 })(window);

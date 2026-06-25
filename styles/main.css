@@ -1043,6 +1043,91 @@ body::before {
 .ha-overlay__sub { font-size: 1.15rem; margin-bottom: 18px; }
 .ha-overlay__sub strong { color: var(--red); }
 
+/* ----- Rank It ---------------------------------------------------------- */
+
+.ri-pass, .ri-rank, .ri-reveal { text-align: center; }
+.ri-title {
+  font-size: clamp(1.4rem, 5.5vw, 2rem); font-weight: 900; line-height: 1.2;
+  margin: 10px 0 4px; padding: 16px; background: #fff; border: 4px solid var(--ink);
+  border-radius: var(--radius); box-shadow: var(--pop);
+}
+.ri-rank-list { list-style: none; padding: 0; margin: 14px 0; display: flex; flex-direction: column; gap: 8px; }
+.ri-rank__item {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: var(--green); border: 3px solid var(--ink); border-radius: 14px;
+  font-weight: 800; box-shadow: var(--pop); text-align: left;
+}
+.ri-rank__no {
+  width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--ink); color: #fff; border-radius: 999px; font-size: 0.9rem;
+}
+.ri-rank__empty { padding: 14px; border: 3px dashed var(--ink); border-radius: 14px; }
+.ri-pool { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 12px 0; }
+.ri-pick { flex: 1 1 auto; min-width: 44%; }
+
+.ri-consensus { list-style: none; padding: 0; margin: 8px 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.ri-row {
+  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; font-weight: 800; text-align: left;
+}
+.ri-row__no {
+  width: 28px; height: 28px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--purple); color: #fff; border-radius: 999px; font-size: 0.85rem;
+}
+.ri-players { list-style: none; padding: 0; margin: 8px 0 4px; display: flex; flex-direction: column; gap: 8px; }
+.ri-prow {
+  display: flex; justify-content: space-between; gap: 10px; padding: 10px 14px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; font-weight: 700;
+}
+.ri-prow--win { background: var(--green); }
+.ri-prow--lose { background: var(--red); color: #fff; }
+.ri-prow--lose .muted { color: rgba(255,255,255,0.8); }
+.ri-prow__name { font-weight: 800; }
+
+/* ----- Meme Maker ------------------------------------------------------- */
+
+.mm-pass, .mm-entry, .mm-vote, .mm-reveal { text-align: center; }
+.mm-image { font-size: clamp(4rem, 22vw, 8rem); line-height: 1; margin: 8px 0; }
+.mm-image--sm { font-size: clamp(3rem, 16vw, 5.5rem); margin: 4px 0; }
+.mm-setup {
+  font-size: clamp(1.2rem, 5vw, 1.8rem); font-weight: 800; line-height: 1.25;
+  margin: 4px auto 14px; max-width: 620px;
+}
+.mm-input { text-align: center; font-size: 1.2rem; font-weight: 700; margin-bottom: 14px; }
+
+.mm-answers { display: flex; flex-direction: column; gap: 12px; margin: 8px 0; }
+.mm-answer {
+  display: flex; align-items: center; gap: 12px; text-align: left;
+  padding: 14px 16px; font-family: var(--font); font-size: 1.1rem; font-weight: 700; color: var(--ink);
+  background: #fff; border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--pop); cursor: pointer;
+}
+.mm-answer:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.mm-answer__no {
+  width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  background: var(--purple); color: #fff; border: 2px solid var(--ink); border-radius: 12px; font-weight: 900;
+}
+.mm-answer__text { flex: 1; }
+
+.mm-result-list { list-style: none; padding: 0; margin: 14px 0; display: flex; flex-direction: column; gap: 10px; }
+.mm-result-card {
+  padding: 12px 16px; background: #fff; border: 3px solid var(--ink); border-radius: 16px; text-align: left;
+}
+.mm-result-card--win { background: var(--green); box-shadow: var(--pop); }
+.mm-result-card__text { font-size: 1.15rem; font-weight: 800; line-height: 1.25; }
+.mm-result-card__by { font-size: 0.85rem; font-weight: 700; color: var(--ink-soft); margin-top: 4px; }
+.mm-result-card--win .mm-result-card__by { color: var(--ink); }
+
+.mm-scores { list-style: none; padding: 0; margin: 8px auto 4px; max-width: 460px; display: flex; flex-direction: column; gap: 8px; }
+.mm-score-row {
+  display: flex; justify-content: space-between; gap: 10px; padding: 10px 16px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; font-weight: 800;
+}
+.mm-score-row--lead { background: var(--yellow); }
+.mm-score-row__pts {
+  min-width: 32px; text-align: center; background: var(--ink); color: #fff;
+  border-radius: 999px; padding: 0 10px;
+}
+
 /* ----- Larger screens --------------------------------------------------- */
 
 @media (min-width: 600px) {
@@ -1054,6 +1139,8 @@ body::before {
   .pt-actions .btn { flex: 1; }
   .act-perform-actions .btn { min-height: 12vh; }
   .quiz-options { grid-template-columns: 1fr 1fr; }
+  .ri-pool { max-width: 620px; margin-left: auto; margin-right: auto; }
+  .mm-answers { max-width: 620px; margin-left: auto; margin-right: auto; }
 }
 
 /* Desktop: nicer two-column turn layout + a roomier board */

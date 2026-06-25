@@ -57,7 +57,7 @@
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
 
     var chips = ['<button class="chip" data-pool="mixed">' + t("🎯 Mixed") + "</button>"]
       .concat(Object.keys(pools).map(function (k) {
@@ -250,7 +250,7 @@
 
   // --- Word picking --------------------------------------------------------
   function pickWord(pool) {
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
     var keys = Object.keys(pools);
     if (!keys.length) return { word: "Beer", category: "Party" };
 
@@ -267,6 +267,12 @@
   }
 
   // --- Utils ---------------------------------------------------------------
+  // Shared term pools this game should offer (excludes drawing-only pools).
+  function poolsFor() {
+    return global.Spielecke.termPoolsFor
+      ? global.Spielecke.termPoolsFor("imposter")
+      : (global.Spielecke.Terms || {});
+  }
   function highlight(sel, value, attrName) {
     els.querySelectorAll(sel + " .chip").forEach(function (c) {
       c.classList.toggle("chip--active", c.getAttribute(attrName) === value);

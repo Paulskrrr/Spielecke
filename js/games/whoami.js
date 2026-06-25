@@ -81,7 +81,7 @@
   // --- Setup screen --------------------------------------------------------
   function renderSetup() {
     stopCountdown();
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
 
     var modeChips =
       '<div class="chip-row" id="wa-modes">' +
@@ -250,7 +250,7 @@
 
   // --- Word queue ----------------------------------------------------------
   function buildQueue(pool) {
-    var pools = global.Spielecke.Terms || {};
+    var pools = poolsFor();
     var keys = Object.keys(pools);
     var items;
     if (pool === "mixed" || !pools[pool]) {
@@ -308,6 +308,12 @@
   }
 
   // --- Utils ---------------------------------------------------------------
+  // Shared term pools this game should offer (excludes drawing-only pools).
+  function poolsFor() {
+    return global.Spielecke.termPoolsFor
+      ? global.Spielecke.termPoolsFor("whoami")
+      : (global.Spielecke.Terms || {});
+  }
   function highlight(sel, key, value, attrName) {
     els.querySelectorAll(sel + " .chip").forEach(function (c) {
       c.classList.toggle("chip--active", c.getAttribute(attrName) === value);
