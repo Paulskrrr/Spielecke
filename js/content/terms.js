@@ -44,14 +44,6 @@
         "Whipped cream", "Massage parlour", "Period sex", "Dad bod",
       ],
     },
-    insideJokes: {
-      label: "😎 Inside Jokes",
-      terms: [
-        "[Inside joke #1]", "[That thing someone did]", "[Running gag]",
-        "[The nickname]", "[Most likely to ...]", "[Legendary night]",
-      ],
-    },
-
     starwars_easy: {
       label: "⭐ Star Wars – Easy",
       terms: [
