@@ -198,18 +198,24 @@
       b.addEventListener("click", function () { callRank(b.getAttribute("data-r")); });
     });
     els.querySelector("#fd-home").addEventListener("click", function () { ctx.goHome(); });
-    scrollHistoryEnd();
   }
 
   // The scrollable strip of every card drawn since the last shuffle, so the
-  // table can glance at what's already out (counting help). Oldest → newest,
-  // auto-scrolled to the freshest card; on desktop a dozen show at once, on
-  // mobile you swipe the strip.
+  // table can glance at what's already out (counting help). Sorted by rank
+  // (2 → A, left to right) — not chronological — so gaps/open ranks jump out at
+  // a glance; on desktop a dozen show at once, on mobile you swipe the strip.
+  var SUIT_RANK = { S: 0, H: 1, D: 2, C: 3 };
+  function sortedDiscard() {
+    return discard.slice().sort(function (a, b) {
+      return Cards.value(a) - Cards.value(b) || (SUIT_RANK[a.suit] - SUIT_RANK[b.suit]);
+    });
+  }
+  function histCardHtml(c, isNew) {
+    return '<div class="fd-histcard' + (isNew ? " fd-histcard--new" : "") + '">' + Cards.faceHtml(c, { small: true }) + "</div>";
+  }
   function historyHtml() {
     var inner = discard.length
-      ? discard.map(function (c) {
-          return '<div class="fd-histcard">' + Cards.faceHtml(c, { small: true }) + "</div>";
-        }).join("")
+      ? sortedDiscard().map(function (c) { return histCardHtml(c, false); }).join("")
       : '<div class="fd-history-empty">' + t("No cards drawn yet — the pile builds up here.") + "</div>";
     return (
       '<div class="fd-history-wrap">' +
@@ -218,11 +224,6 @@
       '  <div class="fd-history" id="fd-history">' + inner + "</div>" +
       "</div>"
     );
-  }
-
-  function scrollHistoryEnd() {
-    var h = els && els.querySelector("#fd-history");
-    if (h) h.scrollLeft = h.scrollWidth;
   }
 
   function rankValue(rank) { return Cards.RANKS.indexOf(rank) + 2; }
@@ -275,20 +276,21 @@
 
   function advanceAfter() {
     discard.push(current);
-    // Slot the just-revealed card into the history strip live (it would also be
-    // rebuilt by the next renderRound, but this shows it landing immediately).
+    // Rebuild the history strip live, re-sorted by rank, so the just-revealed
+    // card drops into its right place (it would also be rebuilt by the next
+    // renderRound; this just shows it landing immediately).
     var hist = els.querySelector("#fd-history");
     if (hist) {
-      var empty = hist.querySelector(".fd-history-empty");
-      if (empty) hist.innerHTML = "";
-      var node = document.createElement("div");
-      node.className = "fd-histcard fd-histcard--new";
-      node.innerHTML = Cards.faceHtml(current, { small: true });
-      hist.appendChild(node);
-      try { hist.scrollTo({ left: hist.scrollWidth, behavior: "smooth" }); }
-      catch (e) { hist.scrollLeft = hist.scrollWidth; }
+      hist.innerHTML = sortedDiscard().map(function (c) {
+        return histCardHtml(c, c === current); // identity match flags the new card
+      }).join("");
       var cnt = els.querySelector("#fd-history-count");
       if (cnt) cnt.textContent = discard.length;
+      var fresh = hist.querySelector(".fd-histcard--new");
+      if (fresh && fresh.scrollIntoView) {
+        try { fresh.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" }); }
+        catch (e) { /* older browsers: leave scroll as-is */ }
+      }
     }
     var resEl = els.querySelector("#fd-result");
     var btn = document.createElement("button");
