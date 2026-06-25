@@ -103,13 +103,13 @@
         return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
       }).join("");
       body =
-        ‘  <p class="muted small">Hold the phone to your forehead so you can\’t see it. The table shouts clues. Tap <strong>’ + t("GOT IT ✅") + ‘</strong> when you guess, <strong>’ + t("SKIP ⏭️") + ‘</strong> to pass.</p>’ +
-        ‘  <h3 class="sub">’ + t("Category") + "</h3>" +
-        ‘  <div class="chip-row" id="wa-pools">’ + poolChips + "</div>" +
-        ‘  <h3 class="sub">’ + t("Round length") + "</h3>" +
-        ‘  <div class="chip-row" id="wa-times">’ + timeChips + "</div>" +
-        ‘  <label class="toggle"><input type="checkbox" id="wa-sound"’ + (settings.soundOn ? " checked" : "") + " /><span>" + t("🔊 Sounds") + "</span></label>" +
-        ‘  <button id="wa-start" class="btn btn-primary btn-block btn-xl">’ + t("START TURN ▶️") + "</button>";
+        '  <p class="muted small">Hold the phone to your forehead so you can\'t see it. The table shouts clues. Tap <strong>' + t("GOT IT ✅") + '</strong> when you guess, <strong>' + t("SKIP ⏭️") + '</strong> to pass.</p>' +
+        '  <h3 class="sub">' + t("Category") + "</h3>" +
+        '  <div class="chip-row" id="wa-pools">' + poolChips + "</div>" +
+        '  <h3 class="sub">' + t("Round length") + "</h3>" +
+        '  <div class="chip-row" id="wa-times">' + timeChips + "</div>" +
+        '  <label class="toggle"><input type="checkbox" id="wa-sound"' + (settings.soundOn ? " checked" : "") + " /><span>" + t("🔊 Sounds") + "</span></label>" +
+        '  <button id="wa-start" class="btn btn-primary btn-block btn-xl">' + t("START TURN ▶️") + "</button>";
     }
 
     els.innerHTML =
