@@ -29,7 +29,8 @@
   var countdownTimer = null;
   var audio = null;
 
-  var queue = [];      // shuffled identity queue
+  var queue = [];      // shuffled identity queue — persists across turns within a session
+  var queuePool = null; // which pool the current queue was built for
   var score = 0;
   var remaining = 0;   // seconds left
 
@@ -54,7 +55,7 @@
       stopCountdown();
       teardownAudio();
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; queue = []; score = 0;
+      ctx = null; settings = null; queue = []; queuePool = null; score = 0;
     },
   };
 
@@ -178,7 +179,10 @@
   function startTurn() {
     score = 0;
     remaining = settings.roundSeconds;
-    queue = buildQueue(settings.pool);
+    if (!queue.length || queuePool !== settings.pool) {
+      queue = buildQueue(settings.pool);
+      queuePool = settings.pool;
+    }
     setupAudio();
 
     els.innerHTML =
