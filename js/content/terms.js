@@ -159,28 +159,27 @@
     },
 
     starwars_hard: {
+      // Scoped to the films + The Clone Wars (animated): hard but iconic. No
+      // Rebels / newer live-action / game-only deep cuts — those are a different
+      // angle and easy to miss if you haven't watched those shows.
       label: "⭐ Star Wars – Hard",
       terms: [
-        // Clone Wars & Rebels characters
-        "Savage Opress", "Bo-Katan Kryze", "Barriss Offee",
-        "Kanan Jarrus", "Ezra Bridger", "Sabine Wren", "Hera Syndulla",
-        "Admiral Thrawn", "Grand Inquisitor",
-        // Mandalorian & newer shows
-        "Din Djarin", "Fennec Shand", "Greef Karga", "The Armorer",
-        "Omega",
+        // Prequel & Original trilogy characters (deep cuts)
+        "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
+        "Bossk", "IG-88", "Grand Moff Tarkin",
+        // The Clone Wars (animated)
+        "Savage Opress", "Barriss Offee", "Embo",
         // Rogue One
         "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
-        // Classic deeper cuts
-        "Grand Moff Tarkin", "Cal Kestis",
         // Planets
         "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
-        "Mustafar", "Kashyyyk", "Ryloth", "Lothal", "Scarif", "Nevarro",
+        "Mustafar", "Kashyyyk", "Ryloth", "Scarif", "Jedha",
         // Ships & Weapons
         "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
-        "Star Destroyer", "AT-AT", "Razor Crest", "Thermal Detonator",
-        // Concepts
+        "Star Destroyer", "AT-AT", "Thermal Detonator",
+        // Concepts & lore
         "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
-        "Force Ghost", "The Clone Wars",
+        "Force Ghost", "The Clone Wars", "Carbonite", "Sarlacc", "Kessel Run",
       ],
     },
 
