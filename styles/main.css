@@ -194,14 +194,26 @@ body::before {
   background: radial-gradient(circle, rgba(255, 255, 255, 0.28), transparent 62%);
   pointer-events: none;
 }
-/* each card a different crayon colour + a subtle playful tilt; text is always
-   white (legibility on the lighter cards comes from the text-shadow below) */
-.game-card:nth-child(6n + 1) { background: var(--yellow); transform: rotate(-1deg); }
-.game-card:nth-child(6n + 2) { background: var(--green);  transform: rotate(1deg); }
-.game-card:nth-child(6n + 3) { background: var(--blue);   transform: rotate(-1deg); }
-.game-card:nth-child(6n + 4) { background: var(--pink);   transform: rotate(1deg); }
-.game-card:nth-child(6n + 5) { background: var(--orange); transform: rotate(-1.5deg); }
-.game-card:nth-child(6n + 6) { background: var(--purple); transform: rotate(1.5deg); }
+/* each card a different crayon colour; text is always white (legibility on the
+   lighter cards comes from the text-shadow below) */
+.game-card:nth-child(6n + 1) { background: var(--yellow); }
+.game-card:nth-child(6n + 2) { background: var(--green);  }
+.game-card:nth-child(6n + 3) { background: var(--blue);   }
+.game-card:nth-child(6n + 4) { background: var(--pink);   }
+.game-card:nth-child(6n + 5) { background: var(--orange); }
+.game-card:nth-child(6n + 6) { background: var(--purple); }
+
+/* Playful tilt + tiny vertical jitter on a 7-step cycle. Keeping this on a
+   different (coprime) cycle than the 6-colour one means colour+angle don't
+   line up again until 42 cards, so the grid reads hand-scattered rather than
+   uniformly slanted. */
+.game-card:nth-child(7n + 1) { transform: rotate(-1.5deg); }
+.game-card:nth-child(7n + 2) { transform: rotate(1deg)    translateY(2px); }
+.game-card:nth-child(7n + 3) { transform: rotate(-0.5deg); }
+.game-card:nth-child(7n + 4) { transform: rotate(2deg)    translateY(-2px); }
+.game-card:nth-child(7n + 5) { transform: rotate(-2deg)   translateY(1px); }
+.game-card:nth-child(7n + 6) { transform: rotate(0.7deg); }
+.game-card:nth-child(7n + 7) { transform: rotate(-1deg)   translateY(-1px); }
 
 .game-card:hover,
 .game-card:focus-visible {
