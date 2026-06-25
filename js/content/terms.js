@@ -51,6 +51,98 @@
         "[The nickname]", "[Most likely to ...]", "[Legendary night]",
       ],
     },
+
+    starwars_easy: {
+      label: "⭐ Star Wars – Easy",
+      terms: [
+        // Films
+        "Darth Vader", "Luke Skywalker", "Yoda", "Princess Leia", "Han Solo",
+        "Obi-Wan Kenobi", "Chewbacca", "R2-D2", "C-3PO", "Emperor Palpatine",
+        "Boba Fett", "Jango Fett", "Anakin Skywalker", "Padmé Amidala",
+        "Qui-Gon Jinn", "Mace Windu", "Count Dooku", "General Grievous",
+        "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "Poe Dameron", "BB-8",
+        "Snoke", "Lando Calrissian", "Jabba the Hutt", "Admiral Ackbar",
+        "Darth Maul", "The Mandalorian", "Grogu",
+        // Clone Wars (well-known)
+        "Ahsoka Tano", "Captain Rex", "Commander Cody", "Asajj Ventress",
+        "Cad Bane", "Hondo Ohnaka", "Plo Koon", "Aayla Secura", "Kit Fisto",
+      ],
+    },
+
+    starwars_hard: {
+      label: "⭐ Star Wars – Hard",
+      terms: [
+        // Clone Wars – deeper cuts
+        "Quinlan Vos", "Savage Opress", "Mother Talzin", "Pre Vizsla",
+        "Bo-Katan Kryze", "Satine Kryze", "Fives", "Echo", "Crosshair",
+        "Hunter", "Omega", "Commander Wolffe", "Commander Bly",
+        "Barriss Offee", "Luminara Unduli", "Depa Billaba", "Even Piell",
+        // Rebels / Other
+        "Kanan Jarrus", "Ezra Bridger", "Sabine Wren", "Hera Syndulla",
+        "Admiral Thrawn", "Wilhuff Tarkin",
+        // Planets
+        "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
+        "Mustafar", "Utapau", "Kashyyyk", "Ryloth", "Lothal", "Umbara",
+        "Christophsis", "Mortis",
+        // Weapons & Ships
+        "Darksaber", "Holocron", "Kyber Crystal", "AT-AT", "LAAT Gunship",
+        "Slave I", "Star Destroyer", "Millennium Falcon",
+        // Famous phrases & concepts
+        "Order 66", "I am your father", "This is the Way",
+        "May the Force be with you", "It's a trap!", "Do or do not",
+        "Rule of Two", "Youngling", "Midi-Chlorians",
+      ],
+    },
+
+    marvel: {
+      label: "🦸 Marvel (bis 2022)",
+      terms: [
+        // Avengers core
+        "Iron Man", "Captain America", "Thor", "Black Widow", "Hulk",
+        "Hawkeye", "Nick Fury",
+        // Phase 1–3 heroes
+        "Spider-Man", "Doctor Strange", "Black Panther", "Ant-Man",
+        "Captain Marvel", "War Machine", "Falcon", "Winter Soldier",
+        "Scarlet Witch", "Vision", "Quicksilver", "Valkyrie",
+        // Guardians
+        "Star-Lord", "Gamora", "Drax", "Groot", "Rocket Raccoon",
+        "Nebula", "Mantis", "Yondu",
+        // Villains
+        "Thanos", "Loki", "Ultron", "Hela", "Killmonger", "Ego",
+        "Mysterio", "Vulture", "Red Skull", "Ronan", "Aldrich Killian",
+        "Agatha Harkness",
+        // Supporting
+        "Shuri", "Okoye", "Wong", "Happy Hogan", "Pepper Potts",
+        "Nick Fury", "Phil Coulson", "Agent Hill",
+        // Netflix / TV
+        "Daredevil", "Jessica Jones", "Luke Cage", "Punisher",
+        "Kingpin", "Elektra",
+      ],
+    },
+
+    onepiece: {
+      label: "🏴‍☠️ One Piece",
+      terms: [
+        // Straw Hat crew
+        "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Sanji",
+        "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe",
+        // Red-Hair & Whitebeard crews
+        "Shanks", "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
+        // Warlords & Allies
+        "Trafalgar Law", "Boa Hancock", "Crocodile",
+        "Donquixote Doflamingo", "Bartholomew Kuma", "Gecko Moria",
+        "Buggy", "Mihawk",
+        // Marine & Navy
+        "Monkey D. Garp", "Akainu", "Aokiji", "Kizaru", "Sengoku",
+        "Smoker", "Tashigi", "Coby",
+        // Villains & Antagonists
+        "Arlong", "Enel", "Rob Lucci", "Katakuri", "Big Mom", "Kaido",
+        "Blackbeard", "King", "Queen", "Jack",
+        // Others
+        "Yamato", "Nefertari Vivi", "Bon Clay", "Perona", "Ivankov",
+        "Silvers Rayleigh", "Gol D. Roger",
+      ],
+    },
   };
 
   global.Spielecke = global.Spielecke || {};
