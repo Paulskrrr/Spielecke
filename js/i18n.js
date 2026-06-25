@@ -309,9 +309,10 @@
     // ── Rank It ────────────────────────────────────────────────────────────
     "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
     "{name}'s ranking": "{name}s Ranking",
-    "Tap the items in order — top of the list first.": "Tippe die Dinge der Reihe nach an — Platz 1 zuerst.",
-    "Nothing picked yet.": "Noch nichts gewählt.",
-    "↺ Reset": "↺ Zurücksetzen",
+    "Drag the items into order — the top is your #1.": "Zieh die Dinge in deine Reihenfolge — ganz oben ist dein Platz 1.",
+    "🔀 Shuffle": "🔀 Mischen",
+    "Top": "Oben",
+    "Bottom": "Unten",
     "Players ({n}): {names}": "Spieler ({n}): {names}",
     "The group has spoken": "Der Schwarm hat entschieden",
     "A perfect match — the whole table agrees! 🤝": "Perfekte Übereinstimmung — der ganze Tisch ist sich einig! 🤝",

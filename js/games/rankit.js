@@ -101,58 +101,143 @@
       '  <p class="muted">' + t("Build your ranking in private — don\'t let the others copy.") + "</p>" +
       '  <button id="ri-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — reveal").replace("{name}", esc(name)) + "</button>" +
       "</section>";
-    els.querySelector("#ri-go").addEventListener("click", function () { current = []; renderRank(); });
+    els.querySelector("#ri-go").addEventListener("click", function () {
+      // Every item is on the axis from the start, in a shuffled order so nobody
+      // is anchored to a pre-baked "correct" list. The player drags to reorder.
+      current = shuffle(set.items.map(function (_, i) { return i; }));
+      renderRank();
+    });
   }
 
   function renderRank() {
     var name = players[idx];
     var items = set.items;
-    var complete = current.length === items.length;
 
-    // Chosen items in rank order (tap to undo the last one).
-    var chosen = current.map(function (itemIdx, pos) {
+    // The set title encodes the axis as "<top pole> → <bottom pole>". Split it so
+    // the rail can label which end is #1 and which is last.
+    var poles = set.title.split("→");
+    var topPole = poles.length > 1 ? poles[0].trim() : t("Top");
+    var botPole = poles.length > 1 ? poles.slice(1).join("→").trim() : t("Bottom");
+
+    var cards = current.map(function (itemIdx, pos) {
       return (
-        '<li class="ri-rank__item">' +
-        '<span class="ri-rank__no">' + (pos + 1) + "</span>" +
-        '<span class="ri-rank__label">' + esc(items[itemIdx]) + "</span>" +
-        "</li>"
+        '<div class="ri-card" data-item="' + itemIdx + '">' +
+        '<span class="ri-card__no">' + (pos + 1) + "</span>" +
+        '<span class="ri-card__label">' + esc(items[itemIdx]) + "</span>" +
+        '<span class="ri-card__grip" aria-hidden="true">⠿</span>' +
+        "</div>"
       );
-    }).join("");
-
-    // Remaining items as tappable buttons.
-    var pool = items.map(function (label, i) {
-      if (current.indexOf(i) !== -1) return "";
-      return '<button class="btn ri-pick" data-i="' + i + '">' + esc(label) + "</button>";
     }).join("");
 
     els.innerHTML =
       '<section class="screen ri-rank">' +
       '  <h3 class="sub">' + t("{name}'s ranking").replace("{name}", esc(name)) + "</h3>" +
       '  <div class="ri-title">' + esc(set.title) + "</div>" +
-      '  <p class="muted small">' + t("Tap the items in order — top of the list first.") + "</p>" +
-      '  <ol class="ri-rank-list">' + (chosen || '<li class="ri-rank__empty muted">' + t("Nothing picked yet.") + "</li>") + "</ol>" +
-      '  <div class="ri-pool">' + pool + "</div>" +
+      '  <p class="muted small">' + t("Drag the items into order — the top is your #1.") + "</p>" +
+      '  <div class="ri-axis">' +
+      '    <div class="ri-axis__rail">' +
+      '      <span class="ri-axis__pole">⬆ ' + esc(topPole) + "</span>" +
+      '      <span class="ri-axis__pole ri-axis__pole--bot">⬇ ' + esc(botPole) + "</span>" +
+      "    </div>" +
+      '    <div class="ri-cards" id="ri-cards">' + cards + "</div>" +
+      "  </div>" +
       '  <div class="stack">' +
-      '    <button id="ri-reset" class="btn btn-block"' + (current.length ? "" : " disabled") + ">" + t("↺ Reset") + "</button>" +
-      '    <button id="ri-lock" class="btn btn-primary btn-block btn-xl"' + (complete ? "" : " disabled") + ">" + t("Lock it in 🔒") + "</button>" +
+      '    <button id="ri-shuffle" class="btn btn-block">' + t("🔀 Shuffle") + "</button>" +
+      '    <button id="ri-lock" class="btn btn-primary btn-block btn-xl">' + t("Lock it in 🔒") + "</button>" +
       "  </div>" +
       "</section>";
 
-    els.querySelectorAll(".ri-pick").forEach(function (b) {
-      b.addEventListener("click", function () {
-        current.push(parseInt(b.getAttribute("data-i"), 10));
-        renderRank();
-      });
+    setupDrag(els.querySelector("#ri-cards"));
+
+    els.querySelector("#ri-shuffle").addEventListener("click", function () {
+      current = shuffle(current.slice());
+      renderRank();
     });
-    els.querySelector("#ri-reset").addEventListener("click", function () { current = []; renderRank(); });
-    var lock = els.querySelector("#ri-lock");
-    if (complete) lock.addEventListener("click", function () {
+    els.querySelector("#ri-lock").addEventListener("click", function () {
       rankings.push({ name: name, order: current.slice() });
       idx++;
       current = [];
       if (idx >= players.length) renderReveal();
       else renderPassTo();
     });
+  }
+
+  // Vertical-axis drag-and-drop. Cards are absolutely positioned by their slot
+  // (slot 0 = top = #1). Dragging a card follows the finger; when it crosses into
+  // another slot the underlying `current` order is spliced and the other cards
+  // slide to make room. Pointer events cover both touch and mouse.
+  function setupDrag(list) {
+    var GAP = 10;
+    var cards = Array.prototype.slice.call(list.querySelectorAll(".ri-card"));
+    if (!cards.length) return;
+
+    var rowH = 0;
+    cards.forEach(function (c) { rowH = Math.max(rowH, c.offsetHeight); });
+    rowH += GAP;
+    list.style.height = rowH * cards.length + "px";
+
+    function slotOf(itemIdx) { return current.indexOf(itemIdx); }
+
+    function layout(except) {
+      cards.forEach(function (c) {
+        if (c === except) return;
+        var item = parseInt(c.getAttribute("data-item"), 10);
+        c.style.transition = "transform .18s ease";
+        c.style.transform = "translateY(" + slotOf(item) * rowH + "px)";
+      });
+    }
+    function renumber() {
+      cards.forEach(function (c) {
+        var item = parseInt(c.getAttribute("data-item"), 10);
+        c.querySelector(".ri-card__no").textContent = slotOf(item) + 1;
+      });
+    }
+    layout();
+
+    cards.forEach(function (card) {
+      card.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        try { card.setPointerCapture(e.pointerId); } catch (err) {}
+        var item = parseInt(card.getAttribute("data-item"), 10);
+        var startY = e.clientY;
+        var baseY = slotOf(item) * rowH;
+        card.classList.add("ri-card--drag");
+        card.style.transition = "none";
+
+        function move(ev) {
+          var y = baseY + (ev.clientY - startY);
+          card.style.transform = "translateY(" + y + "px) scale(1.03)";
+          var target = Math.max(0, Math.min(cards.length - 1, Math.round(y / rowH)));
+          var cur = slotOf(item);
+          if (target !== cur) {
+            current.splice(cur, 1);
+            current.splice(target, 0, item);
+            layout(card);
+            renumber();
+          }
+        }
+        function up(ev) {
+          try { card.releasePointerCapture(ev.pointerId); } catch (err) {}
+          card.removeEventListener("pointermove", move);
+          card.removeEventListener("pointerup", up);
+          card.removeEventListener("pointercancel", up);
+          card.classList.remove("ri-card--drag");
+          card.style.transition = "transform .18s ease";
+          card.style.transform = "translateY(" + slotOf(item) * rowH + "px)";
+        }
+        card.addEventListener("pointermove", move);
+        card.addEventListener("pointerup", up);
+        card.addEventListener("pointercancel", up);
+      });
+    });
+  }
+
+  function shuffle(arr) {
+    for (var i = arr.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
+    }
+    return arr;
   }
 
   function renderReveal() {
