@@ -205,10 +205,12 @@
   function setupCanvas() {
     canvas = els.querySelector("#dd-canvas");
     if (!canvas) return;
-    var rect = canvas.getBoundingClientRect();
     var dpr = global.devicePixelRatio || 1;
-    var w = rect.width || 300;
-    var h = rect.height || 340;
+    // Use the CONTENT box (clientWidth/Height excludes the 4px border), not the
+    // border-box from getBoundingClientRect — otherwise the bitmap is sized for
+    // the outer edge and gets squeezed into the content box, drifting the cursor.
+    var w = canvas.clientWidth || 300;
+    var h = canvas.clientHeight || 340;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     cctx = canvas.getContext("2d");
@@ -228,7 +230,9 @@
 
   function pos(e) {
     var r = canvas.getBoundingClientRect();
-    return { x: e.clientX - r.left, y: e.clientY - r.top };
+    // r.left/top sit on the OUTER border edge; the drawing origin is the content
+    // box, so shift inward by the border width (clientLeft/clientTop).
+    return { x: e.clientX - r.left - canvas.clientLeft, y: e.clientY - r.top - canvas.clientTop };
   }
   function onDown(e) {
     e.preventDefault();

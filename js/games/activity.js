@@ -285,9 +285,10 @@
     canvas = els.querySelector("#act-canvas");
     if (!canvas) return;
     drawFrozen = false; drawing = false;
-    var rect = canvas.getBoundingClientRect();
     var dpr = global.devicePixelRatio || 1;
-    var w = rect.width || 300, h = rect.height || 340;
+    // Content box (clientWidth/Height) excludes the 4px border — sizing the
+    // bitmap to the border-box instead would squeeze it and drift the cursor.
+    var w = canvas.clientWidth || 300, h = canvas.clientHeight || 340;
     canvas.width = Math.round(w * dpr);
     canvas.height = Math.round(h * dpr);
     cctx = canvas.getContext("2d");
@@ -301,7 +302,7 @@
     canvas.addEventListener("pointercancel", onUp);
     canvas.addEventListener("pointerleave", onUp);
   }
-  function cpos(e) { var r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+  function cpos(e) { var r = canvas.getBoundingClientRect(); return { x: e.clientX - r.left - canvas.clientLeft, y: e.clientY - r.top - canvas.clientTop }; }
   function onDown(e) {
     if (drawFrozen) return;
     e.preventDefault(); drawing = true;
