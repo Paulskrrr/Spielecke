@@ -23,7 +23,7 @@
       name: "Most Likely To",
       tagline: "Point on three. No takebacks.",
       icon: "🫵",
-      minPlayers: 3,
+      minPlayers: 2,
       supportsDrinking: true,
     },
     mount: function (container, context) {

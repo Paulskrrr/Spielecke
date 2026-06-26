@@ -46,7 +46,7 @@
       name: "Activity",
       tagline: "Two teams. Explain, draw, act. First to the finish wins.",
       icon: "🗺️",
-      minPlayers: 4,
+      minPlayers: 2,
       supportsDrinking: true,
     },
     mount: function (container, context) {

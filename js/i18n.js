@@ -124,6 +124,8 @@
     // ── Imposter ───────────────────────────────────────────────────────────
     "Word pool": "Wörter-Kategorie",
     "How many imposters?": "Wie viele Imposter?",
+    "Random": "Zufällig",
+    "🎲 Random leans toward fewer imposters — big groups stay tense.": "🎲 Zufällig wählt eher wenige Imposter — auch große Runden bleiben spannend.",
     "Deal roles 🂴": "Rollen austeilen 🂴",
     "Player {i} of {n}": "Spieler {i} von {n}",
     "Pass to {name}": "Weiter an {name}",

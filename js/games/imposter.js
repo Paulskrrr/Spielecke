@@ -16,7 +16,7 @@
 
   function Pools() { return global.Spielecke.Pools; }
 
-  var MIN_PLAYERS = 3;
+  var MIN_PLAYERS = 2;
   var DEFAULTS = { imposterCount: 1 };
 
   var els = null;
@@ -43,9 +43,10 @@
     mount: function (container, context) {
       els = container;
       ctx = context;
+      var savedCount = context.store.get("imposterCount", DEFAULTS.imposterCount);
       settings = {
         pools: Pools().load(context.store, poolsFor()),
-        imposterCount: parseInt(context.store.get("imposterCount", DEFAULTS.imposterCount), 10) || 1,
+        imposterCount: savedCount === "random" ? "random" : (parseInt(savedCount, 10) || 1),
       };
       renderSetup();
     },
@@ -71,15 +72,19 @@
 
     var countSection = "";
     if (enough) {
-      if (settings.imposterCount > roster.length) settings.imposterCount = roster.length;
-      if (settings.imposterCount < 1) settings.imposterCount = 1;
+      if (settings.imposterCount !== "random") {
+        if (settings.imposterCount > roster.length) settings.imposterCount = roster.length;
+        if (settings.imposterCount < 1) settings.imposterCount = 1;
+      }
       var countChips = [];
       for (var n = 1; n <= roster.length; n++) {
         countChips.push('<button class="chip" data-count="' + n + '">' + n + "</button>");
       }
+      countChips.push('<button class="chip" data-count="random">🎲 ' + t("Random") + "</button>");
       countSection =
         '<h3 class="sub">' + t("How many imposters?") + "</h3>" +
-        '<div class="chip-row" id="im-count">' + countChips.join("") + "</div>";
+        '<div class="chip-row" id="im-count">' + countChips.join("") + "</div>" +
+        '<p class="muted small">' + t("🎲 Random leans toward fewer imposters — big groups stay tense.") + "</p>";
     }
 
     els.innerHTML =
@@ -101,7 +106,8 @@
       highlight("#im-count", String(settings.imposterCount), "data-count");
       els.querySelectorAll("#im-count .chip").forEach(function (c) {
         c.addEventListener("click", function () {
-          settings.imposterCount = parseInt(c.getAttribute("data-count"), 10);
+          var v = c.getAttribute("data-count");
+          settings.imposterCount = v === "random" ? "random" : parseInt(v, 10);
           ctx.store.set("imposterCount", settings.imposterCount);
           highlight("#im-count", String(settings.imposterCount), "data-count");
         });
@@ -114,7 +120,7 @@
   // --- Deal & reveal phase -------------------------------------------------
   function dealRoles(roster) {
     players = roster.map(function (p) { return p.name; });
-    var count = Math.max(1, Math.min(settings.imposterCount, players.length));
+    var count = resolveImposterCount(players.length);
     imposterSet = {};
     var idxs = players.map(function (_, i) { return i; });
     for (var i = idxs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = idxs[i]; idxs[i] = idxs[j]; idxs[j] = tmp; }
@@ -125,6 +131,31 @@
     secretCategory = picked.category;
     revealIdx = 0;
     renderPassTo();
+  }
+
+  // Resolve the configured count for a table of n players. A fixed number is
+  // just clamped; "random" draws from a distribution skewed toward FEW imposters.
+  function resolveImposterCount(n) {
+    if (settings.imposterCount === "random") return randomImposterCount(n);
+    return Math.max(1, Math.min(settings.imposterCount, n));
+  }
+
+  // Weighted toward fewer imposters: P(k) ∝ 1/2^(k-1) for k = 1..max(1, n-1).
+  // So 1 imposter is by far the likeliest, 2 next, and large counts get
+  // exponentially rare (e.g. 7-of-9 ≈ 0.8%). Never makes the whole table fakers.
+  function randomImposterCount(n) {
+    var max = Math.max(1, n - 1);
+    var weights = [], total = 0;
+    for (var k = 1; k <= max; k++) {
+      var w = 1 / Math.pow(2, k - 1);
+      weights.push(w); total += w;
+    }
+    var r = Math.random() * total;
+    for (var i = 0; i < weights.length; i++) {
+      r -= weights[i];
+      if (r < 0) return i + 1;
+    }
+    return 1;
   }
 
   function imposterNames() {
