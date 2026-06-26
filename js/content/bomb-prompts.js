@@ -4,7 +4,7 @@
  * EDIT ME. Pure content, no game logic. These are CATEGORY PROMPTS (a different
  * shape from the shared single-term database in terms.js) — each is a topic the
  * table riffs on out loud ("name a footballer who's played for Barça"). Keep
- * them snappy. The gold is in the inside-jokes pool.
+ * them snappy.
  *
  * Pools let theme stay editable and become language-switchable later. Add a key
  * and it shows up as a selectable chip automatically. `label` is what players
@@ -34,16 +34,6 @@
           "Gegner von McGregor",
           "Aufgabegriffe, bei denen du abklopfst",
           "UFC-Champions (egal welche Division)",
-        ],
-      },
-      insideJokes: {
-        label: "😎 Insider",
-        prompts: [
-          "[Paul trägt die hier ein — hier liegt das Gold]",
-          "[Noch ein Insider-Spruch]",
-          "[Gruppen-Legende / Running Gag]",
-          "[Die eine Nacht, die keiner vergisst]",
-          "[Wer am ehesten ...]",
         ],
       },
       general: {
@@ -78,16 +68,6 @@
           "McGregor opponents",
           "Submissions you can tap to",
           "UFC champions (any division)",
-        ],
-      },
-      insideJokes: {
-        label: "😎 Inside Jokes",
-        prompts: [
-          "[Paul fills these in — the gold lives here]",
-          "[Another inside joke prompt]",
-          "[Group legend / running gag]",
-          "[That one night nobody forgets]",
-          "[Person most likely to ...]",
         ],
       },
       general: {

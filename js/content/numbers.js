@@ -45,13 +45,6 @@
         { q: "What year did the Berlin Wall fall?", a: 1989 },
       ],
     },
-    insideJokes: {
-      label: "😎 Inside Jokes",
-      questions: [
-        { q: "[Group stat question — put a real number]", a: 0 },
-        { q: "[How many times has __ happened?]", a: 0 },
-      ],
-    },
   };
 
   var DE = {
@@ -84,13 +77,6 @@
         { q: "Anzahl der Jupitermonde (bekannt, ungefähr)?", a: 95 },
         { q: "Wie viele Spieler stehen insgesamt auf einem Fußballfeld?", a: 22 },
         { q: "In welchem Jahr fiel die Berliner Mauer?", a: 1989 },
-      ],
-    },
-    insideJokes: {
-      label: "😎 Insider",
-      questions: [
-        { q: "[Gruppen-Statistik-Frage — echte Zahl einsetzen]", a: 0 },
-        { q: "[Wie oft ist __ schon passiert?]", a: 0 },
       ],
     },
   };

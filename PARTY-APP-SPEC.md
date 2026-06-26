@@ -36,8 +36,7 @@ next.
 - ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
 - ✅ **Rank It** — privately rank the same set; drift from the group's consensus loses *(drinking-capable)*
 
-**Next:** more games (see Roadmap), fill in NSFW + inside-joke content pools, optional
-settings/stats screen.
+**Next:** more games (see Roadmap), optional settings/stats screen.
 
 ---
 
@@ -204,7 +203,7 @@ Two shapes of content, by what the game needs:
   - Quiz Out → *levelled multiple-choice* (`quiz.js`, an array of levels; each question
     `{ q, options:[4], answer:index }`). Options are shuffled on screen.
 
-Inside-jokes and the spiciest NSFW entries are left as clearly-marked `[placeholders]` for
+The spiciest NSFW entries are left as clearly-marked `[placeholders]` for
 Paul to fill.
 
 ---
@@ -397,12 +396,5 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
 
 ### Open content TODO (Paul)
 
-The NSFW / filthy / spicy pools are all written. Only the **inside-jokes**
-placeholders are left for Paul to fill (they need real group context):
-
-- `content/terms.js` → `insideJokes`
-- `content/bomb-prompts.js` → `insideJokes`
-- `content/wavelength.js` → `insideJokes`
-- `content/nhie.js`, `content/most-likely.js`, `content/truth.js` → `insideJokes`
-- `content/numbers.js` → `insideJokes` (real group stats + numbers)
-- `content/activity.js` → the one `[Inside joke — hard]` word
+The NSFW / filthy / spicy pools are all written. The inside-jokes placeholder
+category has been removed across all games — it never had real content.

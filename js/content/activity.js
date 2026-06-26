@@ -32,9 +32,7 @@
         words: [
           "Sinnkrise", "Mile-High-Club", "Freundschaft Plus",
           "Midlife-Crisis", "Stockholm-Syndrom", "Hochstapler-Syndrom",
-          "Kamasutra", "Dirty Talk", "Rollenspiel", "Safeword", "Walk of Shame",
-          "[Inside joke — hard]",
-        ],
+          "Kamasutra", "Dirty Talk", "Rollenspiel", "Safeword", "Walk of Shame",        ],
       },
     },
     en: {
@@ -54,9 +52,7 @@
         words: [
           "Existential crisis", "Mile-high club", "Friends with benefits",
           "Midlife crisis", "Stockholm syndrome", "Imposter syndrome",
-          "Kama Sutra", "Dirty talk", "Roleplay", "Safe word", "Walk of shame",
-          "[Inside joke — hard]",
-        ],
+          "Kama Sutra", "Dirty talk", "Roleplay", "Safe word", "Walk of shame",        ],
       },
     },
   };

@@ -3,7 +3,7 @@
  *
  * EDIT ME. Pure content. Each entry is a TRUTH question put to one player. In
  * drinking mode they can dodge it by drinking; in plain mode they just answer.
- * The 🔞 and inside-joke pools are where it gets spicy — fill the placeholders.
+ * The 🔞 pool is where it gets spicy.
  */
 (function (global) {
   "use strict";
@@ -53,14 +53,6 @@
           "Hattest du je was mit dem Ex von jemandem in diesem Raum?",
         ],
       },
-      insideJokes: {
-        label: "😎 Insider",
-        prompts: [
-          "[Inside-joke truth #1]",
-          "[The question only this group would ask]",
-          "[Come clean about the incident]",
-        ],
-      },
     },
     en: {
       general: {
@@ -104,14 +96,6 @@
           "What's a kink you'd actually want to try?",
           "Last thing you searched that you'd be embarrassed by?",
           "Ever hooked up with someone's ex in this room?",
-        ],
-      },
-      insideJokes: {
-        label: "😎 Inside Jokes",
-        prompts: [
-          "[Inside-joke truth #1]",
-          "[The question only this group would ask]",
-          "[Come clean about the incident]",
         ],
       },
     },

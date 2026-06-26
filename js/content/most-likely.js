@@ -55,15 +55,6 @@
           "hat einen One-Night-Stand und fängt Gefühle",
         ],
       },
-      insideJokes: {
-        label: "😎 Insider",
-        prompts: [
-          "[Insider-Spruch #1]",
-          "[Am meisten __ der Gruppe]",
-          "[Macht das Ding wieder]",
-          "[Verhalten der Gruppenlegende]",
-        ],
-      },
     },
     en: {
       general: {
@@ -106,15 +97,6 @@
           "have the highest body count here",
           "go home with someone tonight",
           "have a one-night stand and catch feelings",
-        ],
-      },
-      insideJokes: {
-        label: "😎 Inside Jokes",
-        prompts: [
-          "[Inside-joke prompt #1]",
-          "[Most __ of the group]",
-          "[Do that thing again]",
-          "[Group-legend behaviour]",
         ],
       },
     },

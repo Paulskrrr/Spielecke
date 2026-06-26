@@ -10,7 +10,7 @@
  *
  * The title MUST contain a "→": the game splits on it to label the top/bottom
  * poles of the rail. Keep the DE and EN pool keys
- * (general/party/videogames/nsfw/insideJokes) in sync so the category chips line
+ * (general/party/videogames/nsfw) in sync so the category chips line
  * up in both languages.
  */
 (function (global) {
@@ -95,13 +95,6 @@
           { title: "Größte → harmloseste Bett-Sünde", items: ["An jemand anderen denken", "Den Namen verwechseln", "Mittendrin aufhören", "Heimlich filmen wollen", "Danach sofort einschlafen"] },
         ],
       },
-      insideJokes: {
-        label: "😎 Insider",
-        sets: [
-          { title: "[Ranke nach: wer macht's zuerst]", items: ["[Name A]", "[Name B]", "[Name C]", "[Name D]", "[Name E]"] },
-          { title: "[Die schlimmsten Angewohnheiten der Gruppe]", items: ["[Angewohnheit 1]", "[Angewohnheit 2]", "[Angewohnheit 3]", "[Angewohnheit 4]", "[Angewohnheit 5]"] },
-        ],
-      },
     },
 
     en: {
@@ -180,13 +173,6 @@
           { title: "Turns you on most → least when sexting", items: ["A nude with no warning", "A detailed description", "A filthy voice note", "Just 'come over'", "Emoji hints"] },
           { title: "Hottest → most boring threesome setup", items: ["Two women", "Two men", "Couple plus one", "Two strangers from the bar", "With close friends"] },
           { title: "Biggest → most harmless sin in bed", items: ["Thinking of someone else", "Saying the wrong name", "Stopping halfway", "Wanting to film it secretly", "Falling asleep right after"] },
-        ],
-      },
-      insideJokes: {
-        label: "😎 Inside Jokes",
-        sets: [
-          { title: "[Rank these by who'd do it first]", items: ["[Name A]", "[Name B]", "[Name C]", "[Name D]", "[Name E]"] },
-          { title: "[The group's worst habits, best → worst]", items: ["[Habit 1]", "[Habit 2]", "[Habit 3]", "[Habit 4]", "[Habit 5]"] },
         ],
       },
     },

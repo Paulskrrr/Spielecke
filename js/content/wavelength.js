@@ -6,8 +6,7 @@
  * clue that lands the rest of the table on the right spot. (Different shape from
  * the shared term database — these are opposite pairs — so they live here.)
  *
- * `left` is the 0 end, `right` is the 100 end. Add pairs freely; the spicy and
- * inside-joke pools are yours to fill.
+ * `left` is the 0 end, `right` is the 100 end. Add pairs freely.
  */
 (function (global) {
   "use strict";
@@ -44,14 +43,6 @@
           { left: "Green Flag", right: "Red Flag im Bett" },
         ],
       },
-      insideJokes: {
-        label: "😎 Insider",
-        pairs: [
-          { left: "[Harmloser Insider]", right: "[Extremer Insider]" },
-          { left: "[Am wenigsten __ Freund:in]", right: "[Am meisten __ Freund:in]" },
-          { left: "[Zahme Erinnerung]", right: "[Durchgeknallte Erinnerung]" },
-        ],
-      },
     },
     en: {
       general: {
@@ -82,14 +73,6 @@
           { left: "Soft & sensual", right: "Rough & nasty" },
           { left: "Cute hookup", right: "Filthy hookup" },
           { left: "Green flag", right: "Red flag in bed" },
-        ],
-      },
-      insideJokes: {
-        label: "😎 Inside Jokes",
-        pairs: [
-          { left: "[Mild in-group thing]", right: "[Extreme in-group thing]" },
-          { left: "[Least __ friend]", right: "[Most __ friend]" },
-          { left: "[Tame memory]", right: "[Unhinged memory]" },
         ],
       },
     },

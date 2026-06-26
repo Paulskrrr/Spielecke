@@ -3,7 +3,7 @@
  *
  * EDIT ME. Pure content. Each entry completes "Never have I ever ___" — write
  * just the predicate (lowercase verb phrase), the game adds the prefix. Keep
- * them confession-worthy. The 🔞 and inside-joke pools are where it bites.
+ * them confession-worthy. The 🔞 pool is where it bites.
  */
 (function (global) {
   "use strict";
@@ -55,15 +55,6 @@
           "irgendwo in diesem Gebäude Sex gehabt",
         ],
       },
-      insideJokes: {
-        label: "😎 Insider",
-        prompts: [
-          "[Insider-Geständnis #1]",
-          "[Das, was nur die Gruppe weiß]",
-          "[Der Vorfall]",
-          "[Running-Gag-Geständnis]",
-        ],
-      },
     },
     en: {
       general: {
@@ -109,15 +100,6 @@
           "kissed someone of the same sex",
           "hooked up on a first date",
           "had sex somewhere in this building",
-        ],
-      },
-      insideJokes: {
-        label: "😎 Inside Jokes",
-        prompts: [
-          "[Inside-joke confession #1]",
-          "[That thing only the group knows]",
-          "[The incident]",
-          "[Running-gag admission]",
         ],
       },
     },
