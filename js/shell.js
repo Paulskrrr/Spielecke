@@ -25,6 +25,37 @@
     contentEl = document.getElementById("app");
     renderHeader();
     showShelf();
+    global.addEventListener("keydown", onGlobalKeydown);
+  }
+
+  // Spacebar = "do the going-concern action of this screen" — the one move that
+  // keeps a round flowing (draw / roll / pass / next / reveal …). Only active
+  // while a game is mounted, so it never fires on the shelf or roster.
+  //
+  // Resolution: an explicit [data-primary] wins (e.g. Hochadel's deck, Mäxchen's
+  // hat — actions that aren't a .btn-primary). Otherwise we fall back to the
+  // screen's primary button, which every game uses as its single forward action.
+  // Binary-choice screens (got/missed, higher/lower, quiz options) deliberately
+  // use other classes, so space correctly does nothing there. We never hijack
+  // typing and skip disabled buttons; preventDefault stops the page scroll-jump.
+  function isTypingTarget(el) {
+    if (!el) return false;
+    var tag = el.tagName;
+    return tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || el.isContentEditable === true;
+  }
+  function onGlobalKeydown(e) {
+    if (e.code !== "Space" && e.key !== " " && e.keyCode !== 32) return;
+    if (e.metaKey || e.ctrlKey || e.altKey) return;
+    if (!currentGame || !contentEl) return; // only during gameplay
+    if (isTypingTarget(e.target)) return;
+    var btns = contentEl.querySelectorAll("[data-primary]:not([disabled])");
+    if (!btns.length) {
+      btns = contentEl.querySelectorAll(".btn-primary:not([disabled])");
+    }
+    if (btns.length) {
+      e.preventDefault();
+      btns[btns.length - 1].click();
+    }
   }
 
   // --- Teardown helper -----------------------------------------------------

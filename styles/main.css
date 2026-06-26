@@ -1167,10 +1167,20 @@ body::before {
 
 /* Table hub */
 .ha-turn {
-  display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 4px 0 12px;
+  width: max-content; max-width: 92%;
+  display: flex; align-items: center; gap: 14px;
+  margin: 4px auto 18px; padding: 9px 24px 9px 11px;
+  background: #fff; border: 4px solid var(--ink); border-radius: 999px; box-shadow: var(--pop);
 }
-.ha-turn__label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
-.ha-turn__name { font-size: 1.8rem; font-weight: 900; color: var(--purple); }
+.ha-turn__crown {
+  flex-shrink: 0; width: 2em; height: 2em; font-size: 1.7rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #7b46c9, var(--purple));
+  border: 3px solid var(--ink); border-radius: 50%;
+}
+.ha-turn__meta { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+.ha-turn__label { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); }
+.ha-turn__name { font-size: 1.7rem; font-weight: 900; color: var(--purple); }
 .ha-table-main { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .ha-empty { margin: 4px 0 8px; }
 
@@ -1178,7 +1188,7 @@ body::before {
 .ha-deck-zone { display: flex; flex-direction: column; align-items: center; }
 .ha-deck {
   position: relative;
-  width: min(58vw, 220px);
+  width: min(62vw, 240px);
   aspect-ratio: 3 / 4;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
   font-family: var(--font); font-weight: 900; color: #fff;
@@ -1232,7 +1242,11 @@ body::before {
   opacity: 0.85; align-self: center;
 }
 
-.ha-foot { margin-top: 22px; }
+/* Reset is intentionally low-key — you sit on this screen for hours, so it
+   shouldn't compete with the deck. */
+.ha-foot { margin-top: 26px; text-align: center; }
+.ha-reset { font-size: 0.8rem; padding: 7px 16px; opacity: 0.5; }
+.ha-reset:hover { opacity: 0.9; }
 
 /* The drawn card */
 .ha-draw-screen { min-height: 66vh; }
@@ -1458,24 +1472,29 @@ body::before {
     width: auto;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    padding-left: max(24px, 4vw);
-    padding-right: max(24px, 4vw);
+    padding: 0 max(24px, 4vw) 16px;
+    /* Fill the viewport below the header and vertically centre the hub so it
+       doesn't strand at the top — this is the screen the table stares at for
+       hours. The two auto margins float the deck/piles into the centre and
+       drop the reset to the very bottom. */
+    min-height: calc(100vh - 140px);
+    display: flex; flex-direction: column; align-items: center;
   }
+  .ha-table .ha-turn { margin-top: auto; margin-bottom: 28px; }
   .ha-table .ha-table-main {
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
-    gap: 44px;
+    gap: 56px;
+    width: 100%;
     max-width: 1320px;
     margin: 0 auto;
   }
-  .ha-table .ha-deck-zone { flex: 0 0 auto; position: sticky; top: 92px; }
+  .ha-table .ha-deck-zone { flex: 0 0 auto; }
+  .ha-table .ha-deck { width: 272px; }
   .ha-table .ha-piles { flex: 1; flex-direction: row; gap: 32px; }
   .ha-table .ha-pile { flex: 1; }
-  .ha-table .ha-foot {
-    display: flex; gap: 12px; max-width: 560px; margin-left: auto; margin-right: auto;
-  }
-  .ha-table .ha-foot .btn { flex: 1; margin-top: 0; }
+  .ha-table .ha-foot { margin-top: auto; margin-bottom: 0; }
 
   /* Focused single-card screens stay centred and readable, not stretched. */
   .ha-intro, .ha-draw-screen {

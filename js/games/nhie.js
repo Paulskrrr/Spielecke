@@ -70,7 +70,7 @@
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + t("Never have I ever…") + "</div>" +
       '  <div class="deck-tapwrap">' +
-      '    <div id="ni-card" class="deck-prompt">' + esc(line) + "</div>" +
+      '    <div id="ni-card" class="deck-prompt" role="button" data-primary>' + esc(line) + "</div>" +
       "  </div>" +
       '  <p class="deck-rule">' +
       (settings.drinking ? t("Done it? Drink! 🍺") : t("Done it? Own up 🙋")) +

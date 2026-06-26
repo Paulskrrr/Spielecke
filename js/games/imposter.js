@@ -172,7 +172,7 @@
 
     els.innerHTML =
       '<section class="screen imposter-role">' + body +
-      '  <button id="im-hide" class="btn btn-block btn-xl">' +
+      '  <button id="im-hide" class="btn btn-block btn-xl" data-primary>' +
       (last ? t("Hide & start talking 🗣️") : t("Hide & pass on ➡️")) + "</button>" +
       "</section>";
     els.querySelector("#im-hide").addEventListener("click", function () {

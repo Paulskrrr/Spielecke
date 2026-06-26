@@ -63,8 +63,6 @@
       cardById = {};
       data.deck.forEach(function (c) { cardById[c.id] = c; });
 
-      global.addEventListener("keydown", onKeydown);
-
       var saved = context.store.get("state", null);
       if (saved && saved.edition && saved.order && saved.order.length >= 2
           && rosterMatchesSaved(saved.order)) {
@@ -79,23 +77,13 @@
     },
     unmount: function () {
       clearAll();
-      global.removeEventListener("keydown", onKeydown);
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; data = null; game = null; cardById = {};
     },
   };
 
-  // Space (or Enter) always fires the screen's primary action — draw a card on
-  // the table, complete the drawn card, advance the intro, etc. The most recently
-  // rendered primary wins (e.g. the Sanduhr overlay over the table).
-  function onKeydown(e) {
-    if (e.code !== "Space" && e.key !== " " && e.key !== "Enter" && e.keyCode !== 32) return;
-    if (!els) return;
-    var tag = e.target && e.target.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA") return; // don't hijack typing
-    var btns = els.querySelectorAll("[data-primary]");
-    if (btns.length) { e.preventDefault(); btns[btns.length - 1].click(); }
-  }
+  // Spacebar fires the screen's primary action (draw / complete / advance) — now
+  // handled globally by the shell, which clicks the on-screen [data-primary].
 
   // --- timers --------------------------------------------------------------
   function after(ms, fn) { var id = global.setTimeout(fn, ms); timers.push(id); return id; }
@@ -399,8 +387,11 @@
     els.innerHTML =
       '<section class="screen ha-screen ha-table">' +
       '  <div class="ha-turn">' +
-      '    <span class="ha-turn__label">' + t("Current player") + "</span>" +
-      '    <span class="ha-turn__name">' + esc(cur ? cur.name : "—") + "</span>" +
+      '    <span class="ha-turn__crown" aria-hidden="true">👑</span>' +
+      '    <span class="ha-turn__meta">' +
+      '      <span class="ha-turn__label">' + t("Current player") + "</span>" +
+      '      <span class="ha-turn__name">' + esc(cur ? cur.name : "—") + "</span>" +
+      "    </span>" +
       "  </div>" +
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
@@ -416,7 +407,7 @@
       "    </div>" +
       "  </div>" +
       '  <div class="ha-foot">' +
-      '    <button id="ha-reset" class="btn btn-ghost btn-block">' + t("↺ Reset game") + "</button>" +
+      '    <button id="ha-reset" class="btn btn-ghost ha-reset">' + t("↺ Reset game") + "</button>" +
       "  </div>" +
       "</section>";
 

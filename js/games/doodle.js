@@ -111,7 +111,7 @@
       '  <canvas id="dd-canvas" class="doodle-canvas"></canvas>' +
       '  <div class="dd-tools">' +
       '    <button id="dd-clear" class="btn btn-skip">' + t("Clear 🧹") + "</button>" +
-      '    <button id="dd-done" class="btn btn-got">' + t("Done ✅") + "</button>" +
+      '    <button id="dd-done" class="btn btn-got" data-primary>' + t("Done ✅") + "</button>" +
       "  </div>" +
       "</section>";
     setupCanvas();
