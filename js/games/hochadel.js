@@ -66,10 +66,14 @@
       global.addEventListener("keydown", onKeydown);
 
       var saved = context.store.get("state", null);
-      if (saved && saved.edition && saved.order && saved.order.length >= 2) {
+      if (saved && saved.edition && saved.order && saved.order.length >= 2
+          && rosterMatchesSaved(saved.order)) {
         game = reconcile(saved);
         renderGroundRules(renderTable);
       } else {
+        // No saved game, or it belongs to a different roster — start fresh so
+        // the court is seated with the players currently in the roster.
+        context.store.set("state", null);
         renderEdition();
       }
     },
@@ -123,6 +127,18 @@
     return (ctx.players || [])
       .filter(function (p) { return p && p.name; })
       .map(function (p) { return { id: p.id, name: p.name }; });
+  }
+
+  // A saved game is only worth resuming if it belongs to the CURRENT roster.
+  // Hochadel snapshots the players into `state.order`, so without this check a
+  // reload would resurrect an old game (old player names) after the roster
+  // changed. Compare by the set of player ids, ignoring order.
+  function rosterMatchesSaved(order) {
+    var cur = rosterOrder();
+    if (!Array.isArray(order) || order.length !== cur.length) return false;
+    var ids = {};
+    cur.forEach(function (p) { ids[p.id] = true; });
+    return order.every(function (p) { return p && ids[p.id]; });
   }
 
   function newGame(edition) {
