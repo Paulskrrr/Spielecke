@@ -166,7 +166,8 @@
     winner = null;
     leader = null;
     renderTrack(t("They're at the gate… 🏁"));
-    // The big GO button starts the paced animation.
+    // Kick off the paced animation straight away — no extra GO tap needed.
+    startRace();
   }
 
   function renderTrack(commentary) {
@@ -217,7 +218,7 @@
     } else {
       c.innerHTML =
         '<button id="hr-go" class="btn btn-primary btn-block btn-xl">' +
-        (pos.S + pos.H + pos.D + pos.C === 0 ? t("And… they're off! 🏇") : t("Resume ▶️")) + "</button>" +
+        (pos.S + pos.H + pos.D + pos.C === 0 ? t("And… they're off! 🏇") : t("Resume ▶️")) + "</button>";
       c.querySelector("#hr-go").addEventListener("click", startRace);
     }
   }
