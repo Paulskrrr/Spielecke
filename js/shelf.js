@@ -35,12 +35,12 @@
     // A teaser tile that fills the last grid slot. It has the same tactile
     // press feel as a real card but carries no data-id, so the click handler
     // below treats it as a no-op — it reacts, but goes nowhere.
+    // Deliberately bare: just the icon box and a "Coming soon" title (kept in
+    // English in both languages), nothing else.
     var soonTile =
-      '<button class="game-card game-card--soon" type="button" aria-label="' + escapeAttr(t("Coming soon")) + '">' +
+      '<button class="game-card game-card--soon" type="button" aria-label="Coming soon">' +
       '  <span class="game-card__icon">✨</span>' +
-      '  <span class="game-card__name">' + escapeHtml(t("Coming soon…")) + "</span>" +
-      '  <span class="game-card__tagline">' + escapeHtml(t("New games are in the works.")) + "</span>" +
-      '  <span class="game-card__meta"><span class="badge">🔜 ' + escapeHtml(t("Soon")) + "</span></span>" +
+      '  <span class="game-card__name">Coming soon</span>' +
       "</button>";
 
     container.innerHTML =

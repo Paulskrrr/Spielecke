@@ -254,10 +254,9 @@ body::before {
   box-shadow: 0 8px 0 rgba(36, 27, 77, 0.2);
 }
 .game-card--soon::after { display: none; }
-/* Same internal layout as a real card (icon square, name, tagline, meta) — only
-   the colours change. Text is dark on the light tile, so drop the white halo. */
+/* Just the icon box + title. Text is dark on the light tile, so drop the white
+   halo the coloured cards use. */
 .game-card--soon .game-card__name { color: var(--ink); text-shadow: none; }
-.game-card--soon .game-card__tagline { color: var(--ink-soft); text-shadow: none; }
 
 .game-card__icon {
   font-size: 1.9rem;
