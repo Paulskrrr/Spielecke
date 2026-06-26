@@ -1315,6 +1315,13 @@ body::before {
   .quiz-options { grid-template-columns: 1fr 1fr; }
   .ri-axis { max-width: 620px; margin-left: auto; margin-right: auto; }
 
+  /* On desktop the hat hub goes back to a compact, centred block — the
+     full-height phone layout is mobile-only. */
+  .mx-hub { min-height: auto; }
+  .mx-hub .mx-stage { flex: none; margin: 18px 0 8px; }
+  .mx-hub .mx-hat { font-size: clamp(5rem, 30vw, 9rem); }
+  .mx-hub__foot { margin-top: 18px; }
+
   /* Wavelength: classic horizontal dial on wider screens — the two end-labels
      bracket the bar to the left and right. */
   .wl-spectrum { flex-direction: row; align-items: center; gap: 14px; }
@@ -1612,6 +1619,16 @@ body::before {
   user-select: none; transition: transform 0.12s ease;
   animation: mx-bob 1.8s ease-in-out infinite;
 }
+
+/* Hat hub: on mobile use the whole screen — hat centred, lift button on the
+   floor — so the phone fills the hand instead of crowding the top. */
+.mx-hub {
+  display: flex; flex-direction: column;
+  min-height: calc(100dvh - 150px);
+}
+.mx-hub .mx-stage { flex: 1; justify-content: center; margin: 0; }
+.mx-hub .mx-hat { font-size: clamp(6.5rem, 44vw, 11rem); }
+.mx-hub__foot { margin-top: auto; padding-top: 8px; }
 .mx-hat.tappable:active { transform: translateY(6px) scale(0.96); }
 .mx-hat--shaking { animation: mx-shake 0.16s linear infinite; }
 .mx-hat--lift { animation: mx-lift 0.42s cubic-bezier(0.3, 1.3, 0.5, 1) forwards; }

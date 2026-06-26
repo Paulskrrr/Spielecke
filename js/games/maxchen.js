@@ -94,14 +94,16 @@
   function renderHat() {
     clearTimer();
     els.innerHTML =
-      '<section class="screen mx-turn">' +
+      '<section class="screen mx-turn mx-hub">' +
       '  <div class="mx-stage">' +
       '    <div id="mx-hat" class="mx-hat" aria-label="' + attr(t("Roll the dice")) + '">🎩</div>' +
       '    <div class="mx-tap-hint">' + t("Tap the hat to roll — keep the screen to yourself") + "</div>" +
       "  </div>" +
+      '  <div class="mx-hub__foot">' +
       (underHat
-        ? '  <button id="mx-reveal" class="btn btn-block btn-xl">' + t("Lift the hat 👀") + "</button>"
-        : '  <p class="muted small">' + t("You open the round — roll the dice.") + "</p>") +
+        ? '    <button id="mx-reveal" class="btn btn-block btn-xl">' + t("Lift the hat 👀") + "</button>"
+        : '    <p class="muted small">' + t("You open the round — roll the dice.") + "</p>") +
+      "  </div>" +
       "</section>";
 
     tappable(els.querySelector("#mx-hat"), rollDice);
