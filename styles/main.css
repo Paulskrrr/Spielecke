@@ -41,10 +41,12 @@
 }
 
 * { box-sizing: border-box; }
-/* Base colour behind everything = header purple, so the mobile overscroll
-   "rubber-band" gap above the sticky header shows purple, not the background
-   image. The visible viewport is still the Memphis image (body::before). */
-html { background: var(--purple); }
+/* Base colour behind everything = the page's paper cream. iOS Safari bleeds
+   this html background into the edges the fixed image can't paint (the
+   home-indicator strip, the overscroll rubber-band), so keeping it neutral
+   means no purple band creeps in at the bottom. The visible viewport is still
+   the Memphis image (body::before). */
+html { background: var(--paper); }
 html, body { margin: 0; padding: 0; }
 
 body {
