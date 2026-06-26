@@ -118,6 +118,21 @@
           "würde bei einem Lapdance knallrot werden",
         ],
       },
+      date: {
+        label: "🌹 Date",
+        prompts: [
+          "steht heimlich darauf, beim Sex gewürgt zu werden",
+          "übernimmt im Bett die Kontrolle",
+          "gibt im Bett lieber die Kontrolle ab",
+          "macht heute Abend den ersten Schritt",
+          "denkt gerade an einen Kuss",
+          "wird im Bett am lautesten",
+          "verliebt sich schneller nach gutem Sex",
+          "hat gerade den versauteren Gedanken",
+          "zieht den anderen zuerst zu sich",
+          "hat einen Kink, der den anderen überraschen würde",
+        ],
+      },
     },
     en: {
       general: {
@@ -222,6 +237,21 @@
           "have a one-night stand and catch feelings",
           "have been on a date nobody here ever found out about",
           "blush bright red during a lap dance",
+        ],
+      },
+      date: {
+        label: "🌹 Date",
+        prompts: [
+          "secretly be into being choked in bed",
+          "take control in bed",
+          "rather give up control in bed",
+          "make the first move tonight",
+          "be thinking about a kiss right now",
+          "be the loudest in bed",
+          "catch feelings faster after good sex",
+          "have the filthier thought right now",
+          "pull the other one in first",
+          "have a kink that would surprise the other",
         ],
       },
     },
