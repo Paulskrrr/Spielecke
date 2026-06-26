@@ -1,0 +1,302 @@
+/*
+ * games/quiz.js — Quiz Out (turn-based knockout quiz)
+ *
+ * Players take turns. Each turn shows a 4-option question; a wrong answer costs
+ * a life. After every full round (each surviving player has answered once) the
+ * difficulty climbs a level. Lose all your hearts and you're out — last player
+ * standing wins. Hearts (1–5) are configured before the start.
+ *
+ * Uses the shared roster for turn order + per-player lives.
+ * Content: content/quiz.js (Spielecke.QuizQuestions), an array of levels.
+ * Drinking-capable: in drinking mode a wrong answer also = drink.
+ */
+(function (global) {
+  "use strict";
+
+  function t(k) { return global.Spielecke.t(k); }
+  function Pools() { return global.Spielecke.Pools; }
+
+  var MIN_PLAYERS = 2;
+  var HEART_OPTIONS = [1, 2, 3, 4, 5];
+  var LEVEL_NAMES = ["Warm-up", "Easy", "Medium", "Hard", "Brutal", "Insane"];
+  var DEFAULTS = { hearts: 3, drinking: false };
+
+  var els = null, ctx = null, settings = null;
+  var players = [];      // [{ name, lives }]
+  var roundQueue = [];   // players still to act this round
+  var round = -1;        // -> level index after beginRound()
+  var used = {};         // used question indices per level
+  var currentPlayer = null, currentQ = null, currentOpts = null;
+
+  var module = {
+    meta: {
+      id: "quiz",
+      name: "Quiz Out",
+      tagline: "Answer or lose a heart. Last one standing wins.",
+      icon: "🧠",
+      minPlayers: MIN_PLAYERS,
+      supportsDrinking: true,
+    },
+    mount: function (container, context) {
+      els = container; ctx = context;
+      settings = {
+        hearts: clampHearts(context.store.get("hearts", DEFAULTS.hearts)),
+        drinking: context.store.get("drinking", false) === true,
+        pools: Pools().load(context.store, cats()),
+      };
+      renderSetup();
+    },
+    unmount: function () {
+      if (els) { els.innerHTML = ""; els = null; }
+      ctx = null; settings = null; players = []; roundQueue = []; used = {};
+    },
+  };
+
+  // --- Setup ---------------------------------------------------------------
+  function renderSetup() {
+    var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
+    var enough = roster.length >= MIN_PLAYERS;
+    var note = enough
+      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
+
+    var hearts = HEART_OPTIONS.map(function (h) {
+      return '<button class="chip" data-hearts="' + h + '">' + h + " ❤️</button>";
+    }).join("");
+
+    els.innerHTML =
+      '<section class="screen game-setup">' +
+      '  <h2 class="screen-title pop">🧠 ' + t("Quiz Out") + "</h2>" +
+      '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
+      note +
+      '  <h3 class="sub">' + t("Categories") + "</h3>" +
+      '  <div class="chip-row" id="qz-pools">' + Pools().chipsHtml(cats(), t) + "</div>" +
+      '  <h3 class="sub">' + t("Hearts each") + "</h3>" +
+      '  <div class="chip-row" id="qz-hearts">' + hearts + "</div>" +
+      '  <label class="toggle"><input type="checkbox" id="qz-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode (wrong = drink too)") + "</span></label>" +
+      '  <button id="qz-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start quiz ▶️") + "</button>" +
+      "</section>";
+
+    Pools().bind(els.querySelector("#qz-pools"), cats(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+
+    highlight("#qz-hearts", String(settings.hearts), "data-hearts");
+    els.querySelectorAll("#qz-hearts .chip").forEach(function (c) {
+      c.addEventListener("click", function () {
+        settings.hearts = clampHearts(c.getAttribute("data-hearts"));
+        ctx.store.set("hearts", settings.hearts);
+        highlight("#qz-hearts", String(settings.hearts), "data-hearts");
+      });
+    });
+    els.querySelector("#qz-drink").addEventListener("change", function (e) {
+      settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
+    });
+    var start = els.querySelector("#qz-start");
+    if (enough) start.addEventListener("click", function () { startGame(roster); });
+  }
+
+  // --- Game loop -----------------------------------------------------------
+  function startGame(roster) {
+    players = roster.map(function (p) { return { name: p.name, lives: settings.hearts }; });
+    roundQueue = []; round = -1; used = {};
+    nextTurn();
+  }
+
+  function active() { return players.filter(function (p) { return p.lives > 0; }); }
+
+  function beginRound() {
+    round++;
+    roundQueue = active().slice();
+  }
+
+  function nextTurn() {
+    var alive = active();
+    if (alive.length <= 1) { renderWin(alive[0] || null); return; }
+    if (roundQueue.length === 0) beginRound();
+    currentPlayer = roundQueue.shift();
+    renderPass();
+  }
+
+  // Current-language categories { key: { label, levels:[ [q…], … ] } }.
+  function cats() { return global.Spielecke.L(global.Spielecke.QuizQuestions) || {}; }
+  function selectedKeys() { return Pools().resolve(settings.pools, cats()); }
+
+  // Deepest ladder among the chosen categories — drives how far the climb goes.
+  function maxLevels() {
+    var c = cats(), m = 1;
+    selectedKeys().forEach(function (k) {
+      var lv = c[k] && c[k].levels;
+      if (lv && lv.length > m) m = lv.length;
+    });
+    return m;
+  }
+
+  // All questions at this difficulty across the chosen categories (each clamped
+  // to its own hardest level so shallow categories still contribute).
+  function levelPool(level) {
+    var c = cats(), pool = [];
+    selectedKeys().forEach(function (k) {
+      var lv = c[k] && c[k].levels;
+      if (lv && lv.length) pool = pool.concat(lv[Math.min(level, lv.length - 1)] || []);
+    });
+    return pool;
+  }
+
+  function levelIndex() {
+    return Math.max(0, Math.min(round, maxLevels() - 1));
+  }
+  function levelName() {
+    var i = levelIndex();
+    return t(LEVEL_NAMES[i] || ("Level " + (i + 1)));
+  }
+
+  function renderPass() {
+    els.innerHTML =
+      '<section class="screen qz-pass">' +
+      '  <div class="qz-hud"><span class="badge">' + t("Round {n}").replace("{n}", round + 1) + "</span>" +
+      (settings.drinking ? '<span class="badge badge-drink">' + t("🍻 drink") + "</span>" : "") +
+      "  </div>" +
+      '  <div class="pass-emoji">🧠</div>' +
+      '  <h2 class="pass-name pop">' + esc(currentPlayer.name) + "</h2>" +
+      '  <div class="qz-lives">' + hearts(currentPlayer) + "</div>" +
+      '  <p class="muted">' + t("Difficulty: {level}").replace("{level}", "<strong>" + esc(levelName()) + "</strong>") + " · " +
+      active().length + t(" left in the game") + "</p>" +
+      '  <button id="qz-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — go").replace("{name}", esc(currentPlayer.name)) + "</button>" +
+      "</section>";
+    els.querySelector("#qz-go").addEventListener("click", renderQuestion);
+  }
+
+  function renderQuestion() {
+    currentQ = pickQuestion(levelIndex());
+    currentOpts = shuffleOptions(currentQ);
+
+    var opts = currentOpts.map(function (o, i) {
+      return '<button class="btn quiz-option" data-i="' + i + '">' + esc(o.text) + "</button>";
+    }).join("");
+
+    els.innerHTML =
+      '<section class="screen qz-question">' +
+      '  <div class="qz-hud"><span class="badge">' + esc(levelName()) + "</span>" +
+      '    <span class="qz-lives-mini"></span></div>' +
+      '  <div class="quiz-q">' + esc(currentQ.q) + "</div>" +
+      '  <div class="quiz-options">' + opts + "</div>" +
+      "</section>";
+    // fill the mini lives + name in the hud (set as text to avoid quoting issues)
+    var mini = els.querySelector(".qz-lives-mini");
+    if (mini) mini.textContent = currentPlayer.name + " " + heartsPlain(currentPlayer);
+
+    els.querySelectorAll(".quiz-option").forEach(function (b) {
+      b.addEventListener("click", function () {
+        answer(parseInt(b.getAttribute("data-i"), 10));
+      });
+    });
+  }
+
+  function answer(i) {
+    var chosen = currentOpts[i];
+    var correctText = currentOpts[indexOfCorrect()].text;
+    if (chosen.correct) {
+      renderFeedback(true, null);
+    } else {
+      currentPlayer.lives--;
+      // if eliminated, drop from this round's remaining queue
+      if (currentPlayer.lives <= 0) {
+        roundQueue = roundQueue.filter(function (p) { return p !== currentPlayer; });
+      }
+      renderFeedback(false, correctText);
+    }
+  }
+
+  function indexOfCorrect() {
+    for (var i = 0; i < currentOpts.length; i++) if (currentOpts[i].correct) return i;
+    return 0;
+  }
+
+  function renderFeedback(ok, correctText) {
+    var eliminated = !ok && currentPlayer.lives <= 0;
+    var sub;
+    if (ok) {
+      sub = t("Safe — well played.");
+    } else if (eliminated) {
+      sub = t("Answer: ") + "<strong>" + esc(correctText) + "</strong>. 💀 <strong>" + esc(currentPlayer.name) +
+        "</strong>" + t(" is OUT!") + (settings.drinking ? t(" 🍺 Drink!") : "");
+    } else {
+      sub = t("Answer: ") + "<strong>" + esc(correctText) + "</strong>. −1 ❤️" +
+        (settings.drinking ? t(" 🍺 Drink!") : "");
+    }
+
+    els.innerHTML =
+      '<section class="screen qz-feedback">' +
+      '  <div class="result-emoji">' + (ok ? "✅" : (eliminated ? "💀" : "❌")) + "</div>" +
+      '  <h2 class="result-title pop">' + (ok ? t("Correct!") : t("Wrong!")) + "</h2>" +
+      '  <p class="result-sub">' + sub + "</p>" +
+      '  <div class="qz-lives">' + hearts(currentPlayer) + "</div>" +
+      '  <button id="qz-next" class="btn btn-primary btn-block btn-xl">' + t("Next player ▶️") + "</button>" +
+      "</section>";
+    els.querySelector("#qz-next").addEventListener("click", nextTurn);
+  }
+
+  function renderWin(winner) {
+    els.innerHTML =
+      '<section class="screen qz-win">' +
+      '  <div class="boom-flash">🏆</div>' +
+      '  <h2 class="boom-title">' + (winner ? esc(winner.name) + t(" wins!") : t("Game over")) + "</h2>" +
+      '  <p class="result-sub">' + (winner ? t("Last one standing — quiz champion!") : t("Everyone\'s out!")) + "</p>" +
+      '  <div class="stack">' +
+      '    <button id="qz-again" class="btn btn-primary btn-block btn-xl">' + t("Play again 🔁") + "</button>" +
+      '    <button id="qz-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
+      "  </div>" +
+      "</section>";
+    els.querySelector("#qz-again").addEventListener("click", function () {
+      var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
+      if (roster.length >= MIN_PLAYERS) startGame(roster); else renderSetup();
+    });
+    els.querySelector("#qz-settings").addEventListener("click", renderSetup);
+  }
+
+  // --- Questions -----------------------------------------------------------
+  function pickQuestion(level) {
+    var pool = levelPool(level);
+    if (!pool.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
+    var u = used[level] = used[level] || {};
+    var avail = [];
+    for (var i = 0; i < pool.length; i++) if (!u[i]) avail.push(i);
+    if (!avail.length) { used[level] = u = {}; for (var k = 0; k < pool.length; k++) avail.push(k); }
+    var pick = avail[Math.floor(Math.random() * avail.length)];
+    u[pick] = true;
+    return pool[pick];
+  }
+
+  function shuffleOptions(q) {
+    var arr = q.options.map(function (o, i) { return { text: o, correct: i === q.answer }; });
+    for (var i = arr.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp; }
+    return arr;
+  }
+
+  // --- Helpers -------------------------------------------------------------
+  function clampHearts(v) {
+    var n = parseInt(v, 10);
+    if (isNaN(n)) n = DEFAULTS.hearts;
+    return Math.max(1, Math.min(5, n));
+  }
+  function hearts(p) {
+    var full = "", empty = "";
+    for (var i = 0; i < p.lives; i++) full += "❤️";
+    for (var j = 0; j < settings.hearts - p.lives; j++) empty += "🤍";
+    return full + empty;
+  }
+  function heartsPlain(p) {
+    var s = "";
+    for (var i = 0; i < p.lives; i++) s += "❤️";
+    return s;
+  }
+  function highlight(sel, value, an) {
+    els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
+  }
+  var esc = global.Spielecke.esc;
+
+  global.Spielecke = global.Spielecke || {};
+  global.Spielecke.Games = global.Spielecke.Games || {};
+  global.Spielecke.Games.quiz = module;
+})(window);

@@ -1,11 +1,50 @@
-# Party Game App — Build Spec
+# Spielecke — Party Game App Spec
 
 A self-owned, group-specific party-game collection. Splash-like aggregator, but every
 game is filled with our own terms, rules, references, and design. Lives permanently on a
 GitHub Pages link, gets new games added over time. Built to outlast any single event.
 
-This document is the brief for Claude Code. **Build order: the shell + game shelf first
-(this doc, Part 1), then games one at a time (The Bomb spec'd here in Part 2).**
+This document started as the build brief and is now kept as **living documentation** — it
+reflects what's actually been built, the decisions that were made along the way, and what's
+next.
+
+> **Adults only.** The shell/UI is playful and childlike on purpose, but the *content* is
+> NSFW — this is a drinking game for grown-ups.
+
+---
+
+## Status
+
+**Shipped (on `main`):** the shell + **20 games**.
+
+- ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
+- ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
+- ✅ Shared term database for single-term games + optional drinking-mode toggle
+- ✅ **The Bomb** — hot-potato word game *(drinking-capable)*
+- ✅ **Most Likely To** — pointing deck *(drinking-capable)*
+- ✅ **Never Have I Ever** — confession deck *(drinking-capable)*
+- ✅ **Who Am I?** — Heads-Up / forehead guessing
+- ✅ **Imposter** — hidden-role secret word
+- ✅ **Wavelength** — spectrum/dial guessing
+- ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
+- ✅ **Princess Treatment** — King/Princess debate deck
+- ✅ **Doodle Drama** — drawing telephone (canvas)
+- ✅ **Activity** — two-team board race (explain / draw / charade) *(drinking-capable)*
+- ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
+- ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
+- ✅ **Chooser** — spinning-wheel random person picker
+- ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
+- ✅ **Rank It** — privately rank the same set; drift from the group's consensus loses *(drinking-capable)*
+- ✅ **Hochadel** — royal-court action-card game; cards command who must *dienen* *(drinking-capable)*
+- ✅ **Mäxchen / Mia** — bluffing dice under a hat, passed around *(drinking-capable)*
+- ✅ **Ride the Bus** — four-guess card gauntlet *(drinking-capable)*
+- ✅ **Fuck the Dealer** — guess-the-rank card game with dealer rotation *(drinking-capable)*
+- ✅ **Horse Race** — animated suit-betting card race *(drinking-capable)*
+
+**Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
+Players screen.
+
+**Next:** more games (see Roadmap), optional settings/stats screen.
 
 ---
 
@@ -15,205 +54,424 @@ This document is the brief for Claude Code. **Build order: the shell + game shel
   opened from a `file://` path, from GitHub Pages, on a MacBook, and on any phone via the
   published link. Each person can also just open the link independently.
 - **One device at a time / shared screen.** Games are designed for a MacBook on the table
-  or a phone passed around. No cross-device networking. (This was a deliberate decision —
-  the "everyone connected on their own screen" magic requires a broker/backend, which we
-  ruled out.)
-- **Scales to ~10, flexible.** Player count should never be load-bearing. Games work from
-  ~3 up to ~12 without special-casing.
-- **Every game has a clean win/loss or drink outcome** so any of them doubles as a drinking
-  game. This is a hard requirement, not a nice-to-have.
-- **Content carries the theme, not code.** Group jokes, MMA, World Cup, our topics — all
-  live in editable data (word pools, question banks), never hardcoded into game logic.
-  This is what makes new content cheap to add.
-- **Language: English for UI and shell now.** Individual games may later carry an English
-  *or* German word pool (or both, switchable). Build content structures so a game can hold
-  multiple language pools without code changes.
-- **Vanilla JS / HTML / CSS.** No framework required. Light bundling is fine. Mobile-first
-  responsive — must look right on a phone and on a laptop.
-- **Persistence via localStorage only** (player list, stats, last-used settings). No other
-  storage. Degrade gracefully if localStorage is unavailable.
+  or a phone passed around. No cross-device networking. (Deliberate — the "everyone on
+  their own screen" magic needs a broker/backend, which we ruled out.)
+- **Scales to ~10, flexible.** Player count is never load-bearing. Games work from ~3 up to
+  ~12 without special-casing.
+- **Every game has a clean win/lose/score outcome.** Games are **plain by default** — not
+  everything is a drinking game. Games where it *fits* expose an optional **🍻 Drinking
+  mode** toggle in their setup (off by default, persisted); turning it on swaps the
+  resolution to "who drinks." Don't bolt a drink penalty onto a game where it doesn't fit.
+- **Fewer elements, clean focus.** Default to one *fewer* button or line of text, never one
+  more. Where it reads naturally, the design element *is* the action — tap the card, the
+  wheel, the hat — instead of a separate button beneath it (`Spielecke.tappable`). Cut
+  redundant labels, duplicate "back" buttons, and text that restates what's already on
+  screen. Each screen should present a single, obvious next action.
+- **Content carries the theme, not code.** Group jokes, MMA, our topics — all live in
+  editable data files, never hardcoded into game logic. New content is cheap to add.
+- **Bilingual (DE / EN), German by default.** UI strings live in `i18n.js` (`Spielecke.t`),
+  toggled on the Players screen and persisted. Content files are `{ de, en }` bundles read
+  through `Spielecke.L(...)`; language-neutral decks (proper-noun term pools) share one list.
+  Adding a string or a pool stays a data-only change.
+- **Single responsive build.** One `index.html` + shared CSS/JS, mobile-first. No separate
+  mobile/desktop builds — CSS adapts to phone and laptop. Must look right on both.
+- **Vanilla JS / HTML / CSS, no framework, no build step.** Loaded as **ordered classic
+  `<script>` tags** (not ES modules) so the app works from `file://` without a server —
+  ES module `import` is blocked by browsers under `file://`. All asset paths are relative.
+- **Persistence via localStorage only** (roster, per-game settings, future stats). Degrades
+  gracefully to in-memory if localStorage is unavailable.
+
+### Visual identity (decided)
+
+- **Name:** Spielecke ("the play corner").
+- **Look:** kindergarten / playground / toy-box. Chunky crayon colours, fat rounded
+  toy-block buttons with hard offset shadows, sticker-style headings (white outline),
+  confetti background, bouncy/wiggle animations, big emoji.
+- **Childlike design, adult content.** Flashy and loud throughout.
+- **Fonts:** system rounded stack only (`Baloo 2` → `Comic Sans MS` → `Chalkboard SE` →
+  `Trebuchet MS`). No external font loading (keeps it pure-static / file://-safe).
+- **Logo:** "Pauls Spielecke" wordmark — chunky 3D gold "Spielecke" with a black outline
+  and a red handwritten "Pauls" on top. Lives at `assets/logo.png` (transparent
+  background), used in the header, page title, and favicon. Cropped tight from Paul's
+  uploaded artwork with the white background keyed out.
 
 ---
 
-## Part 1 — The Shell (build this first)
+## Part 1 — The Shell
 
-The shell is the app skeleton: a home screen, a shared player roster, a game registry, and
-the contract that every game module implements. Ship the shell with **zero games wired in
-beyond a placeholder**, confirm navigation + roster + persistence work, then add The Bomb.
+The app skeleton: home screen, shared player roster, game registry, and the contract every
+game module implements.
 
 ### 1.1 Screens
 
-1. **Home / Game Shelf**
-   - Title/brand for the app (placeholder name `[APP NAME TBD]` — Paul to decide).
-   - A grid of game cards. Each card: icon/emoji, game name, one-line tagline, player-count
-     hint, and a "drinking-game ✓" marker.
-   - Tapping a card → that game's setup or directly into the game.
-   - Persistent header element showing the current roster size with an "Edit players" button.
+1. **Home / Game Shelf** — brand header + a responsive grid of game cards (icon, name,
+   tagline, player-count hint, drinking-game marker). Tap a card → that game.
+2. **Players / Roster (app-level, shared by all games)** — add / remove / reorder (up/down
+   buttons) players by name. Persists to localStorage, reused by every game. Soft
+   minimum-count warning (warn, don't block). The single most important shared piece.
+3. **Game screens** — owned by each game module (see contract).
+4. **Settings** — not built yet (language toggle, reset stats). Stub later.
 
-2. **Players / Roster (app-level, shared by all games)**
-   - Add / remove / reorder players (names only).
-   - Roster persists in localStorage and is reused by every game — entered once, used
-     everywhere. This is the single most important shared piece.
-   - Minimum sensible count enforced softly (warn, don't block).
+Persistent header shows the roster size with an "Edit players" button, on every screen.
 
-3. **Game screens** — owned by each game module (see contract below).
+### 1.2 File structure
 
-4. **(Optional, later) Settings** — language pool toggle, reset stats, etc. Stub only for now.
-
-### 1.2 Game Registry
-
-A single array/object the shell reads to render the shelf. Adding a game = adding one entry
-+ dropping in its module. Example shape (illustrative, refine as needed):
-
-```js
-const GAMES = [
-  {
-    id: "bomb",
-    name: "The Bomb",
-    tagline: "Name it fast, pass it faster. Don't be holding it when it blows.",
-    icon: "💣",
-    minPlayers: 3,
-    isDrinkingGame: true,
-    module: BombGame,   // implements the Game Module Contract
-  },
-  // future games appended here
-];
 ```
+index.html                 single entry; ordered classic <script> tags; relative paths
+styles/main.css            the whole Spielecke theme (mobile-first, responsive)
+js/
+  store.js                 localStorage: shared roster + per-game namespaced store
+  i18n.js                  DE/EN strings (Spielecke.t) + content-bundle picker (Spielecke.L)
+  ui.js                    shared helpers: tappable() + the HTML escapers (esc / attr)
+  pools.js                 multi-select category-pool chips + draw-time guard
+  registry.js              GAMES array the shelf renders
+  shell.js                 router, header, mount/unmount, builds the game context
+  shelf.js                 home / game-card grid
+  roster.js                players screen + DE/EN language toggle
+  content/                 DATA ONLY (no logic) — bilingual { de, en } bundles
+    terms.js               SHARED single-term DB (Who Am I?, Imposter, Doodle Drama)
+    bomb-prompts.js        The Bomb's category prompts
+    wavelength.js          Wavelength's opposite pairs
+    nhie.js / most-likely.js / truth.js   sentence-predicate decks
+    numbers.js             Liar's Numbers question/answer bank
+    princess.js            Princess Treatment prompts (by category × gender)
+    activity.js            Activity words, tiered by points (2/3/4)
+    quiz.js                Quiz Out questions, an array of difficulty levels
+    rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
+    hochadel.js            Hochadel deck + ground rules + verses, tagged per edition
+  games/                   one module per game (logic)
+    bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
+    liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
+    reactionduel.js  rankit.js  hochadel.js  maxchen.js
+    cards.js  busfahrt.js  fuckdealer.js  pferderennen.js   (card games; cards.js = shared deck)
+    (chooser, reactionduel & maxchen have no content file)
+assets/logo.png            the "Pauls Spielecke" wordmark
+```
+
+**Adding a game** = drop a module in `js/games/`, add any content file in `js/content/`,
+add the two `<script>` tags to `index.html`, and append one entry in `registry.js`.
 
 ### 1.3 Game Module Contract
 
-Every game is a self-contained module the shell can mount and unmount. Define a clear,
-minimal interface so game #2..#10 are pure drop-ins. At minimum each module exposes:
+Each game is a self-contained object on `window.Spielecke.Games.<id>` exposing:
 
-- `mount(container, context)` — render into the given DOM node. `context` provides the
-  shared roster, a persistence helper scoped to the game's `id`, and a `goHome()` callback.
-- `unmount()` — tear down, clear timers/listeners. Critical for the reflex/timer games.
-- `meta` — the registry fields above (or the registry references them).
+- `meta` — `{ id, name, tagline, icon, minPlayers, supportsDrinking }`. `supportsDrinking`
+  means the game offers an optional drinking-mode toggle — not that it's always a drinking
+  game. The registry builds its entry straight from this so the two never drift.
+- `mount(container, context)` — render into the given DOM node.
+- `unmount()` — tear down: clear **all** timers/intervals and close any audio. Critical.
 
-`context` shape (illustrative):
+`context` provided by the shell:
 
 ```js
 {
-  players: [{ id, name }, ...],   // current shared roster, read-only copy
-  store: {                         // localStorage namespaced to this game's id
-    get(key, fallback), set(key, value)
-  },
-  goHome(),                        // return to the shelf
+  players: [{ id, name }, ...],   // read-only copy of the shared roster
+  store: { get(key, fallback), set(key, value) },  // localStorage namespaced to game id
+  goHome(),                        // return to the shelf (triggers unmount)
 }
 ```
 
-Rules for modules:
-- A game **must not** reach into global state except through `context`.
-- A game **must** clean up all timers/intervals/audio on `unmount()`.
-- A game **owns its own content data** (word pools / banks) in a clearly separated,
-  easily-editable structure — ideally a separate data file or a top-of-module constant,
-  so non-coders (future Paul, half-drunk) can edit content without touching logic.
+Rules:
+- A game **must not** reach global state except through `context` (content data on
+  `window.Spielecke.*` is the one allowed read — it's static data, not app state).
+- A game **must** clean up all timers/audio on `unmount()` — the shell calls `unmount()`
+  before every navigation.
+- Content lives in `js/content/`, separated from logic, so it can be edited by a non-coder
+  (future Paul, half-drunk).
 
-### 1.4 Shell Acceptance Criteria
+### 1.4 Persistence (`store.js`)
 
-- Loads from `file://` and from a GitHub Pages subpath without broken asset paths
-  (use relative paths throughout).
+- `Store.rosterGet()` / `Store.rosterSet(players)` — shared roster (`spielecke.roster`).
+- `Store.gameStore(id)` → `{ get, set }` namespaced `spielecke.game.<id>.<key>`. Generic
+  enough to hold future cross-game stats/leaderboard without redesign.
+- All access try/catch-wrapped; falls back to an in-memory map if localStorage is blocked.
+
+### 1.5 Shell Acceptance Criteria
+
+- Loads from `file://` and a GitHub Pages subpath with no broken paths (relative throughout).
 - Roster survives refresh.
-- Navigating into the placeholder game and back to the shelf works cleanly, no leaked
-  timers or stale DOM.
-- Looks correct on iPhone-width and on a laptop.
+- Navigating into a game and back works cleanly — no leaked timers, no stale DOM.
+- Correct on iPhone-width and laptop.
 
 ---
 
-## Part 2 — Game #1: The Bomb
+## Part 2 — Content architecture
 
-### 2.1 Concept
+Two shapes of content, by what the game needs:
 
-A hot-potato word game. A **category** appears on screen ("Footballers who've played for
-Barça"). The device is the bomb. The active player says one valid answer out loud, taps
-**Pass**, and hands the device to the next player. A hidden, randomised fuse is counting
-down. Whoever is holding the device when the fuse runs out **loses the round and drinks.**
+- **Shared single-term database** (`js/content/terms.js` → `Spielecke.Terms`): single
+  names/words/things that work to describe, hint at, *and* draw. Used by **Who Am I?**,
+  **Imposter**, and **Doodle Drama** so terms are managed in one place. Each pool is
+  `{ label, terms: [...] }`; "Mixed" draws across all. A pool may carry an optional
+  `games: [...]` allow-list scoping it to specific games — e.g. `doodle_hard` (multi-word
+  scenes + abstract concepts that you can *draw* but can't put on a forehead or use as an
+  Imposter word) is tagged `games: ["doodle"]` so it only shows up in Doodle Drama. Games
+  read their pools via `Spielecke.termPoolsFor(id)`, which filters the chips **and** the
+  "Mixed" draw so a scoped pool never leaks into a game it doesn't belong to.
+- **Per-game content** when the shape differs:
+  - The Bomb → category *prompts* (`bomb-prompts.js`, `{ label, prompts }`).
+  - Wavelength → *opposite pairs* (`wavelength.js`, `{ label, pairs:[{left,right}] }`).
+  - Never Have I Ever / Most Likely To → *sentence predicates* (`nhie.js`, `most-likely.js`,
+    `{ label, prompts }`) — separate because the grammar differs from each other.
+  - Liar's Numbers → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
+  - Princess Treatment → *gendered prompts* (`princess.js`, `{ label, princess:[], king:[] }`).
+  - Activity → *point-tiered words* (`activity.js`, `{ 2:{label,words}, 3:…, 4:… }`),
+    type-agnostic — the field decides how you perform, the points decide difficulty.
+  - Quiz Out → *levelled multiple-choice* (`quiz.js`, an array of levels; each question
+    `{ q, options:[4], answer:index }`). Options are shuffled on screen.
+  - Hochadel → an editable **deck** tagged per edition + ground rules + opening verses
+    (`hochadel.js`).
+  - The three card games share one honest **52-card deck + card-face** component (`cards.js`),
+    not a content file.
 
-Viciously simple, scales to any number, and every drop of theme lives in the category list.
+**Bilingual content:** every content file is a `{ de, en }` bundle read via `Spielecke.L(...)`;
+proper-noun term pools (football, Marvel, …) keep one shared list. **Category pools are
+multi-select** (`pools.js`) — toggle several at once, an empty selection means 🎯 Mixed (all)
+— and are resolved at draw time so a stale/empty pick can never start a dry round.
 
-### 2.2 Flow
-
-1. From the shelf → The Bomb. Roster is already known from the shell.
-2. **Round setup:** pick a category — random by default, with an option to pick manually
-   or to draw from a chosen pool (e.g. "Football", "MMA", "Inside Jokes", "General").
-3. **Arm the bomb:** big "Start" button. On start:
-   - A fuse timer begins, **length randomised within a configurable range** (e.g. 15–45s)
-     and **hidden from players** — tension comes from not knowing.
-   - The current category is displayed large and legible across the table.
-   - Optional: a ticking sound that subtly accelerates (respect an audio on/off toggle;
-     must be silenceable; clean up on unmount).
-4. **Play:** active player says an answer, taps a large **Pass** button → device passed
-   physically to next player. The app does not validate answers (humans police that out
-   loud — keep it social). Optionally track whose turn via the roster for the loser
-   callout, or keep it purely physical — see open question.
-5. **Detonation:** when the fuse hits zero → loud/visual explosion. The holder loses.
-   - If turn-tracking is on, name the loser ("🔥 [Name] drinks!").
-   - Offer **Next round** (new random category, new random fuse) and **Back to shelf**.
-
-### 2.3 Content Structure
-
-Categories grouped into pools so theme is editable and language-switchable later:
-
-```js
-const BOMB_CATEGORIES = {
-  football: [
-    "Footballers who've played for Barça",
-    "World Cup winning nations",
-    "Bundesliga clubs",
-    // ...
-  ],
-  mma: [
-    "Ways to win a fight by stoppage",
-    "UFC weight classes",
-    "McGregor opponents",
-    // ...
-  ],
-  insideJokes: [
-    "[Paul fills these in — the gold lives here]",
-  ],
-  general: [
-    "Pizza toppings",
-    "Things in this room",
-    // ...
-  ],
-};
-```
-
-Leave the inside-jokes and themed pools mostly empty with clear placeholders — Paul fills
-them. The build just needs ~5 real entries per pool to be testable.
-
-### 2.4 Configurables (sensible defaults, easy to change)
-
-- Fuse range min/max (default 15–45s).
-- Whether fuse acceleration / sound is on (default on, toggleable).
-- Category pool selection (default: all pools mixed, random draw).
-- Turn/loser tracking on or off (see open question).
-
-### 2.5 The Bomb — Acceptance Criteria
-
-- Fuse length genuinely random each round and not visible to players.
-- Pass button is large, thumb-friendly, hard to misfire.
-- Explosion is unmistakable (visual + optional sound).
-- A full loop — start → pass several times → detonate → next round — works with no leaked
-  timers, and `unmount()` kills the fuse and any audio immediately.
-- Works one-handed on a phone passed around the table.
+The spiciest NSFW entries are left as clearly-marked `[placeholders]` for
+Paul to fill.
 
 ---
 
-## Open Questions for Paul (resolve before/while building each part)
+## Part 3 — Games
 
-1. **App name + visual identity.** What's the brand? Any aesthetic direction (the blackjack
-   game had a 1950s jazz-lounge look — same universe, or distinct)?
-2. **The Bomb — turn tracking on or off?** Pure physical pass (app doesn't know who holds
-   it) is simpler and more social; turn-tracking lets the app name the loser and could feed
-   a stats/leaderboard. Which do you want for v1?
-3. **Stats/leaderboard across games** — in scope eventually? If yes, the persistence helper
-   in the contract should be designed for it now even if unused.
-4. **Next 3–4 games to slot in** after The Bomb. Current shortlist (each a distinct
-   mechanic so the night doesn't feel samey):
-   - **Liar's Numbers** — all-number bluff (dodges the bilingual "tell" problem). Real stat
-     question, everyone says a fake number aloud, closest wins, furthest drinks.
-   - **Higher or Lower** — themed fact chain, group votes by shouting, wrong = drink.
-   - **Countdown Roulette** — random player picker assigns a themed task or drink.
-   - **Odd-One-Out** — reflex flash-grid filler for between fight rounds.
-   Confirm/reorder/replace.
+Outcomes below are the **plain** (default) framing. For drinking-capable games, the
+🍻 toggle swaps the resolution wording to drinks.
+
+### 3.1 The Bomb 💣 (`bomb`, 3+) — drinking-capable
+
+Hot-potato. A category prompt shows; the device is the bomb. Holder names an answer, taps
+the big **Pass**, hands the phone on. A hidden fuse counts down.
+
+- **Pass model:** pure physical pass — the app runs the fuse only, doesn't track turns.
+- **Fuse:** always random **20–90s**, hidden. Cosmetic accelerating tick; detonation on a
+  precise timer. Web Audio explosion + haptics.
+- **Config:** category pool, sound on/off, 🍻 drinking mode. Persisted.
+- **Outcome:** holder at detonation **loses the round** (drinking mode: drinks).
+
+### 3.2 Most Likely To 🫵 (`mostlikely`, 3+) — drinking-capable
+
+Pointing deck. Card shows "Most likely to ___"; on 3-2-1 everyone points.
+
+- **Config:** category pool, 🍻 drinking mode.
+- **Outcome:** most fingers takes the **crown 👑** (drinking mode: drinks). Pointing/counting
+  is physical; the app shows the prompt + call.
+
+### 3.3 Never Have I Ever 🙊 (`nhie`, 2+) — drinking-capable
+
+Confession deck. Card shows "Never have I ever ___".
+
+- **Config:** category pool, 🍻 drinking mode.
+- **Outcome:** anyone who's done it **owns up** (drinking mode: drinks).
+
+### 3.4 Who Am I? 🙈 (`whoami`, 2+) — plain
+
+Heads-Up style. Two modes (toggle in setup):
+- **📚 Categories:** phone on the forehead, table shouts clues, **GOT IT** / **SKIP** against
+  a visible countdown. Config: category pool (shared Terms), round length (30/60/90s), sound.
+  Outcome: pure score — "You got N right!" (beat 3 for a 🎉).
+- **✍️ Custom sticky:** type one character/thing and it shows as a big **sticky note** to
+  hold on the forehead — a digital sticky note for when you don't have paper ones. No timer,
+  no score; "New character" to go again.
+
+### 3.5 Imposter 🕵️ (`imposter`, 3+) — plain
+
+Hidden roles on one device. Everyone gets the same secret word except one random
+**imposter**, who only sees the category. Pass to reveal each role privately (shared roster
+for order + names), then discuss, vote, unmask.
+
+- **Config:** word pool (shared Terms); **number of imposters** (1 up to the whole table,
+  chosen before dealing). Persisted.
+- **Outcome:** all imposter(s) caught → the table wins; fooled → the imposter(s) win.
+
+### 3.6 Wavelength 📡 (`wavelength`, 3+) — plain
+
+A spectrum between two opposites (e.g. Cold ↔ Hot). A **clue-giver** secretly sees a hidden
+target band and gives a clue; the rest slide a dial to guess.
+
+- **Config:** spectrum pool.
+- **Outcome:** closeness **score** (0–100). Bullseye ±10, miss beyond ±30.
+
+### 3.7 Liar's Numbers 🔢 (`liars`, 2+) — drinking-capable
+
+Numeric guessing on one device. A question with a number answer shows; the phone passes
+round and each player privately locks a guess; reveal sorts by distance. Uses the roster.
+
+- **Config:** question pool, 🍻 drinking mode.
+- **Outcome:** closest **wins 🏆**, furthest **loses 💀** (drinking mode: furthest drinks).
+
+### 3.8 Princess Treatment 👑 (`princess`, 1+) — plain
+
+Debate deck. Each round shows a thing a partner does; the table decides Princess Treatment
+👑 or Bare Minimum 😐. The target **alternates every round** between Princess (for the women)
+and King (for the men), with gender-specific prompts by category.
+
+- **Config:** category pool.
+- **Outcome:** none — it's a hot-takes / debate generator. No winner, no drinks.
+
+### 3.9 Doodle Drama 🎨 (`doodle`, 2+) — plain
+
+Drawing telephone. A secret word (shared Terms) goes to player 1, who **draws** it; player 2
+**guesses** from the drawing; player 3 draws that guess; and so on down the roster. Reveal
+the whole chain at the end.
+
+- **Tech:** HTML5 `<canvas>` + Pointer Events → same code for mouse (laptop) and finger
+  (mobile). Drawings kept in memory for the session (not localStorage — too big).
+- **Config:** word pool.
+- **Outcome:** none — reveal the carnage for laughs.
+
+### 3.10 Activity 🗺️ (`activity`, 4+) — drinking-capable
+
+Two teams race along a map. Each field is a type shown by **icon + colour, never words**:
+💬 explain · ✏️ draw · 🎭 charade. On your turn you're on a field of one type; pick a
+**2/3/4-point** word; one team member performs it that way while their team guesses, against
+a fixed **60s** clock. Guess in time → move forward by the point value. First team to the
+finish 🏆 wins.
+
+- **Teams:** two, each a "figure" token (tap to change) that moves along the board. If a
+  roster exists, a suggested split is shown with a 🔀 shuffle.
+- **Board:** 14 typed fields + finish, randomised each game. Responsive — compact wrapping
+  tiles on mobile, a roomier two-column layout (board beside controls) on desktop.
+- **Config:** team figures (persisted), 🍻 drinking mode. Words tiered by points (`activity.js`).
+- **Outcome:** first team to complete the map wins. Drinking mode — fail a round → your
+  team drinks; succeed → the other team drinks.
+
+### 3.11 Quiz Out 🧠 (`quiz`, 2+) — drinking-capable
+
+Turn-based knockout quiz. Players take turns answering a 4-option question; a wrong answer
+costs a life. After every full round (each survivor has answered once) the difficulty climbs
+a level. Lose all hearts → out; last player standing wins. Uses the roster for turn order +
+per-player lives.
+
+- **Config:** hearts each (1–5, default 3), 🍻 drinking mode (wrong = drink too). Persisted.
+- **Flow:** "Pass to [Name]" (lives shown) → question + 4 shuffled options → correct = safe,
+  wrong = −1 heart (and drink in drinking mode) → next player; difficulty rises each round.
+- **Outcome:** last survivor wins.
+
+### 3.12 Truth or Drink 🍸 (`truth`, 2+) — drinking-capable
+
+A random player (from the roster, no immediate repeat) gets a truth question.
+
+- **Config:** category pool, 🍻 drinking mode.
+- **Outcome:** plain — answer honestly. Drinking mode — answer, or drink to dodge.
+
+### 3.13 Chooser 🎡 (`chooser`, 2+) — plain
+
+A spinning wheel that lands on a random person from the roster. SVG wheel (one coloured
+slice + name per player), CSS-rotate spin with a fixed pointer at the top. No content file —
+it just spins the roster. "Spin again" to re-roll. Handy as a picker for any other game.
+
+### 3.14 Reaction Duel ⚡ (`reaction`, 2+) — drinking-capable
+
+Two players, device flat between them; the screen splits into two tap zones (top half
+rotated 180° for the player across the table). Each round is a random **type** — and not
+just "tap fast":
+- **GO** — wait for green, then tap; early tap = false start.
+- **Bait** — fakes flash during the wait ("GO?", "✋ STOP"); tap one and you lose.
+- **Colour** — tap only on green; tapping another colour loses.
+- **Symbol** — tap only the 💣; tapping a decoy loses.
+
+Every type reduces to a `live` flag: tap while live → win; tap while not live → lose. First
+to the target score (3/5/7, default 5) wins. Uses the roster to name the two duelists (or
+Left/Right without one). Drinking mode → loser of each round drinks. No content file, no
+audio (a sound would leak a reflex cue); all timers cleared on round end + unmount.
+
+### 3.15 Rank It 🥇 (`rankit`, 2+) — drinking-capable
+
+One device, one shared list. A set shows with an axis to rank along (best → worst, biggest →
+smallest). The phone passes round; each player privately taps the items into their own order
+and locks it. Reveal builds the **group's consensus** (items sorted by average position) and
+measures each player's **drift** from it (sum of per-item rank distance — the Spearman
+footrule). Closest to the group is the most in sync; furthest off loses.
+
+- **Config:** category pool, 🍻 drinking mode. Item count per set is flexible.
+- **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }] }`).
+- **Outcome:** least drift **wins 👑**, most drift **loses 💀** (drinking mode: drinks). If the
+  whole table ranks identically, it's a draw — nobody wins or loses.
+
+### 3.16 Hochadel 👑 (`hochadel`, 2+) — drinking-capable
+
+Royal-court action-card game (Klattschen-style). Players draw cards in turn; the in-game word
+for "drink" is **dienen**. Four card types, each a heraldic colour: **Sofort** (crimson —
+resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz" that stacks and
+stays on screen), **Aktiv** (gold — face-up with its holder, self-triggered later), **Minispiel**
+(violet — a table mini-game the host completes). Two standing ground rules are always on. The
+deck is data, tagged per edition (active: *Diener & Könige*; *Rapunzel* is a locked stub) and
+reshuffles endlessly. Game state persists; the Sanduhr (secret timer) and the space-key
+shortcut are torn down on unmount.
+
+### 3.17 Mäxchen / Mia 🎩 (`maxchen`, 2+) — drinking-capable
+
+Bluffing dice on one passed-around phone. Tap the hat to roll two dice in secret, announce a
+value out loud (truth or bluff, higher than the player before you), pass on; the next player
+rolls again or lifts the hat to call it. The app's only job is to keep the roll secret until
+someone lifts — it **doesn't** track claims or judge who lied; the table settles that.
+
+### 3.18 Ride the Bus 🚌 (`busfahrt`, 1+) — drinking-capable
+
+Card gauntlet (the final guessing phase). A **Busfahrer** climbs a four-step ladder about the
+next card — **colour → higher/lower → inside/outside → exact suit**. A wrong guess drops them
+back to step 1 and they **trinken** sips equal to the step they failed (1–4); clear all four to
+escape. Tie handling and "on escape the driver hands out the sips" are configurable. The driver
+rotates via the roster.
+
+### 3.19 Fuck the Dealer 🃏 (`fuckdealer`, 2+) — drinking-capable
+
+A dealer holds the deck; the table guesses the next card's **rank**. First miss → the dealer
+gives a higher/lower hint and you get a second guess; miss twice → you **trinken** (rank gap or
+a flat amount, configurable). Nail it → the dealer drinks. Each card is revealed and added to a
+rank-sorted "drawn" strip (counting help); the dealer passes left after the deck empties twice.
+
+### 3.20 Horse Race 🐎 (`pferderennen`, 1+) — drinking-capable
+
+The four Aces are the horses (♠♥♦♣); the app flips the other 48 cards one at a time and the
+matching-suit horse advances. Six face-down **hurdles** flip as the field clears each level,
+rubber-banding that suit back a step. Players bet a suit (roster); first horse home → backers
+**verteilen** sips, the rest **trinken** (flat or "lengths behind", configurable). The race is
+animated and **paced** like a race call (configurable speed) with a commentator line; the
+single timer chain is cleared on unmount.
+
+---
+
+## Resolved decisions
+
+1. **App name + identity** → **Pauls Spielecke**, playground/toy-box look + logo, NSFW
+   content (see Part 0 visual identity).
+2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
+   expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
+   penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
+   Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity, Reaction Duel, Rank It, Hochadel,
+   Mäxchen, Ride the Bus, Fuck the Dealer, Horse Race.
+3. **The Bomb pass model** → pure physical pass (no turn tracking).
+4. **The Bomb fuse** → always random 20–90s, not configurable.
+5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
+   Drama) via canvas + Pointer Events works on both.
+6. **Module loading** → ordered classic `<script>` tags (no ES modules) for `file://`.
+7. **Content management** → shared single-term DB for games that fit; per-game files for
+   different shapes (prompts, pairs, numbers, gendered prompts).
+8. **Stats/leaderboard** → not built, but `store.gameStore(id)` is namespaced so it can be
+   added later without redesign.
+9. **Fewer elements, clean focus** → prefer one *fewer* button/line; the card/wheel/hat is the
+   tap target (`Spielecke.tappable`); redundant back-buttons and restating text are removed.
+10. **Bilingual DE/EN, German default** → strings in `i18n.js` (`Spielecke.t`), content as
+    `{ de, en }` bundles via `Spielecke.L`; language toggle on the Players screen, persisted.
+11. **Category pools are multi-select** → toggle several at once; an empty selection = 🎯 Mixed
+    (all). Resolved at draw time (`pools.js`) so a stale/empty pick never starts a dry round.
+12. **Card games share one honest 52-card deck** → `cards.js` provides the deck, shuffle, and
+    card-face component reused by Ride the Bus, Fuck the Dealer, and Horse Race.
+
+---
+
+## Roadmap — candidate next games
+
+Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / replace:
+
+- **Higher or Lower** — themed fact chain, group votes by shouting, wrong = out (or drink).
+- **Countdown Roulette** — random player picker assigns a themed task or drink.
+- **Odd-One-Out** — reflex flash-grid filler.
+
+### Open content TODO (Paul)
+
+The NSFW / filthy / spicy pools are all written. The inside-jokes placeholder
+category has been removed across all games — it never had real content.

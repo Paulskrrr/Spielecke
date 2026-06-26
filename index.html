@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+  />
+  <!-- Match the page background (not the header) so the mobile browser's
+       address/home-indicator bar blends in instead of showing a purple band. -->
+  <meta name="theme-color" content="#fff7e8" />
+  <title>Pauls Spielecke</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="styles/main.css" />
+</head>
+<body>
+  <!-- Persistent app header: brand + roster badge + edit-players button -->
+  <header id="app-header" class="app-header"></header>
+
+  <!-- Screens (shelf / roster / game) mount here -->
+  <main id="app" class="app"></main>
+
+  <!--
+    Ordered classic <script> tags (no ES modules) so the app loads from a
+    plain file:// path as well as a GitHub Pages subpath. Order matters:
+    primitives first, then games, then screens, then the shell that boots.
+  -->
+  <script src="js/store.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/pools.js"></script>
+
+  <!-- Content (data only) -->
+  <script src="js/content/terms.js"></script>
+  <script src="js/content/bomb-prompts.js"></script>
+  <script src="js/content/wavelength.js"></script>
+  <script src="js/content/nhie.js"></script>
+  <script src="js/content/most-likely.js"></script>
+  <script src="js/content/numbers.js"></script>
+  <script src="js/content/princess.js"></script>
+  <script src="js/content/activity.js"></script>
+  <script src="js/content/quiz.js"></script>
+  <script src="js/content/truth.js"></script>
+  <script src="js/content/rankit.js"></script>
+  <script src="js/content/hochadel.js"></script>
+
+  <!-- Game modules -->
+  <script src="js/games/bomb.js"></script>
+  <script src="js/games/whoami.js"></script>
+  <script src="js/games/imposter.js"></script>
+  <script src="js/games/wavelength.js"></script>
+  <script src="js/games/nhie.js"></script>
+  <script src="js/games/mostlikely.js"></script>
+  <script src="js/games/liars.js"></script>
+  <script src="js/games/princess.js"></script>
+  <script src="js/games/doodle.js"></script>
+  <script src="js/games/activity.js"></script>
+  <script src="js/games/quiz.js"></script>
+  <script src="js/games/truth.js"></script>
+  <script src="js/games/chooser.js"></script>
+  <script src="js/games/reactionduel.js"></script>
+  <script src="js/games/rankit.js"></script>
+  <script src="js/games/hochadel.js"></script>
+  <script src="js/games/maxchen.js"></script>
+
+  <!-- Kartenklassiker: shared 52-card deck/face, then the three card games -->
+  <script src="js/games/cards.js"></script>
+  <script src="js/games/busfahrt.js"></script>
+  <script src="js/games/fuckdealer.js"></script>
+  <script src="js/games/pferderennen.js"></script>
+
+  <script src="js/registry.js"></script>
+  <script src="js/shelf.js"></script>
+  <script src="js/roster.js"></script>
+  <script src="js/shell.js"></script>
+</body>
+</html>
