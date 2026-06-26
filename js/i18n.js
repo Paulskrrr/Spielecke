@@ -40,6 +40,7 @@
     "Coming soon": "Bald verfügbar",
     "Coming soon…": "Bald verfügbar…",
     "New games are in the works.": "Neue Spiele sind in Arbeit.",
+    "Soon": "Bald",
 
     // ── Game names & taglines ──────────────────────────────────────────────
     "The Bomb": "Die Bombe",

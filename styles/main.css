@@ -48,6 +48,10 @@
    the Memphis image (body::before). */
 html { background: var(--paper); }
 html, body { margin: 0; padding: 0; }
+/* Kill the iOS rubber-band overscroll so pulling the page never opens a gap
+   between the top of the screen and the sticky header (which would reveal the
+   fixed background behind it). */
+html, body { overscroll-behavior: none; }
 
 body {
   font-family: var(--font);
@@ -57,8 +61,10 @@ body {
      toolbar is showing (100vh resolves to the toolbar-hidden height). */
   min-height: 100vh;
   min-height: 100dvh;
+  /* Top inset is handled by the header itself (its purple fills the notch), so
+     there's never a background strip above the bar. */
   padding:
-    env(safe-area-inset-top) env(safe-area-inset-right)
+    0 env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
@@ -103,6 +109,9 @@ body::before {
   /* slim header: tighter vertical padding (~10% shorter) without resizing the
      logo — the 52px wordmark stays put, only its breathing room shrinks */
   padding: 8px 16px;
+  /* Extend the purple up through the top safe area (notch / status bar) so the
+     bar reaches the very top of the screen — no background gap above it. */
+  padding-top: calc(8px + env(safe-area-inset-top));
   background: var(--purple);
   border-bottom: 4px solid var(--ink);
 }
@@ -172,8 +181,10 @@ body::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
   gap: 18px;
-  margin-top: 4px;
 }
+/* Home menu: equal breathing room above and below the tile grid so the spacing
+   reads symmetric top-to-bottom (the .app's default bottom padding is larger). */
+.app:has(.shelf-screen) { padding-top: 24px; padding-bottom: 24px; }
 
 .game-card {
   position: relative;
@@ -241,12 +252,12 @@ body::before {
   color: var(--ink-soft);
   border-style: dashed;
   box-shadow: 0 8px 0 rgba(36, 27, 77, 0.2);
-  align-items: center; justify-content: center; text-align: center; gap: 6px;
 }
 .game-card--soon::after { display: none; }
-.game-card--soon .game-card__icon { background: transparent; box-shadow: none; }
-.game-card--soon .game-card__name { color: var(--ink); }
-.game-card--soon .game-card__tagline { color: var(--ink-soft); }
+/* Same internal layout as a real card (icon square, name, tagline, meta) — only
+   the colours change. Text is dark on the light tile, so drop the white halo. */
+.game-card--soon .game-card__name { color: var(--ink); text-shadow: none; }
+.game-card--soon .game-card__tagline { color: var(--ink-soft); text-shadow: none; }
 
 .game-card__icon {
   font-size: 1.9rem;

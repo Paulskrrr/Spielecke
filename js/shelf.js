@@ -40,6 +40,7 @@
       '  <span class="game-card__icon">✨</span>' +
       '  <span class="game-card__name">' + escapeHtml(t("Coming soon…")) + "</span>" +
       '  <span class="game-card__tagline">' + escapeHtml(t("New games are in the works.")) + "</span>" +
+      '  <span class="game-card__meta"><span class="badge">🔜 ' + escapeHtml(t("Soon")) + "</span></span>" +
       "</button>";
 
     container.innerHTML =
