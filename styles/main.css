@@ -50,7 +50,11 @@ html, body { margin: 0; padding: 0; }
 body {
   font-family: var(--font);
   color: var(--ink);
+  /* Dynamic viewport height: match the *visible* area so short pages don't
+     leave phantom scroll space below the content when the mobile browser's
+     toolbar is showing (100vh resolves to the toolbar-hidden height). */
   min-height: 100vh;
+  min-height: 100dvh;
   padding:
     env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
@@ -1624,7 +1628,9 @@ body::before {
    floor — so the phone fills the hand instead of crowding the top. */
 .mx-hub {
   display: flex; flex-direction: column;
-  min-height: calc(100dvh - 150px);
+  /* Fill the screen below the sticky header + app padding (≈156px), with a
+     few px to spare so the floor button never pushes a phantom scrollbar. */
+  min-height: calc(100dvh - 160px);
 }
 .mx-hub .mx-stage { flex: 1; justify-content: center; margin: 0; }
 .mx-hub .mx-hat { font-size: clamp(6.5rem, 44vw, 11rem); }
