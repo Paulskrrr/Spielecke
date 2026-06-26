@@ -22,7 +22,7 @@
   var ROUND_OPTIONS = [30, 60, 90]; // seconds
   var TARGET = 3; // beat this for a 🎉
 
-  var DEFAULTS = { roundSeconds: 60, pool: "mixed", soundOn: true, mode: "categories" };
+  var DEFAULTS = { roundSeconds: 60, soundOn: true, mode: "categories" };
 
   // Per-mount state
   var els = null;

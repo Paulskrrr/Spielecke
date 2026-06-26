@@ -267,7 +267,7 @@
     clearAll();
     phase = "resolved";
     scores[winner]++;
-    if (scores[winner] >= settings.target) renderMatchWin(winner, loser, loserReason);
+    if (scores[winner] >= settings.target) renderMatchWin(winner);
     else renderRoundResult(winner, loser, loserReason);
   }
 

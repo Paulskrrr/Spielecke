@@ -356,10 +356,6 @@
       .replace(/"/g, "&quot;");
   }
 
-  function attr(s) {
-    return esc(s).replace(/'/g, "&#39;");
-  }
-
   function categories() { return global.Spielecke.L(global.Spielecke.BombCategories) || {}; }
 
   global.Spielecke = global.Spielecke || {};

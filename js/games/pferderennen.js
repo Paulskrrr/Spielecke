@@ -28,7 +28,7 @@
   var SPEEDS = { slow: 1300, normal: 850, fast: 450 };
 
   var SUITS = Cards.SUIT_ORDER; // S H D C
-  var HORSE = { S: "🐎", H: "🐎", D: "🐎", C: "🐎" };
+  var HORSE_EMOJI = "🐎"; // all four lanes share the same horse; suit tells them apart
 
   var els = null, ctx = null, settings = null;
   var bets = {};            // playerName -> suit
@@ -102,7 +102,7 @@
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       '  <div class="hr-horses">' +
       SUITS.map(function (s) {
-        return '<span class="hr-horsechip hr-suit--' + Cards.SUITS[s].colour + '">' + HORSE[s] + " " + Cards.SUITS[s].symbol + "</span>";
+        return '<span class="hr-horsechip hr-suit--' + Cards.SUITS[s].colour + '">' + HORSE_EMOJI + " " + Cards.SUITS[s].symbol + "</span>";
       }).join("") +
       "  </div>" +
       '  <h3 class="sub">' + t("Place your bets") + "</h3>" +
@@ -179,7 +179,7 @@
         '  <div class="hr-track">' +
         hurdleMarkers() +
         '    <span class="hr-finish">🏁</span>' +
-        '    <span class="hr-horse" style="left:' + leftPct.toFixed(2) + '%">' + HORSE[s] + "</span>" +
+        '    <span class="hr-horse" style="left:' + leftPct.toFixed(2) + '%">' + HORSE_EMOJI + "</span>" +
         "  </div>" +
         "</div>"
       );
@@ -381,7 +381,7 @@
 
     els.innerHTML =
       '<section class="screen hr-screen hr-result">' +
-      '  <h2 class="screen-title pop hr-suit--' + winColour + '">🏆 ' + HORSE[winSuit] + " " + Cards.SUITS[winSuit].symbol + " " + esc(winLabel) + " " + t("wins!") + "</h2>" +
+      '  <h2 class="screen-title pop hr-suit--' + winColour + '">🏆 ' + HORSE_EMOJI + " " + Cards.SUITS[winSuit].symbol + " " + esc(winLabel) + " " + t("wins!") + "</h2>" +
       "  " + resultList +
       '  <button id="hr-rematch" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
       '  <button id="hr-rebet" class="btn btn-block">' + t("New bets 🎲") + "</button>" +

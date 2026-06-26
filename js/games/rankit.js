@@ -370,7 +370,6 @@
   // Current-language pools from the bilingual { de, en } content bundle.
   function sets() { return global.Spielecke.L(global.Spielecke.RankItSets) || {}; }
   function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-  function attr(s) { return esc(s).replace(/'/g, "&#39;"); }
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};
