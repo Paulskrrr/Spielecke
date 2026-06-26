@@ -31,7 +31,7 @@
   var HORSE_EMOJI = "🐎"; // all four lanes share the same horse; suit tells them apart
 
   var els = null, ctx = null, settings = null;
-  var bets = {};            // playerName -> suit
+  var bets = {};            // playerId -> suit  (keyed by id so duplicate names never collide)
   var draw = [], discard = [], hurdles = [];
   var pos = { S: 0, H: 0, D: 0, C: 0 };
   var flippedHurdles = 0, finishPos = 7, winner = null, leader = null, leadChanged = false;
@@ -70,24 +70,24 @@
     if (raceTimer !== null) { global.clearTimeout(raceTimer); raceTimer = null; }
   }
   function num(v, d) { var n = parseInt(v, 10); return isNaN(n) ? d : n; }
-  function names() {
-    return (ctx.players || []).filter(function (p) { return p && p.name; }).map(function (p) { return p.name; });
+  function roster() {
+    return (ctx.players || []).filter(function (p) { return p && p.name; });
   }
 
   // ── Setup / betting ────────────────────────────────────────────────────────
   function renderSetup() {
     stopRace();
-    var ns = names();
+    var ros = roster();
     var speedKey = settings.flipMs >= SPEEDS.slow ? "slow" : settings.flipMs <= SPEEDS.fast ? "fast" : "normal";
 
-    var betRows = ns.length
-      ? ns.map(function (n) {
+    var betRows = ros.length
+      ? ros.map(function (p) {
           return (
-            '<div class="hr-betrow" data-player="' + attr(n) + '">' +
-            '  <span class="hr-betname">' + esc(n) + "</span>" +
+            '<div class="hr-betrow" data-player="' + attr(p.id) + '">' +
+            '  <span class="hr-betname">' + esc(p.name) + "</span>" +
             '  <span class="hr-betsuits">' +
             SUITS.map(function (s) {
-              var on = bets[n] === s ? " hr-suit--on" : "";
+              var on = bets[p.id] === s ? " hr-suit--on" : "";
               return '<button class="hr-suit hr-suit--' + Cards.SUITS[s].colour + on + '" data-suit="' + s + '">' + Cards.SUITS[s].symbol + "</button>";
             }).join("") +
             "  </span>" +
@@ -354,12 +354,14 @@
     var winColour = Cards.SUITS[winSuit].colour;
     var winLabel = Cards.SUITS[winSuit].label;
 
-    var entries = Object.keys(bets).map(function (player) {
-      var s = bets[player];
+    // Build payout rows from the CURRENT roster (keyed by id), so each player's
+    // name shows correctly and bets from players who have since left are dropped.
+    var entries = roster().filter(function (p) { return bets[p.id]; }).map(function (p) {
+      var s = bets[p.id];
       var won = s === winSuit;
       var behind = finishPos - pos[s];
       var sips = settings.lossFormula === "lengths" ? Math.max(1, behind) : settings.flatLossSips;
-      return { player: player, suit: s, won: won, behind: behind, sips: sips };
+      return { player: p.name, suit: s, won: won, behind: behind, sips: sips };
     });
 
     var winners = entries.filter(function (e) { return e.won; });
