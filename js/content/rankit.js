@@ -10,7 +10,7 @@
  *
  * The title MUST contain a "→": the game splits on it to label the top/bottom
  * poles of the rail. Keep the DE and EN pool keys
- * (general/party/videogames/nsfw) in sync so the category chips line
+ * (general/party/videogames/leisure/history/nsfw) in sync so the category chips line
  * up in both languages.
  */
 (function (global) {
@@ -68,6 +68,28 @@
           { title: "Größter → kleinster Tilt-Moment (CS)", items: ["Teamkill in der ersten Sekunde", "16:14 verloren", "Ace vom Teammate geklaut", "Eco-Runde verloren", "Granate ins eigene Team"] },
           { title: "Nervigster → harmlosester Mitspieler (CS)", items: ["Ragequit nach Pistol", "Schreit dauernd Rush B", "Pickt AWP und whiffed alles", "Mic-Spammer mit Musik", "Wirft Flashes ins eigene Team"] },
           { title: "Beste → schlechteste Eco-Waffe", items: ["Deagle", "Tec-9", "P250", "Dual Berettas", "Glock-Spray"] },
+        ],
+      },
+      leisure: {
+        label: "🏖️ Freizeit & Urlaub",
+        sets: [
+          { title: "Bester → schlechtester Urlaubstyp", items: ["Strandresort", "Backpacking", "Städtetrip", "Kreuzfahrt", "All-Inclusive-Pauschal"] },
+          { title: "Entspannendste → stressigste Urlaubsaktivität", items: ["Am Pool liegen", "Stadtführung", "Wandern", "Souvenirshopping", "Flughafen-Transfer"] },
+          { title: "Größtes → kleinstes Urlaubs-Drama", items: ["Koffer verloren", "Sonnenbrand an Tag 1", "Flug verpasst", "Magen-Darm im Hotel", "Handy-Akku leer"] },
+          { title: "Bestes → schlechtestes Festival-Erlebnis", items: ["Headliner live sehen", "Crowdsurfen", "Dixie-Klo um 3 Uhr", "Matschschlacht", "Zelt säuft im Regen ab"] },
+          { title: "Entspannendstes → anstrengendstes Hobby", items: ["Lesen", "Yoga", "Zocken", "Marathon-Training", "Möbel selbst aufbauen"] },
+          { title: "Schönstes → nervigstes Reisesouvenir", items: ["Kühlschrankmagnet", "Sand in jeder Tasche", "Sonnenbrand-Streifen", "3000 Handyfotos", "Eine neue Sprach-App"] },
+        ],
+      },
+      history: {
+        label: "🏛️ Politik & Geschichte",
+        sets: [
+          { title: "Wichtigste → überschätzteste Erfindung der Geschichte", items: ["Buchdruck", "Internet", "Das Rad", "Penicillin", "Selfie-Stick"] },
+          { title: "Beste → unnötigste Eigenschaft eines Politikers", items: ["Ehrlichkeit", "Rückgrat", "Charisma", "Gutes Gedächtnis", "Schöne Reden"] },
+          { title: "Größter → kleinster Wendepunkt der Geschichte", items: ["Mauerfall", "Mondlandung", "Erfindung des Internets", "Französische Revolution", "Erfindung des Kaffees"] },
+          { title: "Coolste → langweiligste Epoche zum Zeitreisen", items: ["Antikes Rom", "Wilder Westen", "Die 80er", "Mittelalter", "Steinzeit"] },
+          { title: "Glaubwürdigste → absurdeste Verschwörungstheorie", items: ["Mondlandung gefakt", "Echsenmenschen", "Flache Erde", "Aliens in Area 51", "Vögel sind Drohnen"] },
+          { title: "Mächtigste → machtloseste Position", items: ["US-Präsident", "Großkonzern-CEO", "Influencer", "Bürgermeister", "Klassensprecher"] },
         ],
       },
       nsfw: {
@@ -148,6 +170,28 @@
           { title: "Biggest → smallest tilt moment (CS)", items: ["Teamkill in the first second", "Lost 16:14", "Ace stolen by a teammate", "Lost the eco round", "Grenade into your own team"] },
           { title: "Most → least annoying teammate (CS)", items: ["Rage-quits after pistol", "Constantly yells Rush B", "Picks AWP and whiffs everything", "Mic spammer with music", "Throws flashes into your own team"] },
           { title: "Best → worst eco weapon", items: ["Deagle", "Tec-9", "P250", "Dual Berettas", "Glock spray"] },
+        ],
+      },
+      leisure: {
+        label: "🏖️ Leisure & Travel",
+        sets: [
+          { title: "Best → worst holiday type", items: ["Beach resort", "Backpacking", "City trip", "Cruise", "All-inclusive package"] },
+          { title: "Most relaxing → most stressful holiday activity", items: ["Lying by the pool", "Guided city tour", "Hiking", "Souvenir shopping", "Airport transfer"] },
+          { title: "Biggest → smallest holiday disaster", items: ["Lost luggage", "Day-1 sunburn", "Missed flight", "Food poisoning at the hotel", "Dead phone battery"] },
+          { title: "Best → worst festival moment", items: ["Seeing the headliner live", "Crowd surfing", "Portaloo at 3am", "Mud fight", "Tent flooding in the rain"] },
+          { title: "Most relaxing → most exhausting hobby", items: ["Reading", "Yoga", "Gaming", "Marathon training", "Building flat-pack furniture"] },
+          { title: "Best → most annoying travel souvenir", items: ["Fridge magnet", "Sand in every bag", "Sunburn lines", "3000 phone photos", "A new language app"] },
+        ],
+      },
+      history: {
+        label: "🏛️ Politics & History",
+        sets: [
+          { title: "Most important → most overrated invention in history", items: ["The printing press", "The internet", "The wheel", "Penicillin", "The selfie stick"] },
+          { title: "Best → most pointless trait in a politician", items: ["Honesty", "A spine", "Charisma", "A good memory", "Pretty speeches"] },
+          { title: "Biggest → smallest turning point in history", items: ["Fall of the Berlin Wall", "Moon landing", "Invention of the internet", "French Revolution", "Invention of coffee"] },
+          { title: "Coolest → most boring era to time-travel to", items: ["Ancient Rome", "Wild West", "The 80s", "The Middle Ages", "The Stone Age"] },
+          { title: "Most believable → most absurd conspiracy theory", items: ["Faked moon landing", "Lizard people", "Flat earth", "Aliens in Area 51", "Birds are drones"] },
+          { title: "Most → least powerful position", items: ["US President", "Megacorp CEO", "Influencer", "Mayor", "Class president"] },
         ],
       },
       nsfw: {
