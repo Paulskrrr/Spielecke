@@ -1235,6 +1235,8 @@ body::before {
   align-self: flex-start; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
   color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px;
 }
+/* On the dark-blue rule cards a dark badge would vanish — make it royal gold. */
+.ha-card-mini--regel .ha-card-mini__holder { background: var(--yellow); color: var(--ink); }
 .ha-card-mini__title { font-size: 1.05rem; font-weight: 900; line-height: 1.1; padding-right: 18px; }
 .ha-card-mini__text { font-size: 0.78rem; line-height: 1.32; flex: 1; }
 .ha-card-mini__hint {

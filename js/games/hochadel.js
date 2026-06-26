@@ -428,6 +428,7 @@
         return (
           '<div class="ha-card-mini ha-card-mini--regel">' +
           '  <span class="ha-card-mini__pip">📜</span>' +
+          (r.by ? '  <span class="ha-card-mini__holder">' + esc(r.by) + "</span>" : "") +
           '  <span class="ha-card-mini__title">' + esc(r.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>" +
           "</div>"
@@ -512,7 +513,8 @@
     if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
-      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText });
+      var curL = currentPlayer();
+      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—" });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
       game.active.push({
