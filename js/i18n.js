@@ -85,6 +85,7 @@
     "👆 Tap to spin again": "👆 Tippen zum erneut Drehen",
     "👆 Tap the card to continue": "👆 Karte tippen für weiter",
     "Category": "Kategorie",
+    "Categories": "Kategorien",
     "🎯 Mixed": "🎯 Gemischt",
     "🎯 Mixed (all)": "🎯 Gemischt",
     "Change pool": "Kategorie wechseln",

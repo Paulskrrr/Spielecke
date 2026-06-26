@@ -104,6 +104,58 @@
           "Designated driver", "Kebab at 4am", "Pre-game", "Shots", "Group chat",
         ],
       },
+      science: {
+        // Concrete, shoutable sci/tech nouns — work as a Who Am I? identity, an
+        // Imposter word AND a Doodle subject, so offered to all three.
+        label: "🔬 Science & Tech",
+        terms: [
+          "Robot", "Rocket", "Dinosaur", "Volcano", "Telescope", "Magnet",
+          "Light bulb", "Battery", "Astronaut", "Alien", "Black hole", "Submarine",
+          "Drone", "Microscope", "Skeleton", "Brain", "Tornado", "Solar panel",
+          "Self-driving car", "Artificial intelligence", "Vaccine", "Atom",
+          "Satellite", "3D printer",
+        ],
+      },
+      history: {
+        // Recognisable figures, events and symbols — great for Who Am I? and
+        // Imposter, but too abstract to draw, so not offered to Doodle.
+        label: "🏛️ Politics & History",
+        games: ["imposter", "whoami"],
+        terms: [
+          "Napoleon", "Cleopatra", "Julius Caesar", "Albert Einstein",
+          "Abraham Lincoln", "Gandhi", "Queen Elizabeth II", "The Berlin Wall",
+          "The Pyramids", "The Titanic", "The French Revolution", "The Cold War",
+          "The Moon landing", "A Viking", "A Knight", "A Pharaoh",
+          "The Roman Empire", "A Dictator", "The Stone Age", "The Statue of Liberty",
+          "The Eiffel Tower", "World War II", "The Wild West", "A Crown",
+        ],
+      },
+      leisure: {
+        // Holiday/leisure objects — fun to draw and to hint at as an Imposter
+        // word, but odd as a "who am I", so Doodle + Imposter only.
+        label: "🏖️ Leisure & Travel",
+        games: ["imposter", "doodle"],
+        terms: [
+          "Beach", "Suitcase", "Sunscreen", "Deck chair", "Passport", "Tent",
+          "Cruise ship", "Aeroplane", "Snorkel", "Pool cocktail", "Souvenir",
+          "Hiking boots", "Sunburn", "Hotel buffet", "Festival", "Road trip",
+          "Hammock", "Beach ball", "Flip-flops", "Camper van", "Ski lift", "Map",
+          "Selfie stick", "All-inclusive resort",
+        ],
+      },
+      power: {
+        // Money/power concepts — the secret-word guessing of Imposter fits these
+        // best; offered to Imposter only.
+        label: "💰 Money & Power",
+        games: ["imposter"],
+        terms: [
+          "Billionaire", "Crown", "Gold bar", "Briefcase of cash", "Throne",
+          "Diamond", "Stock market", "President", "Bank vault", "Dictator",
+          "Bribe", "Lobbyist", "Inheritance", "Private jet", "Yacht",
+          "Tax haven", "Casino", "Crypto", "CEO", "Red carpet", "Bodyguard",
+          "Penthouse",
+        ],
+      },
       famous: {
         label: "🌟 Famous",
         terms: [
@@ -316,6 +368,50 @@
         terms: [
           "Bier-Pong", "Kater", "Tequila-Shot", "Nachtclub", "Karaoke",
           "Schlafmütze (Fahrer)", "Döner um 4 Uhr", "Vorglühen", "Shots", "Gruppenchat",
+        ],
+      },
+      science: {
+        label: "🔬 Wissenschaft & Technik",
+        terms: [
+          "Roboter", "Rakete", "Dinosaurier", "Vulkan", "Teleskop", "Magnet",
+          "Glühbirne", "Batterie", "Astronaut", "Außerirdischer", "Schwarzes Loch",
+          "U-Boot", "Drohne", "Mikroskop", "Skelett", "Gehirn", "Tornado",
+          "Solarpanel", "Selbstfahrendes Auto", "Künstliche Intelligenz", "Impfung",
+          "Atom", "Satellit", "3D-Drucker",
+        ],
+      },
+      history: {
+        label: "🏛️ Politik & Geschichte",
+        games: ["imposter", "whoami"],
+        terms: [
+          "Napoleon", "Kleopatra", "Julius Cäsar", "Albert Einstein",
+          "Abraham Lincoln", "Gandhi", "Königin Elisabeth II.", "Die Berliner Mauer",
+          "Die Pyramiden", "Die Titanic", "Die Französische Revolution", "Der Kalte Krieg",
+          "Die Mondlandung", "Ein Wikinger", "Ein Ritter", "Ein Pharao",
+          "Das Römische Reich", "Ein Diktator", "Die Steinzeit", "Die Freiheitsstatue",
+          "Der Eiffelturm", "Der Zweite Weltkrieg", "Der Wilde Westen", "Eine Krone",
+        ],
+      },
+      leisure: {
+        label: "🏖️ Freizeit & Urlaub",
+        games: ["imposter", "doodle"],
+        terms: [
+          "Strand", "Koffer", "Sonnencreme", "Liegestuhl", "Reisepass", "Zelt",
+          "Kreuzfahrtschiff", "Flugzeug", "Schnorchel", "Cocktail am Pool", "Souvenir",
+          "Wanderschuhe", "Sonnenbrand", "Hotelbuffet", "Festival", "Roadtrip",
+          "Hängematte", "Wasserball", "Flip-Flops", "Wohnmobil", "Skilift", "Landkarte",
+          "Selfie-Stick", "All-inclusive-Resort",
+        ],
+      },
+      power: {
+        label: "💰 Geld & Macht",
+        games: ["imposter"],
+        terms: [
+          "Milliardär", "Krone", "Goldbarren", "Geldkoffer", "Thron",
+          "Diamant", "Aktienmarkt", "Präsident", "Banktresor", "Diktator",
+          "Bestechung", "Lobbyist", "Erbschaft", "Privatjet", "Yacht",
+          "Steuerparadies", "Casino", "Krypto", "CEO", "Roter Teppich", "Leibwächter",
+          "Penthouse",
         ],
       },
       famous: {

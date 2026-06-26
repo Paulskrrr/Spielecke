@@ -35,6 +35,32 @@
           "schreibt heute Abend dem Ex",
         ],
       },
+      leisure: {
+        label: "🏖️ Freizeit & Urlaub",
+        prompts: [
+          "verpasst den Flug, weil noch ein Selfie sein musste",
+          "verläuft sich in jeder fremden Stadt",
+          "bucht den Urlaub eine Stunde vor Abflug",
+          "packt für ein Wochenende wie für drei Wochen",
+          "verbringt den ganzen Urlaub am Pool",
+          "will jede Sehenswürdigkeit an einem Tag abklappern",
+          "bekommt am ersten Tag den schlimmsten Sonnenbrand",
+          "redet die ganze Busfahrt mit Fremden",
+        ],
+      },
+      history: {
+        label: "🏛️ Politik & Geschichte",
+        prompts: [
+          "führt aus Versehen eine kleine Revolution an",
+          "gewinnt jedes Geschichtsquiz",
+          "diskutiert auf jeder Feier über Politik",
+          "würde sich am liebsten zum König krönen lassen",
+          "kennt jede Jahreszahl auswendig",
+          "geht später in die Politik",
+          "hält eine Rede, die keiner hören will",
+          "würde eine Zeitmaschine sofort missbrauchen",
+        ],
+      },
       nsfw: {
         label: "🔞 18+",
         prompts: [
@@ -77,6 +103,32 @@
           "lose their phone tonight",
           "start a dance-off",
           "text their ex tonight",
+        ],
+      },
+      leisure: {
+        label: "🏖️ Leisure & Travel",
+        prompts: [
+          "miss the flight for one more selfie",
+          "get lost in every new city",
+          "book the holiday an hour before takeoff",
+          "pack for three weeks for a weekend trip",
+          "spend the whole holiday by the pool",
+          "try to see every sight in one day",
+          "get the worst sunburn on day one",
+          "talk to strangers the whole bus ride",
+        ],
+      },
+      history: {
+        label: "🏛️ Politics & History",
+        prompts: [
+          "accidentally start a small revolution",
+          "win every history quiz",
+          "argue about politics at every party",
+          "have themselves crowned king",
+          "know every date by heart",
+          "go into politics one day",
+          "give a speech nobody asked for",
+          "instantly misuse a time machine",
         ],
       },
       nsfw: {

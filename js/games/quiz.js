@@ -14,6 +14,7 @@
   "use strict";
 
   function t(k) { return global.Spielecke.t(k); }
+  function Pools() { return global.Spielecke.Pools; }
 
   var MIN_PLAYERS = 2;
   var HEART_OPTIONS = [1, 2, 3, 4, 5];
@@ -41,6 +42,7 @@
       settings = {
         hearts: clampHearts(context.store.get("hearts", DEFAULTS.hearts)),
         drinking: context.store.get("drinking", false) === true,
+        pools: Pools().load(context.store, cats()),
       };
       renderSetup();
     },
@@ -67,11 +69,17 @@
       '  <h2 class="screen-title pop">🧠 ' + t("Quiz Out") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       note +
+      '  <h3 class="sub">' + t("Categories") + "</h3>" +
+      '  <div class="chip-row" id="qz-pools">' + Pools().chipsHtml(cats(), t) + "</div>" +
       '  <h3 class="sub">' + t("Hearts each") + "</h3>" +
       '  <div class="chip-row" id="qz-hearts">' + hearts + "</div>" +
       '  <label class="toggle"><input type="checkbox" id="qz-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode (wrong = drink too)") + "</span></label>" +
       '  <button id="qz-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start quiz ▶️") + "</button>" +
       "</section>";
+
+    Pools().bind(els.querySelector("#qz-pools"), cats(),
+      function () { return settings.pools; },
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
 
     highlight("#qz-hearts", String(settings.hearts), "data-hearts");
     els.querySelectorAll("#qz-hearts .chip").forEach(function (c) {
@@ -110,11 +118,33 @@
     renderPass();
   }
 
-  function questions() { return global.Spielecke.L(global.Spielecke.QuizQuestions) || []; }
+  // Current-language categories { key: { label, levels:[ [q…], … ] } }.
+  function cats() { return global.Spielecke.L(global.Spielecke.QuizQuestions) || {}; }
+  function selectedKeys() { return Pools().resolve(settings.pools, cats()); }
+
+  // Deepest ladder among the chosen categories — drives how far the climb goes.
+  function maxLevels() {
+    var c = cats(), m = 1;
+    selectedKeys().forEach(function (k) {
+      var lv = c[k] && c[k].levels;
+      if (lv && lv.length > m) m = lv.length;
+    });
+    return m;
+  }
+
+  // All questions at this difficulty across the chosen categories (each clamped
+  // to its own hardest level so shallow categories still contribute).
+  function levelPool(level) {
+    var c = cats(), pool = [];
+    selectedKeys().forEach(function (k) {
+      var lv = c[k] && c[k].levels;
+      if (lv && lv.length) pool = pool.concat(lv[Math.min(level, lv.length - 1)] || []);
+    });
+    return pool;
+  }
 
   function levelIndex() {
-    var max = questions().length - 1;
-    return Math.max(0, Math.min(round, max));
+    return Math.max(0, Math.min(round, maxLevels() - 1));
   }
   function levelName() {
     var i = levelIndex();
@@ -229,8 +259,7 @@
 
   // --- Questions -----------------------------------------------------------
   function pickQuestion(level) {
-    var levels = questions();
-    var pool = levels[level] || levels[0] || [];
+    var pool = levelPool(level);
     if (!pool.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
     var u = used[level] = used[level] || {};
     var avail = [];

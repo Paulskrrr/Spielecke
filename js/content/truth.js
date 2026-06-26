@@ -32,6 +32,28 @@
           "Über wen in diesem Raum hast du hinter dem Rücken geredet?",
         ],
       },
+      leisure: {
+        label: "🏖️ Freizeit & Urlaub",
+        prompts: [
+          "Was war dein peinlichstes Urlaubserlebnis?",
+          "Welches Reiseziel ist völlig überbewertet?",
+          "Was hast du im Urlaub schon mal mitgehen lassen (Hotel-Handtuch zählt)?",
+          "Wohin würdest du sofort auswandern?",
+          "Was war dein größtes Reise-Desaster?",
+          "Mit wem in diesem Raum würdest du am liebsten verreisen – und mit wem niemals?",
+        ],
+      },
+      history: {
+        label: "🏛️ Politik & Geschichte",
+        prompts: [
+          "Welche historische Person würdest du gern treffen?",
+          "In welcher Epoche hättest du lieber gelebt?",
+          "Welche Verschwörungstheorie findest du heimlich ein bisschen plausibel?",
+          "Wenn du einen Tag lang die absolute Macht hättest – was würdest du tun?",
+          "Welches Schulfach war für dich am nutzlosesten?",
+          "Über welches politische Thema regst du dich am meisten auf?",
+        ],
+      },
       nsfw: {
         label: "🔞 18+",
         prompts: [
@@ -75,6 +97,28 @@
           "What's a night out you genuinely don't remember?",
           "What's your most cringe drunk text?",
           "Who in this room have you talked about behind their back?",
+        ],
+      },
+      leisure: {
+        label: "🏖️ Leisure & Travel",
+        prompts: [
+          "What's your most embarrassing holiday story?",
+          "Which travel destination is totally overrated?",
+          "What have you swiped on holiday (hotel towels count)?",
+          "Where would you emigrate to right now?",
+          "What was your biggest travel disaster?",
+          "Who in this room would you most — and never — travel with?",
+        ],
+      },
+      history: {
+        label: "🏛️ Politics & History",
+        prompts: [
+          "Which historical figure would you love to meet?",
+          "Which era would you rather have lived in?",
+          "Which conspiracy theory do you secretly find a bit plausible?",
+          "If you had absolute power for one day, what would you do?",
+          "Which school subject was the most useless to you?",
+          "Which political topic winds you up the most?",
         ],
       },
       nsfw: {
