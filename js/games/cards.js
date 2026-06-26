@@ -1,5 +1,5 @@
 /*
- * games/cards.js — shared 52-card deck + card-face component (Kartenklassiker spec)
+ * games/cards.js — shared 52-card deck + card-face component (the three card games)
  *
  * One honest deck utility reused by all three Kartenklassiker games (Busfahrt,
  * Fuck the Dealer, Pferderennen) so there are never three card implementations.

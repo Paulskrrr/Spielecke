@@ -1,5 +1,5 @@
 /*
- * content/hochadel.js — content & deck for „Hochadel" (spec HOCHADEL-SPEC.md §5)
+ * content/hochadel.js — content & deck for „Hochadel" (cards tagged per edition)
  *
  * EDIT ME. Pure data. The Hochadel engine (js/games/hochadel.js) reads this and
  * drives all behaviour from each card's `type`. Keeping the deck as data means an

@@ -1,5 +1,5 @@
 /*
- * games/hochadel.js — „Hochadel" (royal-court drinking card game, spec HOCHADEL-SPEC.md)
+ * games/hochadel.js — „Hochadel" (royal-court drinking card game; see PARTY-APP-SPEC.md §3)
  *
  * A Klattschen-style game: players draw action cards in turn; cards command who
  * must **dienen** (the in-game word for "drink"). Four card types drive both the
