@@ -31,6 +31,7 @@
   var spectrum = null;
   var target = 50;
   var guess = 50;
+  var clue = "";
 
   var module = {
     meta: {
@@ -51,7 +52,7 @@
 
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; spectrum = null;
+      ctx = null; settings = null; spectrum = null; clue = "";
     },
   };
 
@@ -80,6 +81,7 @@
     spectrum = pickSpectrum();
     target = Math.round(MAX_HALF + Math.random() * (100 - 2 * MAX_HALF));
     guess = 50;
+    clue = "";
     renderHandover();
   }
 
@@ -98,12 +100,21 @@
     els.innerHTML =
       '<section class="screen wl-target">' +
       '  <h2 class="screen-title pop">' + t("Give a clue!") + "</h2>" +
-      poles(spectrum) +
-      track({ showTarget: true }) +
-      '  <p class="muted small">' + t("Think of a clue between the two ends that points right at the band — then hide and let the table guess.") + "</p>" +
-      '  <button id="wl-hide" class="btn btn-block btn-xl">' + t("Hide & let them guess 🤐") + "</button>" +
+      spectrumView(spectrum, { showTarget: true }) +
+      '  <p class="muted small">' + t("Write a clue between the two ends that points right at the band — the others only see your clue, not the target.") + "</p>" +
+      '  <input id="wl-clue" class="text-input wl-clue-input" type="text" maxlength="60" placeholder="' + attr(t("Your clue…")) + '" value="' + attr(clue) + '" />' +
+      '  <button id="wl-hide" class="btn btn-primary btn-block btn-xl" disabled>' + t("Hide & let them guess 🤐") + "</button>" +
       "</section>";
-    els.querySelector("#wl-hide").addEventListener("click", renderGuess);
+
+    var input = els.querySelector("#wl-clue");
+    var hide = els.querySelector("#wl-hide");
+    function sync() { clue = input.value.trim(); hide.disabled = clue.length === 0; }
+    input.addEventListener("input", sync);
+    sync();
+    hide.addEventListener("click", function () {
+      clue = input.value.trim();
+      if (clue) renderGuess();
+    });
   }
 
   // --- Guess phase: the table moves the dial -------------------------------
@@ -111,11 +122,8 @@
     els.innerHTML =
       '<section class="screen wl-guess">' +
       '  <h2 class="screen-title pop">' + t("Where is it?") + "</h2>" +
-      poles(spectrum) +
-      '  <div class="wl-dial">' +
-      track({ showTarget: false, showGuess: true }) +
-      '    <input id="wl-slider" class="wl-slider" type="range" min="0" max="100" value="' + guess + '" />' +
-      "  </div>" +
+      clueBanner() +
+      spectrumView(spectrum, { showGuess: true, slider: true }) +
       '  <button id="wl-lock" class="btn btn-primary btn-block btn-xl">' + t("Lock it in 🔒") + "</button>" +
       "</section>";
 
@@ -153,8 +161,8 @@
       '<section class="screen wl-reveal">' +
       '  <div class="result-emoji">' + emoji + "</div>" +
       '  <h2 class="result-title pop">' + title + "</h2>" +
-      poles(spectrum) +
-      track({ showTarget: true, showGuess: true }) +
+      clueBanner() +
+      spectrumView(spectrum, { showTarget: true, showGuess: true }) +
       '  <p class="result-sub">' + line + "</p>" +
       '  <div class="stack">' +
       '    <button id="wl-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
@@ -168,11 +176,31 @@
   }
 
   // --- View helpers --------------------------------------------------------
-  function poles(s) {
+  // The whole spectrum: the two end-labels bracket the dial so they read as the
+  // poles of the axis — stacked above/below the vertical track on mobile, left/
+  // right of the horizontal track on desktop (layout is pure CSS). When
+  // `opts.slider` is set the guess slider is dropped in alongside the track.
+  function spectrumView(s, opts) {
+    opts = opts || {};
+    var slider = opts.slider
+      ? '<input id="wl-slider" class="wl-slider" type="range" min="0" max="100" value="' + guess + '" />'
+      : "";
     return (
-      '<div class="wl-poles">' +
+      '<div class="wl-spectrum">' +
       '  <span class="wl-pole wl-pole--left">' + esc(s.left) + "</span>" +
+      '  <div class="wl-dial">' + track(opts) + slider + "</div>" +
       '  <span class="wl-pole wl-pole--right">' + esc(s.right) + "</span>" +
+      "</div>"
+    );
+  }
+
+  // The clue-giver's written hint, shown to everyone during the guess + reveal.
+  function clueBanner() {
+    if (!clue) return "";
+    return (
+      '<div class="wl-clue">' +
+      '  <span class="wl-clue__label">' + t("The clue") + "</span>" +
+      '  <span class="wl-clue__text">" ' + esc(clue) + ' "</span>' +
       "</div>"
     );
   }

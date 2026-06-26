@@ -160,6 +160,8 @@
     "Clue-giver only": "Nur für den Tipp-Geber",
     "Show me the target 🎯": "Zeig mir das Ziel 🎯",
     "Give a clue!": "Gib einen Tipp!",
+    "Your clue…": "Dein Tipp…",
+    "The clue": "Der Tipp",
     "Hide & let them guess 🤐": "Verstecken & raten lassen 🤐",
     "Where is it?": "Wo ist es?",
     "Lock it in 🔒": "Festlegen 🔒",
@@ -350,7 +352,7 @@
     // Wavelength
     "One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.": "Ein Spieler sieht einen versteckten Punkt auf dem Dial und gibt einen Ein-Satz-Tipp zwischen den beiden Enden. Alle anderen schieben den Regler zu ihrem Tipp. Volltreffer = Ruhm, voll daneben = saufen.",
     "Everyone else: look away! One person picks up the phone to see the secret target.": "Alle anderen: weggucken! Einer schnappt sich das Handy, um das geheime Ziel zu sehen.",
-    "Think of a clue between the two ends that points right at the band — then hide and let the table guess.": "Überleg dir einen Tipp zwischen den beiden Enden, der genau auf das Band zeigt — dann versteck es und lass den Tisch raten.",
+    "Write a clue between the two ends that points right at the band — the others only see your clue, not the target.": "Schreib einen Tipp zwischen den beiden Enden, der genau auf das Band zeigt — die anderen sehen nur deinen Tipp, nicht das Ziel.",
     // Princess Treatment
     "Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.": "Jede Runde wechselt zwischen 👑 Prinzessin (für die Mädels) und 🤴 König (für die Jungs). Lest den Spruch vor, dann entscheidet der Tisch.",
     "Make one up!": "Denk dir was aus!",
