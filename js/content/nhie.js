@@ -115,6 +115,21 @@
           "irgendwo in diesem Gebäude Sex gehabt",
         ],
       },
+      date: {
+        label: "🌹 Date",
+        prompts: [
+          "es genossen, beim Sex gewürgt zu werden",
+          "auf einem ersten Date schon gewusst, dass ich mit der Person im Bett landen will",
+          "mir mitten im Gespräch vorgestellt, wie mein Gegenüber im Bett ist",
+          "jemanden allein mit Worten angemacht",
+          "beim Sex komplett die Kontrolle abgegeben",
+          "schon beim ersten Treffen geküsst, weil die Spannung zu groß wurde",
+          "mich gegen eine Wand drücken lassen und es genossen",
+          "jemandem beim Reden auf den Mund geschaut und nur ans Küssen gedacht",
+          "im Bett laut gesagt, was ich wirklich will",
+          "mich auf den ersten Blick körperlich zu jemandem hingezogen gefühlt",
+        ],
+      },
     },
     en: {
       general: {
@@ -220,6 +235,21 @@
           "kissed someone of the same sex",
           "hooked up on a first date",
           "had sex somewhere in this building",
+        ],
+      },
+      date: {
+        label: "🌹 Date",
+        prompts: [
+          "enjoyed being choked in bed",
+          "known on a first date I wanted to end up in bed with them",
+          "pictured how the person across from me is in bed, mid-conversation",
+          "turned someone on with words alone",
+          "given up control completely in bed",
+          "kissed someone on a first meeting because the tension got too much",
+          "let someone pin me against a wall and loved it",
+          "stared at someone's lips while they talked, thinking only about kissing them",
+          "said out loud in bed exactly what I wanted",
+          "felt instantly, physically drawn to someone at first sight",
         ],
       },
     },

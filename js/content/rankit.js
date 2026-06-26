@@ -147,6 +147,17 @@
           { title: "Größte → harmloseste Bett-Sünde", items: ["An jemand anderen denken", "Den Namen verwechseln", "Mittendrin aufhören", "Heimlich filmen wollen", "Danach sofort einschlafen"] },
         ],
       },
+      date: {
+        label: "🌹 Date",
+        sets: [
+          { title: "Am heißesten → am harmlosesten berührt werden", items: ["An der Kehle gehalten", "Haare gezogen", "Festgehalten", "Sanft gekratzt", "Geführt"] },
+          { title: "Würde ich heute Abend am ehesten → am wenigsten machen", items: ["Knutschen", "Hals küssen", "Die Kontrolle abgeben", "Zuerst initiieren", "Es nur beim Reden lassen"] },
+          { title: "Heißeste → harmloseste Art, die Spannung zu brechen", items: ["Erster Kuss", "Hand aufs Bein", "Ins Ohr flüstern", "Langer Blick", "Wie zufällige Berührung"] },
+          { title: "Worauf ich beim ersten Mal am meisten → am wenigsten achte", items: ["Augen", "Lächeln", "Stimme", "Hände", "Duft"] },
+          { title: "Macht mich am meisten → am wenigsten an", items: ["Dominant geführt werden", "Dreckig zugeflüstert", "Langsam ausgezogen", "Festgehalten", "Sanft geneckt"] },
+          { title: "So soll der Abend am liebsten → am wenigsten enden", items: ["Bei dir", "Bei mir", "Langer Kuss an der Tür", "Noch ein letzter Drink", "Schon im Taxi übereinander her"] },
+        ],
+      },
     },
 
     en: {
@@ -277,6 +288,17 @@
           { title: "Turns you on most → least when sexting", items: ["A nude with no warning", "A detailed description", "A filthy voice note", "Just 'come over'", "Emoji hints"] },
           { title: "Hottest → most boring threesome setup", items: ["Two women", "Two men", "Couple plus one", "Two strangers from the bar", "With close friends"] },
           { title: "Biggest → most harmless sin in bed", items: ["Thinking of someone else", "Saying the wrong name", "Stopping halfway", "Wanting to film it secretly", "Falling asleep right after"] },
+        ],
+      },
+      date: {
+        label: "🌹 Date",
+        sets: [
+          { title: "Hottest → most innocent way to be touched", items: ["Held by the throat", "Hair pulled", "Pinned down", "Lightly scratched", "Guided"] },
+          { title: "Most → least likely I'd do tonight", items: ["Make out", "Kiss your neck", "Give up control", "Make the first move", "Keep it to just talking"] },
+          { title: "Hottest → most harmless way to break the tension", items: ["First kiss", "Hand on the leg", "Whisper in the ear", "A long look", "An 'accidental' touch"] },
+          { title: "What I notice most → least the first time", items: ["Eyes", "Smile", "Voice", "Hands", "Scent"] },
+          { title: "Turns me on most → least", items: ["Being led dominantly", "Filthy whispers", "Being slowly undressed", "Being held down", "Being teased softly"] },
+          { title: "How I'd most → least want the night to end", items: ["At yours", "At mine", "A long kiss at the door", "One more drink", "All over each other in the taxi"] },
         ],
       },
     },

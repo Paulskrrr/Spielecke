@@ -71,6 +71,25 @@
           "Sie schreibt ihm zuerst was Versautes, während er unterwegs ist",
         ],
       },
+      date: {
+        label: "🌹 Date",
+        princess: [
+          "Er legt dir beim Küssen die Hand an den Hals",
+          "Er drückt dich beim Küssen gegen die Wand",
+          "Er sagt dir ins Ohr, was er später mit dir vorhat",
+          "Er hält beim Küssen den Augenkontakt",
+          "Er zieht dich am ersten Abend fest an sich",
+          "Er nimmt sich, was er will – fragt aber, ob es dir gefällt",
+        ],
+        king: [
+          "Sie sagt ihm, dass sie es mag, an der Kehle gehalten zu werden",
+          "Sie macht beim ersten Mal den ersten Schritt",
+          "Sie flüstert ihm ins Ohr, was sie will",
+          "Sie zieht ihn am Kragen zu sich",
+          "Sie übernimmt im Bett mal komplett die Führung",
+          "Sie sagt ihm direkt, worauf sie steht",
+        ],
+      },
     },
     en: {
       romance: {
@@ -122,6 +141,25 @@
           "She surprises him with a striptease",
           "She lets him pick anything in the bedroom",
           "She sexts him first while he's out",
+        ],
+      },
+      date: {
+        label: "🌹 Date",
+        princess: [
+          "He puts his hand on your throat when he kisses you",
+          "He pins you against the wall when he kisses you",
+          "He whispers in your ear what he's going to do to you later",
+          "He holds eye contact while kissing you",
+          "He pulls you in close on the first night",
+          "He takes what he wants — but asks if you like it",
+        ],
+        king: [
+          "She tells him she likes a hand on her throat",
+          "She makes the first move the first time",
+          "She whispers in his ear what she wants",
+          "She pulls him in by the collar",
+          "She takes the lead in bed for once",
+          "She tells him straight up what she's into",
         ],
       },
     },
