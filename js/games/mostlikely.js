@@ -92,7 +92,7 @@
     for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
     return a;
   }
-  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  var esc = global.Spielecke.esc;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

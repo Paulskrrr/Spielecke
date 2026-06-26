@@ -24,10 +24,8 @@
   function has(available, k) {
     return !!available && Object.prototype.hasOwnProperty.call(available, k);
   }
-  function esc(s) {
-    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-  }
-  function attr(s) { return esc(s).replace(/'/g, "&#39;"); }
+  var esc = global.Spielecke.esc;
+  var attr = global.Spielecke.attr;
 
   // Resolve a stored selection into valid, currently-available keys.
   // Empty/invalid selection → ALL keys. This is the draw-time correctness gate.

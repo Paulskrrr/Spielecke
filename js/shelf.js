@@ -51,17 +51,8 @@
     return min + "+";
   }
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
-
-  function escapeAttr(str) {
-    return escapeHtml(str).replace(/'/g, "&#39;");
-  }
+  var escapeHtml = global.Spielecke.esc;
+  var escapeAttr = global.Spielecke.attr;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Shelf = { render: render };

@@ -140,13 +140,7 @@
     return "p_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 7);
   }
 
-  function escapeHtml(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  }
+  var escapeHtml = global.Spielecke.esc;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Roster = { render: render };

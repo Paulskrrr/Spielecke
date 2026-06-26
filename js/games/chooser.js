@@ -134,7 +134,7 @@
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
   function trunc(s) { s = String(s); return s.length > 10 ? s.slice(0, 9) + "…" : s; }
-  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  var esc = global.Spielecke.esc;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

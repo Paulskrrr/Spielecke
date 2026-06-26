@@ -5,6 +5,11 @@
  * the action trigger itself, instead of a separate button below it. Adds the
  * .tappable class (cursor + haptic press feedback in CSS), wires click, and
  * keeps it keyboard-accessible (Enter/Space) with button semantics.
+ *
+ * esc(s) / attr(s): the shared HTML escapers used by every screen and game that
+ * builds innerHTML. esc() neutralises text for element content; attr() also
+ * escapes ' for values inside single-quoted attributes. Loads before all
+ * games/screens (see index.html) so modules can alias them at definition time.
  */
 (function (global) {
   "use strict";
@@ -26,5 +31,18 @@
     return el;
   }
 
+  function esc(s) {
+    return String(s)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+  function attr(s) {
+    return esc(s).replace(/'/g, "&#39;");
+  }
+
   S.tappable = tappable;
+  S.esc = esc;
+  S.attr = attr;
 })(window);

@@ -453,7 +453,7 @@
   function stopTimer() {
     if (timer !== null) { global.clearInterval(timer); timer = null; }
   }
-  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  var esc = global.Spielecke.esc;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};
