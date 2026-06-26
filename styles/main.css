@@ -1487,6 +1487,30 @@ body::before {
   .act-point__n { font-size: 2.2rem; }
   /* the board on result / win screens, centred and roomy */
   .act-result .act-board-wrap, .act-win .act-board-wrap { max-width: 880px; margin: 0 auto; }
+
+  /* Ride the Bus: on a phone the four little cards + two buttons sit fine, but
+     on desktop they stranded a tiny strip at the very top of a tall empty
+     column. Centre the rung vertically and scale the cards, question and
+     guess buttons up so it actually fills the screen. */
+  .bf-screen {
+    max-width: 720px; margin: 0 auto;
+    min-height: 68vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .bf-screen .pkcard--sm, .bf-screen .pkflip--sm { width: 84px; height: 120px; }
+  .bf-screen .pkcard--sm .pkcard__pip { font-size: 2.3rem; }
+  .bf-screen .pkcard--sm .pkcard__corner { font-size: 0.78rem; }
+  .bf-screen .pkcard--sm .pkcard__crest { font-size: 1.15rem; }
+  .bf-row { gap: 18px; min-height: 132px; margin: 14px 0 26px; }
+  .bf-q { font-size: 1.7rem; margin: 12px 0 22px; }
+  .btn-guess { font-size: 1.4rem; padding: 18px 12px; }
+
+  /* Fuck the Dealer: same story — single big card + rank buttons. Centre it and
+     give the focal card and buttons more presence. */
+  .fd-screen { max-width: 760px; margin: 0 auto; }
+  .fd-cardwrap .pkflip { width: 104px; height: 148px; }
+  .fd-cardwrap .pkcard__pip { font-size: 2.9rem; }
+  .fd-hint { font-size: 1.4rem; padding: 10px 16px; }
+  .btn-rank { font-size: 1.3rem; padding: 18px 8px; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
