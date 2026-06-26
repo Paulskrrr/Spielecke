@@ -649,6 +649,99 @@ body::before {
 }
 .wl-clue__text { font-size: 1.3rem; font-weight: 800; }
 
+/* ----- Wavelength reveal: always-vertical dial with named lines ---------- */
+/* The track is a vertical pill on the left; each player's line sits at their
+   guess and carries a name tag to the right. Lines drip in one at a time. */
+.wl-result {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  margin: 14px 0;
+}
+.wl-rpole {
+  padding: 10px;
+  font-weight: 800;
+  text-align: center;
+  color: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  box-shadow: var(--pop);
+}
+.wl-rpole--top { background: var(--blue); }
+.wl-rpole--bot { background: var(--red); }
+
+.wl-rdial { position: relative; width: 100%; max-width: 380px; height: 320px; margin: 4px auto; cursor: pointer; }
+.wl-rtrack {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 54px;
+  border: 4px solid var(--ink);
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--blue), var(--purple), var(--red));
+  overflow: hidden;
+}
+.wl-rzone {
+  position: absolute; left: 0; right: 0;
+  top: var(--start); height: var(--size);
+  border-top: 3px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
+}
+.wl-rzone--far  { background: rgba(255, 255, 255, 0.30); }
+.wl-rzone--near { background: rgba(255, 255, 255, 0.55); }
+.wl-rzone--bull {
+  background: repeating-linear-gradient(
+    45deg, rgba(255,255,255,0.95) 0 8px, rgba(255,207,51,0.95) 8px 16px
+  );
+}
+.wl-rcenter {
+  position: absolute; left: 0; right: 0;
+  top: var(--pos); height: 0;
+  border-top: 2px dashed var(--ink);
+}
+
+/* A placed guess = a line across the track + a leader + a name tag. The tag is
+   positioned by JS (nudged to avoid overlap); the leader links it to the line. */
+.wl-line {
+  position: absolute; left: 0; top: var(--pos);
+  width: 62px; height: 6px; margin-top: -3px;
+  background: var(--ink); border-radius: 3px; box-shadow: 0 0 0 2px #fff;
+  opacity: 0; transition: opacity .3s ease;
+}
+.wl-line.is-in { opacity: 1; }
+.wl-line--win { background: var(--green); }
+.wl-lead {
+  position: absolute; height: 3px; margin-top: -1.5px;
+  background: var(--ink); border-radius: 2px;
+  transform-origin: left center;
+  opacity: 0; transition: opacity .3s ease;
+}
+.wl-lead.is-in { opacity: 1; }
+.wl-tag {
+  position: absolute; left: 76px; top: 0;
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 4px 11px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  font-weight: 800; font-size: 0.92rem; white-space: nowrap;
+  box-shadow: var(--pop);
+  opacity: 0; transform: translateX(-10px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.wl-tag.is-in { opacity: 1; transform: translateX(0); }
+.wl-tag--win { background: var(--green); }
+.wl-tag__pts {
+  font-size: 0.72rem; font-weight: 800;
+  padding: 1px 7px;
+  background: var(--ink); color: #fff;
+  border-radius: 999px;
+}
+
+/* Result line + buttons fade in once every line has landed. */
+.wl-reveal-actions { opacity: 0; transition: opacity .4s ease; }
+.wl-reveal-actions.is-in { opacity: 1; }
+
 /* ----- Prompt-deck games (NHIE, Most Likely To) ------------------------- */
 
 .deck-card { text-align: center; display: flex; flex-direction: column; min-height: 68vh; }
