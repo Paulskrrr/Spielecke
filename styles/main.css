@@ -1356,6 +1356,18 @@ body::before {
   .mx-hub .mx-hat { font-size: clamp(5rem, 30vw, 9rem); }
   .mx-hub__foot { margin-top: 18px; }
 
+  /* Mäxchen private-roll & reveal: centre on the tall desktop canvas and
+     supersize the dice instead of pinning a tiny cluster to the top. */
+  .mx-turn:not(.mx-hub), .mx-reveal {
+    max-width: 680px; margin: 0 auto;
+    min-height: 62vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .mx-turn:not(.mx-hub) .mx-die, .mx-reveal .mx-die {
+    width: 104px; height: 104px; padding: 13px; border-radius: 20px;
+  }
+  .mx-turn:not(.mx-hub) .mx-die__pip, .mx-reveal .mx-die__pip { width: 18px; height: 18px; }
+  .mx-turn:not(.mx-hub) .mx-dice, .mx-reveal .mx-dice { gap: 22px; }
+
   /* Wavelength: classic horizontal dial on wider screens — the two end-labels
      bracket the bar to the left and right. */
   .wl-spectrum { flex-direction: row; align-items: center; gap: 14px; }
@@ -1370,6 +1382,13 @@ body::before {
     background: linear-gradient(90deg, var(--blue), var(--purple), var(--red));
   }
   .wl-dial .wl-track { margin: 8px 0 18px; }
+  /* Clue & guess screens: centre vertically and widen so the dial, poles and
+     input fill the desktop canvas instead of clustering at the top. */
+  .wl-target, .wl-guess {
+    max-width: 820px; margin: 0 auto;
+    min-height: 58vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .wl-target .wl-track, .wl-guess .wl-track { height: 56px; }
   .wl-zone {
     top: 0;
     bottom: 0;
