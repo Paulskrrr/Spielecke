@@ -145,16 +145,14 @@
   function renderReveal() {
     clearTimer();
     var roll = underHat || { a: 1, b: 1 };
-    var sub = settings.drinking
-      ? '🍺 ' + t("Whoever was wrong drinks!")
-      : t("Round over — you all know who was right.");
+    var sub = settings.drinking ? '<p class="result-sub">🍺 ' + t("Whoever was wrong drinks!") + "</p>" : "";
 
     els.innerHTML =
       '<section class="screen mx-reveal">' +
       '  <div class="result-emoji">👀</div>' +
       '  <h2 class="result-title pop">' + t("Hat lifted!") + "</h2>" +
       '  <div class="mx-revealroll">' + diceHtml(roll) + valueBadge(roll) + "</div>" +
-      '  <p class="result-sub">' + sub + "</p>" +
+      "  " + sub +
       '  <div class="stack">' +
       '    <button id="mx-next" class="btn btn-primary btn-block btn-xl">' + t("New round 🔁") + "</button>" +
       '    <button id="mx-quit" class="btn btn-block">' + t("Change settings") + "</button>" +

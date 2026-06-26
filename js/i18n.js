@@ -538,7 +538,6 @@
     "Pass it on 🎩": "Weitergeben 🎩",
     "Hat lifted!": "Aufgedeckt!",
     "Whoever was wrong drinks!": "Wer falsch lag, trinkt!",
-    "Round over — you all know who was right.": "Runde vorbei — ihr wisst, wer recht hatte.",
     "New round 🔁": "Neue Runde 🔁",
     "Mäxchen": "Mäxchen",
     "Pasch": "Pasch",
