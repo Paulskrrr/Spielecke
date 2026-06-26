@@ -48,6 +48,10 @@
    the Memphis image (body::before). */
 html { background: var(--paper); }
 html, body { margin: 0; padding: 0; }
+/* Kill the iOS rubber-band overscroll so pulling the page never opens a gap
+   between the top of the screen and the sticky header (which would reveal the
+   fixed background behind it). */
+html, body { overscroll-behavior: none; }
 
 body {
   font-family: var(--font);
@@ -57,8 +61,10 @@ body {
      toolbar is showing (100vh resolves to the toolbar-hidden height). */
   min-height: 100vh;
   min-height: 100dvh;
+  /* Top inset is handled by the header itself (its purple fills the notch), so
+     there's never a background strip above the bar. */
   padding:
-    env(safe-area-inset-top) env(safe-area-inset-right)
+    0 env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
 }
 
@@ -103,6 +109,9 @@ body::before {
   /* slim header: tighter vertical padding (~10% shorter) without resizing the
      logo — the 52px wordmark stays put, only its breathing room shrinks */
   padding: 8px 16px;
+  /* Extend the purple up through the top safe area (notch / status bar) so the
+     bar reaches the very top of the screen — no background gap above it. */
+  padding-top: calc(8px + env(safe-area-inset-top));
   background: var(--purple);
   border-bottom: 4px solid var(--ink);
 }
@@ -172,8 +181,10 @@ body::before {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
   gap: 18px;
-  margin-top: 4px;
 }
+/* Home menu: equal breathing room above and below the tile grid so the spacing
+   reads symmetric top-to-bottom (the .app's default bottom padding is larger). */
+.app:has(.shelf-screen) { padding-top: 24px; padding-bottom: 24px; }
 
 .game-card {
   position: relative;
@@ -230,6 +241,22 @@ body::before {
   outline: none;
 }
 .game-card:active { transform: translateY(3px) scale(0.99); box-shadow: 0 2px 0 var(--ink); }
+
+/* "Coming soon" teaser — fills the trailing grid slot. Muted & dashed so it
+   reads as a placeholder, but it keeps the hover/press haptics of a real card
+   (it just doesn't navigate anywhere). */
+.game-card.game-card--soon {
+  background:
+    repeating-linear-gradient(45deg, rgba(36, 27, 77, 0.06) 0 14px, transparent 14px 28px),
+    var(--paper-2);
+  color: var(--ink-soft);
+  border-style: dashed;
+  box-shadow: 0 8px 0 rgba(36, 27, 77, 0.2);
+}
+.game-card--soon::after { display: none; }
+/* Just the icon box + title. Text is dark on the light tile, so drop the white
+   halo the coloured cards use. */
+.game-card--soon .game-card__name { color: var(--ink); text-shadow: none; }
 
 .game-card__icon {
   font-size: 1.9rem;
@@ -867,6 +894,48 @@ body::before {
 .doodle-thumb { display: block; width: 100%; max-height: 320px; object-fit: contain; background: #fff; border-radius: 10px; }
 .dd-guesstext { font-size: 1.4rem; font-weight: 800; }
 
+/* Reveal step-through: one beat per screen, clicked through in order. */
+.dd-reveal--step, .dd-finale { text-align: center; }
+.dd-progress {
+  font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--ink-soft); margin: 2px 0 14px;
+}
+.dd-stepcard {
+  max-width: 560px; margin: 0 auto 16px; padding: 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: #fff; border: 4px solid var(--ink); border-radius: var(--radius); box-shadow: var(--pop);
+  animation: pop-in 0.22s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.dd-step-kicker { font-size: 0.95rem; font-weight: 800; color: var(--ink-soft); }
+.dd-stepword { font-size: clamp(1.6rem, 6vw, 2.4rem); font-weight: 900; line-height: 1.15; }
+.dd-stepimg {
+  width: 100%; max-height: 48vh; object-fit: contain; background: #fff;
+  border: 3px solid var(--ink); border-radius: 12px; margin: 0;
+}
+.dd-step-nav { display: flex; gap: 10px; max-width: 560px; margin: 0 auto; }
+.dd-step-nav .btn-primary { flex: 1; }
+.dd-prev { flex: 0 0 auto; font-size: 1.3rem; }
+
+/* Gallery finale — the last drawing hung in an ornate gilded frame with a
+   brass nameplate carrying the ORIGINAL word, presented like an artwork. */
+.dd-art { margin: 6px auto 16px; max-width: 560px; display: flex; flex-direction: column; align-items: center; }
+.dd-artframe {
+  position: relative; padding: 16px;
+  background: linear-gradient(135deg, #b8860b, #ffe9a8 22%, #c9971f 48%, #ffe9a8 72%, #a9760a);
+  border: 3px solid #6e530c; border-radius: 6px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34), inset 0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+.dd-artframe::before {
+  content: ""; position: absolute; inset: 8px; border: 3px double #6e530c; border-radius: 3px; pointer-events: none;
+}
+.dd-artframe__mat { padding: 14px; background: #fbf7ec; border: 1px solid #6e530c; }
+.dd-artframe__mat img { display: block; width: 100%; max-height: 56vh; object-fit: contain; background: #fff; }
+.dd-plate {
+  margin-top: 14px; font-weight: 900; font-size: 1.25rem; letter-spacing: 0.3px;
+  color: #2a2208; background: linear-gradient(#e7c65b, #b8902e);
+  border: 3px solid #6e530c; border-radius: 8px; padding: 8px 24px; box-shadow: 0 5px 0 #5a4711;
+}
+
 /* ----- Activity --------------------------------------------------------- */
 
 /* type colours shared by tiles, banners, legend */
@@ -1133,11 +1202,18 @@ body::before {
 .ha-hint { min-height: 1.2em; margin-top: 10px; }
 
 /* Turn order */
-.ha-order { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.ha-order { list-style: none; padding: 0; margin: 12px 0; position: relative; }
 .ha-order__item {
+  position: absolute; left: 0; right: 0; top: 0; box-sizing: border-box;
   display: flex; align-items: center; gap: 12px; padding: 12px 14px; font-weight: 800;
   background: #fff; border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--pop);
+  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
 }
+.ha-order__item--drag {
+  cursor: grabbing; z-index: 5; box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28); border-color: var(--purple);
+}
+.ha-order__name { flex: 1 1 auto; }
+.ha-order__grip { flex-shrink: 0; color: var(--ink-soft); font-size: 1.2rem; letter-spacing: -2px; }
 .ha-order__no {
   width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   background: var(--purple); color: #fff; border: 2px solid var(--ink); border-radius: 999px; font-size: 0.9rem;
@@ -1160,10 +1236,20 @@ body::before {
 
 /* Table hub */
 .ha-turn {
-  display: flex; flex-direction: column; align-items: center; gap: 2px; margin: 4px 0 12px;
+  width: max-content; max-width: 92%;
+  display: flex; align-items: center; gap: 14px;
+  margin: 4px auto 18px; padding: 9px 24px 9px 11px;
+  background: #fff; border: 4px solid var(--ink); border-radius: 999px; box-shadow: var(--pop);
 }
-.ha-turn__label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--ink-soft); }
-.ha-turn__name { font-size: 1.8rem; font-weight: 900; color: var(--purple); }
+.ha-turn__crown {
+  flex-shrink: 0; width: 2em; height: 2em; font-size: 1.7rem; line-height: 1;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(160deg, #7b46c9, var(--purple));
+  border: 3px solid var(--ink); border-radius: 50%;
+}
+.ha-turn__meta { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.1; }
+.ha-turn__label { font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--ink-soft); }
+.ha-turn__name { font-size: 1.7rem; font-weight: 900; color: var(--purple); }
 .ha-table-main { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .ha-empty { margin: 4px 0 8px; }
 
@@ -1171,7 +1257,7 @@ body::before {
 .ha-deck-zone { display: flex; flex-direction: column; align-items: center; }
 .ha-deck {
   position: relative;
-  width: min(58vw, 220px);
+  width: min(62vw, 240px);
   aspect-ratio: 3 / 4;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
   font-family: var(--font); font-weight: 900; color: #fff;
@@ -1218,6 +1304,8 @@ body::before {
   align-self: flex-start; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
   color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px;
 }
+/* On the dark-blue rule cards a dark badge would vanish — make it royal gold. */
+.ha-card-mini--regel .ha-card-mini__holder { background: var(--yellow); color: var(--ink); }
 .ha-card-mini__title { font-size: 1.05rem; font-weight: 900; line-height: 1.1; padding-right: 18px; }
 .ha-card-mini__text { font-size: 0.78rem; line-height: 1.32; flex: 1; }
 .ha-card-mini__hint {
@@ -1225,7 +1313,11 @@ body::before {
   opacity: 0.85; align-self: center;
 }
 
-.ha-foot { margin-top: 22px; }
+/* Reset is intentionally low-key — you sit on this screen for hours, so it
+   shouldn't compete with the deck. */
+.ha-foot { margin-top: 26px; text-align: center; }
+.ha-reset { font-size: 0.8rem; padding: 7px 16px; opacity: 0.5; }
+.ha-reset:hover { opacity: 0.9; }
 
 /* The drawn card */
 .ha-draw-screen { min-height: 66vh; }
@@ -1285,8 +1377,8 @@ body::before {
   writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
   font-weight: 800; font-size: 0.72rem; line-height: 1; padding: 6px 0;
   max-height: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--ink);
 }
-.ri-axis__pole--bot { color: var(--red); }
 .ri-cards { position: relative; }
 .ri-card {
   position: absolute; left: 0; right: 0; top: 0; box-sizing: border-box;
@@ -1339,7 +1431,15 @@ body::before {
   .pt-actions .btn { flex: 1; }
   .act-perform-actions .btn { min-height: 12vh; }
   .quiz-options { grid-template-columns: 1fr 1fr; }
-  .ri-axis { max-width: 620px; margin-left: auto; margin-right: auto; }
+  /* Desktop: spread the ranking out so it fills the available width instead of
+     hugging a narrow phone column. Wider axis, roomier cards, taller rail. */
+  .ri-title { max-width: 860px; margin-left: auto; margin-right: auto; }
+  .ri-axis { max-width: 860px; margin-left: auto; margin-right: auto; gap: 20px; }
+  .ri-axis__rail { width: 38px; }
+  .ri-axis__pole { font-size: 0.85rem; }
+  .ri-card { padding: 16px 20px; font-size: 1.1rem; }
+  .ri-card__no { width: 36px; height: 36px; font-size: 1rem; }
+  .ri-card__grip { font-size: 1.4rem; }
 
   /* On desktop the hat hub goes back to a compact, centred block — the
      full-height phone layout is mobile-only. */
@@ -1347,6 +1447,18 @@ body::before {
   .mx-hub .mx-stage { flex: none; margin: 18px 0 8px; }
   .mx-hub .mx-hat { font-size: clamp(5rem, 30vw, 9rem); }
   .mx-hub__foot { margin-top: 18px; }
+
+  /* Mäxchen private-roll & reveal: centre on the tall desktop canvas and
+     supersize the dice instead of pinning a tiny cluster to the top. */
+  .mx-turn:not(.mx-hub), .mx-reveal {
+    max-width: 680px; margin: 0 auto;
+    min-height: 62vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .mx-turn:not(.mx-hub) .mx-die, .mx-reveal .mx-die {
+    width: 104px; height: 104px; padding: 13px; border-radius: 20px;
+  }
+  .mx-turn:not(.mx-hub) .mx-die__pip, .mx-reveal .mx-die__pip { width: 18px; height: 18px; }
+  .mx-turn:not(.mx-hub) .mx-dice, .mx-reveal .mx-dice { gap: 22px; }
 
   /* Wavelength: classic horizontal dial on wider screens — the two end-labels
      bracket the bar to the left and right. */
@@ -1362,6 +1474,13 @@ body::before {
     background: linear-gradient(90deg, var(--blue), var(--purple), var(--red));
   }
   .wl-dial .wl-track { margin: 8px 0 18px; }
+  /* Clue & guess screens: centre vertically and widen so the dial, poles and
+     input fill the desktop canvas instead of clustering at the top. */
+  .wl-target, .wl-guess {
+    max-width: 820px; margin: 0 auto;
+    min-height: 58vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .wl-target .wl-track, .wl-guess .wl-track { height: 56px; }
   .wl-zone {
     top: 0;
     bottom: 0;
@@ -1424,24 +1543,29 @@ body::before {
     width: auto;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
-    padding-left: max(24px, 4vw);
-    padding-right: max(24px, 4vw);
+    padding: 0 max(24px, 4vw) 16px;
+    /* Fill the viewport below the header and vertically centre the hub so it
+       doesn't strand at the top — this is the screen the table stares at for
+       hours. The two auto margins float the deck/piles into the centre and
+       drop the reset to the very bottom. */
+    min-height: calc(100vh - 140px);
+    display: flex; flex-direction: column; align-items: center;
   }
+  .ha-table .ha-turn { margin-top: auto; margin-bottom: 28px; }
   .ha-table .ha-table-main {
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
-    gap: 44px;
+    gap: 56px;
+    width: 100%;
     max-width: 1320px;
     margin: 0 auto;
   }
-  .ha-table .ha-deck-zone { flex: 0 0 auto; position: sticky; top: 92px; }
+  .ha-table .ha-deck-zone { flex: 0 0 auto; }
+  .ha-table .ha-deck { width: 272px; }
   .ha-table .ha-piles { flex: 1; flex-direction: row; gap: 32px; }
   .ha-table .ha-pile { flex: 1; }
-  .ha-table .ha-foot {
-    display: flex; gap: 12px; max-width: 560px; margin-left: auto; margin-right: auto;
-  }
-  .ha-table .ha-foot .btn { flex: 1; margin-top: 0; }
+  .ha-table .ha-foot { margin-top: auto; margin-bottom: 0; }
 
   /* Focused single-card screens stay centred and readable, not stretched. */
   .ha-intro, .ha-draw-screen {
@@ -1479,6 +1603,53 @@ body::before {
   .act-point__n { font-size: 2.2rem; }
   /* the board on result / win screens, centred and roomy */
   .act-result .act-board-wrap, .act-win .act-board-wrap { max-width: 880px; margin: 0 auto; }
+
+  /* Ride the Bus: on a phone the four little cards + two buttons sit fine, but
+     on desktop they stranded a tiny strip at the very top of a tall empty
+     column. Centre the rung vertically and scale the cards, question and
+     guess buttons up so it actually fills the screen. */
+  .bf-screen {
+    max-width: 720px; margin: 0 auto;
+    min-height: 68vh; display: flex; flex-direction: column; justify-content: center;
+  }
+  .bf-screen .pkcard--sm, .bf-screen .pkflip--sm { width: 84px; height: 120px; }
+  .bf-screen .pkcard--sm .pkcard__pip { font-size: 2.3rem; }
+  .bf-screen .pkcard--sm .pkcard__corner { font-size: 0.78rem; }
+  .bf-screen .pkcard--sm .pkcard__crest { font-size: 1.15rem; }
+  .bf-row { gap: 18px; min-height: 132px; margin: 14px 0 26px; }
+  .bf-q { font-size: 1.7rem; margin: 12px 0 22px; }
+  .btn-guess { font-size: 1.4rem; padding: 18px 12px; }
+
+  /* Fuck the Dealer: same story — single big card + rank buttons. Centre it and
+     give the focal card and buttons more presence. */
+  .fd-screen { max-width: 760px; margin: 0 auto; }
+  .fd-cardwrap .pkflip { width: 104px; height: 148px; }
+  .fd-cardwrap .pkcard__pip { font-size: 2.9rem; }
+  .fd-hint { font-size: 1.4rem; padding: 10px 16px; }
+  .btn-rank { font-size: 1.3rem; padding: 18px 8px; }
+
+  /* Doodle Drama: on desktop the canvas was a full-width, short strip pinned to
+     the top. Cap the width for a comfortable near-square drawing area, grow the
+     height, and centre the screen vertically. The canvas sizes its buffer from
+     these CSS dimensions, so the usable drawing surface grows with it. */
+  /* Break out of the narrow 880px .app column to full viewport width, then cap a
+     roomy centred drawing column so the canvas truly fills the desktop. */
+  .dd-draw, .dd-guess {
+    width: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: max(24px, 4vw);
+    padding-right: max(24px, 4vw);
+    min-height: 82vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .dd-draw > *, .dd-guess > * { width: 100%; max-width: 1040px; }
+  .dd-draw .doodle-canvas { height: min(72vh, 720px); }
+  .dd-guess .doodle-show { height: min(68vh, 660px); }
+  /* Reveal step-through & gallery: centre vertically on the desktop canvas. */
+  .dd-reveal--step, .dd-finale {
+    min-height: 74vh; display: flex; flex-direction: column; justify-content: center;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
@@ -1533,6 +1704,32 @@ body::before {
 .bf-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
 .bf-driver { font-weight: 800; font-size: 1.2rem; color: var(--purple); }
 .bf-rung { font-weight: 800; background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 3px 12px; }
+
+/* The bus timeline: a little road with four stops + a finish flag. The bus
+   slides one stop to the right on every correct guess (and back to the depot
+   on a wrong one), animated like the horses in the Horse Race. */
+.bf-line { margin: 2px 4px 18px; padding: 0 16px; }
+.bf-line__track {
+  position: relative; height: 10px; border-radius: 999px;
+  background: repeating-linear-gradient(90deg, #e7ddc6 0 16px, #efe7d4 16px 32px);
+  border: 3px solid var(--ink);
+}
+.bf-tick {
+  position: absolute; top: 50%; width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink); opacity: 0.5; transform: translate(-50%, -50%);
+}
+.bf-line__finish {
+  position: absolute; right: -8px; top: 50%; transform: translateY(-50%); font-size: 1.3rem;
+  filter: drop-shadow(0 1px 0 var(--ink));
+}
+.bf-line__bus {
+  position: absolute; top: 50%; left: 0; transform: translate(-50%, -56%);
+  font-size: 1.7rem; line-height: 1; z-index: 2;
+  filter: drop-shadow(0 1px 0 var(--ink));
+  transition: left 0.6s cubic-bezier(0.34, 0.85, 0.4, 1);
+}
+@media (prefers-reduced-motion: reduce) { .bf-line__bus { transition: none; } }
+
 .bf-row { display: flex; justify-content: center; gap: 10px; margin: 8px 0 18px; min-height: 90px; }
 .bf-slot { display: flex; align-items: flex-start; justify-content: center; }
 .bf-slot--live { transform: translateY(-4px); }

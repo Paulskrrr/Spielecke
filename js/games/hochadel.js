@@ -37,7 +37,7 @@
   var TYPE_META = {
     sofort:    { tag: "Crimson", label: "Instant Action",  colour: "#9B1B30" },
     regel:     { tag: "Sapphire", label: "Passive / Rule", colour: "#1B3A6B" },
-    aktiv:     { tag: "Gold",    label: "Active Card",     colour: "#C9A227" },
+    aktiv:     { tag: "Gold",    label: "Trump",           colour: "#C9A227" },
     minispiel: { tag: "Purple",  label: "Mini-game",       colour: "#5B2A86" },
   };
 
@@ -63,35 +63,27 @@
       cardById = {};
       data.deck.forEach(function (c) { cardById[c.id] = c; });
 
-      global.addEventListener("keydown", onKeydown);
-
       var saved = context.store.get("state", null);
-      if (saved && saved.edition && saved.order && saved.order.length >= 2) {
+      if (saved && saved.edition && saved.order && saved.order.length >= 2
+          && rosterMatchesSaved(saved.order)) {
         game = reconcile(saved);
         renderGroundRules(renderTable);
       } else {
+        // No saved game, or it belongs to a different roster — start fresh so
+        // the court is seated with the players currently in the roster.
+        context.store.set("state", null);
         renderEdition();
       }
     },
     unmount: function () {
       clearAll();
-      global.removeEventListener("keydown", onKeydown);
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; data = null; game = null; cardById = {};
     },
   };
 
-  // Space (or Enter) always fires the screen's primary action — draw a card on
-  // the table, complete the drawn card, advance the intro, etc. The most recently
-  // rendered primary wins (e.g. the Sanduhr overlay over the table).
-  function onKeydown(e) {
-    if (e.code !== "Space" && e.key !== " " && e.key !== "Enter" && e.keyCode !== 32) return;
-    if (!els) return;
-    var tag = e.target && e.target.tagName;
-    if (tag === "INPUT" || tag === "TEXTAREA") return; // don't hijack typing
-    var btns = els.querySelectorAll("[data-primary]");
-    if (btns.length) { e.preventDefault(); btns[btns.length - 1].click(); }
-  }
+  // Spacebar fires the screen's primary action (draw / complete / advance) — now
+  // handled globally by the shell, which clicks the on-screen [data-primary].
 
   // --- timers --------------------------------------------------------------
   function after(ms, fn) { var id = global.setTimeout(fn, ms); timers.push(id); return id; }
@@ -123,6 +115,18 @@
     return (ctx.players || [])
       .filter(function (p) { return p && p.name; })
       .map(function (p) { return { id: p.id, name: p.name }; });
+  }
+
+  // A saved game is only worth resuming if it belongs to the CURRENT roster.
+  // Hochadel snapshots the players into `state.order`, so without this check a
+  // reload would resurrect an old game (old player names) after the roster
+  // changed. Compare by the set of player ids, ignoring order.
+  function rosterMatchesSaved(order) {
+    var cur = rosterOrder();
+    if (!Array.isArray(order) || order.length !== cur.length) return false;
+    var ids = {};
+    cur.forEach(function (p) { ids[p.id] = true; });
+    return order.every(function (p) { return p && ids[p.id]; });
   }
 
   function newGame(edition) {
@@ -237,18 +241,26 @@
     }
 
     var list = game.order.map(function (o, i) {
-      return '<li class="ha-order__item"><span class="ha-order__no">' + (i + 1) + "</span>" + esc(o.name) + "</li>";
+      return (
+        '<li class="ha-order__item" data-id="' + attr(o.id) + '">' +
+        '<span class="ha-order__no">' + (i + 1) + "</span>" +
+        '<span class="ha-order__name">' + esc(o.name) + "</span>" +
+        '<span class="ha-order__grip" aria-hidden="true">⠿</span>' +
+        "</li>"
+      );
     }).join("");
 
     els.innerHTML =
       '<section class="screen ha-screen">' +
       '  <h2 class="screen-title pop">' + t("Seating Order") + "</h2>" +
-      '  <p class="muted">' + t("Players take turns drawing. Shuffle if you like.") + "</p>" +
-      '  <ol class="ha-order">' + list + "</ol>" +
+      '  <p class="muted">' + t("Players take turns drawing. Drag the names to reorder, or shuffle.") + "</p>" +
+      '  <ol class="ha-order" id="ha-order">' + list + "</ol>" +
       '  <button id="ha-shuffle" class="btn btn-block">' + t("🔀 Shuffle order") + "</button>" +
       '  <button id="ha-start" class="btn btn-primary btn-block btn-xl" data-primary>' + t("Continue ▶️") + "</button>" +
       '  <button id="ha-back" class="btn btn-ghost btn-block">' + t("← Choose Edition") + "</button>" +
       "</section>";
+
+    setupOrderDrag(els.querySelector("#ha-order"));
 
     els.querySelector("#ha-shuffle").addEventListener("click", function () {
       game.order = shuffle(game.order);
@@ -260,6 +272,79 @@
       renderGroundRules(renderTable);
     });
     els.querySelector("#ha-back").addEventListener("click", renderEdition);
+  }
+
+  // Vertical drag-to-reorder for the seating list (same approach as Rank It):
+  // each item is absolutely positioned by its slot; dragging one past another
+  // splices `game.order` and slides the rest into place. Pointer events cover
+  // touch + mouse. Items are keyed by player id so a re-sort stays correct.
+  function setupOrderDrag(list) {
+    if (!list) return;
+    var GAP = 8;
+    var rows = Array.prototype.slice.call(list.querySelectorAll(".ha-order__item"));
+    if (rows.length < 2) return;
+
+    var rowH = 0;
+    rows.forEach(function (c) { rowH = Math.max(rowH, c.offsetHeight); });
+    rowH += GAP;
+    list.style.height = rowH * rows.length + "px";
+
+    function slotOf(id) {
+      for (var i = 0; i < game.order.length; i++) {
+        if (String(game.order[i].id) === id) return i;
+      }
+      return 0;
+    }
+    function layout(except) {
+      rows.forEach(function (c) {
+        if (c === except) return;
+        c.style.transition = "transform .18s ease";
+        c.style.transform = "translateY(" + slotOf(c.getAttribute("data-id")) * rowH + "px)";
+      });
+    }
+    function renumber() {
+      rows.forEach(function (c) {
+        c.querySelector(".ha-order__no").textContent = slotOf(c.getAttribute("data-id")) + 1;
+      });
+    }
+    layout();
+
+    rows.forEach(function (card) {
+      card.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        try { card.setPointerCapture(e.pointerId); } catch (err) {}
+        var id = card.getAttribute("data-id");
+        var startY = e.clientY;
+        var baseY = slotOf(id) * rowH;
+        card.classList.add("ha-order__item--drag");
+        card.style.transition = "none";
+
+        function move(ev) {
+          var y = baseY + (ev.clientY - startY);
+          card.style.transform = "translateY(" + y + "px) scale(1.03)";
+          var target = Math.max(0, Math.min(rows.length - 1, Math.round(y / rowH)));
+          var cur = slotOf(id);
+          if (target !== cur) {
+            var moved = game.order.splice(cur, 1)[0];
+            game.order.splice(target, 0, moved);
+            layout(card);
+            renumber();
+          }
+        }
+        function up(ev) {
+          try { card.releasePointerCapture(ev.pointerId); } catch (err) {}
+          card.removeEventListener("pointermove", move);
+          card.removeEventListener("pointerup", up);
+          card.removeEventListener("pointercancel", up);
+          card.classList.remove("ha-order__item--drag");
+          card.style.transition = "transform .18s ease";
+          card.style.transform = "translateY(" + slotOf(id) * rowH + "px)";
+        }
+        card.addEventListener("pointermove", move);
+        card.addEventListener("pointerup", up);
+        card.addEventListener("pointercancel", up);
+      });
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -302,8 +387,11 @@
     els.innerHTML =
       '<section class="screen ha-screen ha-table">' +
       '  <div class="ha-turn">' +
-      '    <span class="ha-turn__label">' + t("Current player") + "</span>" +
-      '    <span class="ha-turn__name">' + esc(cur ? cur.name : "—") + "</span>" +
+      '    <span class="ha-turn__crown" aria-hidden="true">👑</span>' +
+      '    <span class="ha-turn__meta">' +
+      '      <span class="ha-turn__label">' + t("Current player") + "</span>" +
+      '      <span class="ha-turn__name">' + esc(cur ? cur.name : "—") + "</span>" +
+      "    </span>" +
       "  </div>" +
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
@@ -319,7 +407,7 @@
       "    </div>" +
       "  </div>" +
       '  <div class="ha-foot">' +
-      '    <button id="ha-reset" class="btn btn-ghost btn-block">' + t("↺ Reset game") + "</button>" +
+      '    <button id="ha-reset" class="btn btn-ghost ha-reset">' + t("↺ Reset game") + "</button>" +
       "  </div>" +
       "</section>";
 
@@ -340,6 +428,7 @@
         return (
           '<div class="ha-card-mini ha-card-mini--regel">' +
           '  <span class="ha-card-mini__pip">📜</span>' +
+          (r.by ? '  <span class="ha-card-mini__holder">' + esc(r.by) + "</span>" : "") +
           '  <span class="ha-card-mini__title">' + esc(r.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>" +
           "</div>"
@@ -353,7 +442,7 @@
   function activeHtml() {
     var body;
     if (!game.active.length) {
-      body = '<p class="ha-empty muted small">' + t("No active cards. Gold cards stay face-up with their holder.") + "</p>";
+      body = '<p class="ha-empty muted small">' + t("No Trumps yet. Gold cards stay face-up with their holder.") + "</p>";
     } else {
       body = '<div class="ha-hand">' + game.active.map(function (a) {
         return (
@@ -367,7 +456,7 @@
         );
       }).join("") + "</div>";
     }
-    return '<div class="ha-pile"><h3 class="sub">' + t("🪙 Active Cards") + "</h3>" + body + "</div>";
+    return '<div class="ha-pile"><h3 class="sub">' + t("🪙 Trumps") + "</h3>" + body + "</div>";
   }
 
   // ---------------------------------------------------------------------------
@@ -384,7 +473,7 @@
       '<section class="screen ha-screen">' +
       '  <div class="result-emoji">🃏</div>' +
       '  <h2 class="result-title pop">' + t("Deck at Rest") + "</h2>" +
-      '  <p class="result-sub">' + t("All cards are in play (Standing Rules & Active Cards). Reset for a fresh round.") + "</p>" +
+      '  <p class="result-sub">' + t("All cards are in play (Standing Rules & Trumps). Reset for a fresh round.") + "</p>" +
       '  <button id="ha-back" class="btn btn-primary btn-block btn-xl" data-primary>' + t("Back to Table") + "</button>" +
       "</section>";
     els.querySelector("#ha-back").addEventListener("click", renderTable);
@@ -424,7 +513,8 @@
     if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
-      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText });
+      var curL = currentPlayer();
+      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—" });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
       game.active.push({
@@ -522,7 +612,7 @@
     els.innerHTML =
       '<section class="screen ha-screen">' +
       '  <h2 class="screen-title pop">' + t("Reset game?") + "</h2>" +
-      '  <div class="fuse-note">' + t("Standing rules and active cards will be lost; the deck gets reshuffled. Edition and seating order stay.") + "</div>" +
+      '  <div class="fuse-note">' + t("Standing rules and Trumps will be lost; the deck gets reshuffled. Edition and seating order stay.") + "</div>" +
       '  <button id="ha-reset-yes" class="btn btn-primary btn-block btn-xl">' + t("Yes, reset") + "</button>" +
       '  <button id="ha-reset-no" class="btn btn-ghost btn-block">' + t("Cancel") + "</button>" +
       "</section>";
@@ -540,6 +630,7 @@
 
   // --- util ----------------------------------------------------------------
   var esc = global.Spielecke.esc;
+  var attr = global.Spielecke.attr;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

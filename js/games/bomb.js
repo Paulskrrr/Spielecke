@@ -47,7 +47,7 @@
       name: "The Bomb",
       tagline: "Name it fast, pass it faster. Don't be holding it when it blows.",
       icon: "💣",
-      minPlayers: 3,
+      minPlayers: 2,
       supportsDrinking: true,
     },
 

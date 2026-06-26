@@ -34,6 +34,7 @@
   var step = 0;          // 0..3 = current rung; 4 = escaped
   var revealTimer = null;
   var busy = false;      // guard against double-taps mid-reveal
+  var busPos = 0;        // where the little bus sits on the timeline (0..4)
 
   var module = {
     meta: {
@@ -56,7 +57,7 @@
     unmount: function () {
       clearTimer();
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; row = []; step = 0; busy = false;
+      ctx = null; settings = null; row = []; step = 0; busy = false; busPos = 0;
     },
   };
 
@@ -113,8 +114,39 @@
   }
 
   function startRide() {
+    busPos = 0;   // fresh ride starts the bus at the depot
     deal();
     renderRide();
+  }
+
+  // The little bus on its timeline: 4 stops (one per rung) ending at the 🏁.
+  // The bus is rendered at its current position, then slid to the target so it
+  // animates between renders — like the horses in the Horse Race.
+  function busLineHtml() {
+    var ticks = "";
+    for (var i = 1; i <= 3; i++) {
+      ticks += '<span class="bf-tick" style="left:' + (i / 4 * 100) + '%"></span>';
+    }
+    return (
+      '<div class="bf-line">' +
+      '  <div class="bf-line__track">' + ticks +
+      '    <span class="bf-line__bus" id="bf-bus" style="left:' + (busPos / 4 * 100) + '%">🚌</span>' +
+      '    <span class="bf-line__finish">🏁</span>' +
+      "  </div>" +
+      "</div>"
+    );
+  }
+  // Slide the already-rendered bus to `target` (0..4). Double rAF guarantees the
+  // start position paints first so the CSS transition actually animates.
+  function moveBus(target) {
+    busPos = target;
+    if (!els) return;
+    global.requestAnimationFrame(function () {
+      global.requestAnimationFrame(function () {
+        var b = els && els.querySelector("#bf-bus");
+        if (b) b.style.left = (target / 4 * 100) + "%";
+      });
+    });
   }
 
   function deal() {
@@ -159,6 +191,7 @@
       '<section class="screen bf-screen">' +
       '  <div class="bf-head"><span class="bf-driver">🚌 ' + esc(driverName()) + "</span>" +
       '    <span class="bf-rung">' + t("Step") + " " + (step + 1) + "/4</span></div>" +
+      busLineHtml() +
       '  <div class="bf-row">' + cardsHtml + "</div>" +
       '  <p class="bf-q">' + t(def.q) + "</p>" +
       '  <div class="bf-guesses" id="bf-guesses">' + optBtns + "</div>" +
@@ -168,6 +201,7 @@
     els.querySelectorAll("#bf-guesses .btn-guess").forEach(function (b) {
       b.addEventListener("click", function () { guess(b.getAttribute("data-v")); });
     });
+    moveBus(step);
   }
 
   function guess(v) {
@@ -234,6 +268,7 @@
     var handsOut = settings.escapeHandsOut;
     els.innerHTML =
       '<section class="screen bf-screen bf-escape">' +
+      busLineHtml() +
       '  <div class="bf-row">' +
       row.map(function (c) { return '<div class="bf-slot bf-slot--done">' + Cards.faceHtml(c, { small: true }) + "</div>"; }).join("") +
       "  </div>" +
@@ -250,9 +285,11 @@
     els.querySelector("#bf-next").addEventListener("click", function () {
       var n = names().length;
       if (n) driverIdx = (driverIdx + 1) % n;
-      deal(); renderRide();
+      busPos = 0; deal(); renderRide();
     });
-    els.querySelector("#bf-again").addEventListener("click", function () { deal(); renderRide(); });
+    els.querySelector("#bf-again").addEventListener("click", function () { busPos = 0; deal(); renderRide(); });
+
+    moveBus(4); // roll the bus into the final station
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────

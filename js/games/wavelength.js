@@ -18,7 +18,7 @@
   function pools() { return global.Spielecke.L(global.Spielecke.WavelengthSpectrums) || {}; }
   function Pools() { return global.Spielecke.Pools; }
 
-  var MIN_PLAYERS = 3; // clue-giver + at least two guessers
+  var MIN_PLAYERS = 2; // a clue-giver + at least one guesser
 
   // Concentric scoring zones, measured as half-width (%) out from the target
   // centre. The closer you land to the middle, the more you score — so a sharp

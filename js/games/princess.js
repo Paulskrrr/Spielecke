@@ -77,7 +77,7 @@
       '  <div class="deck-prompt">' + esc(prompt) + "</div>" +
       '  <p class="deck-rule">' + treatWord + "</p>" +
       '  <div class="pt-actions">' +
-      '    <button id="pr-yes" class="btn btn-got">' + treatLabel + "</button>" +
+      '    <button id="pr-yes" class="btn btn-got" data-primary>' + treatLabel + "</button>" +
       '    <button id="pr-no" class="btn btn-skip">' + t("😐 Bare minimum") + "</button>" +
       "  </div>" +
       "</section>";

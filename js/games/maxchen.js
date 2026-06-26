@@ -96,7 +96,7 @@
     els.innerHTML =
       '<section class="screen mx-turn mx-hub">' +
       '  <div class="mx-stage">' +
-      '    <div id="mx-hat" class="mx-hat" aria-label="' + attr(t("Roll the dice")) + '">🎩</div>' +
+      '    <div id="mx-hat" class="mx-hat" role="button" aria-label="' + attr(t("Roll the dice")) + '" data-primary>🎩</div>' +
       '    <div class="mx-tap-hint">' + t("Tap the hat to roll — keep the screen to yourself") + "</div>" +
       "  </div>" +
       '  <div class="mx-hub__foot">' +

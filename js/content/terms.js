@@ -158,9 +158,23 @@
       },
       famous: {
         label: "🌟 Famous",
+        // Proper nouns — identical to de.
         terms: [
+          // Pop & screen icons
           "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
           "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
+          "Rihanna", "Billie Eilish", "Justin Bieber", "Ariana Grande",
+          "Leonardo DiCaprio", "Keanu Reeves", "Margot Robbie", "Zendaya", "Homer Simpson",
+          // Sport
+          "Cristiano Ronaldo", "Lionel Messi", "LeBron James",
+          "Lewis Hamilton", "Usain Bolt", "Mike Tyson",
+          // Hip-Hop & Rap
+          "Drake", "Eminem", "Kanye West", "Snoop Dogg",
+          "Kendrick Lamar", "Nicki Minaj", "Apache 207",
+          // Business & tech moguls
+          "Elon Musk", "Jeff Bezos", "Mark Zuckerberg", "Steve Jobs", "Bill Gates",
+          // Internet & world stage
+          "MrBeast", "Kim Kardashian", "Barack Obama",
         ],
       },
       nsfw: {
@@ -418,8 +432,21 @@
         label: "🌟 Berühmt",
         // Proper nouns — identical to en.
         terms: [
+          // Pop & screen icons
           "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
           "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
+          "Rihanna", "Billie Eilish", "Justin Bieber", "Ariana Grande",
+          "Leonardo DiCaprio", "Keanu Reeves", "Margot Robbie", "Zendaya", "Homer Simpson",
+          // Sport
+          "Cristiano Ronaldo", "Lionel Messi", "LeBron James",
+          "Lewis Hamilton", "Usain Bolt", "Mike Tyson",
+          // Hip-Hop & Rap
+          "Drake", "Eminem", "Kanye West", "Snoop Dogg",
+          "Kendrick Lamar", "Nicki Minaj", "Apache 207",
+          // Business & tech moguls
+          "Elon Musk", "Jeff Bezos", "Mark Zuckerberg", "Steve Jobs", "Bill Gates",
+          // Internet & world stage
+          "MrBeast", "Kim Kardashian", "Barack Obama",
         ],
       },
       nsfw: {

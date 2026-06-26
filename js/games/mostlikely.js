@@ -23,7 +23,7 @@
       name: "Most Likely To",
       tagline: "Point on three. No takebacks.",
       icon: "🫵",
-      minPlayers: 3,
+      minPlayers: 2,
       supportsDrinking: true,
     },
     mount: function (container, context) {
@@ -71,7 +71,7 @@
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + t("Most likely to…") + "</div>" +
       '  <div class="deck-tapwrap">' +
-      '    <div id="ml-card" class="deck-prompt">' + esc(line) + "</div>" +
+      '    <div id="ml-card" class="deck-prompt" role="button" data-primary>' + esc(line) + "</div>" +
       "  </div>" +
       '  <p class="deck-rule">' + t("3… 2… 1… POINT! 🫵") + "<br/>" +
       (settings.drinking ? t("Most fingers drinks 🍺") : t("Most fingers takes the crown 👑")) +

@@ -73,7 +73,7 @@
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + who + "</div>" +
       '  <div class="deck-tapwrap">' +
-      '    <div id="tr-card" class="deck-prompt">' + esc(nextPrompt()) + "</div>" +
+      '    <div id="tr-card" class="deck-prompt" role="button" data-primary>' + esc(nextPrompt()) + "</div>" +
       "  </div>" +
       '  <p class="deck-rule">' + (settings.drinking ? t("Answer honestly, or take a 🍺 drink to dodge.") : t("Answer honestly!")) + "</p>" +
       '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +

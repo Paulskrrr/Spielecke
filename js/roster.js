@@ -3,15 +3,13 @@
  *
  * The single most important shared piece: enter players once, every game reuses
  * them. Supports add / remove / reorder (up-down buttons — the most reliable
- * touch-friendly reorder), persists on every change, and softly warns (does not
- * block) when there are too few players.
+ * touch-friendly reorder), persists on every change. It never nags about player
+ * count — short-handed play is a deliberate choice; games guard their own floor.
  *
  * Language toggle lives here (DE / EN), stored globally via Spielecke.setLang.
  */
 (function (global) {
   "use strict";
-
-  var SOFT_MIN = 3; // warn below this; never block
 
   function t(k) { return global.Spielecke.t(k); }
 
@@ -73,13 +71,10 @@
           .join("");
       }
 
-      if (players.length && players.length < SOFT_MIN) {
-        warnEl.textContent = t("⚠ Most games are better with {n}+ players.").replace("{n}", SOFT_MIN);
-        warnEl.style.display = "block";
-      } else {
-        warnEl.textContent = "";
-        warnEl.style.display = "none";
-      }
+      // No player-count nagging — you can deliberately play short-handed; the
+      // app shouldn't second-guess that. Games still guard their own hard floor.
+      warnEl.textContent = "";
+      warnEl.style.display = "none";
       ctx.refreshHeader();
     }
 

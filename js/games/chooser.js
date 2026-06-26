@@ -56,7 +56,7 @@
     els.innerHTML =
       '<section class="screen chooser-screen">' +
       '  <h2 class="screen-title pop">🎡 ' + t("Chooser") + "</h2>" +
-      '  <div id="chooser-wheelwrap" class="wheel-wrap">' +
+      '  <div id="chooser-wheelwrap" class="wheel-wrap" role="button" data-primary>' +
       '    <div class="wheel-pointer"></div>' +
       '    <div id="chooser-wheel" class="wheel">' + wheelSvg(ns) + "</div>" +
       "  </div>" +
