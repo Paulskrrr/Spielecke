@@ -1133,11 +1133,18 @@ body::before {
 .ha-hint { min-height: 1.2em; margin-top: 10px; }
 
 /* Turn order */
-.ha-order { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.ha-order { list-style: none; padding: 0; margin: 12px 0; position: relative; }
 .ha-order__item {
+  position: absolute; left: 0; right: 0; top: 0; box-sizing: border-box;
   display: flex; align-items: center; gap: 12px; padding: 12px 14px; font-weight: 800;
   background: #fff; border: 3px solid var(--ink); border-radius: 16px; box-shadow: var(--pop);
+  cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
 }
+.ha-order__item--drag {
+  cursor: grabbing; z-index: 5; box-shadow: 0 10px 22px rgba(0, 0, 0, 0.28); border-color: var(--purple);
+}
+.ha-order__name { flex: 1 1 auto; }
+.ha-order__grip { flex-shrink: 0; color: var(--ink-soft); font-size: 1.2rem; letter-spacing: -2px; }
 .ha-order__no {
   width: 30px; height: 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   background: var(--purple); color: #fff; border: 2px solid var(--ink); border-radius: 999px; font-size: 0.9rem;

@@ -388,7 +388,7 @@
     "Choose Edition": "Edition wählen",
     "The Rapunzel Edition is coming soon. 👸": "Die Rapunzel-Edition ist bald verfügbar. 👸",
     "Seating Order": "Sitzordnung",
-    "Players take turns drawing. Shuffle if you like.": "Reihum wird gezogen. Verschiebe per Zufall, wenn du magst.",
+    "Players take turns drawing. Drag the names to reorder, or shuffle.": "Reihum wird gezogen. Zieh die Namen in deine Reihenfolge oder mische.",
     "🔀 Shuffle order": "🔀 Reihenfolge mischen",
     "Continue ▶️": "Weiter ▶️",
     "← Choose Edition": "← Edition wählen",

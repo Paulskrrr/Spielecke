@@ -253,18 +253,26 @@
     }
 
     var list = game.order.map(function (o, i) {
-      return '<li class="ha-order__item"><span class="ha-order__no">' + (i + 1) + "</span>" + esc(o.name) + "</li>";
+      return (
+        '<li class="ha-order__item" data-id="' + attr(o.id) + '">' +
+        '<span class="ha-order__no">' + (i + 1) + "</span>" +
+        '<span class="ha-order__name">' + esc(o.name) + "</span>" +
+        '<span class="ha-order__grip" aria-hidden="true">⠿</span>' +
+        "</li>"
+      );
     }).join("");
 
     els.innerHTML =
       '<section class="screen ha-screen">' +
       '  <h2 class="screen-title pop">' + t("Seating Order") + "</h2>" +
-      '  <p class="muted">' + t("Players take turns drawing. Shuffle if you like.") + "</p>" +
-      '  <ol class="ha-order">' + list + "</ol>" +
+      '  <p class="muted">' + t("Players take turns drawing. Drag the names to reorder, or shuffle.") + "</p>" +
+      '  <ol class="ha-order" id="ha-order">' + list + "</ol>" +
       '  <button id="ha-shuffle" class="btn btn-block">' + t("🔀 Shuffle order") + "</button>" +
       '  <button id="ha-start" class="btn btn-primary btn-block btn-xl" data-primary>' + t("Continue ▶️") + "</button>" +
       '  <button id="ha-back" class="btn btn-ghost btn-block">' + t("← Choose Edition") + "</button>" +
       "</section>";
+
+    setupOrderDrag(els.querySelector("#ha-order"));
 
     els.querySelector("#ha-shuffle").addEventListener("click", function () {
       game.order = shuffle(game.order);
@@ -276,6 +284,79 @@
       renderGroundRules(renderTable);
     });
     els.querySelector("#ha-back").addEventListener("click", renderEdition);
+  }
+
+  // Vertical drag-to-reorder for the seating list (same approach as Rank It):
+  // each item is absolutely positioned by its slot; dragging one past another
+  // splices `game.order` and slides the rest into place. Pointer events cover
+  // touch + mouse. Items are keyed by player id so a re-sort stays correct.
+  function setupOrderDrag(list) {
+    if (!list) return;
+    var GAP = 8;
+    var rows = Array.prototype.slice.call(list.querySelectorAll(".ha-order__item"));
+    if (rows.length < 2) return;
+
+    var rowH = 0;
+    rows.forEach(function (c) { rowH = Math.max(rowH, c.offsetHeight); });
+    rowH += GAP;
+    list.style.height = rowH * rows.length + "px";
+
+    function slotOf(id) {
+      for (var i = 0; i < game.order.length; i++) {
+        if (String(game.order[i].id) === id) return i;
+      }
+      return 0;
+    }
+    function layout(except) {
+      rows.forEach(function (c) {
+        if (c === except) return;
+        c.style.transition = "transform .18s ease";
+        c.style.transform = "translateY(" + slotOf(c.getAttribute("data-id")) * rowH + "px)";
+      });
+    }
+    function renumber() {
+      rows.forEach(function (c) {
+        c.querySelector(".ha-order__no").textContent = slotOf(c.getAttribute("data-id")) + 1;
+      });
+    }
+    layout();
+
+    rows.forEach(function (card) {
+      card.addEventListener("pointerdown", function (e) {
+        e.preventDefault();
+        try { card.setPointerCapture(e.pointerId); } catch (err) {}
+        var id = card.getAttribute("data-id");
+        var startY = e.clientY;
+        var baseY = slotOf(id) * rowH;
+        card.classList.add("ha-order__item--drag");
+        card.style.transition = "none";
+
+        function move(ev) {
+          var y = baseY + (ev.clientY - startY);
+          card.style.transform = "translateY(" + y + "px) scale(1.03)";
+          var target = Math.max(0, Math.min(rows.length - 1, Math.round(y / rowH)));
+          var cur = slotOf(id);
+          if (target !== cur) {
+            var moved = game.order.splice(cur, 1)[0];
+            game.order.splice(target, 0, moved);
+            layout(card);
+            renumber();
+          }
+        }
+        function up(ev) {
+          try { card.releasePointerCapture(ev.pointerId); } catch (err) {}
+          card.removeEventListener("pointermove", move);
+          card.removeEventListener("pointerup", up);
+          card.removeEventListener("pointercancel", up);
+          card.classList.remove("ha-order__item--drag");
+          card.style.transition = "transform .18s ease";
+          card.style.transform = "translateY(" + slotOf(id) * rowH + "px)";
+        }
+        card.addEventListener("pointermove", move);
+        card.addEventListener("pointerup", up);
+        card.addEventListener("pointercancel", up);
+      });
+    });
   }
 
   // ---------------------------------------------------------------------------
@@ -556,6 +637,7 @@
 
   // --- util ----------------------------------------------------------------
   var esc = global.Spielecke.esc;
+  var attr = global.Spielecke.attr;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};
