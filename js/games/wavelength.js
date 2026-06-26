@@ -28,7 +28,11 @@
     { half: 10, pts: 3, cls: "near" },
     { half: 18, pts: 2, cls: "far" },
   ];
-  var MAX_HALF = ZONES[ZONES.length - 1].half; // keep the whole target on-track
+  // How far the target centre stays clear of each rail. We only keep the
+  // innermost (top-scoring) ring fully on-track, so the band can sit flush
+  // against either end — true extremes are possible. The wider outer rings just
+  // clip at the rail (both tracks are overflow:hidden).
+  var EDGE_MARGIN = ZONES[0].half;
 
   var els = null;
   var ctx = null;
@@ -106,7 +110,7 @@
     clearTimer();
     var names = roster.map(function (p) { return p.name; });
     spectrum = pickSpectrum();
-    target = Math.round(MAX_HALF + Math.random() * (100 - 2 * MAX_HALF));
+    target = Math.round(EDGE_MARGIN + Math.random() * (100 - 2 * EDGE_MARGIN));
     clue = "";
     guess = 50;
     guesses = [];
