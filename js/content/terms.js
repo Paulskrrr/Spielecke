@@ -385,11 +385,11 @@
         games: ["imposter", "whoami"],
         terms: [
           "Napoleon", "Kleopatra", "Julius Cäsar", "Albert Einstein",
-          "Abraham Lincoln", "Gandhi", "Königin Elisabeth II.", "Die Berliner Mauer",
-          "Die Pyramiden", "Die Titanic", "Die Französische Revolution", "Der Kalte Krieg",
-          "Die Mondlandung", "Ein Wikinger", "Ein Ritter", "Ein Pharao",
-          "Das Römische Reich", "Ein Diktator", "Die Steinzeit", "Die Freiheitsstatue",
-          "Der Eiffelturm", "Der Zweite Weltkrieg", "Der Wilde Westen", "Eine Krone",
+          "Abraham Lincoln", "Gandhi", "Königin Elisabeth II.", "Berliner Mauer",
+          "Pyramiden", "Titanic", "Französische Revolution", "Kalter Krieg",
+          "Mondlandung", "Wikinger", "Ritter", "Pharao",
+          "Römisches Reich", "Diktator", "Steinzeit", "Freiheitsstatue",
+          "Eiffelturm", "Zweiter Weltkrieg", "Wilder Westen", "Krone",
         ],
       },
       leisure: {
@@ -427,7 +427,7 @@
         terms: [
           "One-Night-Stand", "Stripclub", "Sexting", "Walk of Shame",
           "Booty Call", "Freundschaft Plus", "Nacktbaden",
-          "Der neue Partner deines Ex", "Eine betrunkene Nachricht, die du bereust",
+          "Neuer Partner deines Ex", "Betrunkene Nachricht, die du bereust",
           "Dreier", "Lapdance", "Handschellen", "Morgenlatte", "Quickie",
           "Sugar Daddy", "Safeword", "Feuchter Traum", "Dirty Talk", "Rollenspiel",
           "Friendzone", "Netflix and Chill", "Knutschfleck", "Blaue Eier",
