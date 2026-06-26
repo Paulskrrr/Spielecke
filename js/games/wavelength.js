@@ -121,7 +121,7 @@
   function renderGuess() {
     els.innerHTML =
       '<section class="screen wl-guess">' +
-      '  <h2 class="screen-title pop">' + t("Where is it?") + "</h2>" +
+      '  <h2 class="screen-title pop">' + t("Wavelength") + "</h2>" +
       clueBanner() +
       spectrumView(spectrum, { showGuess: true, slider: true }) +
       '  <button id="wl-lock" class="btn btn-primary btn-block btn-xl">' + t("Lock it in 🔒") + "</button>" +

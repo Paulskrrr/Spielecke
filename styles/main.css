@@ -512,7 +512,7 @@ body::before {
 
 /* ----- Wavelength ------------------------------------------------------- */
 
-.wl-handover, .wl-reveal { text-align: center; }
+.wl-handover, .wl-reveal, .wl-guess { text-align: center; }
 
 /* Mobile-first: the spectrum runs VERTICALLY (blue at top → red at bottom),
    with each end-label stacked directly above/below the dial so they read as the
