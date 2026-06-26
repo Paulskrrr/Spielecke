@@ -77,20 +77,6 @@ body::before {
   background-repeat: no-repeat;
 }
 
-/* Bottom safe-area cap: the themed bottom toolbar / home-indicator area is
-   purple (like the header), but it bled straight into the background. Fill the
-   bottom inset with the same purple and a black top edge, mirroring the
-   header's border-bottom so the bar reads as bounded. Zero-height (and so
-   invisible) on devices/desktop with no bottom inset. */
-body::after {
-  content: "";
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  height: env(safe-area-inset-bottom, 0px);
-  background: linear-gradient(var(--ink) 0 4px, var(--purple) 4px);
-  z-index: 9;
-}
-
 /* ----- Sticker headings (.neon legacy name + .pop) ---------------------- */
 
 .neon,
