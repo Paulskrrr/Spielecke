@@ -1535,12 +1535,20 @@ body::before {
      the top. Cap the width for a comfortable near-square drawing area, grow the
      height, and centre the screen vertically. The canvas sizes its buffer from
      these CSS dimensions, so the usable drawing surface grows with it. */
+  /* Break out of the narrow 880px .app column to full viewport width, then cap a
+     roomy centred drawing column so the canvas truly fills the desktop. */
   .dd-draw, .dd-guess {
-    max-width: 720px; margin: 0 auto;
-    min-height: 74vh; display: flex; flex-direction: column; justify-content: center;
+    width: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: max(24px, 4vw);
+    padding-right: max(24px, 4vw);
+    min-height: 82vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
   }
-  .dd-draw .doodle-canvas { height: min(60vh, 560px); }
-  .dd-guess .doodle-show { height: min(56vh, 520px); }
+  .dd-draw > *, .dd-guess > * { width: 100%; max-width: 1040px; }
+  .dd-draw .doodle-canvas { height: min(72vh, 720px); }
+  .dd-guess .doodle-show { height: min(68vh, 660px); }
 }
 
 /* ════════════════════════════════════════════════════════════════════════
