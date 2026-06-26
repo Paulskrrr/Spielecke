@@ -327,6 +327,9 @@
     "drifted furthest.": "wich am weitesten ab.",
     "Who drifted?": "Wer weicht ab?",
     "off by {n}": "{n} daneben",
+    "🔍 Compare rankings": "🔍 Rankings vergleichen",
+    "Group #{n}": "Schwarm #{n}",
+    "← Back to results": "← Zurück zum Ergebnis",
 
     // ── In-game UI: raw strings localised across games ─────────────────────
     // Who Am I?

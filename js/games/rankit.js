@@ -20,6 +20,9 @@
 
   var els = null, ctx = null, settings = null;
   var players = [], set = null, rankings = [], idx = 0, current = [];
+  // Reveal-time data kept around so the compare view can replay each player's
+  // ranking against the group consensus.
+  var consensusRank = [], compare = [];
 
   var module = {
     meta: {
@@ -41,6 +44,7 @@
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; players = []; set = null; rankings = []; idx = 0; current = [];
+      consensusRank = []; compare = [];
     },
   };
 
@@ -246,7 +250,7 @@
     var consensusOrder = items.map(function (_, i) { return i; }).sort(function (a, b) {
       return avg[a] - avg[b] || a - b;
     });
-    var consensusRank = [];
+    consensusRank = [];
     consensusOrder.forEach(function (itemIdx, pos) { consensusRank[itemIdx] = pos; });
 
     // Each player's drift = sum of |their position − consensus position| (footrule).
@@ -254,8 +258,12 @@
       var drift = items.reduce(function (a, _, i) {
         return a + Math.abs(r.order.indexOf(i) - consensusRank[i]);
       }, 0);
-      return { name: r.name, drift: drift };
+      return { name: r.name, order: r.order, drift: drift };
     }).sort(function (x, y) { return x.drift - y.drift; });
+
+    // Most-in-sync first, so clicking through compares the closest matches before
+    // the wild cards.
+    compare = scored.map(function (s) { return { name: s.name, order: s.order, drift: s.drift }; });
 
     var winner = scored[0];
     var loser = scored[scored.length - 1];
@@ -299,17 +307,60 @@
       '  <ul class="ri-players">' + playerRows + "</ul>" +
       '  <div class="stack">' +
       '    <button id="ri-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
+      '    <button id="ri-compare" class="btn btn-block">' + t("🔍 Compare rankings") + "</button>" +
       '    <button id="ri-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
       '    <button id="ri-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 
+    els.querySelector("#ri-compare").addEventListener("click", function () { renderCompare(0); });
     els.querySelector("#ri-next").addEventListener("click", function () {
       var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
       if (roster.length >= MIN_PLAYERS) startRound(roster); else renderSetup();
     });
     els.querySelector("#ri-settings").addEventListener("click", renderSetup);
     els.querySelector("#ri-home").addEventListener("click", function () { ctx.goHome(); });
+  }
+
+  // Flip through each player's locked-in ranking one at a time and see where they
+  // sat each item versus where the group landed. Wraps around so you can keep
+  // tapping. `i` indexes `compare` (most-in-sync first).
+  function renderCompare(i) {
+    var items = set.items;
+    var n = compare.length;
+    i = ((i % n) + n) % n;
+    var p = compare[i];
+
+    var rows = p.order.map(function (itemIdx, pos) {
+      var cPos = consensusRank[itemIdx];
+      var match = cPos === pos;
+      return (
+        '<li class="ri-row' + (match ? " ri-row--match" : "") + '">' +
+        '<span class="ri-row__no">' + (pos + 1) + "</span>" +
+        '<span class="ri-row__label">' + esc(items[itemIdx]) + "</span>" +
+        '<span class="ri-cmp__group">' + (match ? "✓ " : "") + t("Group #{n}").replace("{n}", cPos + 1) + "</span>" +
+        "</li>"
+      );
+    }).join("");
+
+    els.innerHTML =
+      '<section class="screen ri-reveal">' +
+      '  <div class="result-emoji">🔍</div>' +
+      '  <h2 class="result-title pop">' + t("{name}'s ranking").replace("{name}", esc(p.name)) + "</h2>" +
+      '  <p class="result-sub muted">' + t("Player {i} of {n}").replace("{i}", i + 1).replace("{n}", n) +
+      "  · " + t("off by {n}").replace("{n}", p.drift) + "</p>" +
+      '  <div class="ri-title">' + esc(set.title) + "</div>" +
+      '  <ol class="ri-consensus">' + rows + "</ol>" +
+      '  <div class="ri-cmp-nav">' +
+      '    <button id="ri-cmp-prev" class="btn">◀</button>' +
+      '    <button id="ri-cmp-next" class="btn">▶</button>' +
+      "  </div>" +
+      '  <button id="ri-cmp-back" class="btn btn-primary btn-block btn-xl">' + t("← Back to results") + "</button>" +
+      "</section>";
+
+    els.querySelector("#ri-cmp-prev").addEventListener("click", function () { renderCompare(i - 1); });
+    els.querySelector("#ri-cmp-next").addEventListener("click", function () { renderCompare(i + 1); });
+    els.querySelector("#ri-cmp-back").addEventListener("click", renderReveal);
   }
 
   function pickSet() {
