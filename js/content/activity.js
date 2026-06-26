@@ -18,13 +18,20 @@
     de: {
       2: {
         label: "Leicht",
-        words: ["Bier", "Hund", "Pizza", "Selfie", "Kuss", "Klo", "Kondom", "Handy"],
+        words: [
+          "Bier", "Hund", "Pizza", "Selfie", "Kuss", "Klo", "Kondom", "Handy",
+          "Dusche", "Zahnbürste", "Gitarre", "Regenschirm", "Pinguin", "Roboter",
+          "Skateboard", "Einhorn", "Burger", "Sonnenbrille", "Achterbahn", "Vampir",
+        ],
       },
       3: {
         label: "Mittel",
         words: [
           "Kater", "Tinder-Date", "Walk of Shame", "Nacktbaden",
           "Netflix and Chill", "Fresskoma", "Poledance", "One-Night-Stand",
+          "Sonnenbrand", "Vorstellungsgespräch", "Erstes Date", "Karaoke",
+          "Stau", "Influencer", "Festival", "Bungee-Jumping",
+          "Zombie", "Astronaut", "Ghosting", "Roadtrip",
         ],
       },
       4: {
@@ -33,19 +40,30 @@
           "Sinnkrise", "Mile-High-Club", "Freundschaft Plus",
           "Midlife-Crisis", "Stockholm-Syndrom", "Hochstapler-Syndrom",
           "Kamasutra", "Dirty Talk", "Rollenspiel", "Safeword",
+          "Quarterlife-Crisis", "Fernbeziehung", "Schwarzes Loch",
+          "Künstliche Intelligenz", "Verschwörungstheorie", "Inflation",
+          "Burnout", "Déjà-vu", "Schadenfreude", "FOMO",
+          "Helikopter-Eltern", "Mansplaining",
         ],
       },
     },
     en: {
       2: {
         label: "Easy",
-        words: ["Beer", "Dog", "Pizza", "Selfie", "Kiss", "Toilet", "Condom", "Phone"],
+        words: [
+          "Beer", "Dog", "Pizza", "Selfie", "Kiss", "Toilet", "Condom", "Phone",
+          "Shower", "Toothbrush", "Guitar", "Umbrella", "Penguin", "Robot",
+          "Skateboard", "Unicorn", "Burger", "Sunglasses", "Roller coaster", "Vampire",
+        ],
       },
       3: {
         label: "Medium",
         words: [
           "Hangover", "Tinder date", "Walk of shame", "Skinny dipping",
           "Netflix and chill", "Food coma", "Pole dancing", "One-night stand",
+          "Sunburn", "Job interview", "First date", "Karaoke",
+          "Traffic jam", "Influencer", "Festival", "Bungee jumping",
+          "Zombie", "Astronaut", "Ghosting", "Road trip",
         ],
       },
       4: {
@@ -54,6 +72,10 @@
           "Existential crisis", "Mile-high club", "Friends with benefits",
           "Midlife crisis", "Stockholm syndrome", "Imposter syndrome",
           "Kama Sutra", "Dirty talk", "Roleplay", "Safe word",
+          "Quarter-life crisis", "Long-distance relationship", "Black hole",
+          "Artificial intelligence", "Conspiracy theory", "Inflation",
+          "Burnout", "Déjà vu", "Schadenfreude", "FOMO",
+          "Helicopter parents", "Mansplaining",
         ],
       },
     },
