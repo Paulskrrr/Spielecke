@@ -37,7 +37,7 @@
   var TYPE_META = {
     sofort:    { tag: "Crimson", label: "Instant Action",  colour: "#9B1B30" },
     regel:     { tag: "Sapphire", label: "Passive / Rule", colour: "#1B3A6B" },
-    aktiv:     { tag: "Gold",    label: "Active Card",     colour: "#C9A227" },
+    aktiv:     { tag: "Gold",    label: "Trump",           colour: "#C9A227" },
     minispiel: { tag: "Purple",  label: "Mini-game",       colour: "#5B2A86" },
   };
 
@@ -442,7 +442,7 @@
   function activeHtml() {
     var body;
     if (!game.active.length) {
-      body = '<p class="ha-empty muted small">' + t("No active cards. Gold cards stay face-up with their holder.") + "</p>";
+      body = '<p class="ha-empty muted small">' + t("No Trumps yet. Gold cards stay face-up with their holder.") + "</p>";
     } else {
       body = '<div class="ha-hand">' + game.active.map(function (a) {
         return (
@@ -456,7 +456,7 @@
         );
       }).join("") + "</div>";
     }
-    return '<div class="ha-pile"><h3 class="sub">' + t("🪙 Active Cards") + "</h3>" + body + "</div>";
+    return '<div class="ha-pile"><h3 class="sub">' + t("🪙 Trumps") + "</h3>" + body + "</div>";
   }
 
   // ---------------------------------------------------------------------------
@@ -473,7 +473,7 @@
       '<section class="screen ha-screen">' +
       '  <div class="result-emoji">🃏</div>' +
       '  <h2 class="result-title pop">' + t("Deck at Rest") + "</h2>" +
-      '  <p class="result-sub">' + t("All cards are in play (Standing Rules & Active Cards). Reset for a fresh round.") + "</p>" +
+      '  <p class="result-sub">' + t("All cards are in play (Standing Rules & Trumps). Reset for a fresh round.") + "</p>" +
       '  <button id="ha-back" class="btn btn-primary btn-block btn-xl" data-primary>' + t("Back to Table") + "</button>" +
       "</section>";
     els.querySelector("#ha-back").addEventListener("click", renderTable);
@@ -612,7 +612,7 @@
     els.innerHTML =
       '<section class="screen ha-screen">' +
       '  <h2 class="screen-title pop">' + t("Reset game?") + "</h2>" +
-      '  <div class="fuse-note">' + t("Standing rules and active cards will be lost; the deck gets reshuffled. Edition and seating order stay.") + "</div>" +
+      '  <div class="fuse-note">' + t("Standing rules and Trumps will be lost; the deck gets reshuffled. Edition and seating order stay.") + "</div>" +
       '  <button id="ha-reset-yes" class="btn btn-primary btn-block btn-xl">' + t("Yes, reset") + "</button>" +
       '  <button id="ha-reset-no" class="btn btn-ghost btn-block">' + t("Cancel") + "</button>" +
       "</section>";
