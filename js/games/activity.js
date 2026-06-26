@@ -32,6 +32,7 @@
   var els = null, ctx = null;
   var board = [];            // board[i] = type for i in 0..FINISH-1
   var teams = null;          // [{ figure, color, pos }, ...]
+  var assign = null;         // { playerId: 0|1 } — manual team membership
   var current = 0;           // whose turn
   var points = 0, curType = "", curWord = "";
   var timer = null, remaining = 0;
@@ -55,13 +56,14 @@
         { figure: context.store.get("fig0", FIGURES[0]), color: "blue", pos: 0 },
         { figure: context.store.get("fig1", FIGURES[1]), color: "red", pos: 0 },
       ];
+      assign = context.store.get("teamAssign", {}) || {};
       renderSetup();
     },
     unmount: function () {
       stopTimer();
       teardownCanvas();
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; teams = null; board = [];
+      ctx = null; teams = null; board = []; assign = null;
     },
   };
 
@@ -69,18 +71,23 @@
   function renderSetup() {
     stopTimer();
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var split = roster.length >= 2 ? suggestSplit(roster) : null;
+    ensureAssignment(roster);
+    var membersA = roster.filter(function (p) { return assign[p.id] === 0; });
+    var membersB = roster.filter(function (p) { return assign[p.id] === 1; });
 
     els.innerHTML =
       '<section class="screen act-setup">' +
       '  <h2 class="screen-title pop">🗺️ ' + t("Activity") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       '  <div class="act-teams">' +
-      teamSetupCard(0, split && split[0]) +
+      teamSetupCard(0, membersA) +
       '    <div class="act-vs">' + t("VS") + "</div>" +
-      teamSetupCard(1, split && split[1]) +
+      teamSetupCard(1, membersB) +
       "  </div>" +
-      (split ? '<button id="act-shuffle" class="btn btn-block">' + t("🔀 Shuffle teams") + "</button>" : "") +
+      (roster.length
+        ? '<div class="act-assign-panel"><p class="muted">' + t("Tap a player to pick their team") + "</p>" +
+          '<ul class="act-assign-list">' + roster.map(assignRow).join("") + "</ul></div>"
+        : '<p class="muted act-no-players">' + t("Add players on the Players screen to set up teams.") + "</p>") +
       '  <div class="act-legend">' +
       legendItem("explain") + legendItem("draw") + legendItem("charade") +
       "  </div>" +
@@ -95,9 +102,13 @@
         renderSetup();
       });
     });
-    if (split) {
-      els.querySelector("#act-shuffle").addEventListener("click", renderSetup);
-    }
+    els.querySelectorAll("[data-assign]").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        assign[btn.getAttribute("data-assign")] = parseInt(btn.getAttribute("data-team"), 10);
+        ctx.store.set("teamAssign", assign);
+        renderSetup();
+      });
+    });
     els.querySelector("#act-drink").addEventListener("change", function (e) {
       drinking = e.target.checked; ctx.store.set("drinking", drinking);
     });
@@ -111,9 +122,25 @@
       '  <button id="act-fig' + i + '" class="act-figure" aria-label="Change figure">' + team.figure + "</button>" +
       '  <div class="act-team__name">' + t(i === 0 ? "Team A" : "Team B") + "</div>" +
       (members && members.length
-        ? '<div class="act-team__members">' + esc(members.join(", ")) + "</div>"
-        : '<div class="act-team__members muted">' + t("tap figure to change") + "</div>") +
+        ? '<div class="act-team__members">' + esc(members.map(function (p) { return p.name; }).join(", ")) + "</div>"
+        : '<div class="act-team__members muted">' + t("no players yet") + "</div>") +
       "</div>"
+    );
+  }
+
+  // One row per player: two figure buttons pick the team, active one is lit.
+  function assignRow(p) {
+    var team = assign[p.id];
+    return (
+      '<li class="act-assign-row">' +
+      '  <span class="act-assign-row__name">' + esc(p.name) + "</span>" +
+      '  <div class="act-assign-row__btns">' +
+      '    <button class="act-assign-btn act-assign-btn--a' + (team === 0 ? " is-active" : "") +
+      '" data-assign="' + esc(p.id) + '" data-team="0" aria-label="' + t("Team A") + '">' + teams[0].figure + "</button>" +
+      '    <button class="act-assign-btn act-assign-btn--b' + (team === 1 ? " is-active" : "") +
+      '" data-assign="' + esc(p.id) + '" data-team="1" aria-label="' + t("Team B") + '">' + teams[1].figure + "</button>" +
+      "  </div>" +
+      "</li>"
     );
   }
 
@@ -134,12 +161,21 @@
     }
   }
 
-  function suggestSplit(roster) {
-    var names = roster.map(function (p) { return p.name; });
-    for (var i = names.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = names[i]; names[i] = names[j]; names[j] = tmp; }
-    var a = [], b = [];
-    names.forEach(function (n, i) { (i % 2 === 0 ? a : b).push(n); });
-    return [a, b];
+  // Keep every manual choice; drop stale players; auto-place newcomers on the
+  // smaller team so a fresh roster starts balanced (deterministic — no shuffle).
+  function ensureAssignment(roster) {
+    var next = {}, counts = [0, 0];
+    roster.forEach(function (p) {
+      if (assign[p.id] === 0 || assign[p.id] === 1) { next[p.id] = assign[p.id]; counts[next[p.id]]++; }
+    });
+    roster.forEach(function (p) {
+      if (next[p.id] === undefined) {
+        var team = counts[0] <= counts[1] ? 0 : 1;
+        next[p.id] = team; counts[team]++;
+      }
+    });
+    assign = next;
+    ctx.store.set("teamAssign", assign);
   }
 
   // --- Game start / turn ---------------------------------------------------

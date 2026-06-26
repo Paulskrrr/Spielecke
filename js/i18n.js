@@ -242,7 +242,9 @@
     "Act it out — no talking, no sounds": "Nachspielen — kein Reden, keine Geräusche",
     "🍻 Drinking mode (fail → you drink, win → they drink)": "🍻 Trinkspiel",
     "Start game ▶️": "Spiel starten ▶️",
-    "tap figure to change": "tippen zum Wechseln",
+    "Tap a player to pick their team": "Tippe einen Spieler an, um sein Team zu wählen",
+    "Add players on the Players screen to set up teams.": "Füge auf dem Spieler-Bildschirm Spieler hinzu, um Teams zu bilden.",
+    "no players yet": "noch keine Spieler",
     "'s turn": " ist dran",
     "Pick how risky:": "Wie riskant?",
     "points": "Punkte",
@@ -260,7 +262,6 @@
     "Next team ▶️": "Nächstes Team ▶️",
     "completed the map first!": "hat die Karte als Erstes geschafft!",
     "Change teams": "Teams wechseln",
-    "🔀 Shuffle teams": "🔀 Teams mischen",
 
     // ── Quiz Out ───────────────────────────────────────────────────────────
     "Hearts each": "Herzen pro Spieler",

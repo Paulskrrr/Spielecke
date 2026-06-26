@@ -892,6 +892,26 @@ body::before {
 .act-team__name { font-weight: 800; }
 .act-team__members { font-size: 0.8rem; margin-top: 4px; }
 
+/* Manual team assignment: one row per player, two figure buttons pick the team */
+.act-assign-panel { margin: 16px 0; }
+.act-assign-list { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.act-assign-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  border: 3px solid var(--ink); border-radius: var(--radius); background: #fff; padding: 8px 12px;
+}
+.act-assign-row__name { font-weight: 800; }
+.act-assign-row__btns { display: flex; gap: 6px; }
+.act-assign-btn {
+  font-size: 1.3rem; line-height: 1; background: #fff;
+  border: 3px solid var(--ink); border-radius: 12px; padding: 4px 8px;
+  cursor: pointer; opacity: 0.35; transition: opacity 0.1s, box-shadow 0.1s;
+}
+.act-assign-btn:active { transform: scale(0.9); }
+.act-assign-btn.is-active { opacity: 1; }
+.act-assign-btn--a.is-active { border-color: var(--blue); box-shadow: 0 3px 0 var(--blue); }
+.act-assign-btn--b.is-active { border-color: var(--red); box-shadow: 0 3px 0 var(--red); }
+.act-no-players { margin: 16px 0; }
+
 .act-legend { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0; }
 .act-legend__item {
   font-size: 0.85rem; font-weight: 800; padding: 6px 12px;
