@@ -34,7 +34,7 @@
   var bets = {};            // playerName -> suit
   var draw = [], discard = [], hurdles = [];
   var pos = { S: 0, H: 0, D: 0, C: 0 };
-  var flippedHurdles = 0, finishPos = 7, winner = null, leader = null;
+  var flippedHurdles = 0, finishPos = 7, winner = null, leader = null, leadChanged = false;
   var raceTimer = null, running = false;
 
   var module = {
@@ -291,9 +291,8 @@
 
     // Track lead changes for the commentator.
     var lead = currentLeader();
-    if (lead && lead !== leader) { leader = lead; h_leadChanged = true; }
+    if (lead && lead !== leader) { leader = lead; leadChanged = true; }
   }
-  var h_leadChanged = false;
 
   function minPos() { return Math.min(pos.S, pos.H, pos.D, pos.C); }
   function currentLeader() {
@@ -339,8 +338,8 @@
       justFlipped.justFlipped = false;
       return t("Hurdle! {s} stumbles and drops back!").replace("{s}", Cards.SUITS[justFlipped.card.suit].label);
     }
-    if (h_leadChanged && leader) {
-      h_leadChanged = false;
+    if (leadChanged && leader) {
+      leadChanged = false;
       return t("{s} takes the lead!").replace("{s}", Cards.SUITS[leader].label);
     }
     var maxP = Math.max(pos.S, pos.H, pos.D, pos.C);

@@ -201,10 +201,10 @@
 
     countdownTimer = global.setInterval(function () {
       remaining--;
-      var t = els && els.querySelector("#wa-time");
-      if (t) {
-        t.textContent = remaining + "s";
-        if (remaining <= 5) t.classList.add("hud-time--danger");
+      var timeEl = els && els.querySelector("#wa-time");
+      if (timeEl) {
+        timeEl.textContent = remaining + "s";
+        if (remaining <= 5) timeEl.classList.add("hud-time--danger");
       }
       if (remaining <= 0) finishTurn();
     }, 1000);
@@ -251,7 +251,7 @@
   function shuffle(a) {
     for (var i = a.length - 1; i > 0; i--) {
       var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
     }
     return a;
   }

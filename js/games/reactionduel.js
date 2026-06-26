@@ -66,9 +66,9 @@
     },
     mount: function (container, context) {
       els = container; ctx = context;
+      var tgt = parseInt(context.store.get("target", DEFAULTS.target), 10);
       settings = {
-        target: TARGETS.indexOf(parseInt(context.store.get("target", DEFAULTS.target), 10)) !== -1
-          ? parseInt(context.store.get("target", DEFAULTS.target), 10) : DEFAULTS.target,
+        target: TARGETS.indexOf(tgt) !== -1 ? tgt : DEFAULTS.target,
         drinking: context.store.get("drinking", false) === true,
       };
       li = 0; ri = 1;
