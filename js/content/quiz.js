@@ -230,6 +230,42 @@
         ],
       ],
     },
+
+    geography: {
+      label: "🌍 Geography",
+      levels: [
+        [
+          { q: "What is the capital of France?", options: ["Paris", "London", "Rome", "Madrid"], answer: 0 },
+          { q: "Which continent is Egypt in?", options: ["Africa", "Asia", "Europe", "South America"], answer: 0 },
+          { q: "Which is the largest ocean?", options: ["Pacific", "Atlantic", "Indian", "Arctic"], answer: 0 },
+          { q: "Which country is shaped like a boot?", options: ["Italy", "Spain", "Greece", "Portugal"], answer: 0 },
+        ],
+        [
+          { q: "What is the capital of Japan?", options: ["Tokyo", "Beijing", "Seoul", "Bangkok"], answer: 0 },
+          { q: "How many continents are there?", options: ["7", "5", "6", "8"], answer: 0 },
+          { q: "The Sahara is the world's largest hot what?", options: ["Desert", "Jungle", "Canyon", "Plain"], answer: 0 },
+          { q: "Which country has the most people? (2024)", options: ["India", "China", "USA", "Indonesia"], answer: 0 },
+        ],
+        [
+          { q: "What is the capital of Australia?", options: ["Canberra", "Sydney", "Melbourne", "Perth"], answer: 0 },
+          { q: "Mount Kilimanjaro is in which country?", options: ["Tanzania", "Kenya", "Uganda", "Ethiopia"], answer: 0 },
+          { q: "Which river is usually called the longest?", options: ["Nile", "Amazon", "Yangtze", "Mississippi"], answer: 0 },
+          { q: "The Danube empties into which sea?", options: ["Black Sea", "Baltic Sea", "North Sea", "Mediterranean"], answer: 0 },
+        ],
+        [
+          { q: "What is the capital of Canada?", options: ["Ottawa", "Toronto", "Vancouver", "Montreal"], answer: 0 },
+          { q: "Which strait separates Europe from Africa?", options: ["Gibraltar", "Bosphorus", "Hormuz", "Bering"], answer: 0 },
+          { q: "Which African country has the most people?", options: ["Nigeria", "Egypt", "Ethiopia", "DR Congo"], answer: 0 },
+          { q: "Lake Baikal lies in which country?", options: ["Russia", "Mongolia", "Kazakhstan", "China"], answer: 0 },
+        ],
+        [
+          { q: "What is the capital of Kazakhstan?", options: ["Astana", "Almaty", "Tashkent", "Bishkek"], answer: 0 },
+          { q: "Which country has the longest coastline?", options: ["Canada", "Russia", "Indonesia", "Australia"], answer: 0 },
+          { q: "The Atacama Desert is mostly in which country?", options: ["Chile", "Peru", "Bolivia", "Argentina"], answer: 0 },
+          { q: "Which is the smallest country in the world?", options: ["Vatican City", "Monaco", "San Marino", "Malta"], answer: 0 },
+        ],
+      ],
+    },
   };
 
   var DE = {
@@ -438,6 +474,42 @@
           { q: "Wer ist Star-Lord?", options: ["Peter Quill", "Peter Parker", "Scott Lang", "Stephen Strange"], answer: 0 },
           { q: "Wie heißt Thors Heimatwelt?", options: ["Asgard", "Vanaheim", "Jotunheim", "Midgard"], answer: 0 },
           { q: "Welcher Stein ist auf Vormir versteckt?", options: ["Seelenstein", "Machtstein", "Gedankenstein", "Zeitstein"], answer: 0 },
+        ],
+      ],
+    },
+
+    geography: {
+      label: "🌍 Geografie",
+      levels: [
+        [
+          { q: "Was ist die Hauptstadt von Frankreich?", options: ["Paris", "London", "Rom", "Madrid"], answer: 0 },
+          { q: "Auf welchem Kontinent liegt Ägypten?", options: ["Afrika", "Asien", "Europa", "Südamerika"], answer: 0 },
+          { q: "Welcher Ozean ist der größte?", options: ["Pazifik", "Atlantik", "Indischer", "Arktischer"], answer: 0 },
+          { q: "Welches Land hat die Form eines Stiefels?", options: ["Italien", "Spanien", "Griechenland", "Portugal"], answer: 0 },
+        ],
+        [
+          { q: "Was ist die Hauptstadt von Japan?", options: ["Tokio", "Peking", "Seoul", "Bangkok"], answer: 0 },
+          { q: "Wie viele Kontinente gibt es?", options: ["7", "5", "6", "8"], answer: 0 },
+          { q: "Die Sahara ist die größte heiße was der Welt?", options: ["Wüste", "Dschungel", "Schlucht", "Ebene"], answer: 0 },
+          { q: "Welches Land hat die meisten Menschen? (2024)", options: ["Indien", "China", "USA", "Indonesien"], answer: 0 },
+        ],
+        [
+          { q: "Was ist die Hauptstadt von Australien?", options: ["Canberra", "Sydney", "Melbourne", "Perth"], answer: 0 },
+          { q: "In welchem Land steht der Kilimandscharo?", options: ["Tansania", "Kenia", "Uganda", "Äthiopien"], answer: 0 },
+          { q: "Welcher Fluss gilt meist als der längste?", options: ["Nil", "Amazonas", "Jangtse", "Mississippi"], answer: 0 },
+          { q: "In welches Meer mündet die Donau?", options: ["Schwarzes Meer", "Ostsee", "Nordsee", "Mittelmeer"], answer: 0 },
+        ],
+        [
+          { q: "Was ist die Hauptstadt von Kanada?", options: ["Ottawa", "Toronto", "Vancouver", "Montreal"], answer: 0 },
+          { q: "Welche Meerenge trennt Europa von Afrika?", options: ["Gibraltar", "Bosporus", "Hormus", "Bering"], answer: 0 },
+          { q: "Welches afrikanische Land hat die meisten Menschen?", options: ["Nigeria", "Ägypten", "Äthiopien", "DR Kongo"], answer: 0 },
+          { q: "In welchem Land liegt der Baikalsee?", options: ["Russland", "Mongolei", "Kasachstan", "China"], answer: 0 },
+        ],
+        [
+          { q: "Was ist die Hauptstadt von Kasachstan?", options: ["Astana", "Almaty", "Taschkent", "Bischkek"], answer: 0 },
+          { q: "Welches Land hat die längste Küstenlinie?", options: ["Kanada", "Russland", "Indonesien", "Australien"], answer: 0 },
+          { q: "In welchem Land liegt die Atacama-Wüste größtenteils?", options: ["Chile", "Peru", "Bolivien", "Argentinien"], answer: 0 },
+          { q: "Welches ist das kleinste Land der Welt?", options: ["Vatikanstadt", "Monaco", "San Marino", "Malta"], answer: 0 },
         ],
       ],
     },

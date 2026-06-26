@@ -37,6 +37,9 @@
 
     // ── Shelf ──────────────────────────────────────────────────────────────
     "🍻 drink mode": "🍻 Trinkspiel",
+    "Coming soon": "Bald verfügbar",
+    "Coming soon…": "Bald verfügbar…",
+    "New games are in the works.": "Neue Spiele sind in Arbeit.",
 
     // ── Game names & taglines ──────────────────────────────────────────────
     "The Bomb": "Die Bombe",
@@ -231,6 +234,11 @@
     "🎉 The chain survived!": "🎉 Die Kette hat überlebt!",
     "The chain 🎨": "Die Kette 🎨",
     "New chain 🔁": "Neue Kette 🔁",
+    "It started with…": "Es begann mit…",
+    "Step {i} of {n}": "Schritt {i} von {n}",
+    "Next →": "Weiter →",
+    "Unveil the artwork 🖼️": "Kunstwerk enthüllen 🖼️",
+    "The gallery 🖼️": "Die Galerie 🖼️",
 
     // ── Activity ───────────────────────────────────────────────────────────
     "Explain": "Erklären",

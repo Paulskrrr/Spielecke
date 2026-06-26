@@ -231,6 +231,23 @@ body::before {
 }
 .game-card:active { transform: translateY(3px) scale(0.99); box-shadow: 0 2px 0 var(--ink); }
 
+/* "Coming soon" teaser — fills the trailing grid slot. Muted & dashed so it
+   reads as a placeholder, but it keeps the hover/press haptics of a real card
+   (it just doesn't navigate anywhere). */
+.game-card.game-card--soon {
+  background:
+    repeating-linear-gradient(45deg, rgba(36, 27, 77, 0.06) 0 14px, transparent 14px 28px),
+    var(--paper-2);
+  color: var(--ink-soft);
+  border-style: dashed;
+  box-shadow: 0 8px 0 rgba(36, 27, 77, 0.2);
+  align-items: center; justify-content: center; text-align: center; gap: 6px;
+}
+.game-card--soon::after { display: none; }
+.game-card--soon .game-card__icon { background: transparent; box-shadow: none; }
+.game-card--soon .game-card__name { color: var(--ink); }
+.game-card--soon .game-card__tagline { color: var(--ink-soft); }
+
 .game-card__icon {
   font-size: 1.9rem;
   line-height: 1;
@@ -866,6 +883,48 @@ body::before {
 .dd-by { font-weight: 800; margin-bottom: 8px; color: var(--ink-soft); }
 .doodle-thumb { display: block; width: 100%; max-height: 320px; object-fit: contain; background: #fff; border-radius: 10px; }
 .dd-guesstext { font-size: 1.4rem; font-weight: 800; }
+
+/* Reveal step-through: one beat per screen, clicked through in order. */
+.dd-reveal--step, .dd-finale { text-align: center; }
+.dd-progress {
+  font-size: 0.78rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--ink-soft); margin: 2px 0 14px;
+}
+.dd-stepcard {
+  max-width: 560px; margin: 0 auto 16px; padding: 18px;
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  background: #fff; border: 4px solid var(--ink); border-radius: var(--radius); box-shadow: var(--pop);
+  animation: pop-in 0.22s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.dd-step-kicker { font-size: 0.95rem; font-weight: 800; color: var(--ink-soft); }
+.dd-stepword { font-size: clamp(1.6rem, 6vw, 2.4rem); font-weight: 900; line-height: 1.15; }
+.dd-stepimg {
+  width: 100%; max-height: 48vh; object-fit: contain; background: #fff;
+  border: 3px solid var(--ink); border-radius: 12px; margin: 0;
+}
+.dd-step-nav { display: flex; gap: 10px; max-width: 560px; margin: 0 auto; }
+.dd-step-nav .btn-primary { flex: 1; }
+.dd-prev { flex: 0 0 auto; font-size: 1.3rem; }
+
+/* Gallery finale — the last drawing hung in an ornate gilded frame with a
+   brass nameplate carrying the ORIGINAL word, presented like an artwork. */
+.dd-art { margin: 6px auto 16px; max-width: 560px; display: flex; flex-direction: column; align-items: center; }
+.dd-artframe {
+  position: relative; padding: 16px;
+  background: linear-gradient(135deg, #b8860b, #ffe9a8 22%, #c9971f 48%, #ffe9a8 72%, #a9760a);
+  border: 3px solid #6e530c; border-radius: 6px;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.34), inset 0 0 0 2px rgba(255, 255, 255, 0.4);
+}
+.dd-artframe::before {
+  content: ""; position: absolute; inset: 8px; border: 3px double #6e530c; border-radius: 3px; pointer-events: none;
+}
+.dd-artframe__mat { padding: 14px; background: #fbf7ec; border: 1px solid #6e530c; }
+.dd-artframe__mat img { display: block; width: 100%; max-height: 56vh; object-fit: contain; background: #fff; }
+.dd-plate {
+  margin-top: 14px; font-weight: 900; font-size: 1.25rem; letter-spacing: 0.3px;
+  color: #2a2208; background: linear-gradient(#e7c65b, #b8902e);
+  border: 3px solid #6e530c; border-radius: 8px; padding: 8px 24px; box-shadow: 0 5px 0 #5a4711;
+}
 
 /* ----- Activity --------------------------------------------------------- */
 
@@ -1577,6 +1636,10 @@ body::before {
   .dd-draw > *, .dd-guess > * { width: 100%; max-width: 1040px; }
   .dd-draw .doodle-canvas { height: min(72vh, 720px); }
   .dd-guess .doodle-show { height: min(68vh, 660px); }
+  /* Reveal step-through & gallery: centre vertically on the desktop canvas. */
+  .dd-reveal--step, .dd-finale {
+    min-height: 74vh; display: flex; flex-direction: column; justify-content: center;
+  }
 }
 
 /* ════════════════════════════════════════════════════════════════════════

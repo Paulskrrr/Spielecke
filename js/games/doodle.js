@@ -21,7 +21,7 @@
   var MIN_PLAYERS = 2;
 
   var els = null, ctx = null, settings = null;
-  var players = [], secretWord = "", chain = [], step = 0;
+  var players = [], secretWord = "", chain = [], step = 0, revealStep = 0;
   // active drawing state
   var canvas = null, cctx = null, drawing = false, lastX = 0, lastY = 0;
 
@@ -149,36 +149,77 @@
     else renderPassTo();
   }
 
-  // --- Reveal --------------------------------------------------------------
+  // --- Reveal: step through the chain one beat at a time -------------------
+  // The drama lands when you reveal it move by move — the word, then the first
+  // drawing, then what it became, and so on — rather than dumping it all at once.
   function renderReveal() {
-    var items = ['<div class="dd-seed">' + t("The word was: ") + "<strong>" + esc(secretWord) + "</strong></div>"];
-    for (var i = 1; i < chain.length; i++) {
-      var e = chain[i];
-      if (e.kind === "drawing") {
-        items.push(
-          '<div class="dd-item"><div class="dd-by">' + t("{name} drew:").replace("{name}", esc(e.by)) + "</div>" +
-          '<img class="doodle-thumb" src="' + e.value + '" alt="drawing" /></div>'
-        );
-      } else {
-        items.push(
-          '<div class="dd-item"><div class="dd-by">' + t("{name} guessed:").replace("{name}", esc(e.by)) + "</div>" +
-          '<div class="dd-guesstext">' + esc(e.value) + "</div></div>"
-        );
-      }
+    revealStep = 0;
+    renderRevealStep();
+  }
+
+  function renderRevealStep() {
+    teardownCanvas();
+    var total = chain.length; // seed + each drawing/guess = one card per beat
+    if (revealStep >= total) { renderFinale(); return; }
+
+    var e = chain[revealStep];
+    var card;
+    if (e.kind === "seed") {
+      card =
+        '<div class="dd-step-kicker">' + t("It started with…") + "</div>" +
+        '<div class="dd-stepword">' + esc(e.value) + "</div>";
+    } else if (e.kind === "drawing") {
+      card =
+        '<div class="dd-step-kicker">' + t("{name} drew:").replace("{name}", esc(e.by)) + "</div>" +
+        '<img class="doodle-show dd-stepimg" src="' + e.value + '" alt="drawing" />';
+    } else {
+      card =
+        '<div class="dd-step-kicker">' + t("{name} guessed:").replace("{name}", esc(e.by)) + "</div>" +
+        '<div class="dd-stepword">' + esc(e.value) + "</div>";
     }
+
+    var atLast = revealStep === total - 1;
+    els.innerHTML =
+      '<section class="screen dd-reveal dd-reveal--step">' +
+      '  <h2 class="result-title pop">' + t("The chain 🎨") + "</h2>" +
+      '  <div class="dd-progress">' + t("Step {i} of {n}").replace("{i}", revealStep + 1).replace("{n}", total) + "</div>" +
+      '  <div class="dd-stepcard">' + card + "</div>" +
+      '  <div class="dd-step-nav">' +
+      (revealStep > 0 ? '    <button id="dd-prev" class="btn dd-prev">◀</button>' : "") +
+      '    <button id="dd-next" class="btn btn-primary btn-xl" data-primary>' +
+          (atLast ? t("Unveil the artwork 🖼️") : t("Next →")) + "</button>" +
+      "  </div>" +
+      "</section>";
+
+    var prev = els.querySelector("#dd-prev");
+    if (prev) prev.addEventListener("click", function () { revealStep--; renderRevealStep(); });
+    els.querySelector("#dd-next").addEventListener("click", function () { revealStep++; renderRevealStep(); });
+  }
+
+  // The finale: the chain's last drawing, hung in an ornate frame and captioned
+  // with the ORIGINAL word — the telephone-game punchline as a gallery piece.
+  function renderFinale() {
+    var lastDrawing = null;
+    for (var d = chain.length - 1; d >= 0; d--) { if (chain[d].kind === "drawing") { lastDrawing = chain[d]; break; } }
     var lastGuess = null;
-    for (var j = chain.length - 1; j >= 1; j--) { if (chain[j].kind === "guess") { lastGuess = chain[j].value; break; } }
-    var verdict = lastGuess
-      ? (lastGuess.toLowerCase() === secretWord.toLowerCase()
+    for (var g = chain.length - 1; g >= 1; g--) { if (chain[g].kind === "guess") { lastGuess = chain[g].value; break; } }
+    var verdict = !lastGuess ? ""
+      : (lastGuess.toLowerCase() === secretWord.toLowerCase()
           ? t("🎉 The chain survived!")
-          : "💀 " + t("From {a} to {b}.").replace("{a}", "<strong>" + esc(secretWord) + "</strong>").replace("{b}", "<strong>" + esc(lastGuess) + "</strong>"))
+          : "💀 " + t("From {a} to {b}.").replace("{a}", "<strong>" + esc(secretWord) + "</strong>").replace("{b}", "<strong>" + esc(lastGuess) + "</strong>"));
+
+    var art = lastDrawing
+      ? '<figure class="dd-art">' +
+        '  <div class="dd-artframe"><div class="dd-artframe__mat"><img src="' + lastDrawing.value + '" alt="' + attr(secretWord) + '" /></div></div>' +
+        '  <figcaption class="dd-plate">„' + esc(secretWord) + '“</figcaption>' +
+        "</figure>"
       : "";
 
     els.innerHTML =
-      '<section class="screen dd-reveal">' +
-      '  <h2 class="result-title pop">' + t("The chain 🎨") + "</h2>" +
+      '<section class="screen dd-reveal dd-finale">' +
+      '  <h2 class="result-title pop">' + t("The gallery 🖼️") + "</h2>" +
+      art +
       (verdict ? '<p class="result-sub">' + verdict + "</p>" : "") +
-      '  <div class="dd-chain">' + items.join("") + "</div>" +
       '  <div class="stack">' +
       '    <button id="dd-again" class="btn btn-primary btn-block btn-xl">' + t("New chain 🔁") + "</button>" +
       '    <button id="dd-settings" class="btn btn-block">' + t("Change pool") + "</button>" +
@@ -282,6 +323,7 @@
     return list[Math.floor(Math.random() * list.length)];
   }
   var esc = global.Spielecke.esc;
+  var attr = global.Spielecke.attr;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};
