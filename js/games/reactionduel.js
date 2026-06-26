@@ -31,9 +31,9 @@
 
   function getRoundRules() {
     return {
-      go:     t("Wait for 🟢 GREEN — then TAP!"),
-      bait:   t("TAP on GREEN — don't fall for the fakes! 🪤"),
-      colour: t("TAP only when it turns 🟢 GREEN"),
+      go:     t("Wait for 🟢, then TAP!"),
+      bait:   t("TAP 🟢 — ignore the fakes! 🪤"),
+      colour: t("TAP only on 🟢"),
       symbol: t("TAP only the 💣"),
     };
   }
