@@ -33,7 +33,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Versaut",
+        label: "🔞 18+",
         prompts: [
           "einen One-Night-Stand gehabt",
           "ein Nacktfoto verschickt",
@@ -80,7 +80,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Filth",
+        label: "🔞 18+",
         prompts: [
           "had a one-night stand",
           "sent a nude",

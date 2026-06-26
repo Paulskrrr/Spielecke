@@ -29,7 +29,7 @@
         ],
       },
       spicy: {
-        label: "🔞 Versaut",
+        label: "🔞 18+",
         pairs: [
           { left: "Unschuldig", right: "Versaut" },
           { left: "Abturner", right: "Anturner" },
@@ -73,6 +73,36 @@
           { left: "Lässt mich kalt", right: "Mein großer Traum" },
         ],
       },
+      leisure: {
+        label: "🏖️ Freizeit & Urlaub",
+        pairs: [
+          { left: "Stinklangweilig", right: "Trip des Lebens" },
+          { left: "Pauschaltourist", right: "Echter Abenteurer" },
+          { left: "Pure Entspannung", right: "Voller Stress" },
+          { left: "Überschätztes Reiseziel", right: "Geheimtipp" },
+          { left: "Couch-Hobby", right: "Adrenalin pur" },
+          { left: "Geldverschwendung", right: "Jeden Cent wert" },
+          { left: "Familienurlaub", right: "Party-Eskalation" },
+          { left: "Instagram-Falle", right: "Echtes Erlebnis" },
+          { left: "Daheim am schönsten", right: "Fernweh pur" },
+          { left: "Verregnetes Zelt", right: "Luxus-Resort" },
+        ],
+      },
+      history: {
+        label: "🏛️ Politik & Geschichte",
+        pairs: [
+          { left: "Fußnote", right: "Wendepunkt" },
+          { left: "Harmlos", right: "Tyrann" },
+          { left: "Leeres Versprechen", right: "Echte Veränderung" },
+          { left: "Verstaubt", right: "Brandaktuell" },
+          { left: "Diplomatie", right: "Eskalation" },
+          { left: "Überschätzte Figur", right: "Echte Legende" },
+          { left: "Verschwörungstheorie", right: "Historisch belegt" },
+          { left: "Langweiliger Schulstoff", right: "Pure Dramatik" },
+          { left: "Besser vergessen", right: "Niemals vergessen" },
+          { left: "Symbolpolitik", right: "Echte Macht" },
+        ],
+      },
     },
     en: {
       general: {
@@ -91,7 +121,7 @@
         ],
       },
       spicy: {
-        label: "🔞 Spicy",
+        label: "🔞 18+",
         pairs: [
           { left: "Innocent", right: "Filthy" },
           { left: "Turn-off", right: "Turn-on" },
@@ -133,6 +163,36 @@
           { left: "Squeaky clean", right: "Corrupt to the core" },
           { left: "Keep dreaming", right: "Realistic plan" },
           { left: "Leaves me cold", right: "My big dream" },
+        ],
+      },
+      leisure: {
+        label: "🏖️ Leisure & Travel",
+        pairs: [
+          { left: "Dead boring", right: "Trip of a lifetime" },
+          { left: "Package tourist", right: "True adventurer" },
+          { left: "Pure relaxation", right: "Total stress" },
+          { left: "Overrated spot", right: "Hidden gem" },
+          { left: "Couch hobby", right: "Pure adrenaline" },
+          { left: "Waste of money", right: "Worth every cent" },
+          { left: "Family holiday", right: "Party blowout" },
+          { left: "Instagram trap", right: "Real experience" },
+          { left: "Best at home", right: "Pure wanderlust" },
+          { left: "Rainy tent", right: "Luxury resort" },
+        ],
+      },
+      history: {
+        label: "🏛️ Politics & History",
+        pairs: [
+          { left: "Footnote", right: "Turning point" },
+          { left: "Harmless", right: "Tyrant" },
+          { left: "Empty promise", right: "Real change" },
+          { left: "Dusty", right: "Red-hot topical" },
+          { left: "Diplomacy", right: "Escalation" },
+          { left: "Overrated figure", right: "Genuine legend" },
+          { left: "Conspiracy theory", right: "Documented fact" },
+          { left: "Boring school stuff", right: "Pure drama" },
+          { left: "Best forgotten", right: "Never forget" },
+          { left: "Symbolic gesture", right: "Real power" },
         ],
       },
     },

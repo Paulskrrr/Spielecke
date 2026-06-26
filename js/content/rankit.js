@@ -71,7 +71,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Versaut",
+        label: "🔞 18+",
         sets: [
           // ── Soft entry ──
           { title: "Größter → verzeihlichster Ick", items: ["Schlechter Küsser", "Schreibt viel zu viel", "Wohnt noch bei den Eltern", "Null Ehrgeiz", "Quatscht im Kino"] },
@@ -151,7 +151,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Filth",
+        label: "🔞 18+",
         sets: [
           // ── Soft entry ──
           { title: "Biggest → most forgivable ick", items: ["Bad kisser", "Texts way too much", "Still lives with parents", "Zero ambition", "Talks during the film"] },

@@ -36,7 +36,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Versaut",
+        label: "🔞 18+",
         prompts: [
           "reißt heute Abend einen Fremden auf",
           "hat den wildesten Suchverlauf",
@@ -80,7 +80,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Filth",
+        label: "🔞 18+",
         prompts: [
           "hook up with a stranger tonight",
           "have the wildest search history",

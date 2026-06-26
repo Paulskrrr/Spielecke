@@ -33,7 +33,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Versaut",
+        label: "🔞 18+",
         prompts: [
           "Wie hoch ist dein Body Count? (sei ehrlich)",
           "Was war der verrückteste Ort, an dem du es getrieben hast?",
@@ -78,7 +78,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Filth",
+        label: "🔞 18+",
         prompts: [
           "What's your body count? (be honest)",
           "What's the wildest place you've hooked up?",

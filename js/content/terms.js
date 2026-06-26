@@ -112,7 +112,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Filth",
+        label: "🔞 18+",
         terms: [
           "One-night stand", "Strip club", "Sexting", "Walk of shame",
           "Booty call", "Friends with benefits", "Skinny dipping",
@@ -327,7 +327,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Versaut",
+        label: "🔞 18+",
         terms: [
           "One-Night-Stand", "Stripclub", "Sexting", "Walk of Shame",
           "Booty Call", "Freundschaft Plus", "Nacktbaden",

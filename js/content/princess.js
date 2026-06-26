@@ -55,7 +55,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Scharf",
+        label: "🔞 18+",
         princess: [
           "Er sorgt immer dafür, dass du zuerst kommst",
           "Er schickt mitten im Arbeitstag eine versaute Nachricht",
@@ -108,7 +108,7 @@
         ],
       },
       nsfw: {
-        label: "🔞 Spicy",
+        label: "🔞 18+",
         princess: [
           "He always makes sure you finish first",
           "He sends a filthy text in the middle of your work day",
