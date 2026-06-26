@@ -394,10 +394,14 @@
     clearTickers();
     var typeMeta = TYPE_META[card.type];
     var cur = currentPlayer();
+    // Resolve {P}/{VERS} tokens ONCE so the text shown on the draw screen is the
+    // exact same text stored as a Hofgesetz / active card (a random {VERS} would
+    // otherwise differ between display and storage).
+    var filledText = fillName(card.text);
     var actLabel;
     if (card.type === "sofort") actLabel = t("Done ✓");
     else if (card.type === "regel") actLabel = t("Add as standing rule ✓");
-    else if (card.type === "aktiv") actLabel = t("Assign to {name} 👑").replace("{name}", cur ? esc(cur.name) : t("the holder"));
+    else if (card.type === "aktiv") actLabel = t("Assign to {name} 👑").replace("{name}", cur ? cur.name : t("the holder"));
     else actLabel = t("Loser drinks ✓");
 
     els.innerHTML =
@@ -406,27 +410,28 @@
       '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + typeMeta.colour + '">' +
       '    <div class="ha-bigcard__tag">' + esc(t(typeMeta.label)) + "</div>" +
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
-      '    <div class="ha-bigcard__text">' + esc(fillName(card.text)) + "</div>" +
+      '    <div class="ha-bigcard__text">' + esc(filledText) + "</div>" +
       "  </div>" +
       '  <button id="ha-resolve" class="btn btn-primary btn-block btn-xl" data-primary>' + esc(actLabel) + "</button>" +
       "</section>";
 
-    els.querySelector("#ha-resolve").addEventListener("click", function () { resolveCard(card); });
+    els.querySelector("#ha-resolve").addEventListener("click", function () { resolveCard(card, filledText); });
   }
 
-  function resolveCard(card) {
+  function resolveCard(card, filledText) {
+    if (filledText == null) filledText = fillName(card.text);
     if (card.effect === "reverse") game.dir = -game.dir;
     if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
-      game.hofgesetze.push({ id: card.id, title: card.title, text: fillName(card.text) });
+      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
       game.active.push({
         uid: "u" + (game.uidSeq++),
         cardId: card.id,
         title: card.title,
-        text: fillName(card.text),
+        text: filledText,
         power: card.power || null,
         holder: cur ? cur.name : "—",
       });

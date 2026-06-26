@@ -106,7 +106,6 @@
     "BOOM!": "BOOM!",
     "🔥 Whoever's holding it drinks!": "🔥 Wer es hält, trinkt!",
     "🔥 Whoever's holding it loses the round!": "🔥 Wer es hält, verliert die Runde!",
-    "🍻 Drinking mode": "🍻 Trinkspiel",
 
     // ── Who Am I ───────────────────────────────────────────────────────────
     "📚 Categories": "📚 Kategorien",
@@ -153,7 +152,6 @@
     "got away with it — imposters win!": "kamen davon — Imposter gewinnen!",
     "Did the table catch them?": "Erwischt?",
     "Did the table catch them all?": "Alle erwischt?",
-    "New round 🔁": "Neue Runde 🔁",
 
     // ── Wavelength ─────────────────────────────────────────────────────────
     "Spectrum pool": "Spektrum-Kategorie",
@@ -171,7 +169,6 @@
     "Where is it?": "Wo ist es?",
     "On the wavelength": "Auf einer Wellenlänge",
     "landed closest!": "war am nächsten dran!",
-    "{n} pts": "{n} Pkt",
     "Lock it in 🔒": "Festlegen 🔒",
     "BULLSEYE!": "VOLLTREFFER!",
     "So close!": "Fast!",
@@ -539,7 +536,6 @@
     "Pass it on 🎩": "Weitergeben 🎩",
     "Hat lifted!": "Aufgedeckt!",
     "Whoever was wrong drinks!": "Wer falsch lag, trinkt!",
-    "New round 🔁": "Neue Runde 🔁",
     "Mäxchen": "Mäxchen",
     "Pasch": "Pasch",
   };
