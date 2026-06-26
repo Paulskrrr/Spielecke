@@ -94,7 +94,9 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: var(--gap);
-  padding: 12px 16px;
+  /* slim header: tighter vertical padding (~10% shorter) without resizing the
+     logo — the 52px wordmark stays put, only its breathing room shrinks */
+  padding: 8px 16px;
   background: var(--purple);
   border-bottom: 4px solid var(--ink);
 }
@@ -119,8 +121,8 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: var(--tap);
-  padding: 6px 16px;
+  min-height: 46px;
+  padding: 5px 16px;
   background: var(--yellow);
   border: 3px solid var(--ink);
   border-radius: 999px;
