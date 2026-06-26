@@ -43,6 +43,7 @@
     entry(Games.reaction),
     entry(Games.rankit),
     entry(Games.hochadel),
+    entry(Games.maxchen),
     entry(Games.busfahrt),
     entry(Games.fuckdealer),
     entry(Games.pferderennen),
