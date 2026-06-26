@@ -1285,8 +1285,8 @@ body::before {
   writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
   font-weight: 800; font-size: 0.72rem; line-height: 1; padding: 6px 0;
   max-height: 46%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  color: var(--ink);
 }
-.ri-axis__pole--bot { color: var(--red); }
 .ri-cards { position: relative; }
 .ri-card {
   position: absolute; left: 0; right: 0; top: 0; box-sizing: border-box;
@@ -1339,7 +1339,15 @@ body::before {
   .pt-actions .btn { flex: 1; }
   .act-perform-actions .btn { min-height: 12vh; }
   .quiz-options { grid-template-columns: 1fr 1fr; }
-  .ri-axis { max-width: 620px; margin-left: auto; margin-right: auto; }
+  /* Desktop: spread the ranking out so it fills the available width instead of
+     hugging a narrow phone column. Wider axis, roomier cards, taller rail. */
+  .ri-title { max-width: 860px; margin-left: auto; margin-right: auto; }
+  .ri-axis { max-width: 860px; margin-left: auto; margin-right: auto; gap: 20px; }
+  .ri-axis__rail { width: 38px; }
+  .ri-axis__pole { font-size: 0.85rem; }
+  .ri-card { padding: 16px 20px; font-size: 1.1rem; }
+  .ri-card__no { width: 36px; height: 36px; font-size: 1rem; }
+  .ri-card__grip { font-size: 1.4rem; }
 
   /* On desktop the hat hub goes back to a compact, centred block — the
      full-height phone layout is mobile-only. */
