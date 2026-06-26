@@ -222,8 +222,7 @@
 
     els.innerHTML =
       '<section class="screen wl-reveal">' +
-      '  <div class="result-emoji">🎯</div>' +
-      '  <h2 class="result-title pop">' + t("On the wavelength") + "</h2>" +
+      '  <h2 class="result-title pop wl-reveal-title">🎯 ' + t("On the wavelength") + "</h2>" +
       clueBanner() +
       '  <div class="wl-result">' +
       '    <span class="wl-rpole wl-rpole--top">' + esc(spectrum.left) + "</span>" +
@@ -237,7 +236,6 @@
       '    <p class="result-sub">👑 <strong>' + esc(winner.name) + "</strong> " + t("landed closest!") + "</p>" +
       '    <button id="wl-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
       '    <button id="wl-settings" class="btn btn-block">' + t("Change pool") + "</button>" +
-      '    <button id="wl-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 
@@ -246,7 +244,6 @@
       if (roster.length >= MIN_PLAYERS) startRound(roster); else renderSetup();
     });
     els.querySelector("#wl-settings").addEventListener("click", renderSetup);
-    els.querySelector("#wl-home").addEventListener("click", function () { ctx.goHome(); });
 
     var dial = els.querySelector("#wl-rdial");
     var actions = els.querySelector("#wl-actions");

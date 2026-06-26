@@ -320,13 +320,11 @@
       "  </div>" +
       '  <div class="ha-foot">' +
       '    <button id="ha-reset" class="btn btn-ghost btn-block">' + t("↺ Reset game") + "</button>" +
-      '    <button id="ha-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 
     els.querySelector("#ha-draw").addEventListener("click", onDraw);
     els.querySelector("#ha-reset").addEventListener("click", renderResetConfirm);
-    els.querySelector("#ha-home").addEventListener("click", function () { ctx.goHome(); });
     els.querySelectorAll("[data-trigger]").forEach(function (b) {
       b.addEventListener("click", function () { onTrigger(b.getAttribute("data-trigger")); });
     });

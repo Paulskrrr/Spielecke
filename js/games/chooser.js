@@ -62,11 +62,9 @@
       "  </div>" +
       '  <div id="chooser-result" class="chooser-result">&nbsp;</div>' +
       '  <div id="chooser-hint" class="tap-hint">' + t("👆 Tap to spin") + "</div>" +
-      '  <button id="chooser-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     global.Spielecke.tappable(els.querySelector("#chooser-wheelwrap"), spin);
-    els.querySelector("#chooser-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function wheelSvg(ns) {

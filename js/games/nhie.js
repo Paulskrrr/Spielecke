@@ -76,10 +76,8 @@
       (settings.drinking ? t("Done it? Drink! 🍺") : t("Done it? Own up 🙋")) +
       "</p>" +
       '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
-      '  <button id="ni-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     global.Spielecke.tappable(els.querySelector("#ni-card"), renderCard);
-    els.querySelector("#ni-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function buildQueue() {

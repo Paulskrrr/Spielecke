@@ -163,13 +163,11 @@
       '  <p class="bf-q">' + t(def.q) + "</p>" +
       '  <div class="bf-guesses" id="bf-guesses">' + optBtns + "</div>" +
       '  <div class="bf-result" id="bf-result">&nbsp;</div>' +
-      '  <button id="bf-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelectorAll("#bf-guesses .btn-guess").forEach(function (b) {
       b.addEventListener("click", function () { guess(b.getAttribute("data-v")); });
     });
-    els.querySelector("#bf-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function guess(v) {
@@ -247,7 +245,6 @@
       "</p>" +
       '  <button id="bf-next" class="btn btn-primary btn-block btn-xl">' + t("Next Busfahrer ▶️") + "</button>" +
       '  <button id="bf-again" class="btn btn-block">' + t("Same driver, ride again 🔁") + "</button>" +
-      '  <button id="bf-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelector("#bf-next").addEventListener("click", function () {
@@ -256,7 +253,6 @@
       deal(); renderRide();
     });
     els.querySelector("#bf-again").addEventListener("click", function () { deal(); renderRide(); });
-    els.querySelector("#bf-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────

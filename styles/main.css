@@ -739,6 +739,9 @@ body::before {
 }
 
 /* Result line + buttons fade in once every line has landed. */
+/* Compact reveal header — the tall dial below needs the vertical room, so the
+   big result emoji is dropped and the title shrinks (emoji sits inline). */
+.wl-reveal-title { font-size: clamp(1.2rem, 6vw, 1.6rem); margin: 6px 0 2px; }
 .wl-reveal-actions { opacity: 0; transition: opacity .4s ease; }
 .wl-reveal-actions.is-in { opacity: 1; }
 

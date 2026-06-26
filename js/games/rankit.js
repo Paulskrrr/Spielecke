@@ -309,7 +309,6 @@
       '    <button id="ri-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
       '    <button id="ri-compare" class="btn btn-block">' + t("🔍 Compare rankings") + "</button>" +
       '    <button id="ri-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
-      '    <button id="ri-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 
@@ -319,7 +318,6 @@
       if (roster.length >= MIN_PLAYERS) startRound(roster); else renderSetup();
     });
     els.querySelector("#ri-settings").addEventListener("click", renderSetup);
-    els.querySelector("#ri-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // Flip through each player's locked-in ranking one at a time and see where they

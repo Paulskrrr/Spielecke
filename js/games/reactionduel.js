@@ -281,10 +281,8 @@
       "</p>" +
       '  <div class="rd-scoreline">' + scoreLine() + "</div>" +
       '  <button id="rd-next" class="btn btn-primary btn-block btn-xl">' + t("Next round ▶️") + "</button>" +
-      '  <button id="rd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#rd-next").addEventListener("click", startRound);
-    els.querySelector("#rd-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function renderMatchWin(winner) {
@@ -296,12 +294,10 @@
       '  <div class="stack">' +
       '    <button id="rd-again" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
       '    <button id="rd-setup" class="btn btn-block">' + t("Change players") + "</button>" +
-      '    <button id="rd-home2" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#rd-again").addEventListener("click", function () { scores = [0, 0]; startRound(); });
     els.querySelector("#rd-setup").addEventListener("click", renderSetup);
-    els.querySelector("#rd-home2").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function scoreLine() {

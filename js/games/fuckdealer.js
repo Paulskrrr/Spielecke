@@ -81,9 +81,7 @@
         '<section class="screen game-setup">' +
         '  <h2 class="screen-title pop">🃏 ' + t("Fuck the Dealer") + "</h2>" +
         '  <div class="roster-warn" style="display:block">' + t("⚠ Add at least 2 players from the header (👥): one dealer, the rest guess.") + "</div>" +
-        '  <button id="fd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
         "</section>";
-      els.querySelector("#fd-home").addEventListener("click", function () { ctx.goHome(); });
       return;
     }
 
@@ -191,13 +189,11 @@
       "  </div>" +
       '  <div class="fd-result" id="fd-result">&nbsp;</div>' +
       "  " + historyHtml() +
-      '  <button id="fd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelectorAll("#fd-ranks .btn-rank").forEach(function (b) {
       b.addEventListener("click", function () { callRank(b.getAttribute("data-r")); });
     });
-    els.querySelector("#fd-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // The scrollable strip of every card drawn since the last shuffle, so the

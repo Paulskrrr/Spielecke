@@ -169,7 +169,6 @@
       '      <div class="act-points">' +
       pointBtn(2) + pointBtn(3) + pointBtn(4) +
       "      </div>" +
-      '      <button id="act-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "    </div>" +
       "  </div>" +
       "</section>";
@@ -180,7 +179,6 @@
         renderReveal();
       });
     });
-    els.querySelector("#act-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function pointBtn(p) {
@@ -382,12 +380,10 @@
       '  <div class="stack">' +
       '    <button id="act-again" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
       '    <button id="act-setup" class="btn btn-block">' + t("Change teams") + "</button>" +
-      '    <button id="act-home2" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#act-again").addEventListener("click", startGame);
     els.querySelector("#act-setup").addEventListener("click", renderSetup);
-    els.querySelector("#act-home2").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Board rendering -----------------------------------------------------

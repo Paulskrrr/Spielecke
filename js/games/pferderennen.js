@@ -218,9 +218,7 @@
       c.innerHTML =
         '<button id="hr-go" class="btn btn-primary btn-block btn-xl">' +
         (pos.S + pos.H + pos.D + pos.C === 0 ? t("And… they're off! 🏇") : t("Resume ▶️")) + "</button>" +
-        '<button id="hr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>";
       c.querySelector("#hr-go").addEventListener("click", startRace);
-      c.querySelector("#hr-home").addEventListener("click", function () { ctx.goHome(); });
     }
   }
 
@@ -386,12 +384,10 @@
       "  " + resultList +
       '  <button id="hr-rematch" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
       '  <button id="hr-rebet" class="btn btn-block">' + t("New bets 🎲") + "</button>" +
-      '  <button id="hr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelector("#hr-rematch").addEventListener("click", setupRace);
     els.querySelector("#hr-rebet").addEventListener("click", renderSetup);
-    els.querySelector("#hr-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // ── Helpers ───────────────────────────────────────────────────────────────

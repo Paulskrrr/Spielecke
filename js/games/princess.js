@@ -80,12 +80,10 @@
       '    <button id="pr-yes" class="btn btn-got">' + treatLabel + "</button>" +
       '    <button id="pr-no" class="btn btn-skip">' + t("😐 Bare minimum") + "</button>" +
       "  </div>" +
-      '  <button id="pr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
 
     els.querySelector("#pr-yes").addEventListener("click", nextRound);
     els.querySelector("#pr-no").addEventListener("click", nextRound);
-    els.querySelector("#pr-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function nextRound() {

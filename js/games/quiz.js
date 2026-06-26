@@ -246,7 +246,6 @@
       '  <div class="stack">' +
       '    <button id="qz-again" class="btn btn-primary btn-block btn-xl">' + t("Play again 🔁") + "</button>" +
       '    <button id="qz-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
-      '    <button id="qz-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#qz-again").addEventListener("click", function () {
@@ -254,7 +253,6 @@
       if (roster.length >= MIN_PLAYERS) startGame(roster); else renderSetup();
     });
     els.querySelector("#qz-settings").addEventListener("click", renderSetup);
-    els.querySelector("#qz-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Questions -----------------------------------------------------------

@@ -77,10 +77,8 @@
       "  </div>" +
       '  <p class="deck-rule">' + (settings.drinking ? t("Answer honestly, or take a 🍺 drink to dodge.") : t("Answer honestly!")) + "</p>" +
       '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
-      '  <button id="tr-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     global.Spielecke.tappable(els.querySelector("#tr-card"), renderCard);
-    els.querySelector("#tr-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function pickName() {

@@ -182,7 +182,6 @@
       '  <div class="stack">' +
       '    <button id="dd-again" class="btn btn-primary btn-block btn-xl">' + t("New chain 🔁") + "</button>" +
       '    <button id="dd-settings" class="btn btn-block">' + t("Change pool") + "</button>" +
-      '    <button id="dd-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#dd-again").addEventListener("click", function () {
@@ -190,7 +189,6 @@
       if (roster.length >= MIN_PLAYERS) startChain(roster); else renderSetup();
     });
     els.querySelector("#dd-settings").addEventListener("click", renderSetup);
-    els.querySelector("#dd-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Canvas (Pointer Events: mouse + touch) ------------------------------

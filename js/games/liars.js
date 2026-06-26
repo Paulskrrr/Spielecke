@@ -148,7 +148,6 @@
       '  <div class="stack">' +
       '    <button id="ln-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
       '    <button id="ln-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
-      '    <button id="ln-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#ln-next").addEventListener("click", function () {
@@ -156,7 +155,6 @@
       if (roster.length >= MIN_PLAYERS) startRound(roster); else renderSetup();
     });
     els.querySelector("#ln-settings").addEventListener("click", renderSetup);
-    els.querySelector("#ln-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function pickQuestion() {

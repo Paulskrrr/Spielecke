@@ -207,15 +207,11 @@
       '  <div class="boom-actions">' +
       '    <button id="bomb-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
       '    <button id="bomb-setup" class="btn btn-block">' + t("Change settings") + "</button>" +
-      '    <button id="bomb-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
 
     els.querySelector("#bomb-next").addEventListener("click", startRound);
     els.querySelector("#bomb-setup").addEventListener("click", renderSetup);
-    els.querySelector("#bomb-home").addEventListener("click", function () {
-      ctx.goHome();
-    });
   }
 
   // ========================================================================

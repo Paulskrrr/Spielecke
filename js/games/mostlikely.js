@@ -77,10 +77,8 @@
       (settings.drinking ? t("Most fingers drinks 🍺") : t("Most fingers takes the crown 👑")) +
       "</p>" +
       '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
-      '  <button id="ml-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     global.Spielecke.tappable(els.querySelector("#ml-card"), renderCard);
-    els.querySelector("#ml-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function buildQueue() {

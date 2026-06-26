@@ -165,10 +165,8 @@
       '  <p class="muted small">' + t("Forehead time! Others give clues.") + "</p>" +
       '  <div class="sticky-note"><span class="sticky-note__text">' + esc(text) + "</span></div>" +
       '  <button id="wa-new" class="btn btn-primary btn-block btn-xl">' + t("New character ✍️") + "</button>" +
-      '  <button id="wa-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#wa-new").addEventListener("click", renderSetup);
-    els.querySelector("#wa-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Play screen ---------------------------------------------------------
@@ -236,12 +234,10 @@
       '  <div class="stack">' +
       '    <button id="wa-next" class="btn btn-primary btn-block btn-xl">' + t("Next player ▶️") + "</button>" +
       '    <button id="wa-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
-      '    <button id="wa-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#wa-next").addEventListener("click", startTurn);
     els.querySelector("#wa-settings").addEventListener("click", renderSetup);
-    els.querySelector("#wa-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Word queue ----------------------------------------------------------

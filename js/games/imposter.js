@@ -188,10 +188,8 @@
       '  <h2 class="screen-title pop">' + t("🗣️ Talk it out") + "</h2>" +
       '  <p>' + t("Go round the table. Each person says <strong>one word</strong> hinting at the secret. The imposter is faking it. After a round or two, <strong>vote</strong> on who the faker is.") + "</p>" +
       '  <button id="im-reveal2" class="btn btn-primary btn-block btn-xl">' + t("Reveal the imposter 🔦") + "</button>" +
-      '  <button id="im-home" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "</section>";
     els.querySelector("#im-reveal2").addEventListener("click", renderReveal);
-    els.querySelector("#im-home").addEventListener("click", function () { ctx.goHome(); });
   }
 
   function renderReveal() {
@@ -229,7 +227,6 @@
       '  <div class="stack">' +
       '    <button id="im-again" class="btn btn-primary btn-block btn-xl">' + t("New round 🔁") + "</button>" +
       '    <button id="im-settings" class="btn btn-block">' + t("Change pool") + "</button>" +
-      '    <button id="im-home2" class="btn btn-ghost btn-block">' + t("Back to shelf") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#im-again").addEventListener("click", function () {
@@ -237,7 +234,6 @@
       if (roster.length >= MIN_PLAYERS) dealRoles(roster); else renderSetup();
     });
     els.querySelector("#im-settings").addEventListener("click", renderSetup);
-    els.querySelector("#im-home2").addEventListener("click", function () { ctx.goHome(); });
   }
 
   // --- Word picking --------------------------------------------------------
