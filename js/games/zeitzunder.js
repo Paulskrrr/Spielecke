@@ -539,7 +539,7 @@
     return '<div class="zz-leaf" data-idx="' + i + '"><div class="zz-paper' + (p.spam ? " zz-paper--spam" : "") + '">' +
       (p.postit ? postitHtml() : "") +
       '<h3 class="zz-paper__h">' + p.icon + " " + t(p.title) + "</h3>" +
-      (p.coffee ? '<div class="zz-coffeewrap">' + p.html + '<div class="zz-coffee"></div></div>' : p.html) +
+      (p.coffee ? '<div class="zz-coffeewrap">' + p.html + '<div class="zz-coffee">' + coffeeSvg() + "</div></div>" : p.html) +
       '</div><div class="zz-pagenum">' + i + " / " + (n - 1) + "</div></div>";
   }
   function coverLeaf(i) {
@@ -554,6 +554,28 @@
   }
   function postitHtml() {
     return '<div class="zz-postit"><span class="zz-postit__l">' + t("Today's code") + '</span><b>4 7 2 9</b><span class="zz-postit__s">' + t("do not share") + "</span></div>";
+  }
+  // A real spilled-coffee splatter: smooth brown blobs roughened into organic,
+  // jagged edges + speckle by an SVG turbulence/displacement filter. Dark pooled
+  // centre, lighter halo, droplets flung outward. No image asset — pure static.
+  function coffeeSvg() {
+    return '<svg class="zz-coffee-svg" viewBox="0 0 240 190" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<defs><filter id="zzcoffee" x="-35%" y="-35%" width="170%" height="170%">' +
+      '<feTurbulence type="fractalNoise" baseFrequency="0.017 0.021" numOctaves="3" seed="11" result="n"/>' +
+      '<feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G"/>' +
+      "</filter></defs>" +
+      '<g filter="url(#zzcoffee)">' +
+      '<g fill="#8a572a" fill-opacity="0.5"><ellipse cx="120" cy="100" rx="78" ry="56"/><ellipse cx="58" cy="118" rx="26" ry="19"/><ellipse cx="188" cy="82" rx="24" ry="22"/><ellipse cx="150" cy="150" rx="28" ry="19"/></g>' +
+      '<g fill="#6b3d18" fill-opacity="0.82"><ellipse cx="120" cy="102" rx="60" ry="42"/><ellipse cx="162" cy="120" rx="30" ry="23"/><ellipse cx="84" cy="114" rx="28" ry="21"/></g>' +
+      '<g fill="#341d07" fill-opacity="0.82"><ellipse cx="118" cy="108" rx="34" ry="25"/><ellipse cx="136" cy="99" rx="16" ry="12"/></g>' +
+      '<g fill="#2a1604" fill-opacity="0.7"><circle cx="120" cy="110" r="2.4"/><circle cx="132" cy="118" r="1.7"/><circle cx="108" cy="100" r="1.6"/><circle cx="141" cy="112" r="1.4"/><circle cx="114" cy="124" r="1.6"/><circle cx="150" cy="120" r="1.3"/></g>' +
+      "</g>" +
+      '<g filter="url(#zzcoffee)" fill="#4a2a10" fill-opacity="0.78">' +
+      '<circle cx="214" cy="40" r="5"/><circle cx="226" cy="60" r="2.4"/>' +
+      '<ellipse cx="30" cy="55" rx="7" ry="3" transform="rotate(20 30 55)"/><circle cx="18" cy="70" r="2.4"/>' +
+      '<circle cx="60" cy="176" r="6"/><circle cx="78" cy="183" r="2.4"/><circle cx="46" cy="185" r="2"/>' +
+      '<circle cx="206" cy="166" r="4"/><circle cx="221" cy="151" r="2"/><circle cx="176" cy="20" r="3"/>' +
+      "</g></svg>";
   }
 
   // Pages for a given expert. Today: one expert holds the whole book. The hook

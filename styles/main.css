@@ -2138,34 +2138,14 @@ body::before {
 /* Coffee-stain decoy */
 .zz-coffeewrap { position: relative; }
 .zz-blot { filter: blur(1.5px); opacity: 0.8; }
-/* A spilled coffee stain: irregular blobby outline, an uneven body, a darker
-   DRIED RIM (the coffee-ring effect), and a few splatter droplets around it —
-   not a smooth symmetric gradient (that read as a heat map). */
+/* A real spilled-coffee splatter, drawn as an inline SVG whose smooth brown
+   blobs are roughened into organic jagged edges + speckle by a turbulence /
+   displacement filter (see coffeeSvg() in zeitzunder.js). */
 .zz-coffee {
-  position: absolute; left: 0; bottom: -4%; width: 70%; height: 62%; pointer-events: none;
-  transform: rotate(-7deg);
-  border-radius: 42% 58% 47% 53% / 56% 44% 60% 40%;
-  mix-blend-mode: multiply;
-  background:
-    /* outlier splatter droplets */
-    radial-gradient(circle at 93% 16%, rgba(54,32,14,0.62) 0 2.5px, transparent 3.5px),
-    radial-gradient(circle at 99% 54%, rgba(54,32,14,0.5) 0 2px, transparent 3px),
-    radial-gradient(circle at 6% 86%, rgba(54,32,14,0.55) 0 3px, transparent 4px),
-    radial-gradient(circle at 78% 96%, rgba(54,32,14,0.45) 0 2px, transparent 3px),
-    /* dried darker rim (coffee-ring effect) */
-    radial-gradient(closest-side, transparent 60%, rgba(48,26,8,0.0) 63%, rgba(48,26,8,0.72) 79%, rgba(120,70,28,0.3) 92%, transparent 100%),
-    /* uneven body — offset blobs so the interior isn't symmetric */
-    radial-gradient(closest-side at 38% 44%, rgba(126,76,30,0.82), rgba(126,76,30,0) 66%),
-    radial-gradient(closest-side at 64% 58%, rgba(96,56,22,0.78), rgba(96,56,22,0) 64%),
-    radial-gradient(closest-side at 52% 72%, rgba(74,42,16,0.72), rgba(74,42,16,0) 60%),
-    radial-gradient(closest-side, rgba(110,66,28,0.5), rgba(110,66,28,0) 80%);
+  position: absolute; left: -6%; top: 24%; width: 96%; height: 74%;
+  pointer-events: none; transform: rotate(-5deg); mix-blend-mode: multiply;
 }
-.zz-coffee::after {
-  content: ""; position: absolute; right: -10%; top: 30%; width: 26%; height: 30%;
-  border-radius: 50% 50% 50% 60%; transform: rotate(20deg);
-  background: radial-gradient(closest-side, rgba(70,44,20,0.5), rgba(70,44,20,0) 72%);
-  mix-blend-mode: multiply;
-}
+.zz-coffee-svg { width: 100%; height: 100%; display: block; overflow: visible; }
 .zz-coffeecap { font-style: italic; opacity: 0.7; }
 
 .zz-steps, .zz-rules { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
