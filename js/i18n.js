@@ -656,6 +656,26 @@
     "For support, please hold. Estimated wait time: longer than you have.": "Für Support bitte warten. Voraussichtliche Wartezeit: länger als du hast.",
     "Some assembly was required. We did not do it.": "Eine gewisse Montage war erforderlich. Wir haben sie nicht durchgeführt.",
     "(Still no defusal information here. Flip back two chapters.)": "(Auch hier keine Entschärfungs-Infos. Blättere zwei Kapitel zurück.)",
+
+    // ── Zeitzünder v3 — the manual as a flip-through booklet ───────────────
+    "Previous page": "Vorherige Seite",
+    "Next page": "Nächste Seite",
+    "Cover": "Titel",
+    "TOP SECRET": "STRENG GEHEIM",
+    "Expert {n}": "Experte {n}",
+    "Do not open until the timer starts.": "Erst öffnen, wenn die Uhr läuft.",
+    "Tap ▶ or swipe to flip through.": "Tippe ▶ oder wische zum Blättern.",
+    "Today's code": "Tagescode",
+    "do not share": "nicht weitergeben",
+    "Ch. 5 — Wires — Quick Reference": "Kap. 5 — Drähte — Kurzreferenz",
+    "Ch. 9 — Wires — Full Procedure": "Kap. 9 — Drähte — Volle Prozedur",
+    "Wire cutting — quick steps:": "Draht schneiden — kurz:",
+    "Set the dials, then read off the channel and": "Stell die Regler ein, lies den Kanal ab und",
+    "immediately locate the wire whose number": "finde sofort den Draht, dessen Zahl",
+    "if no match exists then defer to the colour band priority as printed on the": "gibt es keine Übereinstimmung, richte dich nach der Farbband-Priorität wie aufgedruckt auf dem",
+    "never cut the third wire unless the serial contains a vowel and the moon is": "schneide niemals den dritten Draht, außer die Seriennummer enthält einen Vokal und der Mond steht",
+    "…full procedure at the back of this manual.": "…volle Prozedur hinten im Handbuch.",
+    "(Someone spilled coffee here.)": "(Hier hat jemand Kaffee verschüttet.)",
   };
 
   function getLang() {

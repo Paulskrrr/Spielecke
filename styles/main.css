@@ -2078,14 +2078,77 @@ body::before {
 .zz-toast { position: fixed; left: 50%; top: 24%; transform: translateX(-50%); background: var(--ink); color: #fff; font-weight: 900; padding: 12px 22px; border-radius: 999px; box-shadow: var(--pop); z-index: 50; animation: zz-toast 1.1s ease-out forwards; }
 @keyframes zz-toast { 0% { opacity: 0; transform: translate(-50%, 8px); } 15%,70% { opacity: 1; transform: translateX(-50%); } 100% { opacity: 0; } }
 
-/* ---- Manual (expert) ------------------------------------------------- */
+/* ---- Manual (expert) — a physical booklet you flip through ------------ */
 .zz-manual { text-align: left; }
-.zz-mnavrow { display: flex; flex-wrap: wrap; gap: 7px; margin: 10px 0 18px; }
-.zz-mnav { font-size: 0.8rem; font-weight: 800; text-decoration: none; color: var(--ink); background: var(--paper-2); border: 3px solid var(--ink); border-radius: 999px; padding: 5px 12px; }
-.zz-mnav--spam { color: var(--ink-soft); border-style: dashed; }
-.zz-page { border: 4px solid var(--ink); border-radius: var(--radius); background: var(--paper-2); padding: 16px; margin-bottom: 16px; box-shadow: var(--pop); scroll-margin-top: 80px; }
-.zz-page--spam { background: #f3eee2; border-style: dashed; }
-.zz-page__h { margin: 0 0 10px; font-size: 1.25rem; }
+.zz-book {
+  position: relative; max-width: 440px; height: min(70vh, 600px); margin: 8px auto 0;
+  perspective: 1600px;
+}
+.zz-leaf {
+  position: absolute; inset: 0; transform-origin: left center; backface-visibility: hidden;
+  opacity: 0; transform: rotateY(14deg); pointer-events: none; z-index: 1;
+  transition: transform 0.42s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.34s ease;
+}
+.zz-leaf.is-current { opacity: 1; transform: rotateY(0deg); pointer-events: auto; z-index: 3; }
+.zz-leaf.is-out-fwd { opacity: 0; transform: rotateY(-125deg); z-index: 2; }
+.zz-leaf.is-out-back { opacity: 0; transform: rotateY(125deg); z-index: 2; }
+.zz-paper {
+  position: absolute; inset: 0; overflow: auto; padding: 18px 18px 30px;
+  background: var(--paper-2); border: 4px solid var(--ink); border-radius: 14px;
+  box-shadow: var(--pop);
+  background-image: linear-gradient(var(--paper-2) 0 0), repeating-linear-gradient(transparent, transparent 27px, rgba(36,27,77,0.05) 28px);
+}
+.zz-paper--spam { background-color: #f1ebdb; border-style: dashed; }
+.zz-paper__h { margin: 0 0 12px; font-size: 1.2rem; }
+.zz-pagenum { position: absolute; right: 16px; bottom: 8px; font-size: 0.75rem; font-weight: 800; color: var(--ink-soft); }
+
+.zz-pager { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 14px 0 8px; }
+.zz-page-btn { width: 56px; height: 44px; font-size: 1.2rem; cursor: pointer; background: var(--paper-2); border: 3px solid var(--ink); border-radius: 12px; box-shadow: 0 4px 0 var(--ink); }
+.zz-page-btn:active { transform: translateY(4px); box-shadow: none; }
+.zz-page-btn:disabled { opacity: 0.4; cursor: default; box-shadow: none; }
+.zz-pagecount { font-weight: 800; min-width: 70px; text-align: center; color: var(--ink-soft); }
+
+/* Cover */
+.zz-cover {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center;
+  padding: 24px; border: 5px solid var(--ink); border-radius: 14px;
+  background: repeating-linear-gradient(45deg, #2a2d33, #2a2d33 14px, #2f3238 14px, #2f3238 28px);
+  color: #f4f4f4; box-shadow: var(--pop); overflow: hidden;
+}
+.zz-stamp { position: absolute; top: 26px; right: -34px; transform: rotate(16deg); background: var(--red); color: #fff; font-weight: 900; letter-spacing: 2px; padding: 6px 44px; border: 2px solid #fff; font-size: 0.8rem; box-shadow: 0 3px 0 rgba(0,0,0,0.4); }
+.zz-cover__art { font-size: 3.4rem; }
+.zz-cover__title { font-size: 1.8rem; font-weight: 900; color: #ffd84d; }
+.zz-cover__expert { font-weight: 800; letter-spacing: 1px; background: #14161a; padding: 4px 16px; border-radius: 999px; }
+.zz-cover__warn { margin-top: 6px; font-weight: 800; color: #ff8a3d; }
+.zz-cover__hint { font-size: 0.85rem; opacity: 0.7; }
+
+/* Post-it note */
+.zz-postit {
+  position: absolute; top: 12px; right: 12px; width: 116px; z-index: 4;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 12px 6px 10px; transform: rotate(5deg);
+  background: #fff07a; color: #4a4326; font-family: "Comic Sans MS", var(--font);
+  box-shadow: 2px 5px 9px rgba(0,0,0,0.28);
+}
+.zz-postit::before { content: ""; position: absolute; top: -7px; left: 50%; transform: translateX(-50%) rotate(-4deg); width: 50px; height: 18px; background: rgba(255,255,255,0.5); }
+.zz-postit__l { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+.zz-postit b { font-size: 1.4rem; letter-spacing: 3px; }
+.zz-postit__s { font-size: 0.62rem; opacity: 0.8; }
+
+/* Coffee-stain decoy */
+.zz-coffeewrap { position: relative; }
+.zz-blot { filter: blur(1.6px); opacity: 0.85; }
+.zz-coffee {
+  position: absolute; left: -4%; bottom: -6%; width: 74%; height: 66%; pointer-events: none;
+  border-radius: 47% 53% 50% 50% / 55% 45% 55% 45%;
+  background:
+    radial-gradient(closest-side, rgba(60,38,18,0.0) 54%, rgba(60,38,18,0.62) 70%, rgba(40,24,10,0.5) 86%, rgba(60,38,18,0.2) 100%),
+    radial-gradient(closest-side at 58% 42%, rgba(96,60,30,0.82), rgba(96,60,30,0.0) 72%),
+    radial-gradient(closest-side at 34% 64%, rgba(70,44,20,0.85), rgba(70,44,20,0.0) 74%);
+  mix-blend-mode: multiply; transform: rotate(-8deg);
+}
+.zz-coffeecap { font-style: italic; opacity: 0.7; }
+
 .zz-steps, .zz-rules { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
 .zz-rules { list-style: none; padding-left: 0; }
 .zz-rules li { padding-left: 22px; position: relative; }

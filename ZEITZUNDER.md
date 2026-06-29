@@ -93,16 +93,25 @@ maintenance discipline; honour it when adding modules.
 
 ## 6. The manual (expert's phone)
 
-Static reference (same every game), chaptered, with a jump-nav. Real chapters (How to defuse,
-Firing order, Dials, Wires, Keypad, Reading the bomb) are **interleaved with deadpan spam** the
-expert must skip past:
+A **physical booklet you flip through one page at a time** — not a scroll. A cover, then
+chapters; flip with ◀ ▶, arrow keys, or a horizontal swipe, with a page-turn animation and a
+page counter. The same content every game (only the bomb is random).
 
-- **Ch. 2 — Data Protection (GDPR):** mock legal boilerplate ("the Controller processes…
-  fingerprints, ambient panic levels, and last words").
-- **Ch. 6 — Warranty & Liability:** "Warranty void if device is … defused, or detonated."
+- **Cover.** Secret-dossier look (striped cover, "TOP SECRET" stamp, 🧨📖, gold title). States
+  **which expert you are** ("Expert 1") and **"Do not open until the timer starts."** The cover
+  is the **multi-expert variation point**: `buildBook(expertId, expertCount)` already takes the
+  expert — later, different experts get disjoint chapter sets and the cover names them.
+- **Real chapters:** How to defuse, Firing order, Dials, Wires (full procedure, Ch. 9), Keypad,
+  Reading the bomb.
+- **Spam to dig through** (deadpan, styled like real pages): Ch. 2 Data Protection (GDPR), Ch. 6
+  Warranty & Liability.
+- **Coffee-stain misdirection.** Ch. 5 ("Wires — Quick Reference") *looks* like the wire page
+  but a coffee spill has blotted the steps into nonsense — cue panic — while the real, complete
+  procedure is at the **back** (Ch. 9). A half-legible line hints "…full procedure at the back."
+- **Post-it decoy.** A sticky note on Ch. 2 reads "Today's code: 4 7 2 9 — do not share." It is
+  a pure red herring (nothing reads it), like `CLR`. The design element is the point.
 
-Spam pages are styled the same as real ones (dashed accent only) so they genuinely distract.
-More can be added freely — they're pure content.
+More pages (spam, decoys, props) are cheap to add — they're pure content in `buildBook`.
 
 ## 7. Current scope & verification
 

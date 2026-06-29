@@ -170,6 +170,8 @@
     { id: "lethal", label: "💀 Lethal", seconds: 180 }
   ];
   var MAX_STRIKES = 3;
+  // Multi-expert variation point: today a single expert holds the whole book.
+  var EXPERT_ID = 1, EXPERT_COUNT = 1;
 
   var els = null, ctx = null, settings = null;
   var role = null, bomb = null;
@@ -178,6 +180,7 @@
   var activeFace = "core";   // logical face currently at front
   var dials = { a: 0, b: 0 };
   var entry = [], solved = {}, solvedCount = 0, strikes = 0, timeLeft = 0;
+  var manualPages = [], manualIdx = 0;
   var timer = null, audio = null, keyHandler = null, busy = false, justDragged = false;
 
   var module = {
@@ -504,29 +507,116 @@
   // ========================================================================
   // EXPERT: the manual (real rules + bureaucratic spam to dig through)
   // ========================================================================
+  // The manual is a physical BOOKLET you flip through one page at a time — a
+  // cover, then chapters. expertId/expertCount are the variation point: later,
+  // different experts get different subsets of the pages (see buildBook).
   function renderManual() {
     stopTimer(); detachKeys();
-    var pages = manualPages();
-    var nav = pages.map(function (p) { return '<a class="zz-mnav' + (p.spam ? " zz-mnav--spam" : "") + '" href="#zz-pg-' + p.id + '">' + p.icon + " " + t(p.title) + "</a>"; }).join("");
-    var body = pages.map(function (p) { return '<article class="zz-page' + (p.spam ? " zz-page--spam" : "") + '" id="zz-pg-' + p.id + '"><h3 class="zz-page__h">' + p.icon + " " + t(p.title) + "</h3>" + p.html + "</article>"; }).join("");
+    manualPages = buildBook(EXPERT_ID, EXPERT_COUNT);
+    manualIdx = 0;
+    var leaves = manualPages.map(function (p, i) { return leafHtml(p, i, manualPages.length); }).join("");
     els.innerHTML =
-      '<section class="screen zz-manual"><h2 class="screen-title pop">📖 ' + t("Defusal Manual") + "</h2>" +
-      '<p class="muted small">' + t("You can't see the bomb. Ask what's on each face, find the matching page, read the steps back.") + "</p>" +
-      '<nav class="zz-mnavrow">' + nav + "</nav>" + body +
-      '<button id="zz-manual-back" class="btn btn-ghost btn-block">' + t("← Back") + "</button></section>";
+      '<section class="screen zz-manual">' +
+      '  <div class="zz-book" id="zz-book">' + leaves + "</div>" +
+      '  <div class="zz-pager">' +
+      '    <button id="zz-prev" class="zz-page-btn" aria-label="' + t("Previous page") + '">◀</button>' +
+      '    <span class="zz-pagecount" id="zz-pagecount"></span>' +
+      '    <button id="zz-next" class="zz-page-btn" aria-label="' + t("Next page") + '">▶</button>' +
+      "  </div>" +
+      '  <button id="zz-manual-back" class="btn btn-ghost btn-block">' + t("← Back") + "</button>" +
+      "</section>";
+    var book = els.querySelector("#zz-book");
+    book.querySelector('.zz-leaf[data-idx="0"]').classList.add("is-current");
+    updatePager();
+    els.querySelector("#zz-prev").addEventListener("click", function () { turn(-1); });
+    els.querySelector("#zz-next").addEventListener("click", function () { turn(1); });
     els.querySelector("#zz-manual-back").addEventListener("click", renderRolePicker);
+    attachManualNav(book);
   }
-  function manualPages() {
+
+  function leafHtml(p, i, n) {
+    if (p.cover) return coverLeaf(i);
+    return '<div class="zz-leaf" data-idx="' + i + '"><div class="zz-paper' + (p.spam ? " zz-paper--spam" : "") + '">' +
+      (p.postit ? postitHtml() : "") +
+      '<h3 class="zz-paper__h">' + p.icon + " " + t(p.title) + "</h3>" +
+      (p.coffee ? '<div class="zz-coffeewrap">' + p.html + '<div class="zz-coffee"></div></div>' : p.html) +
+      '</div><div class="zz-pagenum">' + i + " / " + (n - 1) + "</div></div>";
+  }
+  function coverLeaf(i) {
+    return '<div class="zz-leaf" data-idx="' + i + '"><div class="zz-cover">' +
+      '<div class="zz-stamp">' + t("TOP SECRET") + "</div>" +
+      '<div class="zz-cover__art">🧨📖</div>' +
+      '<div class="zz-cover__title">' + t("Defusal Manual") + "</div>" +
+      '<div class="zz-cover__expert">' + t("Expert {n}").replace("{n}", EXPERT_ID) + "</div>" +
+      '<div class="zz-cover__warn">⏱️ ' + t("Do not open until the timer starts.") + "</div>" +
+      '<div class="zz-cover__hint">' + t("Tap ▶ or swipe to flip through.") + "</div>" +
+      "</div></div>";
+  }
+  function postitHtml() {
+    return '<div class="zz-postit"><span class="zz-postit__l">' + t("Today's code") + '</span><b>4 7 2 9</b><span class="zz-postit__s">' + t("do not share") + "</span></div>";
+  }
+
+  // Pages for a given expert. Today: one expert holds the whole book. The hook
+  // is here so multi-expert can deal disjoint chapter sets later.
+  function buildBook(expertId, expertCount) {
     return [
-      { id: "start", icon: "🧭", title: "Ch. 1 — How to defuse", html: manualHowTo() },
-      { id: "gdpr", icon: "📜", title: "Ch. 2 — Data Protection (GDPR)", spam: true, html: manualGdpr() },
-      { id: "order", icon: "🧩", title: "Ch. 3 — Firing order", html: manualOrder() },
-      { id: "dials", icon: "🎛️", title: "Ch. 4 — Dials", html: manualDials() },
-      { id: "wires", icon: "🔌", title: "Ch. 5 — Wires", html: manualWires() },
-      { id: "warranty", icon: "🧾", title: "Ch. 6 — Warranty & Liability", spam: true, html: manualWarranty() },
-      { id: "keypad", icon: "🔡", title: "Ch. 7 — Keypad", html: manualKeypad() },
-      { id: "ref", icon: "🔎", title: "Ch. 8 — Reading the bomb", html: manualRef() }
+      { cover: true },
+      { icon: "🧭", title: "Ch. 1 — How to defuse", html: manualHowTo() },
+      { icon: "📜", title: "Ch. 2 — Data Protection (GDPR)", spam: true, postit: true, html: manualGdpr() },
+      { icon: "🧩", title: "Ch. 3 — Firing order", html: manualOrder() },
+      { icon: "🎛️", title: "Ch. 4 — Dials", html: manualDials() },
+      { icon: "🔌", title: "Ch. 5 — Wires — Quick Reference", coffee: true, html: manualWiresRuined() },
+      { icon: "🧾", title: "Ch. 6 — Warranty & Liability", spam: true, html: manualWarranty() },
+      { icon: "🔡", title: "Ch. 7 — Keypad", html: manualKeypad() },
+      { icon: "🔎", title: "Ch. 8 — Reading the bomb", html: manualRef() },
+      { icon: "🔌", title: "Ch. 9 — Wires — Full Procedure", html: manualWires() }
     ];
+  }
+
+  // --- Page turning --------------------------------------------------------
+  function turn(dir) {
+    var n = manualPages.length;
+    var idx = Math.min(n - 1, Math.max(0, manualIdx + dir));
+    if (idx === manualIdx) return;
+    showPage(idx, dir);
+  }
+  function showPage(idx, dir) {
+    var book = els && els.querySelector("#zz-book"); if (!book) return;
+    var cur = book.querySelector(".zz-leaf.is-current");
+    var next = book.querySelector('.zz-leaf[data-idx="' + idx + '"]');
+    if (!next || cur === next) return;
+    if (cur) {
+      cur.classList.remove("is-current");
+      cur.classList.add(dir > 0 ? "is-out-fwd" : "is-out-back");
+      (function (c) { setTimeout(function () { c.classList.remove("is-out-fwd", "is-out-back"); }, 430); })(cur);
+    }
+    next.classList.remove("is-out-fwd", "is-out-back");
+    next.classList.add("is-current");
+    manualIdx = idx;
+    updatePager();
+    blip(760);
+  }
+  function updatePager() {
+    var pc = els.querySelector("#zz-pagecount"), prev = els.querySelector("#zz-prev"), next = els.querySelector("#zz-next");
+    if (pc) pc.textContent = manualIdx === 0 ? t("Cover") : (manualIdx + " / " + (manualPages.length - 1));
+    if (prev) prev.disabled = manualIdx === 0;
+    if (next) next.disabled = manualIdx === manualPages.length - 1;
+  }
+  function attachManualNav(book) {
+    keyHandler = function (e) {
+      if (e.key === "ArrowRight") { e.preventDefault(); turn(1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); turn(-1); }
+    };
+    global.addEventListener("keydown", keyHandler);
+    var sx = 0, sy = 0, active = false;
+    book.addEventListener("pointerdown", function (e) { active = true; sx = e.clientX; sy = e.clientY; });
+    function up(e) {
+      if (!active) return; active = false;
+      var dx = (e.clientX || sx) - sx, dy = (e.clientY || sy) - sy;
+      if (Math.abs(dx) > 45 && Math.abs(dx) > Math.abs(dy)) turn(dx < 0 ? 1 : -1);
+    }
+    book.addEventListener("pointerup", up);
+    book.addEventListener("pointercancel", up);
   }
   function manualHowTo() {
     return "<ol class='zz-steps'>" +
@@ -564,6 +654,17 @@
       "<li>" + t("If a wire's NUMBER equals the Channel, cut it. (If several match, the leftmost.)") + "</li>" +
       "<li>" + t("Otherwise, cut the wire whose COLOUR is highest on the Decoder's colour-priority list (1 = highest). Ties → leftmost.") + "</li>" +
       "</ul><p class='muted small'>" + t("The cut reads the dials LIVE, so the dials must be right even if Wires comes first in the order.") + "</p>";
+  }
+  // A DECOY: looks like THE wire page, but a coffee spill has ruined the steps.
+  // The real procedure is at the back of the book (Ch. 9). Cue panic.
+  function manualWiresRuined() {
+    return "<p>" + t("Wire cutting — quick steps:") + "</p>" +
+      "<ol class='zz-steps'>" +
+      "<li>" + t("Set the dials, then read off the channel and") + " <span class='zz-blot'>" + t("immediately locate the wire whose number") + "</span></li>" +
+      "<li class='zz-blot'>" + t("if no match exists then defer to the colour band priority as printed on the") + "</li>" +
+      "<li class='zz-blot'>" + t("never cut the third wire unless the serial contains a vowel and the moon is") + "</li>" +
+      "</ol>" +
+      "<p class='zz-fine'>" + t("…full procedure at the back of this manual.") + " <span class='zz-coffeecap'>☕ " + t("(Someone spilled coffee here.)") + "</span></p>";
   }
   function manualWarranty() {
     return "<p class='zz-fine'>" + t("This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.") + "</p>" +
