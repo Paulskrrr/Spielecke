@@ -79,7 +79,8 @@
   }
 
   function startRound(roster) {
-    players = roster.map(function (p) { return p.name; });
+    // Reshuffle the pass order each round so it isn't the same sequence every time.
+    players = shuffle(roster.slice()).map(function (p) { return p.name; });
     set = pickSet();
     rankings = [];
     idx = 0;

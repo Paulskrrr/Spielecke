@@ -98,7 +98,8 @@
 
   // --- Game loop -----------------------------------------------------------
   function startGame(roster) {
-    players = roster.map(function (p) { return { name: p.name, lives: settings.hearts }; });
+    // Randomise turn order each game so it isn't the same rotation every time.
+    players = shuffle(roster).map(function (p) { return { name: p.name, lives: settings.hearts }; });
     roundQueue = []; round = -1; used = {};
     nextTurn();
   }
@@ -295,6 +296,7 @@
     els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); });
   }
   var esc = global.Spielecke.esc;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

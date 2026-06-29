@@ -49,7 +49,10 @@
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     teardownCanvas();
-    var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
+    // Randomise the chain order each time the setup is opened so several rounds
+    // don't keep the same draw/guess sequence. The order shown below IS the
+    // order played (start uses this exact captured roster).
+    var roster = shuffle((ctx.players || []).filter(function (p) { return p && p.name; }));
     var chips = Pools().chipsHtml(poolsFor(), t);
 
     var enough = roster.length >= MIN_PLAYERS;
@@ -226,7 +229,8 @@
       "  </div>" +
       "</section>";
     els.querySelector("#dd-again").addEventListener("click", function () {
-      var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
+      // New chain → reshuffle so a fresh round gets a fresh draw/guess order.
+      var roster = shuffle((ctx.players || []).filter(function (p) { return p && p.name; }));
       if (roster.length >= MIN_PLAYERS) startChain(roster); else renderSetup();
     });
     els.querySelector("#dd-settings").addEventListener("click", renderSetup);
@@ -324,6 +328,7 @@
   }
   var esc = global.Spielecke.esc;
   var attr = global.Spielecke.attr;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

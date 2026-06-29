@@ -108,7 +108,8 @@
   // --- Round: pick a random clue-giver, the rest will guess in turn --------
   function startRound(roster) {
     clearTimer();
-    var names = roster.map(function (p) { return p.name; });
+    // Reshuffle each round so the clue-giver and pass order vary between rounds.
+    var names = shuffle(roster).map(function (p) { return p.name; });
     spectrum = pickSpectrum();
     target = Math.round(EDGE_MARGIN + Math.random() * (100 - 2 * EDGE_MARGIN));
     clue = "";
@@ -409,6 +410,7 @@
   // --- Utils ---------------------------------------------------------------
   var esc = global.Spielecke.esc;
   var attr = global.Spielecke.attr;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

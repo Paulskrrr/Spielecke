@@ -10,6 +10,11 @@
  * builds innerHTML. esc() neutralises text for element content; attr() also
  * escapes ' for values inside single-quoted attributes. Loads before all
  * games/screens (see index.html) so modules can alias them at definition time.
+ *
+ * shuffle(arr): a pure Fisher-Yates that returns a NEW array, leaving the input
+ * untouched. Turn-order games (Doodle, Quiz, Wavelength, …) call this when a
+ * round starts so the roster order isn't identical every round — the entered
+ * roster stays the canonical list; only that round's play order is randomised.
  */
 (function (global) {
   "use strict";
@@ -42,7 +47,17 @@
     return esc(s).replace(/'/g, "&#39;");
   }
 
+  function shuffle(arr) {
+    var a = Array.isArray(arr) ? arr.slice() : [];
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
   S.tappable = tappable;
   S.esc = esc;
   S.attr = attr;
+  S.shuffle = shuffle;
 })(window);
