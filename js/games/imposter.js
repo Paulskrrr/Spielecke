@@ -27,6 +27,7 @@
   var imposterSet = {};
   var secretWord = "";
   var secretCategory = "";
+  var secretHint = "";
   var revealIdx = 0;
   var roleShown = false;
 
@@ -47,13 +48,14 @@
       settings = {
         pools: Pools().load(context.store, poolsFor()),
         imposterCount: savedCount === "random" ? "random" : (parseInt(savedCount, 10) || 1),
+        hints: context.store.get("imposterHints", false) === true,
       };
       renderSetup();
     },
 
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; players = []; imposterSet = {}; secretWord = ""; secretCategory = "";
+      ctx = null; settings = null; players = []; imposterSet = {}; secretWord = ""; secretCategory = ""; secretHint = "";
     },
   };
 
@@ -95,6 +97,9 @@
       '  <h3 class="sub">' + t("Word pool") + "</h3>" +
       '  <div class="chip-row" id="im-pools">' + chips + "</div>" +
       countSection +
+      '  <label class="toggle im-hints-toggle"><input type="checkbox" id="im-hints"' +
+      (settings.hints ? " checked" : "") + ' /><span>' + t("Give imposters a hint") + "</span></label>" +
+      '  <p class="muted small">' + t("Imposters secretly get a distant, cryptic clue — enough to bluff, not enough to know.") + "</p>" +
       '  <button id="im-deal" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") +
       ">" + t("Deal roles 🂴") + "</button>" +
       "</section>";
@@ -113,6 +118,12 @@
         });
       });
     }
+    var hintsToggle = els.querySelector("#im-hints");
+    if (hintsToggle) hintsToggle.addEventListener("change", function () {
+      settings.hints = hintsToggle.checked;
+      ctx.store.set("imposterHints", settings.hints);
+    });
+
     var deal = els.querySelector("#im-deal");
     if (enough) deal.addEventListener("click", function () { dealRoles(roster); });
   }
@@ -131,6 +142,7 @@
     var picked = pickWord();
     secretWord = picked.word;
     secretCategory = picked.category;
+    secretHint = picked.hint || "";
     revealIdx = 0;
     renderPassTo();
   }
@@ -189,11 +201,15 @@
     var allyNote = total > 1
       ? t("You're 1 of {n} imposters — but who else?").replace("{n}", total)
       : t("Blend in. Don't get caught.");
+    var clueLine = (settings.hints && secretHint)
+      ? '  <div class="role-hint role-hint--clue">🧭 ' + t("Your hint") + ": <strong>" + esc(secretHint) + "</strong></div>"
+      : "";
     var body = isImposter
       ? '<div class="role-card role-card--imposter">' +
         '  <div class="role-label">' + t("You are the") + "</div>" +
         '  <div class="role-big">' + t("IMPOSTER 🤫") + "</div>" +
         '  <div class="role-hint">' + t("Category") + ": <strong>" + esc(secretCategory) + "</strong></div>" +
+        clueLine +
         '  <div class="role-note">' + allyNote + "</div>" +
         "</div>"
       : '<div class="role-card">' +
@@ -279,7 +295,17 @@
     var words = pools[key].terms || [];
     var word = words.length ? words[Math.floor(Math.random() * words.length)] : "Beer";
     var category = (pools[key].label || key).replace(/^[^\w]+\s*/, "");
-    return { word: word, category: category };
+    return { word: word, category: category, hint: hintFor(key, word) };
+  }
+
+  // Look up the distant decoy hint for this secret (current language). Missing
+  // entries just yield "" so the game never breaks if a word has no hint yet.
+  function hintFor(poolKey, word) {
+    var lang = global.Spielecke.getLang ? global.Spielecke.getLang() : "en";
+    var hints = global.Spielecke.ImposterHints;
+    var byLang = hints && (hints[lang] || hints.en);
+    var pool = byLang && byLang[poolKey];
+    return (pool && pool[word]) || "";
   }
 
   // --- Utils ---------------------------------------------------------------

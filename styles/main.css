@@ -541,6 +541,15 @@ body::before {
 .role-label { font-size: 1rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
 .role-big { font-size: clamp(2.2rem, 12vw, 4rem); font-weight: 900; margin: 8px 0; line-height: 1.1; }
 .role-hint { font-size: 1.05rem; font-weight: 700; }
+/* The optional decoy hint handed to imposters — set apart from the category
+   line with a translucent panel so it reads as its own private clue. */
+.role-hint--clue {
+  margin-top: 12px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
 .role-note { margin-top: 10px; opacity: 0.85; }
 
 .imposter-talk p { font-size: 1.1rem; line-height: 1.5; }
