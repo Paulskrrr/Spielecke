@@ -119,7 +119,9 @@
 
   // --- Deal & reveal phase -------------------------------------------------
   function dealRoles(roster) {
-    players = roster.map(function (p) { return p.name; });
+    // Randomise the reveal/pass order each deal so the phone doesn't always go
+    // round in the same sequence (imposters are already drawn at random below).
+    players = shuffle(roster).map(function (p) { return p.name; });
     var count = resolveImposterCount(players.length);
     imposterSet = {};
     var idxs = players.map(function (_, i) { return i; });
@@ -293,6 +295,7 @@
     });
   }
   var esc = global.Spielecke.esc;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

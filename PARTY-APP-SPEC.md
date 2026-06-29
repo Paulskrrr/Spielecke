@@ -178,6 +178,13 @@ Rules:
   before every navigation.
 - Content lives in `js/content/`, separated from logic, so it can be edited by a non-coder
   (future Paul, half-drunk).
+- **Turn order:** the roster on `context.players` keeps the order players were *entered* (it's
+  the canonical list). Games where play follows a fixed sequence of turns/roles down the roster
+  (Doodle, Quiz, Wavelength, Liar's Numbers, Imposter, Rank It) **must randomise that order when
+  a round starts** — call `Spielecke.shuffle(arr)` (pure Fisher-Yates, returns a new array) so
+  the same five players don't get the identical sequence every round. Games that already pick at
+  random (Truth, Chooser, Reaction Duel) or let the host choose the seat (Busfahrt, Fuck the
+  Dealer) don't need it.
 
 ### 1.4 Persistence (`store.js`)
 

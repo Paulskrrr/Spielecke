@@ -75,7 +75,8 @@
   }
 
   function startRound(roster) {
-    players = roster.map(function (p) { return p.name; });
+    // Reshuffle the pass order each round so it isn't the same sequence repeatedly.
+    players = shuffle(roster).map(function (p) { return p.name; });
     question = pickQuestion();
     guesses = [];
     idx = 0;
@@ -167,6 +168,7 @@
     return (Math.round(n * 100) / 100).toLocaleString("en-US");
   }
   var esc = global.Spielecke.esc;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};
