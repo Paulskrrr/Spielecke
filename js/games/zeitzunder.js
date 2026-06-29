@@ -533,13 +533,15 @@
     var leaves = manualPages.map(function (p, i) { return leafHtml(p, i, manualPages.length); }).join("");
     els.innerHTML =
       '<section class="screen zz-manual">' +
-      '  <div class="zz-book" id="zz-book">' + leaves + "</div>" +
-      '  <div class="zz-pager">' +
-      '    <button id="zz-prev" class="zz-page-btn" aria-label="' + t("Previous page") + '">◀</button>' +
+      '  <div class="zz-mbar">' +
+      '    <button id="zz-manual-back" class="zz-mbar-btn">' + t("← Back") + "</button>" +
       '    <span class="zz-pagecount" id="zz-pagecount"></span>' +
-      '    <button id="zz-next" class="zz-page-btn" aria-label="' + t("Next page") + '">▶</button>' +
       "  </div>" +
-      '  <button id="zz-manual-back" class="btn btn-ghost btn-block">' + t("← Back") + "</button>" +
+      '  <div class="zz-bookrow">' +
+      '    <button id="zz-prev" class="zz-bookbtn" aria-label="' + t("Previous page") + '">◀</button>' +
+      '    <div class="zz-book" id="zz-book">' + leaves + "</div>" +
+      '    <button id="zz-next" class="zz-bookbtn" aria-label="' + t("Next page") + '">▶</button>' +
+      "  </div>" +
       "</section>";
     var book = els.querySelector("#zz-book");
     book.querySelector('.zz-leaf[data-idx="0"]').classList.add("is-current");
