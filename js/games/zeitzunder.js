@@ -571,22 +571,25 @@
   // jagged edges + speckle by an SVG turbulence/displacement filter. Dark pooled
   // centre, lighter halo, droplets flung outward. No image asset — pure static.
   function coffeeSvg() {
-    return '<svg class="zz-coffee-svg" viewBox="0 0 240 190" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
-      '<defs><filter id="zzcoffee" x="-35%" y="-35%" width="170%" height="170%">' +
-      '<feTurbulence type="fractalNoise" baseFrequency="0.017 0.021" numOctaves="3" seed="11" result="n"/>' +
-      '<feDisplacementMap in="SourceGraphic" in2="n" scale="26" xChannelSelector="R" yChannelSelector="G"/>' +
+    return '<svg class="zz-coffee-svg" viewBox="0 0 240 170" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+      '<defs><filter id="zzcoffee" x="-40%" y="-40%" width="180%" height="180%">' +
+      '<feTurbulence type="fractalNoise" baseFrequency="0.014 0.018" numOctaves="3" seed="11" result="n"/>' +
+      '<feDisplacementMap in="SourceGraphic" in2="n" scale="30" xChannelSelector="R" yChannelSelector="G"/>' +
       "</filter></defs>" +
       '<g filter="url(#zzcoffee)">' +
-      '<g fill="#8a572a" fill-opacity="0.5"><ellipse cx="120" cy="100" rx="78" ry="56"/><ellipse cx="58" cy="118" rx="26" ry="19"/><ellipse cx="188" cy="82" rx="24" ry="22"/><ellipse cx="150" cy="150" rx="28" ry="19"/></g>' +
-      '<g fill="#6b3d18" fill-opacity="0.82"><ellipse cx="120" cy="102" rx="60" ry="42"/><ellipse cx="162" cy="120" rx="30" ry="23"/><ellipse cx="84" cy="114" rx="28" ry="21"/></g>' +
-      '<g fill="#341d07" fill-opacity="0.82"><ellipse cx="118" cy="108" rx="34" ry="25"/><ellipse cx="136" cy="99" rx="16" ry="12"/></g>' +
-      '<g fill="#2a1604" fill-opacity="0.7"><circle cx="120" cy="110" r="2.4"/><circle cx="132" cy="118" r="1.7"/><circle cx="108" cy="100" r="1.6"/><circle cx="141" cy="112" r="1.4"/><circle cx="114" cy="124" r="1.6"/><circle cx="150" cy="120" r="1.3"/></g>' +
+      // translucent soaked halo (lets edge text show faintly)
+      '<g fill="#9a6630" fill-opacity="0.4"><ellipse cx="120" cy="86" rx="98" ry="62"/><ellipse cx="40" cy="66" rx="28" ry="22"/><ellipse cx="202" cy="104" rx="28" ry="24"/></g>' +
+      // dense body
+      '<g fill="#683c18" fill-opacity="0.9"><ellipse cx="120" cy="86" rx="78" ry="48"/><ellipse cx="72" cy="96" rx="32" ry="26"/><ellipse cx="170" cy="78" rx="32" ry="26"/></g>' +
+      // near-opaque pooled centre (this is what makes text unreadable)
+      '<g fill="#341d07" fill-opacity="0.97"><ellipse cx="118" cy="88" rx="50" ry="33"/><ellipse cx="146" cy="80" rx="22" ry="16"/><ellipse cx="92" cy="94" rx="20" ry="15"/></g>' +
+      '<g fill="#1d0f02" fill-opacity="0.85"><circle cx="120" cy="90" r="2.6"/><circle cx="134" cy="96" r="1.8"/><circle cx="106" cy="82" r="1.6"/><circle cx="146" cy="92" r="1.5"/><circle cx="112" cy="100" r="1.7"/></g>' +
       "</g>" +
-      '<g filter="url(#zzcoffee)" fill="#4a2a10" fill-opacity="0.78">' +
-      '<circle cx="214" cy="40" r="5"/><circle cx="226" cy="60" r="2.4"/>' +
-      '<ellipse cx="30" cy="55" rx="7" ry="3" transform="rotate(20 30 55)"/><circle cx="18" cy="70" r="2.4"/>' +
-      '<circle cx="60" cy="176" r="6"/><circle cx="78" cy="183" r="2.4"/><circle cx="46" cy="185" r="2"/>' +
-      '<circle cx="206" cy="166" r="4"/><circle cx="221" cy="151" r="2"/><circle cx="176" cy="20" r="3"/>' +
+      '<g filter="url(#zzcoffee)" fill="#3a2208" fill-opacity="0.9">' +
+      '<circle cx="220" cy="34" r="5"/><circle cx="231" cy="54" r="2.6"/>' +
+      '<ellipse cx="22" cy="44" rx="7" ry="3" transform="rotate(20 22 44)"/><circle cx="12" cy="60" r="2.6"/>' +
+      '<circle cx="58" cy="158" r="6"/><circle cx="76" cy="164" r="2.6"/><circle cx="42" cy="162" r="2.2"/>' +
+      '<circle cx="210" cy="150" r="4.5"/><circle cx="226" cy="136" r="2.2"/><circle cx="180" cy="16" r="3"/>' +
       "</g></svg>";
   }
 
@@ -689,16 +692,17 @@
       "<li>" + t("Otherwise, cut the wire whose COLOUR is highest on the Decoder's colour-priority list (1 = highest). Ties → leftmost.") + "</li>" +
       "</ul><p class='muted small'>" + t("The cut reads the dials LIVE, so the dials must be right even if Wires comes first in the order.") + "</p>";
   }
-  // A DECOY: looks like THE wire page, but a coffee spill has ruined the steps.
-  // The real procedure is at the back of the book (Ch. 9). Cue panic.
+  // A DECOY: a believable wire quick-reference, but a coffee spill has soaked
+  // the lower steps into illegibility. The complete procedure is in Ch. 9.
   function manualWiresRuined() {
-    return "<p>" + t("Wire cutting — quick steps:") + "</p>" +
+    return "<p>" + t("Wire-cutting procedure (quick reference):") + "</p>" +
       "<ol class='zz-steps'>" +
-      "<li>" + t("Set the dials, then read off the channel and") + " <span class='zz-blot'>" + t("immediately locate the wire whose number") + "</span></li>" +
-      "<li class='zz-blot'>" + t("if no match exists then defer to the colour band priority as printed on the") + "</li>" +
-      "<li class='zz-blot'>" + t("never cut the third wire unless the serial contains a vowel and the moon is") + "</li>" +
+      "<li>" + t("Set both dials to their target values and add them together to read the channel.") + "</li>" +
+      "<li>" + t("Locate the wire whose printed number equals the channel; that is the wire to cut.") + "</li>" +
+      "<li>" + t("If no number matches, use the colour-priority order: cut the highest-ranked colour present.") + "</li>" +
+      "<li>" + t("Confirm the cut against the firing order before severing the wire.") + "</li>" +
       "</ol>" +
-      "<p class='zz-fine'>" + t("…full procedure at the back of this manual.") + " <span class='zz-coffeecap'>☕ " + t("(Someone spilled coffee here.)") + "</span></p>";
+      "<p class='zz-fine'>" + t("Full procedure: Chapter 9.") + "</p>";
   }
   function manualWarranty() {
     return "<p class='zz-fine'>" + t("This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.") + "</p>" +
