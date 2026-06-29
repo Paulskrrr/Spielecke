@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **20 games**.
+**Shipped (on `main`):** the shell + **21 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -40,6 +40,7 @@ next.
 - ✅ **Ride the Bus** — four-guess card gauntlet *(drinking-capable)*
 - ✅ **Fuck the Dealer** — guess-the-rank card game with dealer rotation *(drinking-capable)*
 - ✅ **Horse Race** — animated suit-betting card race *(drinking-capable)*
+- ✅ **Zeitzünder** — asymmetric co-op bomb defusal: one screen is the bomb, the others hold the manual *(plain)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
 Players screen.
@@ -55,7 +56,10 @@ Players screen.
   published link. Each person can also just open the link independently.
 - **One device at a time / shared screen.** Games are designed for a MacBook on the table
   or a phone passed around. No cross-device networking. (Deliberate — the "everyone on
-  their own screen" magic needs a broker/backend, which we ruled out.)
+  their own screen" magic needs a broker/backend, which we ruled out.) **Zeitzünder** stretches
+  this without breaking it: two *kinds* of screen (the bomb on the table, experts' manuals on
+  their phones) that never talk to each other — each is an independent static instance, and the
+  players bridge them by voice. Still no broker, still no sync; the asymmetry does the work.
 - **Scales to ~10, flexible.** Player count is never load-bearing. Games work from ~3 up to
   ~12 without special-casing.
 - **Every game has a clean win/lose/score outcome.** Games are **plain by default** — not
@@ -438,6 +442,32 @@ rubber-banding that suit back a step. Players bet a suit (roster); first horse h
 **verteilen** sips, the rest **trinken** (flat or "lengths behind", configurable). The race is
 animated and **paced** like a race call (configurable speed) with a commentator line; the
 single timer chain is cleared on unmount.
+
+### 3.21 Zeitzünder 🧨 (`zeitzunder`, 2+) — plain (co-op)
+
+A new genre: asymmetric co-op, *Keep Talking and Nobody Explodes* in miniature. On entry you
+pick a role. **The bomb** (a MacBook on the table) shows a six-faced device you flip through —
+Core, Wires, Keypad, Dials, Guts, Decoder — with a live countdown and three strikes. **Experts**
+open the same link on their phones and get the **Defusal Manual** (rules, tables, legends) but
+never see the bomb. Neither device talks to the other: the defuser reads out what they see, the
+experts read back what to do. The humans are the wire.
+
+One interlocking puzzle, not a linear checklist. Three action stages — **Wires / Keypad /
+Dials** — must be committed in an order the bomb hides in its **firing sigils** (reversed when
+the serial's last digit is even). Each stage reads values off *other* faces: the dials feed the
+wire-cut channel; the Decoder letter + Guts indicators/batteries drive the keypad; the serial
+feeds the dials; `CLR` is a deliberate decoy. Acting out of order, or a wrong action, is a
+strike; three strikes (or the clock) → 💥.
+
+**Solver ↔ manual lockstep:** the rule tables (`SYMBOL_TABLE`, `FIRING_SIGILS`, `LETTER_BANK`,
+colour-priority) are the single source of truth — the host generator/solver and the expert
+manual both read them, so the page the expert reads and the answer the bomb expects can never
+drift. The pure rule engine is exposed under `module._test` and audited (20k generated bombs,
+all solvable; full happy- and lose-path driven through the real UI headlessly). Currently a
+single bomb solvable by one expert; designed so the manual's pages can be *dealt out* across
+several experts later (forcing expert-to-expert talk), with more modules/faces to follow.
+Difficulty sets the fuse (Rookie 6:00 / Standard 4:30 / Lethal 3:00). The countdown interval,
+Web-Audio alarms and key handler are all torn down on unmount.
 
 ---
 

@@ -47,6 +47,7 @@
     entry(Games.busfahrt),
     entry(Games.fuckdealer),
     entry(Games.pferderennen),
+    entry(Games.zeitzunder),
   ];
 
   global.Spielecke = global.Spielecke || {};
