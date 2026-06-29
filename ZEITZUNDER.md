@@ -77,12 +77,14 @@ Each stage reads values off **other** faces, forcing constant flipping:
 |--------|-----------|----------------|
 | Dials  | serial (Core), VNT (Guts) | A = digit-sum mod 10; B = first letter via Letter Bank; VNT swaps |
 | Wires  | the live Dials, colour priority (Decoder) | cut wire numbered (A+B); else highest-priority colour; ties → leftmost |
-| Keypad | letter (Decoder), SIG + batteries (Guts) | press the letter's glyph row; reverse on SIG; +centre glyph if 3+ batteries |
+| Keypad | letter (Decoder), SIG (Guts), serial last digit (Core) | press the letter's glyph row; reverse on SIG; then append ONE glyph by grid position, keyed on the serial's last digit (`KEYPAD_SUFFIX`) |
 | Order  | sigils (Core), serial parity | decode sigils → stages; reverse if last digit even |
 
-`CLR` is a **decoy** indicator — no rule reads it (the manual says so; the defuser doesn't
-know that). The wire-cut reads the dials **live**, so the dials must be set correctly even when
-Wires comes first — a deliberate "set it before you can use it" coupling.
+`CLR` (indicator) and the **batteries** are **decoys** — no rule reads them (the manual says so;
+the defuser doesn't know that). The serial is deliberately hot: its digits/last-digit feed the
+Dials, the Firing order **and** the Keypad, so the defuser keeps having to read it out — exactly
+the "ask → relay the serial → read back the step" loop the room runs on. The wire-cut reads the
+dials **live**, so the dials must be set correctly even when Wires comes first.
 
 **Fail:** 3 strikes (wrong action or out-of-order; each also burns 15s) or the clock → 💥.
 **Win:** all three lamps green → defused. Fuse length is the difficulty (Rookie/Standard/Lethal).

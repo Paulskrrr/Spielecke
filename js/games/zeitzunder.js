@@ -53,6 +53,11 @@
     E: ["Ω", "Θ", "Ξ"], F: ["Δ", "Φ", "Π"], G: ["Π", "Ω", "Σ"], H: ["Θ", "Λ", "Δ"]
   };
   var DECODER_LETTERS = ["A", "B", "C", "D", "E", "F", "G", "H"];
+  // KEYPAD: after the row + SIG reversal, the serial's LAST DIGIT adds one more
+  // key by grid position (or none). Forces the defuser to read the serial out.
+  // 3×3 grid positions: 0 top-left, 2 top-right, 4 centre, 8 bottom-right.
+  var KEYPAD_SUFFIX = { 0: -1, 1: -1, 2: 4, 3: 4, 4: 0, 5: 0, 6: 8, 7: 8, 8: 2, 9: 2 };
+  var POS_NAME = { "-1": "(none)", "0": "top-left glyph", "2": "top-right glyph", "4": "centre glyph", "8": "bottom-right glyph" };
   var FIRING_SIGILS = { "❖": "WIRES", "◈": "WIRES", "✦": "KEYPAD", "⬡": "KEYPAD", "✺": "DIALS", "✪": "DIALS" };
   var SIGILS_BY_STAGE = { WIRES: ["❖", "◈"], KEYPAD: ["✦", "⬡"], DIALS: ["✺", "✪"] };
   var LETTER_BANK = (function () {
@@ -101,7 +106,8 @@
     if (b.indicators.VNT) { var tmp = a; a = bb; bb = tmp; }
     var seq = SYMBOL_TABLE[b.decoderLetter].slice();
     if (b.indicators.SIG) seq.reverse();
-    if (b.batteries >= 3) seq.push(b.keypadLayout[4]);
+    var suf = KEYPAD_SUFFIX[b.serial.d2];
+    if (suf >= 0) seq.push(b.keypadLayout[suf]);
     return { order: order, dialA: a, dialB: bb, keypad: seq };
   }
   function solveWire(dials, b) {
@@ -729,17 +735,32 @@
     return "<p class='zz-fine'>" + t("The keypad uses a non-standard glyph set for tamper resistance; positions are randomised per unit. Identify glyphs by shape, not location.") + "</p>" +
       "<p>" + t("Nine glyphs, scrambled. Press a sequence, then ✓.") + "</p>" +
       "<ul class='zz-rules'>" +
-      "<li>" + t("Read the Decoder LETTER. Find its row below → press those glyphs in order.") + "</li>" +
+      "<li>" + t("Read the Decoder LETTER. Find its row in the Sequence table → press those glyphs in order.") + "</li>" +
       "<li class='zz-warn'>⚠ " + t("If indicator SIG is lit, press them in REVERSE order.") + "</li>" +
-      "<li class='zz-warn'>⚠ " + t("If the bomb has 3+ batteries, press the CENTRE glyph once more at the very end.") + "</li>" +
-      "</ul><table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
+      "<li class='zz-warn'>⚠ " + t("Then read the serial's LAST DIGIT and press ONE final glyph by its grid position (table below).") + "</li>" +
+      "</ul>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Last digit") + "</th><th>" + t("Final key") + "</th></tr></thead><tbody>" + keypadSuffixRows() + "</tbody></table>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
+  }
+  // Build the serial-suffix table straight from KEYPAD_SUFFIX so the manual can
+  // never drift from the solver: group consecutive last-digits with the same key.
+  function keypadSuffixRows() {
+    var out = [], start = 0;
+    for (var d = 0; d <= 9; d++) {
+      if (d === 9 || KEYPAD_SUFFIX[d + 1] !== KEYPAD_SUFFIX[d]) {
+        var label = start === d ? ("" + start) : (start + "–" + d);
+        out.push("<tr><td><b>" + label + "</b></td><td>" + t(POS_NAME["" + KEYPAD_SUFFIX[d]]) + "</td></tr>");
+        start = d + 1;
+      }
+    }
+    return out.join("");
   }
   function manualRef() {
     return "<p class='zz-fine'>" + t("All indicators, labels and codes are printed at manufacture and are read-only.") + "</p>" +
       "<ul class='zz-rules'>" +
-      "<li>" + t("<b>Serial</b>: two letters + two digits, e.g. KQ-37.") + "</li>" +
+      "<li>" + t("<b>Serial</b>: two letters + two digits, e.g. KQ-37. Its digits and last digit drive the Dials, the Firing order AND the Keypad — keep it handy.") + "</li>" +
       "<li>" + t("<b>Indicators</b>: SIG affects the Keypad, VNT affects the Dials.") + " <span class='zz-warn'>" + t("CLR does NOTHING — it's a decoy.") + "</span></li>" +
-      "<li>" + t("<b>Batteries</b>: 0–4 little cells. Matters for the Keypad.") + "</li>" +
+      "<li>" + t("<b>Batteries</b>: 0–4 little cells.") + " <span class='zz-warn'>" + t("A decoy — no rule uses them.") + "</span></li>" +
       "<li>" + t("<b>Decoder</b>: a big letter A–H and a numbered list of colour swatches (the colour priority).") + "</li>" +
       "</ul>";
   }

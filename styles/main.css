@@ -2132,7 +2132,8 @@ body::before {
 .zz-leaf.is-out-fwd { opacity: 0; transform: rotateY(-125deg); z-index: 2; }
 .zz-leaf.is-out-back { opacity: 0; transform: rotateY(125deg); z-index: 2; }
 .zz-paper {
-  position: absolute; inset: 0; overflow: auto; padding: 18px 18px 30px;
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; touch-action: pan-y;
+  padding: 18px 18px 30px;
   background: var(--paper-2); border: 4px solid var(--ink); border-radius: 14px;
   box-shadow: var(--pop);
   background-image: linear-gradient(var(--paper-2) 0 0), repeating-linear-gradient(transparent, transparent 27px, rgba(36,27,77,0.05) 28px);

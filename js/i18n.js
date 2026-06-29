@@ -731,6 +731,20 @@
     "Dispose of this device only at an authorised collection point. Do not place in household recycling.": "Entsorgen Sie dieses Gerät nur an einer autorisierten Sammelstelle. Nicht in den Hausmüll geben.",
     "This device complies with directives it has never heard of: CE, FCC, and vibes.": "Dieses Gerät erfüllt Richtlinien, von denen es nie gehört hat: CE, FCC und Vibes.",
     "Index — Wires: see Wires. Dials: see Dials. Panic: see everywhere.": "Index — Drähte: siehe Drähte. Regler: siehe Regler. Panik: siehe überall.",
+
+    // ── Zeitzünder v5 — keypad serial-suffix table ────────────────────────
+    "Read the Decoder LETTER. Find its row in the Sequence table → press those glyphs in order.": "Lies den Decoder-BUCHSTABEN. Finde seine Zeile in der Folge-Tabelle → drücke diese Glyphen der Reihe nach.",
+    "Then read the serial's LAST DIGIT and press ONE final glyph by its grid position (table below).": "Lies dann die LETZTE Ziffer der Seriennummer und drücke EINE letzte Glyphe nach ihrer Rasterposition (Tabelle unten).",
+    "Last digit": "Letzte Ziffer",
+    "Final key": "Letzte Taste",
+    "(none)": "(keine)",
+    "top-left glyph": "Glyphe oben links",
+    "top-right glyph": "Glyphe oben rechts",
+    "centre glyph": "Glyphe in der Mitte",
+    "bottom-right glyph": "Glyphe unten rechts",
+    "<b>Serial</b>: two letters + two digits, e.g. KQ-37. Its digits and last digit drive the Dials, the Firing order AND the Keypad — keep it handy.": "<b>Seriennr.</b>: zwei Buchstaben + zwei Ziffern, z. B. KQ-37. Ihre Ziffern und die letzte Ziffer steuern Regler, Zünd-Reihenfolge UND Tastenfeld — halte sie bereit.",
+    "<b>Batteries</b>: 0–4 little cells.": "<b>Batterien</b>: 0–4 kleine Zellen.",
+    "A decoy — no rule uses them.": "Eine Falle — keine Regel nutzt sie.",
   };
 
   function getLang() {
