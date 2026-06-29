@@ -40,8 +40,11 @@ instance; the manual is fixed reference; the humans bridge them by voice.
 
 A **real 3D cube of grey industrial panels** — screws in the corners, bevelled metal, a black
 digital readout for the timer/strikes. Six faces, one job each. You **physically flip the
-cube** to reach them: drag to grab-and-turn, or arrow keys, with a 3D flip animation. There is
-**no face menu / shortcut nav** — that would orient you, and you're meant to be lost.
+cube** to reach them: drag to grab-and-turn, arrow keys, or four sleek directional arrows laid
+out around the cube (browser-friendly), with a 3D flip animation. A top-left **↻ roll button**
+turns the whole cube 90° clockwise about the viewing axis, for when it's handed over sideways or
+upside down. There is **no face menu / shortcut nav** — none of these name a face, so they don't
+orient you; you're still meant to be lost.
 
 - **Random arrangement every game.** The six logical faces are dealt to the six physical sides
   of the cube at random, so "wires is on the right" is never learnable.
@@ -101,15 +104,21 @@ page counter. The same content every game (only the bomb is random).
   **which expert you are** ("Expert 1") and **"Do not open until the timer starts."** The cover
   is the **multi-expert variation point**: `buildBook(expertId, expertCount)` already takes the
   expert — later, different experts get disjoint chapter sets and the cover names them.
-- **Real chapters:** How to defuse, Firing order, Dials, Wires (full procedure, Ch. 9), Keypad,
-  Reading the bomb.
-- **Spam to dig through** (deadpan, styled like real pages): Ch. 2 Data Protection (GDPR), Ch. 6
-  Warranty & Liability.
-- **Coffee-stain misdirection.** Ch. 5 ("Wires — Quick Reference") *looks* like the wire page
-  but a coffee spill has blotted the steps into nonsense — cue panic — while the real, complete
-  procedure is at the **back** (Ch. 9). A half-legible line hints "…full procedure at the back."
-- **Post-it decoy.** A sticky note on Ch. 2 reads "Today's code: 4 7 2 9 — do not share." It is
-  a pure red herring (nothing reads it), like `CLR`. The design element is the point.
+- **Real chapters** (numbered Ch. 1–6): How to defuse, Firing order, Dials, Keypad, Reading the
+  bomb, Wires (full procedure). Each is padded with believable boilerplate *filler* (factory
+  notes, calibration disclaimers, read-only warnings) around the operative rule, so the real
+  instruction is buried in officialese — but the rule lines themselves are never touched.
+- **Spam to dig through** — seven deadpan **annexes** interleaved between the chapters: Foreword
+  & Legal Notice, Safety Instructions, Data Protection (GDPR), Maintenance & Care, Warranty &
+  Liability, Troubleshooting, and Disposal/Conformity/Index. ~15 leaves total; dashed accent,
+  otherwise styled like real pages so they genuinely distract.
+- **Coffee-stain misdirection.** The "Wire-Cutting Reference Card" reads as a believable, serious
+  quick-reference, but a near-opaque coffee splatter (an SVG turbulence/displacement stain — no
+  asset) genuinely buries the lower steps, while the real, complete procedure is at the **back**
+  (Ch. 6 — Wires). A surviving footer cross-references it ("Full procedure: Chapter 6"). No meta
+  jokes on the page — the humour is environmental, the page itself stays in-fiction.
+- **Post-it decoy.** A sticky note on the GDPR annex reads "Today's code: 4 7 2 9 — do not share."
+  A pure red herring (nothing reads it), like `CLR`. The design element is the point.
 
 More pages (spam, decoys, props) are cheap to add — they're pure content in `buildBook`.
 

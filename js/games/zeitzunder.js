@@ -141,6 +141,9 @@
   var ID = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
   function RY(s) { return s > 0 ? [[0, 0, 1], [0, 1, 0], [-1, 0, 0]] : [[0, 0, -1], [0, 1, 0], [1, 0, 0]]; }
   function RX(s) { return s > 0 ? [[1, 0, 0], [0, 0, -1], [0, 1, 0]] : [[1, 0, 0], [0, 0, 1], [0, -1, 0]]; }
+  // Roll about the viewing axis (Z) — re-orients the current face's "up" when
+  // the bomb is handed over sideways/upside down. s>0 = 90° clockwise on screen.
+  function RZ(s) { return s > 0 ? [[0, -1, 0], [1, 0, 0], [0, 0, 1]] : [[0, 1, 0], [-1, 0, 0], [0, 0, 1]]; }
   function matMul(A, B) {
     var C = [[0, 0, 0], [0, 0, 0], [0, 0, 0]];
     for (var i = 0; i < 3; i++) for (var j = 0; j < 3; j++) { var s = 0; for (var k = 0; k < 3; k++) s += A[i][k] * B[k][j]; C[i][j] = s; }
@@ -264,6 +267,7 @@
       '<section class="screen zz-bomb">' +
       hudHtml() +
       '  <div class="zz-stage">' +
+      '    <button class="zz-flip zz-roll" data-flip="roll" aria-label="' + t("Rotate 90° clockwise") + '">↻</button>' +
       '    <button class="zz-flip zz-flip--up" data-flip="up" aria-label="' + t("Flip up") + '">▲</button>' +
       '    <button class="zz-flip zz-flip--left" data-flip="left" aria-label="' + t("Flip left") + '">◀</button>' +
       '    <div class="zz-rig" id="zz-rig"><div class="zz-cube" id="zz-cube">' + facesHtml + "</div></div>" +
@@ -361,7 +365,7 @@
     els.querySelectorAll(".zz-flip").forEach(function (b) {
       b.addEventListener("click", function () {
         var d = b.getAttribute("data-flip");
-        rotate(d === "right" ? RY(-1) : d === "left" ? RY(1) : d === "up" ? RX(1) : RX(-1));
+        rotate(d === "right" ? RY(-1) : d === "left" ? RY(1) : d === "up" ? RX(1) : d === "down" ? RX(-1) : RZ(1));
       });
     });
     attachDrag(els.querySelector("#zz-rig"));
@@ -598,15 +602,20 @@
   function buildBook(expertId, expertCount) {
     return [
       { cover: true },
+      { icon: "📘", title: "Annex I — Foreword & Legal Notice", spam: true, html: manualForeword() },
       { icon: "🧭", title: "Ch. 1 — How to defuse", html: manualHowTo() },
-      { icon: "📜", title: "Ch. 2 — Data Protection (GDPR)", spam: true, postit: true, html: manualGdpr() },
-      { icon: "🧩", title: "Ch. 3 — Firing order", html: manualOrder() },
-      { icon: "🎛️", title: "Ch. 4 — Dials", html: manualDials() },
-      { icon: "🔌", title: "Ch. 5 — Wires — Quick Reference", coffee: true, html: manualWiresRuined() },
-      { icon: "🧾", title: "Ch. 6 — Warranty & Liability", spam: true, html: manualWarranty() },
-      { icon: "🔡", title: "Ch. 7 — Keypad", html: manualKeypad() },
-      { icon: "🔎", title: "Ch. 8 — Reading the bomb", html: manualRef() },
-      { icon: "🔌", title: "Ch. 9 — Wires — Full Procedure", html: manualWires() }
+      { icon: "⚠️", title: "Annex II — Safety Instructions", spam: true, html: manualSafety() },
+      { icon: "🧩", title: "Ch. 2 — Firing order", html: manualOrder() },
+      { icon: "📜", title: "Annex III — Data Protection (GDPR)", spam: true, postit: true, html: manualGdpr() },
+      { icon: "🎛️", title: "Ch. 3 — Dials", html: manualDials() },
+      { icon: "🧴", title: "Annex IV — Maintenance & Care", spam: true, html: manualMaintenance() },
+      { icon: "🔌", title: "Wire-Cutting Reference Card", coffee: true, html: manualWiresRuined() },
+      { icon: "🔡", title: "Ch. 4 — Keypad", html: manualKeypad() },
+      { icon: "🧾", title: "Annex V — Warranty & Liability", spam: true, html: manualWarranty() },
+      { icon: "🔎", title: "Ch. 5 — Reading the bomb", html: manualRef() },
+      { icon: "🛠️", title: "Annex VI — Troubleshooting", spam: true, html: manualTroubleshoot() },
+      { icon: "🔌", title: "Ch. 6 — Wires (full procedure)", html: manualWires() },
+      { icon: "♻️", title: "Annex VII — Disposal, Conformity & Index", spam: true, html: manualDisposal() }
     ];
   }
 
@@ -660,7 +669,8 @@
       "<li>" + t("Three jobs live on the device: <b>Wires</b>, <b>Keypad</b>, <b>Dials</b>. They must be committed in the right ORDER — see Firing Order.") + "</li>" +
       "<li>" + t("Every job reads values off OTHER faces. The defuser can't read this manual and you can't see the bomb — so make them flip the cube around and describe what they see.") + "</li>" +
       "<li>" + t("A wrong action, or acting out of order, is a strike. Three strikes — or the clock hitting zero — and it blows.") + "</li>" +
-      "</ol>";
+      "</ol>" +
+      "<p class='zz-fine'>" + t("Read each instruction aloud and confirm it with the operator before it is carried out. Retain this manual for the duration of the engagement.") + "</p>";
   }
   function manualGdpr() {
     return "<p class='zz-fine'>" + t("In accordance with Regulation (EU) 2016/679 (GDPR), this Ordnance Device (\"the Controller\") processes the following categories of personal data of the End User (\"the Defuser\"): fingerprints, ambient panic levels, and last words.") + "</p>" +
@@ -670,30 +680,36 @@
   }
   function manualOrder() {
     var rows = Object.keys(FIRING_SIGILS).map(function (s) { return "<tr><td class='zz-sig'>" + s + "</td><td>" + t(stageLabel(FIRING_SIGILS[s])) + "</td></tr>"; }).join("");
-    return "<p>" + t("One face shows three sigils in a row. Translate each to a job, left to right — that's the order to commit them in.") + "</p>" +
+    return "<p class='zz-fine'>" + t("The firing sequence is fixed at manufacture and cannot be reordered in the field.") + "</p>" +
+      "<p>" + t("One face shows three sigils in a row. Translate each to a job, left to right — that's the order to commit them in.") + "</p>" +
       "<table class='zz-table'><thead><tr><th>" + t("Sigil") + "</th><th>" + t("Job") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
-      "<p class='zz-warn'>⚠ " + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>";
+      "<p class='zz-warn'>⚠ " + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
+      "<p class='zz-fine'>" + t("Note: committing a stage out of sequence is logged as a fault and cannot be undone.") + "</p>";
   }
   function manualDials() {
     var cells = "";
     for (var i = 0; i < 26; i++) { var L = String.fromCharCode(65 + i); cells += "<span class='zz-bankcell'><b>" + L + "</b>" + LETTER_BANK[L] + "</span>"; }
-    return "<p>" + t("Two dials, A and B (0–9 each).") + "</p>" +
+    return "<p class='zz-fine'>" + t("Each dial is a single-digit rotary encoder (0–9) with a detent at every position.") + "</p>" +
+      "<p>" + t("Two dials, A and B (0–9 each).") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("<b>Dial A</b> = the two serial digits added together, then keep only the last digit (e.g. 7+8=15 → 5).") + "</li>" +
       "<li>" + t("<b>Dial B</b> = the serial's FIRST letter, looked up in the Letter Bank below.") + "</li>" +
       "<li class='zz-warn'>⚠ " + t("If indicator VNT is lit, SWAP the two targets (A takes B's number, B takes A's).") + "</li>" +
-      "</ul><div class='zz-bank'>" + cells + "</div>";
+      "</ul><div class='zz-bank'>" + cells + "</div>" +
+      "<p class='zz-fine'>" + t("Dials are factory-calibrated; field recalibration requires tools not supplied with this unit.") + "</p>";
   }
   function manualWires() {
-    return "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
+    return "<p class='zz-fine'>" + t("Complete wire-cutting procedure. This chapter supersedes the quick-reference card.") + "</p>" +
+      "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("First make sure the Dials are set to their targets. <b>Channel</b> = Dial A + Dial B.") + "</li>" +
       "<li>" + t("If a wire's NUMBER equals the Channel, cut it. (If several match, the leftmost.)") + "</li>" +
       "<li>" + t("Otherwise, cut the wire whose COLOUR is highest on the Decoder's colour-priority list (1 = highest). Ties → leftmost.") + "</li>" +
-      "</ul><p class='muted small'>" + t("The cut reads the dials LIVE, so the dials must be right even if Wires comes first in the order.") + "</p>";
+      "</ul><p class='muted small'>" + t("The cut reads the dials LIVE, so the dials must be right even if Wires comes first in the order.") + "</p>" +
+      "<p class='zz-fine'>" + t("After cutting, do not re-strip or re-seat any severed conductor.") + "</p>";
   }
   // A DECOY: a believable wire quick-reference, but a coffee spill has soaked
-  // the lower steps into illegibility. The complete procedure is in Ch. 9.
+  // the lower steps into illegibility. The complete procedure is in Ch. 6.
   function manualWiresRuined() {
     return "<p>" + t("Wire-cutting procedure (quick reference):") + "</p>" +
       "<ol class='zz-steps'>" +
@@ -702,7 +718,7 @@
       "<li>" + t("If no number matches, use the colour-priority order: cut the highest-ranked colour present.") + "</li>" +
       "<li>" + t("Confirm the cut against the firing order before severing the wire.") + "</li>" +
       "</ol>" +
-      "<p class='zz-fine'>" + t("Full procedure: Chapter 9.") + "</p>";
+      "<p class='zz-fine'>" + t("Full procedure: Chapter 6.") + "</p>";
   }
   function manualWarranty() {
     return "<p class='zz-fine'>" + t("This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.") + "</p>" +
@@ -713,7 +729,8 @@
   }
   function manualKeypad() {
     var rows = DECODER_LETTERS.map(function (L) { return "<tr><td><b>" + L + "</b></td><td class='zz-glyphs'>" + SYMBOL_TABLE[L].map(function (g) { return "<span>" + g + "</span>"; }).join("") + "</td></tr>"; }).join("");
-    return "<p>" + t("Nine glyphs, scrambled. Press a sequence, then ✓.") + "</p>" +
+    return "<p class='zz-fine'>" + t("The keypad uses a non-standard glyph set for tamper resistance; positions are randomised per unit. Identify glyphs by shape, not location.") + "</p>" +
+      "<p>" + t("Nine glyphs, scrambled. Press a sequence, then ✓.") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("Read the Decoder LETTER. Find its row below → press those glyphs in order.") + "</li>" +
       "<li class='zz-warn'>⚠ " + t("If indicator SIG is lit, press them in REVERSE order.") + "</li>" +
@@ -721,12 +738,51 @@
       "</ul><table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
   }
   function manualRef() {
-    return "<ul class='zz-rules'>" +
+    return "<p class='zz-fine'>" + t("All indicators, labels and codes are printed at manufacture and are read-only.") + "</p>" +
+      "<ul class='zz-rules'>" +
       "<li>" + t("<b>Serial</b>: two letters + two digits, e.g. KQ-37.") + "</li>" +
       "<li>" + t("<b>Indicators</b>: SIG affects the Keypad, VNT affects the Dials.") + " <span class='zz-warn'>" + t("CLR does NOTHING — it's a decoy.") + "</span></li>" +
       "<li>" + t("<b>Batteries</b>: 0–4 little cells. Matters for the Keypad.") + "</li>" +
       "<li>" + t("<b>Decoder</b>: a big letter A–H and a numbered list of colour swatches (the colour priority).") + "</li>" +
       "</ul>";
+  }
+
+  // --- Spam annexes (deadpan boilerplate to dig through) -------------------
+  function manualForeword() {
+    return "<p class='zz-fine'>" + t("Thank you for choosing this Ordnance Device. Please read this manual carefully and keep it for future reference.") + "</p>" +
+      "<p class='zz-fine'>" + t("All specifications are subject to change without notice. Illustrations are not to scale. The actual device may differ from the unit described.") + "</p>" +
+      "<p class='zz-fine'>" + t("Reproduction of this manual, in whole or in part, without written permission is prohibited.") + "</p>" +
+      "<p class='zz-fine muted'>" + t("Manual revision 4.7.2 · printed on recycled paper · this page intentionally left unhelpful.") + "</p>";
+  }
+  function manualSafety() {
+    return "<ul class='zz-rules'>" +
+      "<li class='zz-fine'><b>" + t("WARNING:") + "</b> " + t("Risk of explosion. Do not expose the device to heat, sparks, open flame, or sudden disappointment.") + "</li>" +
+      "<li class='zz-fine'>" + t("Keep out of reach of children, pets, and the easily startled.") + "</li>" +
+      "<li class='zz-fine'>" + t("Do not operate while drowsy, intoxicated, or panicking. (The operator acknowledges the last may be unavoidable.)") + "</li>" +
+      "<li class='zz-fine'>" + t("In the unlikely event of detonation, discontinue use immediately.") + "</li></ul>";
+  }
+  function manualMaintenance() {
+    return "<ul class='zz-rules'>" +
+      "<li class='zz-fine'>" + t("Wipe the casing with a soft, dry cloth. Do not submerge the device.") + "</li>" +
+      "<li class='zz-fine'>" + t("Lubricate the dials annually with a non-conductive grease.") + "</li>" +
+      "<li class='zz-fine'>" + t("Store in a cool, dry place, away from direct sunlight and bomb-disposal robots.") + "</li>" +
+      "<li class='zz-fine'>" + t("Tighten all visible screws before each use. Do not tighten the invisible ones.") + "</li></ul>";
+  }
+  function manualTroubleshoot() {
+    var data = [
+      ["The device is ticking.", "This is normal."],
+      ["The device has stopped ticking.", "Seek cover."],
+      ["A wire was cut and nothing happened.", "Congratulations, or wait."],
+      ["This manual is unhelpful.", "See Annex VI."]
+    ];
+    var rows = data.map(function (r) { return "<tr><td class='zz-fine'>" + t(r[0]) + "</td><td class='zz-fine'>" + t(r[1]) + "</td></tr>"; }).join("");
+    return "<table class='zz-table'><thead><tr><th>" + t("Problem") + "</th><th>" + t("Solution") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
+  }
+  function manualDisposal() {
+    return "<ul class='zz-rules'>" +
+      "<li class='zz-fine'>" + t("Dispose of this device only at an authorised collection point. Do not place in household recycling.") + "</li>" +
+      "<li class='zz-fine'>" + t("This device complies with directives it has never heard of: CE, FCC, and vibes.") + "</li>" +
+      "<li class='zz-fine'>" + t("Index — Wires: see Wires. Dials: see Dials. Panic: see everywhere.") + "</li></ul>";
   }
 
   // ========================================================================

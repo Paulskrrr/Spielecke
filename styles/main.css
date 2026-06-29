@@ -1969,6 +1969,7 @@ body::before {
   align-items: center; justify-items: center; gap: 6px; width: max-content; margin: 12px auto 24px;
 }
 .zz-stage .zz-rig { grid-column: 2; grid-row: 2; margin: 0; }
+.zz-roll { grid-column: 1; grid-row: 1; font-size: 1.4rem; }
 .zz-flip--up { grid-column: 2; grid-row: 1; }
 .zz-flip--left { grid-column: 1; grid-row: 2; }
 .zz-flip--right { grid-column: 3; grid-row: 2; }
