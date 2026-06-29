@@ -676,6 +676,10 @@
     "never cut the third wire unless the serial contains a vowel and the moon is": "schneide niemals den dritten Draht, außer die Seriennummer enthält einen Vokal und der Mond steht",
     "…full procedure at the back of this manual.": "…volle Prozedur hinten im Handbuch.",
     "(Someone spilled coffee here.)": "(Hier hat jemand Kaffee verschüttet.)",
+    "Flip up": "Nach oben kippen",
+    "Flip left": "Nach links kippen",
+    "Flip right": "Nach rechts kippen",
+    "Flip down": "Nach unten kippen",
   };
 
   function getLang() {

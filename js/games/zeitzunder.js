@@ -263,7 +263,13 @@
     els.innerHTML =
       '<section class="screen zz-bomb">' +
       hudHtml() +
-      '  <div class="zz-rig" id="zz-rig"><div class="zz-cube" id="zz-cube">' + facesHtml + "</div></div>" +
+      '  <div class="zz-stage">' +
+      '    <button class="zz-flip zz-flip--up" data-flip="up" aria-label="' + t("Flip up") + '">▲</button>' +
+      '    <button class="zz-flip zz-flip--left" data-flip="left" aria-label="' + t("Flip left") + '">◀</button>' +
+      '    <div class="zz-rig" id="zz-rig"><div class="zz-cube" id="zz-cube">' + facesHtml + "</div></div>" +
+      '    <button class="zz-flip zz-flip--right" data-flip="right" aria-label="' + t("Flip right") + '">▶</button>' +
+      '    <button class="zz-flip zz-flip--down" data-flip="down" aria-label="' + t("Flip down") + '">▼</button>' +
+      "  </div>" +
       '  <button id="zz-quit" class="zz-quit" aria-label="' + t("Abort") + '">✕</button>' +
       "</section>";
 
@@ -352,6 +358,12 @@
     });
     var dc = els.querySelector("#zz-dial-confirm"); if (dc) dc.addEventListener("click", function () { if (!justDragged) attemptDials(); });
     els.querySelector("#zz-quit").addEventListener("click", renderRolePicker);
+    els.querySelectorAll(".zz-flip").forEach(function (b) {
+      b.addEventListener("click", function () {
+        var d = b.getAttribute("data-flip");
+        rotate(d === "right" ? RY(-1) : d === "left" ? RY(1) : d === "up" ? RX(1) : RX(-1));
+      });
+    });
     attachDrag(els.querySelector("#zz-rig"));
     attachKeys();
     updateEntry();

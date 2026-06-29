@@ -1960,7 +1960,26 @@ body::before {
 .zz-flash { animation: zz-flash 0.4s ease-out; }
 @keyframes zz-flash { 0% { background: #5a1a18; } 100% { background: #14161a; } }
 
-/* ---- The cube -------------------------------------------------------- */
+/* ---- The cube + its flip arrows -------------------------------------- */
+/* Grid puts the four directional arrows around the cube and scales with it.
+   These only ROTATE the cube (no face is named) — the defuser is still lost,
+   this is just easier than dragging in a browser. */
+.zz-stage {
+  display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto;
+  align-items: center; justify-items: center; gap: 6px; width: max-content; margin: 12px auto 24px;
+}
+.zz-stage .zz-rig { grid-column: 2; grid-row: 2; margin: 0; }
+.zz-flip--up { grid-column: 2; grid-row: 1; }
+.zz-flip--left { grid-column: 1; grid-row: 2; }
+.zz-flip--right { grid-column: 3; grid-row: 2; }
+.zz-flip--down { grid-column: 2; grid-row: 3; }
+.zz-flip {
+  width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.2rem; line-height: 1;
+  color: #f4f4f4; background: #4a4f57; border: 3px solid #14161a; box-shadow: 0 3px 0 #14161a;
+}
+.zz-flip:active { transform: translateY(3px); box-shadow: none; }
+
 .zz-rig {
   width: var(--zz-size); height: var(--zz-size); margin: 14px auto 30px;
   perspective: 1400px; touch-action: none; cursor: grab;
@@ -2137,12 +2156,14 @@ body::before {
 
 /* Coffee-stain decoy */
 .zz-coffeewrap { position: relative; }
-.zz-blot { filter: blur(1.5px); opacity: 0.8; }
+/* The ruined lines are just normal (incomplete, nonsense) text — the coffee
+   stain alone sits over them; no artificial blur. */
+.zz-blot { }
 /* A real spilled-coffee splatter, drawn as an inline SVG whose smooth brown
    blobs are roughened into organic jagged edges + speckle by a turbulence /
    displacement filter (see coffeeSvg() in zeitzunder.js). */
 .zz-coffee {
-  position: absolute; left: -6%; top: 24%; width: 96%; height: 74%;
+  position: absolute; left: -14%; top: 6%; width: 128%; height: 104%;
   pointer-events: none; transform: rotate(-5deg); mix-blend-mode: multiply;
 }
 .zz-coffee-svg { width: 100%; height: 100%; display: block; overflow: visible; }
