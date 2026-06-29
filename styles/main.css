@@ -2100,25 +2100,27 @@ body::before {
 
 /* ---- Manual (expert) — a physical booklet you flip through ------------ */
 /* The manual fills the viewport so the flip buttons are ALWAYS reachable
-   without scrolling: a slim top bar (back + page count), then a row of
-   [◀ · page · ▶] where the buttons sit beside the page, vertically centred.
-   Long pages scroll INSIDE the paper, not the screen. */
+   without scrolling — slim ‹ › buttons hug the page edges, the page takes the
+   rest, and long pages scroll INSIDE the paper, not the screen. No top bar:
+   the app header's logo is the way out. */
+.app:has(.zz-manual) { padding: 8px 10px 0; }
 .zz-manual {
-  text-align: left; display: flex; flex-direction: column;
-  height: calc(100svh - 158px - env(safe-area-inset-top)); overflow: hidden;
+  text-align: left; display: flex;
+  /* leave a small bottom gap so the page sits ON the normal background
+     instead of butting a white edge against the screen bottom */
+  height: calc(100svh - 84px - env(safe-area-inset-top)); overflow: hidden;
+  padding-bottom: 14px;
 }
-.zz-mbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex: none; }
-.zz-mbar-btn { font: inherit; font-weight: 800; color: var(--ink-soft); background: var(--paper-2); border: 3px dashed var(--ink); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
-.zz-bookrow { display: flex; align-items: stretch; gap: 8px; flex: 1; min-height: 0; }
+.zz-bookrow { display: flex; align-items: stretch; gap: 6px; flex: 1; min-height: 0; width: 100%; }
 .zz-bookbtn {
-  align-self: center; flex: none; width: 48px; height: 48px; border-radius: 50%; cursor: pointer;
-  display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+  align-self: center; flex: none; width: 30px; height: 78px; border-radius: 999px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; padding: 0;
   background: var(--purple); color: #fff; border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink);
 }
 .zz-bookbtn:active { transform: translateY(4px); box-shadow: none; }
-.zz-bookbtn:disabled { opacity: 0.35; cursor: default; box-shadow: none; }
+.zz-bookbtn:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
 .zz-book {
-  position: relative; flex: 1; min-width: 0; max-width: 440px; height: 100%; margin: 0 auto;
+  position: relative; flex: 1; min-width: 0; max-width: 520px; height: 100%; margin: 0 auto;
   perspective: 1600px;
 }
 .zz-leaf {

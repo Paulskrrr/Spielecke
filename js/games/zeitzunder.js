@@ -533,14 +533,10 @@
     var leaves = manualPages.map(function (p, i) { return leafHtml(p, i, manualPages.length); }).join("");
     els.innerHTML =
       '<section class="screen zz-manual">' +
-      '  <div class="zz-mbar">' +
-      '    <button id="zz-manual-back" class="zz-mbar-btn">' + t("← Back") + "</button>" +
-      '    <span class="zz-pagecount" id="zz-pagecount"></span>' +
-      "  </div>" +
       '  <div class="zz-bookrow">' +
-      '    <button id="zz-prev" class="zz-bookbtn" aria-label="' + t("Previous page") + '">◀</button>' +
+      '    <button id="zz-prev" class="zz-bookbtn" aria-label="' + t("Previous page") + '">‹</button>' +
       '    <div class="zz-book" id="zz-book">' + leaves + "</div>" +
-      '    <button id="zz-next" class="zz-bookbtn" aria-label="' + t("Next page") + '">▶</button>' +
+      '    <button id="zz-next" class="zz-bookbtn" aria-label="' + t("Next page") + '">›</button>' +
       "  </div>" +
       "</section>";
     var book = els.querySelector("#zz-book");
@@ -548,7 +544,6 @@
     updatePager();
     els.querySelector("#zz-prev").addEventListener("click", function () { turn(-1); });
     els.querySelector("#zz-next").addEventListener("click", function () { turn(1); });
-    els.querySelector("#zz-manual-back").addEventListener("click", renderRolePicker);
     attachManualNav(book);
   }
 
