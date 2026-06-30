@@ -19,11 +19,13 @@
   function Pools() { return global.Spielecke.Pools; }
 
   var MIN_PLAYERS = 2;
+  var DRAW_SECONDS = 60; // drawing time limit — starts when the draw screen opens
 
   var els = null, ctx = null, settings = null;
   var players = [], secretWord = "", chain = [], step = 0, revealStep = 0;
   // active drawing state
   var canvas = null, cctx = null, drawing = false, lastX = 0, lastY = 0;
+  var drawTimer = null, drawTimeLeft = 0;
 
   var module = {
     meta: {
@@ -110,7 +112,10 @@
     var prevText = chain[chain.length - 1].value; // seed word or previous guess
     els.innerHTML =
       '<section class="screen dd-draw">' +
-      '  <div class="dd-target">' + t("Draw: ") + "<strong>" + esc(prevText) + "</strong></div>" +
+      '  <div class="dd-draw-head">' +
+      '    <div class="dd-target">' + t("Draw: ") + "<strong>" + esc(prevText) + "</strong></div>" +
+      '    <div class="dd-timer" id="dd-timer">' + fmtSecs(DRAW_SECONDS) + "</div>" +
+      "  </div>" +
       '  <canvas id="dd-canvas" class="doodle-canvas"></canvas>' +
       '  <div class="dd-tools">' +
       '    <button id="dd-clear" class="btn btn-skip">' + t("Clear 🧹") + "</button>" +
@@ -119,12 +124,41 @@
       "</section>";
     setupCanvas();
     els.querySelector("#dd-clear").addEventListener("click", clearCanvas);
-    els.querySelector("#dd-done").addEventListener("click", function () {
-      var data = canvas.toDataURL("image/png");
-      chain.push({ kind: "drawing", by: players[step], value: data });
-      advance();
-    });
+    els.querySelector("#dd-done").addEventListener("click", finishDrawing);
+    startDrawTimer();
   }
+
+  // Capture the canvas, add it to the chain, move on. Triggered by "Done" or by
+  // the timer hitting zero — guarded so it can only fire once per draw step.
+  function finishDrawing() {
+    if (!canvas) return;
+    stopDrawTimer();
+    var data = canvas.toDataURL("image/png");
+    chain.push({ kind: "drawing", by: players[step], value: data });
+    advance();
+  }
+
+  // --- Drawing timer (60s, auto-submits at zero) ---------------------------
+  function startDrawTimer() {
+    stopDrawTimer();
+    drawTimeLeft = DRAW_SECONDS;
+    updateDrawTimer();
+    drawTimer = global.setInterval(function () {
+      drawTimeLeft--;
+      updateDrawTimer();
+      if (drawTimeLeft <= 0) finishDrawing();
+    }, 1000);
+  }
+  function stopDrawTimer() {
+    if (drawTimer !== null) { global.clearInterval(drawTimer); drawTimer = null; }
+  }
+  function updateDrawTimer() {
+    var el = els && els.querySelector("#dd-timer");
+    if (!el) return;
+    el.textContent = fmtSecs(Math.max(0, drawTimeLeft));
+    el.classList.toggle("is-urgent", drawTimeLeft <= 10);
+  }
+  function fmtSecs(s) { var m = Math.floor(s / 60), r = s % 60; return m + ":" + (r < 10 ? "0" : "") + r; }
 
   // --- Guess step ----------------------------------------------------------
   function renderGuess() {
@@ -304,6 +338,7 @@
     cctx.restore();
   }
   function teardownCanvas() {
+    stopDrawTimer();
     if (canvas) {
       canvas.removeEventListener("pointerdown", onDown);
       canvas.removeEventListener("pointermove", onMove);

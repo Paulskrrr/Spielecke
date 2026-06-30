@@ -329,6 +329,9 @@ the whole chain at the end.
 
 - **Tech:** HTML5 `<canvas>` + Pointer Events → same code for mouse (laptop) and finger
   (mobile). Drawings kept in memory for the session (not localStorage — too big).
+- **Draw timer:** each draw step is capped at **60s** (counts down from the moment the draw
+  screen opens, turns red under 10s); at zero the drawing auto-submits. Cleared on every
+  screen change / unmount.
 - **Config:** word pool.
 - **Outcome:** none — reveal the carnage for laughs.
 
