@@ -745,6 +745,13 @@
     "<b>Serial</b>: two letters + two digits, e.g. KQ-37. Its digits and last digit drive the Dials, the Firing order AND the Keypad — keep it handy.": "<b>Seriennr.</b>: zwei Buchstaben + zwei Ziffern, z. B. KQ-37. Ihre Ziffern und die letzte Ziffer steuern Regler, Zünd-Reihenfolge UND Tastenfeld — halte sie bereit.",
     "<b>Batteries</b>: 0–4 little cells.": "<b>Batterien</b>: 0–4 kleine Zellen.",
     "A decoy — no rule uses them.": "Eine Falle — keine Regel nutzt sie.",
+
+    // ── Zeitzünder v6 — replace fiction-breaking meta lines with boilerplate ─
+    "Questions about your data may be addressed to the Data Protection Officer at the address on the back cover.": "Fragen zu Ihren Daten richten Sie bitte an den Datenschutzbeauftragten unter der Adresse auf der Rückseite.",
+    "This warranty does not affect your statutory rights.": "Diese Garantie schränkt Ihre gesetzlichen Rechte nicht ein.",
+    "Manual revision 4.7.2 · printed on recycled paper · this page intentionally left blank.": "Handbuch-Revision 4.7.2 · gedruckt auf Recyclingpapier · diese Seite wurde absichtlich leer gelassen.",
+    "The display shows 0:00.": "Die Anzeige zeigt 0:00.",
+    "Too late.": "Zu spät.",
   };
 
   function getLang() {

@@ -679,7 +679,7 @@
     return "<p class='zz-fine'>" + t("In accordance with Regulation (EU) 2016/679 (GDPR), this Ordnance Device (\"the Controller\") processes the following categories of personal data of the End User (\"the Defuser\"): fingerprints, ambient panic levels, and last words.") + "</p>" +
       "<p class='zz-fine'>" + t("Lawful basis for processing is Art. 6(1)(d) — protection of the vital interests of the data subject, which the Controller notes are time-limited. You have the right to access, rectify and erase your data, provided the request is submitted in triplicate before detonation.") + "</p>" +
       "<p class='zz-fine'>" + t("Data may be transferred to third parties (next of kin, bomb disposal, the group chat). By continuing to hold the device you consent to cookies. 🍪") + "</p>" +
-      "<p class='zz-fine muted'>" + t("(This chapter contains no defusal information. It is here to waste your time. The clock is still running.)") + "</p>";
+      "<p class='zz-fine'>" + t("Questions about your data may be addressed to the Data Protection Officer at the address on the back cover.") + "</p>";
   }
   function manualOrder() {
     var rows = Object.keys(FIRING_SIGILS).map(function (s) { return "<tr><td class='zz-sig'>" + s + "</td><td>" + t(stageLabel(FIRING_SIGILS[s])) + "</td></tr>"; }).join("");
@@ -728,7 +728,7 @@
       "<ul class='zz-rules'><li class='zz-fine'>" + t("Warranty void if device is opened, submerged, defused, or detonated.") + "</li>" +
       "<li class='zz-fine'>" + t("For support, please hold. Estimated wait time: longer than you have.") + "</li>" +
       "<li class='zz-fine'>" + t("Some assembly was required. We did not do it.") + "</li></ul>" +
-      "<p class='zz-fine muted'>" + t("(Still no defusal information here. Flip back two chapters.)") + "</p>";
+      "<p class='zz-fine'>" + t("This warranty does not affect your statutory rights.") + "</p>";
   }
   function manualKeypad() {
     var rows = DECODER_LETTERS.map(function (L) { return "<tr><td><b>" + L + "</b></td><td class='zz-glyphs'>" + SYMBOL_TABLE[L].map(function (g) { return "<span>" + g + "</span>"; }).join("") + "</td></tr>"; }).join("");
@@ -770,7 +770,7 @@
     return "<p class='zz-fine'>" + t("Thank you for choosing this Ordnance Device. Please read this manual carefully and keep it for future reference.") + "</p>" +
       "<p class='zz-fine'>" + t("All specifications are subject to change without notice. Illustrations are not to scale. The actual device may differ from the unit described.") + "</p>" +
       "<p class='zz-fine'>" + t("Reproduction of this manual, in whole or in part, without written permission is prohibited.") + "</p>" +
-      "<p class='zz-fine muted'>" + t("Manual revision 4.7.2 · printed on recycled paper · this page intentionally left unhelpful.") + "</p>";
+      "<p class='zz-fine muted'>" + t("Manual revision 4.7.2 · printed on recycled paper · this page intentionally left blank.") + "</p>";
   }
   function manualSafety() {
     return "<ul class='zz-rules'>" +
@@ -791,7 +791,7 @@
       ["The device is ticking.", "This is normal."],
       ["The device has stopped ticking.", "Seek cover."],
       ["A wire was cut and nothing happened.", "Congratulations, or wait."],
-      ["This manual is unhelpful.", "See Annex VI."]
+      ["The display shows 0:00.", "Too late."]
     ];
     var rows = data.map(function (r) { return "<tr><td class='zz-fine'>" + t(r[0]) + "</td><td class='zz-fine'>" + t(r[1]) + "</td></tr>"; }).join("");
     return "<table class='zz-table'><thead><tr><th>" + t("Problem") + "</th><th>" + t("Solution") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
