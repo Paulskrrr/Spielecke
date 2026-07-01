@@ -664,7 +664,7 @@
     return "<p class='zz-fine'>" + t("The firing sequence is fixed at manufacture and cannot be reordered in the field.") + "</p>" +
       "<p>" + t("One face shows three sigils in a row. Translate each to a job, left to right — that's the order to commit them in.") + "</p>" +
       "<table class='zz-table'><thead><tr><th>" + t("Sigil") + "</th><th>" + t("Job") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
-      "<p class='zz-warn'>⚠ " + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
+      "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
       "<p class='zz-fine'>" + t("Note: committing a stage out of sequence is logged as a fault and cannot be undone.") + "</p>";
   }
   function manualDials() {
