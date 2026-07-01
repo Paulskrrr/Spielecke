@@ -2025,17 +2025,18 @@ body::before {
 /* ---- Core face ------------------------------------------------------- */
 .zz-coreface { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .zz-serialplate {
-  display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
-  background: #c7b36a; padding: 9px 20px 10px; border-radius: 6px;
-  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
+  position: absolute; left: 32px; bottom: 13px; z-index: 2;
+  display: flex; align-items: baseline; gap: 5px;
+  background: none; padding: 0; box-shadow: none;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.14);
 }
 .zz-serialplate__lbl {
-  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.7rem;
-  letter-spacing: 2px; text-transform: uppercase; color: rgba(20,22,26,0.7);
+  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.5rem;
+  letter-spacing: 1.5px; text-transform: uppercase; color: rgba(20,22,26,0.5);
 }
 .zz-serial {
-  font-family: ui-monospace, Menlo, monospace; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px;
-  color: #14161a;
+  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.72rem; letter-spacing: 1px;
+  color: rgba(20,22,26,0.6);
 }
 .zz-sigrow { display: flex; gap: 16px; }
 .zz-sigil {
@@ -2251,8 +2252,8 @@ body::before {
   .zz-bomb { --zz-size: 400px; }
   .zz-sigil { width: 88px; height: 88px; font-size: 3.4rem; border-radius: 14px; }
   .zz-led i { width: 28px; height: 28px; }
-  .zz-serial { font-size: 1.9rem; }
-  .zz-serialplate__lbl { font-size: 0.8rem; }
+  .zz-serial { font-size: 0.92rem; }
+  .zz-serialplate__lbl { font-size: 0.58rem; }
   .zz-wires { max-width: 340px; }
   .zz-wire__line { height: 16px; }
   .zz-wire__bolt { width: 20px; height: 20px; }
