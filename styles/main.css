@@ -2024,12 +2024,12 @@ body::before {
 
 /* ---- Core face ------------------------------------------------------- */
 .zz-coreface { display: flex; flex-direction: column; align-items: center; gap: 12px; }
-.zz-plate {
+.zz-serialplate {
   display: inline-flex; flex-direction: column; align-items: center; gap: 3px;
   background: #c7b36a; padding: 5px 12px 6px; border-radius: 5px;
   box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
 }
-.zz-plate__lbl {
+.zz-serialplate__lbl {
   font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.55rem;
   letter-spacing: 2px; text-transform: uppercase; color: rgba(20,22,26,0.7);
 }
