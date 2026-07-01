@@ -349,8 +349,10 @@
       '<div class="zz-batts">' + batt + "</div><div class=\"zz-inds\">" + inds + "</div></div>";
   }
   function decoderFace() {
-    var key = bomb.colourKey.map(function (c, i) { return '<span class="zz-ckey"><b>' + (i + 1) + '</b><i style="background:' + colorHex(c) + '"></i></span>'; }).join("");
-    return '<div class="zz-decoderface"><div class="zz-letter">' + bomb.decoderLetter + '</div><div class="zz-ckeys">' + key + "</div></div>";
+    var key = bomb.colourKey.map(function (c, i) { return '<div class="zz-ckey"><span class="zz-ckey__rank">' + (i + 1) + '</span><span class="zz-ckey__sw" style="background:' + colorHex(c) + '"></span></div>'; }).join("");
+    return '<div class="zz-decoderface">' +
+      '<div class="zz-readout"><span class="zz-readout__val">' + bomb.decoderLetter + "</span></div>" +
+      '<div class="zz-ckeys">' + key + "</div></div>";
   }
 
   // --- Wiring & cube control ----------------------------------------------
