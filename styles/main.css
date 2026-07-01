@@ -2023,38 +2023,38 @@ body::before {
 .zz-screw--bl { bottom: 8px; left: 8px; } .zz-screw--br { bottom: 8px; right: 8px; }
 
 /* ---- Core face ------------------------------------------------------- */
-.zz-coreface { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.zz-coreface { display: flex; flex-direction: column; align-items: center; gap: 22px; }
 .zz-serialplate {
-  display: inline-flex; flex-direction: column; align-items: center; gap: 3px;
-  background: #c7b36a; padding: 5px 12px 6px; border-radius: 5px;
+  display: inline-flex; flex-direction: column; align-items: center; gap: 4px;
+  background: #c7b36a; padding: 9px 20px 10px; border-radius: 6px;
   box-shadow: inset 0 0 0 2px rgba(0,0,0,0.25);
 }
 .zz-serialplate__lbl {
-  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.55rem;
+  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.7rem;
   letter-spacing: 2px; text-transform: uppercase; color: rgba(20,22,26,0.7);
 }
 .zz-serial {
-  font-family: ui-monospace, Menlo, monospace; font-weight: 800; font-size: 1rem; letter-spacing: 2px;
+  font-family: ui-monospace, Menlo, monospace; font-weight: 800; font-size: 1.5rem; letter-spacing: 2px;
   color: #14161a;
 }
-.zz-sigrow { display: flex; gap: 12px; }
+.zz-sigrow { display: flex; gap: 16px; }
 .zz-sigil {
-  font-size: 2rem; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;
-  background: #1c1f24; color: #ffd84d; border-radius: 9px; box-shadow: inset 0 0 8px rgba(0,0,0,0.7);
+  font-size: 2.6rem; width: 68px; height: 68px; display: flex; align-items: center; justify-content: center;
+  background: #1c1f24; color: #ffd84d; border-radius: 12px; box-shadow: inset 0 0 8px rgba(0,0,0,0.7);
 }
-.zz-ledrow { display: flex; gap: 14px; }
-.zz-led i { display: block; width: 17px; height: 17px; border-radius: 50%; background: #3a3d44; box-shadow: inset 0 0 4px #000; }
+.zz-ledrow { display: flex; gap: 20px; }
+.zz-led i { display: block; width: 22px; height: 22px; border-radius: 50%; background: #3a3d44; box-shadow: inset 0 0 4px #000; }
 .zz-led.is-on i { background: var(--green); box-shadow: 0 0 12px var(--green); }
 
 /* ---- Wires face ------------------------------------------------------ */
-.zz-wires { display: flex; flex-direction: column; gap: 9px; width: 100%; max-width: 230px; }
+.zz-wires { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; }
 .zz-wire {
-  display: flex; align-items: center; gap: 8px; padding: 4px 6px; cursor: pointer;
-  background: #2c2f35; border: 2px solid #1c1f24; border-radius: 8px; font: inherit;
+  display: flex; align-items: center; gap: 12px; padding: 9px 12px; cursor: pointer;
+  background: #2c2f35; border: 2px solid #1c1f24; border-radius: 10px; font: inherit;
 }
-.zz-wire__bolt { width: 10px; height: 10px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #cfd3d8, #7b8089); flex: none; }
-.zz-wire__line { flex: 1; height: 13px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.45); }
-.zz-wire__num { color: #fff; font-weight: 900; font-size: 1.05rem; width: 20px; text-align: center; }
+.zz-wire__bolt { width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #cfd3d8, #7b8089); flex: none; }
+.zz-wire__line { flex: 1; height: 18px; border-radius: 7px; border: 1px solid rgba(0,0,0,0.45); }
+.zz-wire__num { color: #fff; font-weight: 900; font-size: 1.3rem; width: 26px; text-align: center; }
 .zz-wire.is-cut { opacity: 0.35; }
 .zz-wire.is-cut .zz-wire__line { background: #555 !important; clip-path: polygon(0 0,46% 0,46% 100%,0 100%); }
 .zz-wire.is-bad { animation: zz-shake 0.4s; border-color: var(--red); }
@@ -2062,45 +2062,45 @@ body::before {
 @keyframes zz-shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
 
 /* ---- Keypad face ----------------------------------------------------- */
-.zz-keypad { display: flex; flex-direction: column; gap: 8px; align-items: center; }
-.zz-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.zz-keypad { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.zz-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; }
 .zz-key {
-  width: 52px; height: 52px; font-size: 1.45rem; cursor: pointer; color: #f4f4f4;
-  background: linear-gradient(#33373d, #23262b); border: 2px solid #14161a; border-radius: 9px; font-family: inherit;
+  width: 68px; height: 68px; font-size: 1.9rem; cursor: pointer; color: #f4f4f4;
+  background: linear-gradient(#33373d, #23262b); border: 2px solid #14161a; border-radius: 11px; font-family: inherit;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
 }
 .zz-key:active { transform: translateY(2px); }
 .zz-key:disabled { opacity: 0.4; cursor: default; }
 .zz-entry {
-  min-height: 30px; display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 168px; background: #14161a; border-radius: 7px; font-size: 1.25rem; color: #ffd84d; padding: 3px;
+  min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 10px;
+  width: 100%; max-width: 246px; background: #14161a; border-radius: 8px; font-size: 1.6rem; color: #ffd84d; padding: 5px;
 }
-.zz-entry__dot { width: 8px; height: 8px; border-radius: 50%; background: #3a3d44; }
-.zz-keyactions { display: flex; gap: 8px; }
+.zz-entry__dot { width: 10px; height: 10px; border-radius: 50%; background: #3a3d44; }
+.zz-keyactions { display: flex; gap: 12px; }
 .zz-mini {
-  width: 50px; height: 36px; font-size: 1.1rem; font-weight: 900; cursor: pointer; color: #fff;
-  background: #4a4f57; border: 2px solid #14161a; border-radius: 8px;
+  width: 66px; height: 46px; font-size: 1.35rem; font-weight: 900; cursor: pointer; color: #fff;
+  background: #4a4f57; border: 2px solid #14161a; border-radius: 9px;
 }
 .zz-mini--go { background: var(--green); color: #14161a; }
 .zz-mini:disabled { opacity: 0.4; cursor: default; }
 
 /* ---- Dials face ------------------------------------------------------ */
-.zz-dialface { display: flex; flex-direction: column; gap: 12px; align-items: center; }
-.zz-dials { display: flex; gap: 18px; }
-.zz-dial { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.zz-dial__btn { width: 50px; height: 32px; font-size: 1rem; cursor: pointer; color: #f4f4f4; background: #33373d; border: 2px solid #14161a; border-radius: 7px; }
+.zz-dialface { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+.zz-dials { display: flex; gap: 32px; }
+.zz-dial { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.zz-dial__btn { width: 78px; height: 44px; font-size: 1.35rem; cursor: pointer; color: #f4f4f4; background: #33373d; border: 2px solid #14161a; border-radius: 9px; }
 .zz-dial__btn:disabled { opacity: 0.4; cursor: default; }
-.zz-dial__val { width: 54px; height: 54px; display: flex; align-items: center; justify-content: center; font-family: ui-monospace, Menlo, monospace; font-size: 2rem; font-weight: 800; color: #ffd84d; background: #14161a; border-radius: 9px; box-shadow: inset 0 0 8px rgba(0,0,0,0.8); }
-.zz-dial__lbl { font-weight: 900; color: #14161a; }
+.zz-dial__val { width: 78px; height: 78px; display: flex; align-items: center; justify-content: center; font-family: ui-monospace, Menlo, monospace; font-size: 2.9rem; font-weight: 800; color: #ffd84d; background: #14161a; border-radius: 11px; box-shadow: inset 0 0 8px rgba(0,0,0,0.8); }
+.zz-dial__lbl { font-weight: 900; font-size: 1.2rem; color: #14161a; }
 
 /* ---- Guts face ------------------------------------------------------- */
-.zz-gutsface { display: flex; flex-direction: column; gap: 16px; align-items: center; }
-.zz-batts { display: flex; gap: 8px; }
-.zz-batt { width: 30px; height: 16px; border-radius: 3px; background: #2c2f35; border: 2px solid #14161a; position: relative; }
-.zz-batt::after { content: ""; position: absolute; right: -5px; top: 4px; width: 3px; height: 6px; background: #14161a; border-radius: 0 2px 2px 0; }
+.zz-gutsface { display: flex; flex-direction: column; gap: 26px; align-items: center; }
+.zz-batts { display: flex; gap: 12px; }
+.zz-batt { width: 44px; height: 24px; border-radius: 4px; background: #2c2f35; border: 2px solid #14161a; position: relative; }
+.zz-batt::after { content: ""; position: absolute; right: -7px; top: 6px; width: 5px; height: 10px; background: #14161a; border-radius: 0 2px 2px 0; }
 .zz-batt.is-on { background: var(--green); }
-.zz-inds { display: flex; gap: 10px; }
-.zz-ind { font-family: ui-monospace, Menlo, monospace; font-weight: 800; font-size: 0.82rem; letter-spacing: 1px; padding: 6px 10px; border-radius: 6px; background: #1c1f24; color: #4a4f57; border: 2px solid #14161a; }
+.zz-inds { display: flex; gap: 14px; }
+.zz-ind { font-family: ui-monospace, Menlo, monospace; font-weight: 800; font-size: 1.05rem; letter-spacing: 1px; padding: 10px 16px; border-radius: 8px; background: #1c1f24; color: #4a4f57; border: 2px solid #14161a; }
 .zz-ind.is-lit { background: #fff3b0; color: #14161a; border-color: #d4a017; box-shadow: 0 0 12px #ffd84d; }
 
 /* ---- Decoder face ---------------------------------------------------- */
@@ -2233,9 +2233,23 @@ body::before {
 /* ---- Bigger cube on a real screen (the defuser's MacBook) ------------ */
 @media (min-width: 720px) {
   .zz-bomb { --zz-size: 400px; }
-  .zz-sigil { width: 58px; height: 58px; font-size: 2.3rem; }
-  .zz-serial { font-size: 1.15rem; }
-  .zz-key { width: 60px; height: 60px; }
+  .zz-sigil { width: 88px; height: 88px; font-size: 3.4rem; border-radius: 14px; }
+  .zz-led i { width: 28px; height: 28px; }
+  .zz-serial { font-size: 1.9rem; }
+  .zz-serialplate__lbl { font-size: 0.8rem; }
+  .zz-wires { max-width: 340px; }
+  .zz-wire__line { height: 22px; }
+  .zz-wire__num { font-size: 1.5rem; }
+  .zz-key { width: 84px; height: 84px; font-size: 2.3rem; }
+  .zz-entry { max-width: 300px; font-size: 1.9rem; }
+  .zz-mini { width: 80px; height: 54px; font-size: 1.5rem; }
+  .zz-dial__val { width: 96px; height: 96px; font-size: 3.4rem; }
+  .zz-dial__btn { width: 96px; height: 52px; font-size: 1.5rem; }
+  .zz-batt { width: 54px; height: 30px; }
+  .zz-ind { font-size: 1.25rem; padding: 12px 20px; }
+  .zz-readout__val { font-size: 4.2rem; }
+  .zz-decoderface { max-width: 320px; }
+  .zz-ckey__sw { height: 24px; }
 }
 @media (min-width: 1100px) { .zz-bomb { --zz-size: 460px; } }
 @media (prefers-reduced-motion: reduce) {
