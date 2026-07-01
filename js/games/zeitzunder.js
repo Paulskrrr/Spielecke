@@ -462,7 +462,9 @@
     strikes++;
     var s = els.querySelector("#zz-strikes"); if (s) s.innerHTML = strikeDots();
     var hud = els.querySelector("#zz-hud"); if (hud) { hud.classList.remove("zz-flash"); void hud.offsetWidth; hud.classList.add("zz-flash"); }
-    toast(kind === "seq" ? t("✋ Out of sequence!") : t("✕ Wrong — strike!"));
+    // Out-of-sequence gives no popup — just the error beep, the HUD flash and
+    // the extra red X. Only a genuinely wrong action explains itself with a toast.
+    if (kind !== "seq") toast(t("✕ Wrong — strike!"));
     strikeSound();
     if (strikes >= MAX_STRIKES) { boom(); return; }
     timeLeft = Math.max(1, timeLeft - 15); updateTimer();

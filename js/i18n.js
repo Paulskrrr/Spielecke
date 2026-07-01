@@ -581,7 +581,6 @@
     "Decoder letter": "Decoder-Buchstabe",
     "Colour priority": "Farb-Priorität",
     "press the glyphs…": "Glyphen drücken…",
-    "✋ Out of sequence!": "✋ Falsche Reihenfolge!",
     "✕ Wrong — strike!": "✕ Falsch — Fehler!",
     "💥 Three strikes. The wire was wrong.": "💥 Drei Fehler. Der Draht war falsch.",
     "⏱️ Time ran out.": "⏱️ Zeit abgelaufen.",
