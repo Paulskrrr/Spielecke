@@ -723,12 +723,11 @@
       { icon: "📜", title: "Annex III — Data Protection (GDPR)", spam: true, postit: true, html: manualGdpr() },
       { icon: "🎛️", title: "Ch. 3 — Dials", html: manualDials() },
       { icon: "🧴", title: "Annex IV — Maintenance & Care", spam: true, html: manualMaintenance() },
-      { icon: "🔌", title: "Wire-Cutting Reference Card", coffee: true, html: manualWiresRuined() },
+      { icon: "🔌", title: "Ch. 6 — Wires", html: manualWiresRuined() },
       { icon: "🔡", title: "Ch. 4 — Keypad", html: manualKeypad() },
       { icon: "🧾", title: "Annex V — Warranty & Liability", spam: true, html: manualWarranty() },
       { icon: "🔎", title: "Ch. 5 — Reading the bomb", html: manualRef() },
       { icon: "🛠️", title: "Annex VI — Troubleshooting", spam: true, html: manualTroubleshoot() },
-      { icon: "🔌", title: "Ch. 6 — Wires (full procedure)", html: manualWires() },
       { icon: "🧭", title: "Ch. 7 — Wiring Maze", html: manualMaze() },
       { icon: "🔴", title: "Ch. 8 — Arming the detonator", html: manualArming() },
       { icon: "♻️", title: "Annex VII — Disposal, Conformity & Index", spam: true, html: manualDisposal() },
@@ -850,26 +849,17 @@
       "<p>" + t("The Dials do not take on their own face — once set, fire them from the arming control (see Arming).") + "</p>" +
       "<p class='zz-fine'>" + t("Dials are factory-calibrated; field recalibration requires tools not supplied with this unit.") + "</p>";
   }
-  function manualWires() {
-    return "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
-      "<ul class='zz-rules'>" +
-      "<li>" + t("First make sure the Dials are set to their targets. <b>Channel</b> = Dial A + Dial B.") + "</li>" +
-      "<li>" + t("If a wire's NUMBER equals the Channel, cut it. (If several match, the leftmost.)") + "</li>" +
-      "<li>" + t("Otherwise, cut the wire whose COLOUR is highest on the Decoder's colour-priority list (1 = highest). Ties → leftmost.") + "</li>" +
-      "</ul><p class='muted small'>" + t("The cut reads the dials LIVE, so the dials must be right even if Wires comes first in the order.") + "</p>" +
-      "<p class='zz-fine'>" + t("After cutting, do not re-strip or re-seat any severed conductor.") + "</p>";
-  }
-  // A DECOY: a believable wire quick-reference, but a coffee spill has soaked
-  // the lower steps into illegibility. The complete procedure is in Ch. 6.
+  // The wire-cutting reference (the only wires chapter). Complete rules,
+  // including the leftmost tie-break, so it stands on its own.
   function manualWiresRuined() {
-    return "<p>" + t("Wire-cutting procedure (quick reference):") + "</p>" +
+    return "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
       "<ol class='zz-steps'>" +
       "<li>" + t("Set both dials to their target values and add them together to read the channel.") + "</li>" +
-      "<li>" + t("Locate the wire whose printed number equals the channel; that is the wire to cut.") + "</li>" +
-      "<li>" + t("If no number matches, use the colour-priority order: cut the highest-ranked colour present.") + "</li>" +
+      "<li>" + t("If a wire's printed number equals the channel, cut it — if several match, the leftmost.") + "</li>" +
+      "<li>" + t("If no number matches, use the colour-priority order: cut the highest-ranked colour present; ties go to the leftmost.") + "</li>" +
       "<li>" + t("Confirm the cut against the firing order before severing the wire.") + "</li>" +
       "</ol>" +
-      "<p class='zz-fine'>" + t("Full procedure: Chapter 6.") + "</p>";
+      "<p class='zz-fine'>" + t("The cut reads the dials LIVE, so the dials must be set even if Wires comes first in the order.") + "</p>";
   }
   function manualWarranty() {
     return "<p class='zz-fine'>" + t("This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.") + "</p>" +

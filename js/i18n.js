@@ -821,6 +821,12 @@
     "Annex VIII — End-User Licence Agreement": "Anhang VIII — Endbenutzer-Lizenzvereinbarung",
     "Annex IX — Frequently Asked Questions": "Anhang IX — Häufig gestellte Fragen",
     "Annex X — Customer Satisfaction Survey": "Anhang X — Kundenzufriedenheitsumfrage",
+
+    // ── Zeitzünder v11 — single wires chapter (full-procedure page removed) ─
+    "Ch. 6 — Wires": "Kapitel 6 — Drähte",
+    "If a wire's printed number equals the channel, cut it — if several match, the leftmost.": "Trägt ein Draht die Zahl des Kanals, ist er zu durchtrennen — bei mehreren Treffern der am weitesten links liegende.",
+    "If no number matches, use the colour-priority order: cut the highest-ranked colour present; ties go to the leftmost.": "Passt keine Zahl, gilt die Farb-Priorität: zu durchtrennen ist die höchstplatzierte vorhandene Farbe; bei Gleichstand die am weitesten links liegende.",
+    "The cut reads the dials LIVE, so the dials must be set even if Wires comes first in the order.": "Der Schnitt liest die Regler in Echtzeit; sie müssen daher eingestellt sein, auch wenn die Drähte in der Reihenfolge zuerst dran sind.",
   };
 
   function getLang() {
