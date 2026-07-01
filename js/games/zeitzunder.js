@@ -745,7 +745,7 @@
     return "<p class='zz-fine'>" + t("Thank you for choosing this Ordnance Device. Please read this manual carefully and keep it for future reference.") + "</p>" +
       "<p class='zz-fine'>" + t("All specifications are subject to change without notice. Illustrations are not to scale. The actual device may differ from the unit described.") + "</p>" +
       "<p class='zz-fine'>" + t("Reproduction of this manual, in whole or in part, without written permission is prohibited.") + "</p>" +
-      "<p class='zz-fine muted'>" + t("Manual revision 4.7.2 · printed on recycled paper · this page intentionally left blank.") + "</p>";
+      "<p class='zz-fine muted'>" + t("Manual revision 4.7.2 · printed on recycled paper · errors and omissions excepted.") + "</p>";
   }
   function manualSafety() {
     return "<ul class='zz-rules'>" +
