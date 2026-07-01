@@ -649,8 +649,7 @@
       "<li>" + t("Three jobs live on the device: <b>Wires</b>, <b>Keypad</b>, <b>Dials</b>. They must be committed in the right ORDER — see Firing Order.") + "</li>" +
       "<li>" + t("Every job reads values off OTHER faces. The defuser can't read this manual and you can't see the bomb — so make them flip the cube around and describe what they see.") + "</li>" +
       "<li>" + t("A wrong action, or acting out of order, is a strike. Three strikes — or the clock hitting zero — and it blows.") + "</li>" +
-      "</ol>" +
-      "<p class='zz-fine'>" + t("Read each instruction aloud and confirm it with the operator before it is carried out. Retain this manual for the duration of the engagement.") + "</p>";
+      "</ol>";
   }
   function manualGdpr() {
     return "<p class='zz-fine'>" + t("In accordance with Regulation (EU) 2016/679 (GDPR), this Ordnance Device (\"the Controller\") processes the following categories of personal data of the End User (\"the Defuser\"): fingerprints, ambient panic levels, and last words.") + "</p>" +
