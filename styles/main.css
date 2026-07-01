@@ -2225,7 +2225,7 @@ body::before {
   background-image: linear-gradient(var(--paper-2) 0 0), repeating-linear-gradient(transparent, transparent 27px, rgba(36,27,77,0.05) 28px);
 }
 .zz-paper--spam { background-color: #f1ebdb; border-style: dashed; }
-.zz-paper__h { margin: 0 0 12px; font-size: 1.2rem; }
+.zz-paper__h { margin: 0 0 12px; font-size: 1.2rem; overflow-wrap: break-word; hyphens: auto; }
 .zz-pagenum { position: absolute; right: 16px; bottom: 8px; font-size: 0.75rem; font-weight: 800; color: var(--ink-soft); }
 
 .zz-pagecount { font-weight: 800; text-align: right; color: var(--ink-soft); }

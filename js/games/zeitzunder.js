@@ -731,7 +731,10 @@
       { icon: "🔌", title: "Ch. 6 — Wires (full procedure)", html: manualWires() },
       { icon: "🧭", title: "Ch. 7 — Wiring Maze", html: manualMaze() },
       { icon: "🔴", title: "Ch. 8 — Arming the detonator", html: manualArming() },
-      { icon: "♻️", title: "Annex VII — Disposal, Conformity & Index", spam: true, html: manualDisposal() }
+      { icon: "♻️", title: "Annex VII — Disposal, Conformity & Index", spam: true, html: manualDisposal() },
+      { icon: "📄", title: "Annex VIII — End-User Licence Agreement", spam: true, html: manualEula() },
+      { icon: "❓", title: "Annex IX — Frequently Asked Questions", spam: true, html: manualFaq() },
+      { icon: "📝", title: "Annex X — Customer Satisfaction Survey", spam: true, html: manualSurvey() }
     ];
   }
   function manualArming() {
@@ -918,18 +921,26 @@
       "<p class='zz-fine muted'>" + t("Manual revision 4.7.2 · printed on recycled paper · errors and omissions excepted.") + "</p>";
   }
   function manualSafety() {
-    return "<ul class='zz-rules'>" +
+    return "<p class='zz-fine'>" + t("Read all safety instructions before first detonation. Failure to observe these warnings may void the warranty and the afternoon.") + "</p>" +
+      "<ul class='zz-rules'>" +
       "<li class='zz-fine'><b>" + t("WARNING:") + "</b> " + t("Risk of explosion. Do not expose the device to heat, sparks, open flame, or sudden disappointment.") + "</li>" +
       "<li class='zz-fine'>" + t("Keep out of reach of children, pets, and the easily startled.") + "</li>" +
       "<li class='zz-fine'>" + t("Do not operate while drowsy, intoxicated, or panicking. (The operator acknowledges the last may be unavoidable.)") + "</li>" +
-      "<li class='zz-fine'>" + t("In the unlikely event of detonation, discontinue use immediately.") + "</li></ul>";
+      "<li class='zz-fine'>" + t("Wear appropriate protective equipment. No protective equipment is appropriate.") + "</li>" +
+      "<li class='zz-fine'>" + t("This product contains small parts and large consequences.") + "</li>" +
+      "<li class='zz-fine'>" + t("In the unlikely event of detonation, discontinue use immediately.") + "</li></ul>" +
+      "<p class='zz-fine'>" + t("The manufacturer assumes the operator has read this section. The manufacturer is, as ever, mistaken.") + "</p>";
   }
   function manualMaintenance() {
-    return "<ul class='zz-rules'>" +
+    return "<p class='zz-fine'>" + t("Routine maintenance extends the service life of the device — not, admittedly, the outcome most operators are hoping for.") + "</p>" +
+      "<ul class='zz-rules'>" +
       "<li class='zz-fine'>" + t("Wipe the casing with a soft, dry cloth. Do not submerge the device.") + "</li>" +
       "<li class='zz-fine'>" + t("Lubricate the dials annually with a non-conductive grease.") + "</li>" +
+      "<li class='zz-fine'>" + t("Inspect the casing monthly for cracks, corrosion, and ticking that was not there before.") + "</li>" +
       "<li class='zz-fine'>" + t("Store in a cool, dry place, away from direct sunlight and bomb-disposal robots.") + "</li>" +
-      "<li class='zz-fine'>" + t("Tighten all visible screws before each use. Do not tighten the invisible ones.") + "</li></ul>";
+      "<li class='zz-fine'>" + t("Tighten all visible screws before each use. Do not tighten the invisible ones.") + "</li>" +
+      "<li class='zz-fine'>" + t("Replace cells only with the exact type printed on a label that has been deliberately smudged.") + "</li></ul>" +
+      "<p class='zz-fine'>" + t("There are no user-serviceable parts inside — only user-regrettable ones.") + "</p>";
   }
   function manualTroubleshoot() {
     var data = [
@@ -942,10 +953,45 @@
     return "<table class='zz-table'><thead><tr><th>" + t("Problem") + "</th><th>" + t("Solution") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
   }
   function manualDisposal() {
-    return "<ul class='zz-rules'>" +
+    return "<p class='zz-fine'>" + t("At the end of its service life — the device's or the operator's, whichever arrives first — dispose of this product responsibly.") + "</p>" +
+      "<ul class='zz-rules'>" +
       "<li class='zz-fine'>" + t("Dispose of this device only at an authorised collection point. Do not place in household recycling.") + "</li>" +
-      "<li class='zz-fine'>" + t("This device complies with directives it has never heard of: CE, FCC, and vibes.") + "</li>" +
-      "<li class='zz-fine'>" + t("Index — Wires: see Wires. Dials: see Dials. Panic: see everywhere.") + "</li></ul>";
+      "<li class='zz-fine'>" + t("Separate the device into its component materials: metal, plastic, and regret. Recycle the first two.") + "</li>" +
+      "<li class='zz-fine'>" + t("Under the WEEE-ish Directive, a crossed-out wheelie bin is provided on the underside, free of meaning.") + "</li>" +
+      "<li class='zz-fine'>" + t("This device complies with directives it has never heard of: CE, FCC, and vibes.") + "</li></ul>" +
+      "<p class='zz-fine'><b>" + t("Index") + "</b> — " + t("Wires: see Wires. Dials: see Dials. Keypad: see Keypad. Maze: see Maze, eventually. Arming: see the red button. Panic: see everywhere.") + "</p>" +
+      "<p class='zz-fine'>" + t("End of manual. Thank you for reading to the end. It will not help.") + "</p>";
+  }
+  // Three closing annexes — pure boilerplate to dig through under the clock.
+  function manualEula() {
+    return "<p class='zz-fine'>" + t("END-USER LICENCE AGREEMENT. By opening, holding, defusing, or detonating this device, the operator accepts the terms of this Agreement in full and in perpetuity.") + "</p>" +
+      "<ul class='zz-rules'>" +
+      "<li class='zz-fine'>" + t("Licence. The operator is granted a non-exclusive, non-transferable, strictly time-limited right to attempt to survive.") + "</li>" +
+      "<li class='zz-fine'>" + t("Restrictions. The operator may not reverse-engineer the device, except insofar as that is the entire point of it.") + "</li>" +
+      "<li class='zz-fine'>" + t("Termination. This Agreement terminates automatically, and so, potentially, does the operator.") + "</li>" +
+      "<li class='zz-fine'>" + t("Governing law. This Agreement is governed by the laws of physics and, where those fall silent, by panic.") + "</li></ul>" +
+      "<p class='zz-fine'>" + t("If the operator does not agree to these terms, they should have thought of that before the timer started.") + "</p>";
+  }
+  function manualFaq() {
+    var data = [
+      ["Which wire do I cut?", "The correct one. See Chapter 6, if there is time."],
+      ["How much time do I have?", "Less than is being spent reading this page."],
+      ["Is it supposed to make that noise?", "Yes. Right up until it isn't."],
+      ["Can I undo a mistake?", "You may learn from it, briefly."],
+      ["The manual contradicts itself.", "The manual is confident. Follow the confident part."]
+    ];
+    var rows = data.map(function (r) { return "<tr><td class='zz-fine'>" + t(r[0]) + "</td><td class='zz-fine'>" + t(r[1]) + "</td></tr>"; }).join("");
+    return "<p class='zz-fine'>" + t("Frequently asked questions, collected from operators who are no longer available for comment.") + "</p>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Question") + "</th><th>" + t("Answer") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
+  }
+  function manualSurvey() {
+    return "<p class='zz-fine'>" + t("Thank you for choosing this Ordnance Device. Your feedback matters to us and will be processed shortly after the event.") + "</p>" +
+      "<p class='zz-fine'>" + t("Please rate your overall defusal experience:") + "</p>" +
+      "<ul class='zz-rules'>" +
+      "<li class='zz-fine'>" + t("☐ Exceeded expectations   ☐ Met expectations   ☐ Exceeded blast radius") + "</li>" +
+      "<li class='zz-fine'>" + t("How likely are you to recommend this product to a friend? (0 = not likely, 10 = you have no friends left)") + "</li>" +
+      "<li class='zz-fine'>" + t("Was the manual helpful? Please answer in the space provided, using the pen provided. No space or pen is provided.") + "</li></ul>" +
+      "<p class='zz-fine'>" + t("Responses are anonymous. So, increasingly, are respondents.") + "</p>";
   }
 
   // ========================================================================
