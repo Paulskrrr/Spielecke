@@ -374,7 +374,7 @@
         rotate(d === "right" ? RY(-1) : d === "left" ? RY(1) : d === "up" ? RX(1) : d === "down" ? RX(-1) : RZ(1));
       });
     });
-    attachDrag(els.querySelector("#zz-rig"));
+    // Bomb is rotated only via the on-screen buttons / arrow keys — no click or drag on the cube itself.
     attachKeys();
     updateEntry();
   }
@@ -390,33 +390,6 @@
     els.querySelectorAll(".zz-face").forEach(function (f) { f.classList.toggle("is-front", f.getAttribute("data-slot") === fs); });
   }
   function rotate(rmat) { M = matMul(rmat, M); applyCube(true); clack(); }
-
-  function attachDrag(rig) {
-    if (!rig) return;
-    var sx = 0, sy = 0, active = false, moved = false;
-    var cube = els.querySelector("#zz-cube");
-    rig.addEventListener("pointerdown", function (e) { active = true; moved = false; sx = e.clientX; sy = e.clientY; });
-    rig.addEventListener("pointermove", function (e) {
-      if (!active) return;
-      var dx = e.clientX - sx, dy = e.clientY - sy;
-      if (!moved && Math.sqrt(dx * dx + dy * dy) > 6) { moved = true; cube.style.transition = "none"; els.querySelectorAll(".zz-face").forEach(function (f) { f.style.pointerEvents = "none"; }); }
-      if (moved) cube.style.transform = cubeTransform(M, " rotateY(" + (dx * 0.4) + "deg) rotateX(" + (-dy * 0.4) + "deg)");
-    });
-    function end(e) {
-      if (!active) return; active = false;
-      cube.style.transition = "";
-      els.querySelectorAll(".zz-face").forEach(function (f) { f.style.pointerEvents = ""; });
-      if (!moved) return;
-      justDragged = true; setTimeout(function () { justDragged = false; }, 60);
-      var dx = (e.clientX || sx) - sx, dy = (e.clientY || sy) - sy;
-      if (Math.abs(dx) >= Math.abs(dy)) { if (Math.abs(dx) > 34) rotate(RY(dx > 0 ? 1 : -1)); else applyCube(true); }
-      else { if (Math.abs(dy) > 34) rotate(RX(dy > 0 ? 1 : -1)); else applyCube(true); }
-    }
-    rig.addEventListener("pointerup", end);
-    rig.addEventListener("pointercancel", end);
-    rig.addEventListener("pointerleave", end);
-    rig.addEventListener("click", function (e) { if (justDragged) { e.stopPropagation(); e.preventDefault(); } }, true);
-  }
 
   function attachKeys() {
     detachKeys();
