@@ -701,7 +701,6 @@
     "Note: committing a stage out of sequence is logged as a fault and cannot be undone.": "Achtung: Ein Modul außerhalb der vorgesehenen Reihenfolge zu bearbeiten, schlägt am Manipulationsschutz an.",
     "Each dial is a single-digit rotary encoder (0–9) with a detent at every position.": "Jeder Regler ist ein einstelliger Drehgeber (0–9) mit Rastung in jeder Position.",
     "Dials are factory-calibrated; field recalibration requires tools not supplied with this unit.": "Regler sind werkseitig kalibriert; eine Nachkalibrierung im Feld erfordert Werkzeuge, die diesem Gerät nicht beiliegen.",
-    "Complete wire-cutting procedure. This chapter supersedes the quick-reference card.": "Vollständige Drahtschneide-Prozedur. Dieses Kapitel ersetzt die Kurzkarte.",
     "After cutting, do not re-strip or re-seat any severed conductor.": "Nach dem Schneiden keinen durchtrennten Leiter erneut abisolieren oder wieder einsetzen.",
     "The keypad uses a non-standard glyph set for tamper resistance; positions are randomised per unit. Identify glyphs by shape, not location.": "Das Tastenfeld nutzt einen nicht standardisierten Glyphensatz zum Manipulationsschutz; die Positionen sind je Gerät zufällig. Glyphen sind an ihrer Form zu erkennen, nicht an ihrer Position.",
     "All indicators, labels and codes are printed at manufacture and are read-only.": "Alle Anzeigen, Beschriftungen und Codes sind werkseitig aufgedruckt und nur lesbar.",

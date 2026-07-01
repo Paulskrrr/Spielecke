@@ -680,8 +680,7 @@
       "<p class='zz-fine'>" + t("Dials are factory-calibrated; field recalibration requires tools not supplied with this unit.") + "</p>";
   }
   function manualWires() {
-    return "<p class='zz-fine'>" + t("Complete wire-cutting procedure. This chapter supersedes the quick-reference card.") + "</p>" +
-      "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
+    return "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("First make sure the Dials are set to their targets. <b>Channel</b> = Dial A + Dial B.") + "</li>" +
       "<li>" + t("If a wire's NUMBER equals the Channel, cut it. (If several match, the leftmost.)") + "</li>" +
