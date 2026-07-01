@@ -267,7 +267,7 @@
     var facesHtml = SLOTS.map(function (slot) {
       var lid = assignment[slot];
       return '<div class="zz-face" data-face="' + lid + '" data-slot="' + slot + '" style="transform:' + SLOT_TF[slot] + '">' +
-        '<div class="zz-plate">' + screws() + faceContent(lid) + "</div></div>";
+        '<div class="zz-plate">' + screws() + decor(lid) + faceContent(lid) + "</div></div>";
     }).join("");
 
     els.innerHTML =
@@ -293,6 +293,29 @@
 
   function screws() {
     return '<i class="zz-screw zz-screw--tl"></i><i class="zz-screw zz-screw--tr"></i><i class="zz-screw zz-screw--bl"></i><i class="zz-screw zz-screw--br"></i>';
+  }
+  // Non-functional PCB dressing (traces, pads, SMD parts, silkscreen) drawn
+  // around the edges so the middle stays clear for the actual controls.
+  var DECOR_CODE = { core: "IC1", wires: "J2", keypad: "SW1", dials: "RV3", guts: "PS1", decoder: "U4" };
+  function decor(lid) {
+    var code = DECOR_CODE[lid] || "T1";
+    return '<svg class="zz-decor" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
+      '<g fill="none" stroke="rgba(255,255,255,0.085)" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M3 13 H19 V25 H27"/><path d="M97 15 H79 V33 H72"/><path d="M3 87 H21 V71 H29"/><path d="M97 85 H81 V67 H74"/>' +
+      '<path d="M50 3 V15"/><path d="M50 97 V85"/><path d="M3 50 H15"/><path d="M97 50 H85"/><path d="M12 40 V58"/><path d="M88 42 V60"/>' +
+      "</g>" +
+      '<g fill="rgba(0,0,0,0.17)" stroke="rgba(255,255,255,0.05)" stroke-width="0.3">' +
+      '<rect x="7.5" y="30" width="7" height="3.4" rx="0.5"/><rect x="85.5" y="40" width="7" height="3.4" rx="0.5"/>' +
+      '<rect x="10.3" y="61" width="3.4" height="7" rx="0.5"/><rect x="86.3" y="59" width="3.4" height="7" rx="0.5"/>' +
+      '<rect x="44" y="6" width="12" height="4" rx="0.6"/><rect x="44" y="90" width="12" height="4" rx="0.6"/>' +
+      "</g>" +
+      '<g fill="rgba(255,255,255,0.09)">' +
+      '<circle cx="27" cy="25" r="1.3"/><circle cx="72" cy="33" r="1.3"/><circle cx="29" cy="71" r="1.3"/><circle cx="74" cy="67" r="1.3"/>' +
+      '<circle cx="50" cy="15" r="1.1"/><circle cx="50" cy="85" r="1.1"/><circle cx="15" cy="50" r="1.1"/><circle cx="85" cy="50" r="1.1"/>' +
+      "</g>" +
+      '<text x="5" y="52.5" fill="rgba(255,255,255,0.13)" font-size="2.5" font-family="monospace" letter-spacing="0.3">' + code + "</text>" +
+      '<text x="80" y="52.5" fill="rgba(255,255,255,0.11)" font-size="2.3" font-family="monospace">WT-013</text>' +
+      "</svg>";
   }
 
   // --- HUD (timer + strikes — pressure, not guidance) ----------------------

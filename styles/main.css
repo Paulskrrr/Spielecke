@@ -2014,6 +2014,10 @@ body::before {
   color: #1c1f24;
 }
 .zz-face.is-solved .zz-plate { box-shadow: inset 0 0 0 3px var(--green), inset 0 -10px 22px rgba(0,0,0,0.3); }
+/* Decorative PCB dressing behind the controls (isolate so it sits above the
+   panel background but below the controls, without becoming an offset parent) */
+.zz-plate { isolation: isolate; }
+.zz-decor { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
 /* corner screws */
 .zz-screw { position: absolute; width: 13px; height: 13px; border-radius: 50%;
   background: radial-gradient(circle at 35% 30%, #d7dadf, #6b7079 65%, #41454c);
@@ -2114,8 +2118,9 @@ body::before {
 .zz-ind.is-lit { background: #fff3b0; color: #14161a; border-color: #d4a017; box-shadow: 0 0 12px #ffd84d; }
 
 /* ---- Decoder face ---------------------------------------------------- */
-.zz-decoderface { display: flex; flex-direction: column; gap: 18px; align-items: stretch; width: 100%; max-width: 280px; }
+.zz-decoderface { display: flex; flex-direction: column; gap: 18px; align-items: center; width: 100%; max-width: 300px; }
 .zz-readout {
+  align-self: stretch;
   display: flex; align-items: center; justify-content: center; padding: 12px;
   background: #0d0f12; border: 3px solid #2a2d33; border-radius: 10px;
   box-shadow: inset 0 0 16px rgba(0,0,0,0.9), inset 0 0 0 2px rgba(255,255,255,0.05);
@@ -2125,12 +2130,12 @@ body::before {
   color: #ffd84d; letter-spacing: 2px; line-height: 1; text-shadow: 0 0 12px rgba(255,216,77,0.55);
 }
 .zz-ckeys {
-  display: flex; flex-direction: column; gap: 6px; padding: 10px; border-radius: 9px;
+  display: flex; flex-direction: row; justify-content: center; gap: 10px; padding: 12px; border-radius: 9px;
   background: rgba(0,0,0,0.16); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.28);
 }
-.zz-ckey { display: flex; align-items: center; gap: 12px; padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.12); }
-.zz-ckey__rank { width: 20px; text-align: center; font-family: ui-monospace, Menlo, monospace; font-weight: 900; color: #14161a; }
-.zz-ckey__sw { flex: 1; height: 22px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.45); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); }
+.zz-ckey { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.zz-ckey__rank { font-family: ui-monospace, Menlo, monospace; font-weight: 900; font-size: 0.95rem; color: #14161a; }
+.zz-ckey__sw { width: 38px; height: 38px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.5); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), inset 0 -3px 6px rgba(0,0,0,0.28); }
 
 /* ---- Toast ----------------------------------------------------------- */
 .zz-toast { position: fixed; left: 50%; top: 24%; transform: translateX(-50%); background: var(--ink); color: #fff; font-weight: 900; padding: 12px 22px; border-radius: 999px; box-shadow: var(--pop); z-index: 50; animation: zz-toast 1.1s ease-out forwards; }
@@ -2266,8 +2271,9 @@ body::before {
   .zz-batt { width: 54px; height: 30px; }
   .zz-ind { font-size: 1.25rem; padding: 12px 20px; }
   .zz-readout__val { font-size: 4.2rem; }
-  .zz-decoderface { max-width: 320px; }
-  .zz-ckey__sw { height: 24px; }
+  .zz-decoderface { max-width: 340px; }
+  .zz-ckey__sw { width: 48px; height: 48px; }
+  .zz-ckey__rank { font-size: 1.1rem; }
 }
 @media (min-width: 1100px) { .zz-bomb { --zz-size: 460px; } }
 @media (prefers-reduced-motion: reduce) {
