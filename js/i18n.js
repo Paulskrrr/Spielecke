@@ -604,6 +604,8 @@
     "If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).": "Ist die LETZTE Ziffer der Seriennummer GERADE, dreh die Reihenfolge um (Sigillen von rechts nach links).",
     "Two dials, A and B (0–9 each).": "Zwei Regler, A und B (je 0–9).",
     "<b>Dial A</b> = the two serial digits added together, then keep only the last digit (e.g. 7+8=15 → 5).": "<b>Regler A</b> = die beiden Seriennummer-Ziffern addiert, dann nur die letzte Ziffer (z. B. 7+8=15 → 5).",
+    "<b>Dial A</b> = the serial's LAST TWO digits added together, then keep only the last digit (e.g. 7+8=15 → 5).": "<b>Regler A</b> = die LETZTEN ZWEI Ziffern der Seriennummer addiert, dann nur die letzte Ziffer (z. B. 7+8=15 → 5).",
+    "Serial no.": "Seriennr.",
     "<b>Dial B</b> = the serial's FIRST letter, looked up in the Letter Bank below.": "<b>Regler B</b> = der ERSTE Buchstabe der Seriennummer, nachgeschlagen in der Buchstaben-Bank unten.",
     "If indicator VNT is lit, SWAP the two targets (A takes B's number, B takes A's).": "Leuchtet die Anzeige VNT, TAUSCHE die beiden Zielwerte (A nimmt Bs Zahl, B nimmt As).",
     "Letter Bank": "Buchstaben-Bank",

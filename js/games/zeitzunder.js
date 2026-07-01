@@ -86,7 +86,8 @@
   function generate() {
     var L1 = String.fromCharCode(65 + rint(26)), L2 = String.fromCharCode(65 + rint(26));
     var d1 = rint(10), d2 = rint(10);
-    var serial = { letters: L1 + L2, d1: d1, d2: d2, text: L1 + L2 + "-" + d1 + d2 };
+    var batch = "" + (1000 + rint(9000)); // decorative 4-digit batch group (not used by any rule)
+    var serial = { letters: L1 + L2, d1: d1, d2: d2, batch: batch, text: L1 + L2 + "-" + batch + "-" + d1 + "" + d2 };
     var batteries = rint(5);
     var indicators = {}; INDICATORS.forEach(function (k) { indicators[k] = Math.random() < 0.5; });
     var colourKey = shuffle(COLOR_KEYS);
@@ -314,7 +315,6 @@
     var sig = bomb.sigils.map(function (s) { return '<span class="zz-sigil">' + s + "</span>"; }).join("");
     var leds = STAGES.map(function (st) { return '<span class="zz-led" data-stage="' + st + '"><i></i></span>'; }).join("");
     return '<div class="zz-coreface">' +
-      '<div class="zz-serial">' + esc(bomb.serial.text) + "</div>" +
       '<div class="zz-sigrow">' + sig + "</div>" +
       '<div class="zz-ledrow">' + leds + "</div></div>";
   }
@@ -344,7 +344,9 @@
   function gutsFace() {
     var batt = ""; for (var i = 0; i < 4; i++) batt += '<span class="zz-batt' + (i < bomb.batteries ? " is-on" : "") + '"></span>';
     var inds = INDICATORS.map(function (k) { return '<span class="zz-ind' + (bomb.indicators[k] ? " is-lit" : "") + '">' + k + "</span>"; }).join("");
-    return '<div class="zz-gutsface"><div class="zz-batts">' + batt + "</div><div class=\"zz-inds\">" + inds + "</div></div>";
+    return '<div class="zz-gutsface">' +
+      '<div class="zz-plate"><span class="zz-plate__lbl">' + t("Serial no.") + '</span><span class="zz-serial">' + esc(bomb.serial.text) + "</span></div>" +
+      '<div class="zz-batts">' + batt + "</div><div class=\"zz-inds\">" + inds + "</div></div>";
   }
   function decoderFace() {
     var key = bomb.colourKey.map(function (c, i) { return '<span class="zz-ckey"><b>' + (i + 1) + '</b><i style="background:' + colorHex(c) + '"></i></span>'; }).join("");
@@ -668,7 +670,7 @@
     return "<p class='zz-fine'>" + t("Each dial is a single-digit rotary encoder (0–9) with a detent at every position.") + "</p>" +
       "<p>" + t("Two dials, A and B (0–9 each).") + "</p>" +
       "<ul class='zz-rules'>" +
-      "<li>" + t("<b>Dial A</b> = the two serial digits added together, then keep only the last digit (e.g. 7+8=15 → 5).") + "</li>" +
+      "<li>" + t("<b>Dial A</b> = the serial's LAST TWO digits added together, then keep only the last digit (e.g. 7+8=15 → 5).") + "</li>" +
       "<li>" + t("<b>Dial B</b> = the serial's FIRST letter, looked up in the Letter Bank below.") + "</li>" +
       "<li class='zz-warn'>⚠ " + t("If indicator VNT is lit, SWAP the two targets (A takes B's number, B takes A's).") + "</li>" +
       "</ul><div class='zz-bank'>" + cells + "</div>" +
@@ -731,7 +733,7 @@
   function manualRef() {
     return "<p class='zz-fine'>" + t("All indicators, labels and codes are printed at manufacture and are read-only.") + "</p>" +
       "<ul class='zz-rules'>" +
-      "<li>" + t("<b>Serial</b>: two letters + two digits, e.g. KQ-37. Its digits and last digit drive the Dials, the Firing order AND the Keypad — keep it handy.") + "</li>" +
+      "<li>" + t("<b>Serial</b>: a two-letter code, a batch number, then a two-digit code, e.g. KQ-4827-37. Only the FIRST letter and the LAST TWO digits matter — they drive the Dials, the Firing order AND the Keypad. The middle batch number is not used.") + "</li>" +
       "<li>" + t("<b>Indicators</b>: SIG affects the Keypad, VNT affects the Dials.") + " <span class='zz-warn'>" + t("CLR does NOTHING — it's a decoy.") + "</span></li>" +
       "<li>" + t("<b>Batteries</b>: 0–4 little cells.") + " <span class='zz-warn'>" + t("A decoy — no rule uses them.") + "</span></li>" +
       "<li>" + t("<b>Decoder</b>: a big letter A–H and a numbered list of colour swatches (the colour priority).") + "</li>" +
