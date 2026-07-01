@@ -367,9 +367,10 @@
   function gutsFace() {
     var batt = ""; for (var i = 0; i < 4; i++) batt += '<span class="zz-batt' + (i < bomb.batteries ? " is-on" : "") + '"></span>';
     var inds = INDICATORS.map(function (k) { return '<span class="zz-ind' + (bomb.indicators[k] ? " is-lit" : "") + '">' + k + "</span>"; }).join("");
-    return '<div class="zz-gutsface">' +
-      '<div class="zz-serialplate"><span class="zz-serialplate__lbl">' + t("Serial no.") + '</span><span class="zz-serial">' + esc(bomb.serial.text) + "</span></div>" +
-      '<div class="zz-batts">' + batt + "</div><div class=\"zz-inds\">" + inds + "</div></div>";
+    // Serial is a direct child of the plate (not the guts group) so the
+    // guts scaling transform never becomes its offset parent.
+    return '<div class="zz-serialplate"><span class="zz-serialplate__lbl">' + t("Serial no.") + '</span><span class="zz-serial">' + esc(bomb.serial.text) + "</span></div>" +
+      '<div class="zz-gutsface"><div class="zz-batts">' + batt + "</div><div class=\"zz-inds\">" + inds + "</div></div>";
   }
   function decoderFace() {
     var key = bomb.colourKey.map(function (c, i) { return '<div class="zz-ckey"><span class="zz-ckey__rank">' + (i + 1) + '</span><span class="zz-ckey__sw" style="background:' + colorHex(c) + '"></span></div>'; }).join("");
