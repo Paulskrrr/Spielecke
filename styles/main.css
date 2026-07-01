@@ -2049,12 +2049,21 @@ body::before {
 /* ---- Wires face ------------------------------------------------------ */
 .zz-wires { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 300px; }
 .zz-wire {
-  display: flex; align-items: center; gap: 12px; padding: 9px 12px; cursor: pointer;
-  background: #2c2f35; border: 2px solid #1c1f24; border-radius: 10px; font: inherit;
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px; cursor: pointer;
+  background: #23262b; border: 2px solid #14161a; border-radius: 10px; font: inherit;
 }
-.zz-wire__bolt { width: 13px; height: 13px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #cfd3d8, #7b8089); flex: none; }
-.zz-wire__line { flex: 1; height: 18px; border-radius: 7px; border: 1px solid rgba(0,0,0,0.45); }
-.zz-wire__num { color: #fff; font-weight: 900; font-size: 1.3rem; width: 26px; text-align: center; }
+.zz-wire__bolt {
+  width: 16px; height: 16px; border-radius: 50%; flex: none; position: relative;
+  background: radial-gradient(circle at 35% 30%, #dfe3e8, #9297a0 55%, #5c616b);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 1px 1px rgba(0,0,0,0.5);
+}
+.zz-wire__bolt::after { content: ""; position: absolute; inset: 4px 3px; border-top: 2px solid rgba(0,0,0,0.45); transform: rotate(38deg); }
+.zz-wire__line {
+  flex: 1; height: 13px; border-radius: 999px; border: 1px solid rgba(0,0,0,0.55);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.06) 45%, rgba(0,0,0,0.32));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+.zz-wire__num { color: #fff; font-weight: 900; font-size: 1.3rem; width: 24px; text-align: center; }
 .zz-wire.is-cut { opacity: 0.35; }
 .zz-wire.is-cut .zz-wire__line { background: #555 !important; clip-path: polygon(0 0,46% 0,46% 100%,0 100%); }
 .zz-wire.is-bad { animation: zz-shake 0.4s; border-color: var(--red); }
@@ -2120,7 +2129,7 @@ body::before {
 }
 .zz-ckey { display: flex; align-items: center; gap: 12px; padding: 4px 8px; border-radius: 6px; background: rgba(0,0,0,0.12); }
 .zz-ckey__rank { width: 20px; text-align: center; font-family: ui-monospace, Menlo, monospace; font-weight: 900; color: #14161a; }
-.zz-ckey__sw { flex: 1; height: 20px; border-radius: 4px; border: 1px solid rgba(0,0,0,0.5); box-shadow: inset 0 1px 2px rgba(255,255,255,0.28); }
+.zz-ckey__sw { flex: 1; height: 22px; border-radius: 3px; border: 1px solid rgba(0,0,0,0.45); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12); }
 
 /* ---- Toast ----------------------------------------------------------- */
 .zz-toast { position: fixed; left: 50%; top: 24%; transform: translateX(-50%); background: var(--ink); color: #fff; font-weight: 900; padding: 12px 22px; border-radius: 999px; box-shadow: var(--pop); z-index: 50; animation: zz-toast 1.1s ease-out forwards; }
@@ -2245,7 +2254,8 @@ body::before {
   .zz-serial { font-size: 1.9rem; }
   .zz-serialplate__lbl { font-size: 0.8rem; }
   .zz-wires { max-width: 340px; }
-  .zz-wire__line { height: 22px; }
+  .zz-wire__line { height: 16px; }
+  .zz-wire__bolt { width: 20px; height: 20px; }
   .zz-wire__num { font-size: 1.5rem; }
   .zz-key { width: 84px; height: 84px; font-size: 2.3rem; }
   .zz-entry { max-width: 300px; font-size: 1.9rem; }

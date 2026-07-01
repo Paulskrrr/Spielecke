@@ -320,7 +320,7 @@
   }
   function wiresFace() {
     var w = bomb.wires.map(function (wire, i) {
-      return '<button class="zz-wire" data-i="' + i + '"><span class="zz-wire__bolt"></span><span class="zz-wire__line" style="background:' + colorHex(wire.color) + '"></span><span class="zz-wire__num">' + wire.number + "</span></button>";
+      return '<button class="zz-wire" data-i="' + i + '"><span class="zz-wire__bolt"></span><span class="zz-wire__line" style="background-color:' + colorHex(wire.color) + '"></span><span class="zz-wire__bolt"></span><span class="zz-wire__num">' + wire.number + "</span></button>";
     }).join("");
     return '<div class="zz-wires" id="zz-wires">' + w + "</div>";
   }
