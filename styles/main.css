@@ -2179,7 +2179,14 @@ body::before {
   background: repeating-linear-gradient(45deg, #2a2d33, #2a2d33 14px, #2f3238 14px, #2f3238 28px);
   color: #f4f4f4; box-shadow: var(--pop); overflow: hidden;
 }
-.zz-stamp { position: absolute; top: 26px; right: -34px; transform: rotate(16deg); background: var(--red); color: #fff; font-weight: 900; letter-spacing: 2px; padding: 6px 44px; border: 2px solid #fff; font-size: 0.8rem; box-shadow: 0 3px 0 rgba(0,0,0,0.4); }
+.zz-stamp {
+  position: absolute; top: 34px; right: -60px; width: 210px; z-index: 3;
+  transform: rotate(45deg); text-align: center;
+  background: var(--red); color: #fff; font-weight: 900; letter-spacing: 1.5px;
+  padding: 6px 0; font-size: 0.62rem;
+  border-top: 1px solid rgba(255,255,255,0.55); border-bottom: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 2px 7px rgba(0,0,0,0.45);
+}
 .zz-cover__art { font-size: 3.4rem; }
 .zz-cover__title { font-size: 1.8rem; font-weight: 900; color: #ffd84d; }
 .zz-cover__expert { font-weight: 800; letter-spacing: 1px; background: #14161a; padding: 4px 16px; border-radius: 999px; }
