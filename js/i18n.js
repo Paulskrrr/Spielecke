@@ -755,6 +755,17 @@
     // ── Zeitzünder v7 — full manual register sweep (technical, impersonal) ──
     "Manual revision 4.7.2 · printed on recycled paper · errors and omissions excepted.": "Handbuch-Revision 4.7.2 · gedruckt auf Recyclingpapier · Irrtümer und Auslassungen vorbehalten.",
     "<b>Serial</b>: a two-letter code, a batch number, then a two-digit code, e.g. KQ-4827-37. Only the FIRST letter and the LAST TWO digits matter — they drive the Dials, the Firing order AND the Keypad. The middle batch number is not used.": "<b>Seriennummer</b>: ein zweistelliger Buchstabencode, eine Chargennummer, dann ein zweistelliger Zifferncode, z. B. KQ-4827-37. Maßgeblich sind ausschließlich der ERSTE Buchstabe und die LETZTEN ZWEI Ziffern; sie steuern die Regler, die Zünd-Reihenfolge UND das Tastenfeld. Die mittlere Chargennummer wird nicht verwendet.",
+
+    // ── Zeitzünder v8 — Wiring Maze module ─────────────────────────────────
+    "Maze": "Labyrinth",
+    "Ch. 7 — Wiring Maze": "Kapitel 7 — Kabel-Labyrinth",
+    "Four modules live on the device: <b>Wires</b>, <b>Keypad</b>, <b>Dials</b> and the <b>Maze</b>. They must be committed in the right ORDER — see Firing Order.": "Die Bombe umfasst vier Module: <b>Drähte</b>, <b>Tastenfeld</b>, <b>Regler</b> und das <b>Labyrinth</b>. Sie sind ausnahmslos in der vorgeschriebenen Reihenfolge abzuarbeiten.",
+    "One face shows a row of symbols. Each symbol maps in the table below to a module; read them left to right for the order.": "Eine Seite der Bombe trägt eine Reihe von Symbolen. Jedes Symbol steht in der Tabelle unten für ein Modul; von links nach rechts gelesen ergeben sie die Reihenfolge.",
+    "The grid is etched with channels the operator's probe must follow; the channel walls are not visible on the operator's side.": "In das Gitter sind Kanäle geätzt, denen die Sonde des Entschärfers folgen muss; die Kanalwände sind auf der Seite des Entschärfers nicht sichtbar.",
+    "One face is a 6×6 grid with a lit cell that moves, a red target cell and two ringed marker cells.": "Eine Seite ist ein 6×6-Gitter mit einer leuchtenden Zelle, die sich bewegt, einer roten Zielzelle und zwei umringten Markierungszellen.",
+    "Have the operator read out the two ringed marker cells. Find the diagram below with rings in the SAME two cells — that is the active maze.": "Lass dir die beiden umringten Markierungszellen ansagen. Suche unten das Diagramm mit Ringen in denselben zwei Zellen — das ist das aktive Labyrinth.",
+    "Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.": "Führe dann die leuchtende Zelle Schritt für Schritt (hoch/runter/links/rechts) zur roten Zielzelle und umgehe dabei die Wände, die nur du siehst.",
+    "Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.": "Die Sonde gegen eine Wand zu fahren, schlägt am Manipulationsschutz an. Bestätige jeden Schritt, bevor du ihn ansagst.",
   };
 
   function getLang() {

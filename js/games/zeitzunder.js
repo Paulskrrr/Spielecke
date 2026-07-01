@@ -46,7 +46,7 @@
   // ========================================================================
   // RULE TABLES — single source of truth (solver + manual both read these)
   // ========================================================================
-  var STAGES = ["WIRES", "KEYPAD", "DIALS"];
+  var STAGES = ["WIRES", "KEYPAD", "DIALS", "MAZE"];
   var SYMBOLS = ["Δ", "Ψ", "Ω", "Σ", "Φ", "Θ", "Λ", "Ξ", "Π"];
   var SYMBOL_TABLE = {
     A: ["Δ", "Ψ", "Ω"], B: ["Σ", "Φ", "Θ"], C: ["Λ", "Ξ", "Π"], D: ["Ψ", "Σ", "Λ"],
@@ -58,8 +58,8 @@
   // 3×3 grid positions: 0 top-left, 2 top-right, 4 centre, 8 bottom-right.
   var KEYPAD_SUFFIX = { 0: -1, 1: -1, 2: 4, 3: 4, 4: 0, 5: 0, 6: 8, 7: 8, 8: 2, 9: 2 };
   var POS_NAME = { "-1": "(none)", "0": "top-left glyph", "2": "top-right glyph", "4": "centre glyph", "8": "bottom-right glyph" };
-  var FIRING_SIGILS = { "❖": "WIRES", "◈": "WIRES", "✦": "KEYPAD", "⬡": "KEYPAD", "✺": "DIALS", "✪": "DIALS" };
-  var SIGILS_BY_STAGE = { WIRES: ["❖", "◈"], KEYPAD: ["✦", "⬡"], DIALS: ["✺", "✪"] };
+  var FIRING_SIGILS = { "❖": "WIRES", "◈": "WIRES", "✦": "KEYPAD", "⬡": "KEYPAD", "✺": "DIALS", "✪": "DIALS", "⌘": "MAZE", "⟡": "MAZE" };
+  var SIGILS_BY_STAGE = { WIRES: ["❖", "◈"], KEYPAD: ["✦", "⬡"], DIALS: ["✺", "✪"], MAZE: ["⌘", "⟡"] };
   var LETTER_BANK = (function () {
     var pattern = [2, 7, 4, 9, 1, 6, 3, 8, 0, 5], map = {};
     for (var i = 0; i < 26; i++) map[String.fromCharCode(65 + i)] = pattern[i % 10];
@@ -76,6 +76,36 @@
   function colorHex(key) { for (var i = 0; i < COLORS.length; i++) if (COLORS[i].key === key) return COLORS[i].hex; return "#ccc"; }
   function colorName(key) { for (var i = 0; i < COLORS.length; i++) if (COLORS[i].key === key) return COLORS[i].label; return key; }
   var INDICATORS = ["CLR", "SIG", "VNT"];
+
+  // MAZE: a fixed set of 6×6 mazes (must be identical on every device, so
+  // hard-coded, not generated). Each cell is a 4-bit wall mask; the two markers
+  // let the expert identify which maze it is. Walls are invisible on the bomb.
+  var MAZE_N = 6;
+  var MAZE_BIT = { up: 1, right: 2, down: 4, left: 8 };
+  var MAZE_DELTA = { up: [-1, 0], right: [0, 1], down: [1, 0], left: [0, -1] };
+  var MAZES = [
+    { id: 1, markers: [[3, 4], [5, 5]], grid: ["d5393b", "93aaaa", "ac6aaa", "c396c2", "96c396", "c556c7"] },
+    { id: 2, markers: [[4, 4], [0, 0]], grid: ["d393d3", "bc6c3a", "8153c2", "aad43a", "ac53ea", "c57c56"] },
+    { id: 3, markers: [[0, 5], [0, 1]], grid: ["d3d513", "bc396a", "83c6ba", "aa952a", "ac6bc6", "c55457"] },
+    { id: 4, markers: [[1, 0], [1, 2]], grid: ["d39557", "bac553", "aa9552", "aaa956", "86aad3", "c56c56"] },
+    { id: 5, markers: [[3, 1], [1, 3]], grid: ["d53953", "93a83e", "ac6ec3", "a9153a", "aec3aa", "c556c6"] },
+    { id: 6, markers: [[5, 1], [2, 4]], grid: ["d5393b", "d3c6aa", "94796a", "a95692", "86d16a", "c556d6"] }
+  ];
+  function mazeWall(def, r, c, dir) { return (parseInt(def.grid[r].charAt(c), 16) & MAZE_BIT[dir]) !== 0; }
+  function mazeReach(def, sr, sc, gr, gc) {
+    var seen = {}, q = [[sr, sc]]; seen[sr + "," + sc] = true;
+    while (q.length) {
+      var cell = q.shift(), r = cell[0], c = cell[1];
+      if (r === gr && c === gc) return true;
+      ["up", "right", "down", "left"].forEach(function (dir) {
+        if (mazeWall(def, r, c, dir)) return;
+        var nr = r + MAZE_DELTA[dir][0], nc = c + MAZE_DELTA[dir][1], k = nr + "," + nc;
+        if (nr < 0 || nr >= MAZE_N || nc < 0 || nc >= MAZE_N || seen[k]) return;
+        seen[k] = true; q.push([nr, nc]);
+      });
+    }
+    return false;
+  }
 
   // ========================================================================
   // BOMB GENERATION + SOLVING (pure — testable under Node via _test)
@@ -96,9 +126,18 @@
     var wires = []; for (var i = 0; i < 5; i++) wires.push({ color: pick(COLOR_KEYS), number: 1 + rint(9) });
     var stageOrder = shuffle(STAGES);
     var sigils = stageOrder.map(function (st) { return pick(SIGILS_BY_STAGE[st]); });
-    var bomb = { serial: serial, batteries: batteries, indicators: indicators, colourKey: colourKey, decoderLetter: decoderLetter, keypadLayout: keypadLayout, wires: wires, sigils: sigils };
+    var maze = genMaze();
+    var bomb = { serial: serial, batteries: batteries, indicators: indicators, colourKey: colourKey, decoderLetter: decoderLetter, keypadLayout: keypadLayout, wires: wires, sigils: sigils, maze: maze };
     bomb.solution = solve(bomb);
     return bomb;
+  }
+  // Pick a maze and a start/goal that are a real distance apart and reachable.
+  function genMaze() {
+    var def = pick(MAZES), sr, sc, gr, gc, tries = 0;
+    do {
+      sr = rint(MAZE_N); sc = rint(MAZE_N); gr = rint(MAZE_N); gc = rint(MAZE_N); tries++;
+    } while (tries < 200 && (Math.abs(sr - gr) + Math.abs(sc - gc) < 5 || !mazeReach(def, sr, sc, gr, gc)));
+    return { id: def.id, def: def, sr: sr, sc: sc, gr: gr, gc: gc };
   }
   function solve(b) {
     var order = b.sigils.map(function (s) { return FIRING_SIGILS[s]; });
@@ -120,7 +159,8 @@
   }
   function audit(b) {
     var problems = [], sol = b.solution, seen = {};
-    if (sol.order.length !== 3) problems.push("order length");
+    if (sol.order.length !== STAGES.length) problems.push("order length");
+    if (!mazeReach(b.maze.def, b.maze.sr, b.maze.sc, b.maze.gr, b.maze.gc)) problems.push("maze unreachable");
     sol.order.forEach(function (s) { if (STAGES.indexOf(s) < 0) problems.push("bad stage"); if (seen[s]) problems.push("dup"); seen[s] = true; });
     if (!(sol.dialA >= 0 && sol.dialA <= 9)) problems.push("dialA");
     if (!(sol.dialB >= 0 && sol.dialB <= 9)) problems.push("dialB");
@@ -189,6 +229,7 @@
   var M = ID;                // cube orientation
   var activeFace = "core";   // logical face currently at front
   var dials = { a: 0, b: 0 };
+  var mazePos = [0, 0];
   var entry = [], solved = {}, solvedCount = 0, strikes = 0, timeLeft = 0;
   var manualPages = [], manualIdx = 0;
   var timer = null, audio = null, keyHandler = null, busy = false, justDragged = false;
@@ -255,10 +296,10 @@
   function newBomb() {
     bomb = generate();
     // Randomise which face lives on which side of the cube — no memorising.
-    var faces = shuffle(["core", "wires", "keypad", "dials", "guts", "decoder"]);
+    var faces = shuffle(["core", "wires", "keypad", "dials", "guts", "maze"]);
     assignment = {}; SLOTS.forEach(function (s, i) { assignment[s] = faces[i]; });
     M = ID; activeFace = assignment.F;
-    dials = { a: 0, b: 0 }; entry = []; solved = {}; solvedCount = 0; strikes = 0;
+    dials = { a: 0, b: 0 }; entry = []; mazePos = [bomb.maze.sr, bomb.maze.sc]; solved = {}; solvedCount = 0; strikes = 0;
     timeLeft = settings.seconds; busy = false;
     renderBomb();
   }
@@ -296,7 +337,7 @@
   }
   // Non-functional PCB dressing (traces, pads, SMD parts, silkscreen) drawn
   // around the edges so the middle stays clear for the actual controls.
-  var DECOR_CODE = { core: "IC1", wires: "J2", keypad: "SW1", dials: "RV3", guts: "PS1", decoder: "U4" };
+  var DECOR_CODE = { core: "IC1", wires: "J2", keypad: "SW1", dials: "RV3", guts: "U4", maze: "M1" };
   function decor(lid) {
     var code = DECOR_CODE[lid] || "T1";
     return '<svg class="zz-decor" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' +
@@ -331,16 +372,41 @@
     if (lid === "keypad") return keypadFace();
     if (lid === "dials") return dialsFace();
     if (lid === "guts") return gutsFace();
-    if (lid === "decoder") return decoderFace();
+    if (lid === "maze") return mazeFace();
     return "";
   }
   function coreFace() {
     var sig = bomb.sigils.map(function (s) { return '<span class="zz-sigil">' + s + "</span>"; }).join("");
     var leds = STAGES.map(function (st) { return '<span class="zz-led" data-stage="' + st + '"><i></i></span>'; }).join("");
-    return '<div class="zz-coreface">' +
+    return '<div class="zz-serialplate"><span class="zz-serialplate__lbl">' + t("Serial no.") + '</span><span class="zz-serial">' + esc(bomb.serial.text) + "</span></div>" +
+      '<div class="zz-coreface">' +
       '<div class="zz-sigrow">' + sig + "</div>" +
       '<div class="zz-ledrow">' + leds + "</div></div>";
   }
+  // Wiring Maze: a 6×6 grid with the current position (green), the goal (red)
+  // and two identifier markers. Walls are INVISIBLE — the expert reads them.
+  function mazeFace() {
+    return '<div class="zz-mazeface">' +
+      '<div class="zz-maze-grid" id="zz-maze-grid">' + mazeCells() + "</div>" +
+      '<div class="zz-maze-pad">' +
+      '<button class="zz-mpad zz-mpad--up" data-mdir="up" aria-label="up">▲</button>' +
+      '<button class="zz-mpad zz-mpad--left" data-mdir="left" aria-label="left">◀</button>' +
+      '<button class="zz-mpad zz-mpad--right" data-mdir="right" aria-label="right">▶</button>' +
+      '<button class="zz-mpad zz-mpad--down" data-mdir="down" aria-label="down">▼</button>' +
+      "</div></div>";
+  }
+  function mazeCells() {
+    var mz = bomb.maze, mk = mz.def.markers, out = "";
+    for (var r = 0; r < MAZE_N; r++) for (var c = 0; c < MAZE_N; c++) {
+      var cls = "zz-mcell";
+      if (r === mazePos[0] && c === mazePos[1]) cls += " is-pos";
+      else if (r === mz.gr && c === mz.gc) cls += " is-goal";
+      if ((mk[0][0] === r && mk[0][1] === c) || (mk[1][0] === r && mk[1][1] === c)) cls += " is-mark";
+      out += '<span class="' + cls + '"></span>';
+    }
+    return out;
+  }
+  function renderMazeGrid() { var g = els && els.querySelector("#zz-maze-grid"); if (g) g.innerHTML = mazeCells(); }
   function wiresFace() {
     var w = bomb.wires.map(function (wire, i) {
       return '<button class="zz-wire" data-i="' + i + '"><span class="zz-wire__bolt"></span><span class="zz-wire__line" style="background-color:' + colorHex(wire.color) + '"></span><span class="zz-wire__bolt"></span><span class="zz-wire__num">' + wire.number + "</span></button>";
@@ -364,19 +430,17 @@
       '<button class="zz-dial__btn" data-dial="' + which + '" data-dir="-1">▼</button>' +
       '<div class="zz-dial__lbl">' + (which === "a" ? "A" : "B") + "</div></div>";
   }
+  // Reference hub ("guts"): everything the interactive modules read off — the
+  // decoder letter, the colour-priority list, the indicators and the batteries.
   function gutsFace() {
     var batt = ""; for (var i = 0; i < 4; i++) batt += '<span class="zz-batt' + (i < bomb.batteries ? " is-on" : "") + '"></span>';
     var inds = INDICATORS.map(function (k) { return '<span class="zz-ind' + (bomb.indicators[k] ? " is-lit" : "") + '">' + k + "</span>"; }).join("");
-    // Serial is a direct child of the plate (not the guts group) so the
-    // guts scaling transform never becomes its offset parent.
-    return '<div class="zz-serialplate"><span class="zz-serialplate__lbl">' + t("Serial no.") + '</span><span class="zz-serial">' + esc(bomb.serial.text) + "</span></div>" +
-      '<div class="zz-gutsface"><div class="zz-batts">' + batt + "</div><div class=\"zz-inds\">" + inds + "</div></div>";
-  }
-  function decoderFace() {
     var key = bomb.colourKey.map(function (c, i) { return '<div class="zz-ckey"><span class="zz-ckey__rank">' + (i + 1) + '</span><span class="zz-ckey__sw" style="background:' + colorHex(c) + '"></span></div>'; }).join("");
-    return '<div class="zz-decoderface">' +
-      '<div class="zz-readout"><span class="zz-readout__val">' + bomb.decoderLetter + "</span></div>" +
-      '<div class="zz-ckeys">' + key + "</div></div>";
+    return '<div class="zz-gutsface">' +
+      '<div class="zz-refrow"><div class="zz-readout zz-readout--sm"><span class="zz-readout__val">' + bomb.decoderLetter + "</span></div>" +
+      '<div class="zz-inds">' + inds + "</div></div>" +
+      '<div class="zz-ckeys">' + key + "</div>" +
+      '<div class="zz-batts">' + batt + "</div></div>";
   }
 
   // --- Wiring & cube control ----------------------------------------------
@@ -395,6 +459,7 @@
       });
     });
     var dc = els.querySelector("#zz-dial-confirm"); if (dc) dc.addEventListener("click", function () { if (!justDragged) attemptDials(); });
+    els.querySelectorAll(".zz-mpad").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) mazeMove(b.getAttribute("data-mdir")); }); });
     els.querySelector("#zz-quit").addEventListener("click", renderRolePicker);
     els.querySelectorAll(".zz-flip").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -463,6 +528,17 @@
     if (dials.a === bomb.solution.dialA && dials.b === bomb.solution.dialB) solveStage("DIALS");
     else strike("wrong");
   }
+  function mazeMove(dir) {
+    if (solved.MAZE) return;
+    if (nextStage() !== "MAZE") { strike("seq"); return; }
+    var r = mazePos[0], c = mazePos[1], nr = r + MAZE_DELTA[dir][0], nc = c + MAZE_DELTA[dir][1];
+    if (nr < 0 || nr >= MAZE_N || nc < 0 || nc >= MAZE_N || mazeWall(bomb.maze.def, r, c, dir)) {
+      var g = els.querySelector("#zz-maze-grid"); if (g) { g.classList.remove("zz-mshake"); void g.offsetWidth; g.classList.add("zz-mshake"); }
+      strike("wrong"); return;
+    }
+    mazePos = [nr, nc]; renderMazeGrid(); blip(720);
+    if (nr === bomb.maze.gr && nc === bomb.maze.gc) solveStage("MAZE");
+  }
   function solveStage(name) {
     if (solved[name]) return;
     solved[name] = true; solvedCount++; chime(); updateLeds(); disableFace(name); flashFace(name);
@@ -472,9 +548,10 @@
     if (name === "WIRES") els.querySelectorAll("#zz-wires .zz-wire").forEach(function (b) { b.disabled = true; });
     else if (name === "KEYPAD") { els.querySelectorAll("#zz-keys .zz-key").forEach(function (b) { b.disabled = true; }); var s = els.querySelector("#zz-key-submit"), c = els.querySelector("#zz-key-clear"); if (s) s.disabled = true; if (c) c.disabled = true; }
     else if (name === "DIALS") { els.querySelectorAll(".zz-dial__btn").forEach(function (b) { b.disabled = true; }); var d = els.querySelector("#zz-dial-confirm"); if (d) d.disabled = true; }
+    else if (name === "MAZE") els.querySelectorAll(".zz-mpad").forEach(function (b) { b.disabled = true; });
   }
   function flashFace(name) {
-    var lid = name === "WIRES" ? "wires" : name === "KEYPAD" ? "keypad" : "dials";
+    var lid = { WIRES: "wires", KEYPAD: "keypad", DIALS: "dials", MAZE: "maze" }[name];
     var f = els.querySelector('.zz-face[data-face="' + lid + '"]'); if (f) f.classList.add("is-solved");
   }
   function updateLeds() { els.querySelectorAll(".zz-led").forEach(function (l) { l.classList.toggle("is-on", !!solved[l.getAttribute("data-stage")]); }); }
@@ -621,8 +698,34 @@
       { icon: "🔎", title: "Ch. 5 — Reading the bomb", html: manualRef() },
       { icon: "🛠️", title: "Annex VI — Troubleshooting", spam: true, html: manualTroubleshoot() },
       { icon: "🔌", title: "Ch. 6 — Wires (full procedure)", html: manualWires() },
+      { icon: "🧭", title: "Ch. 7 — Wiring Maze", html: manualMaze() },
       { icon: "♻️", title: "Annex VII — Disposal, Conformity & Index", spam: true, html: manualDisposal() }
     ];
+  }
+  // Draw one maze as a wall diagram with its two identifier rings, so the expert
+  // can match it to the bomb and read the (invisible-on-the-bomb) walls.
+  function mazeSvg(def) {
+    var S = 10, seg = "";
+    for (var r = 0; r < MAZE_N; r++) for (var c = 0; c < MAZE_N; c++) {
+      var v = parseInt(def.grid[r].charAt(c), 16);
+      if ((v & MAZE_BIT.right) && c < MAZE_N - 1) seg += '<line x1="' + ((c + 1) * S) + '" y1="' + (r * S) + '" x2="' + ((c + 1) * S) + '" y2="' + ((r + 1) * S) + '"/>';
+      if ((v & MAZE_BIT.down) && r < MAZE_N - 1) seg += '<line x1="' + (c * S) + '" y1="' + ((r + 1) * S) + '" x2="' + ((c + 1) * S) + '" y2="' + ((r + 1) * S) + '"/>';
+    }
+    var rings = def.markers.map(function (m) { return '<circle cx="' + (m[1] * S + S / 2) + '" cy="' + (m[0] * S + S / 2) + '" r="3.1" fill="none" stroke="#c0392b" stroke-width="1.3"/>'; }).join("");
+    return '<svg class="zz-mzimg" viewBox="-1 -1 ' + (MAZE_N * S + 2) + " " + (MAZE_N * S + 2) + '" aria-hidden="true">' +
+      '<rect x="0" y="0" width="' + (MAZE_N * S) + '" height="' + (MAZE_N * S) + '" fill="#f3ecd8" stroke="#241b4d" stroke-width="1.6"/>' +
+      '<g stroke="#241b4d" stroke-width="1.4" stroke-linecap="round">' + seg + "</g>" + rings + "</svg>";
+  }
+  function manualMaze() {
+    var pics = MAZES.map(function (m) { return '<div class="zz-mzcard">' + mazeSvg(m) + "<span>" + t("Maze") + " " + m.id + "</span></div>"; }).join("");
+    return "<p class='zz-fine'>" + t("The grid is etched with channels the operator's probe must follow; the channel walls are not visible on the operator's side.") + "</p>" +
+      "<p>" + t("One face is a 6×6 grid with a lit cell that moves, a red target cell and two ringed marker cells.") + "</p>" +
+      "<ul class='zz-rules'>" +
+      "<li>" + t("Have the operator read out the two ringed marker cells. Find the diagram below with rings in the SAME two cells — that is the active maze.") + "</li>" +
+      "<li>" + t("Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.") + "</li>" +
+      "<li class='zz-warn'>" + t("Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.") + "</li>" +
+      "</ul>" +
+      "<div class='zz-mzgrid'>" + pics + "</div>";
   }
 
   // --- Page turning --------------------------------------------------------
@@ -672,7 +775,7 @@
   }
   function manualHowTo() {
     return "<ol class='zz-steps'>" +
-      "<li>" + t("Three jobs live on the device: <b>Wires</b>, <b>Keypad</b>, <b>Dials</b>. They must be committed in the right ORDER — see Firing Order.") + "</li>" +
+      "<li>" + t("Four modules live on the device: <b>Wires</b>, <b>Keypad</b>, <b>Dials</b> and the <b>Maze</b>. They must be committed in the right ORDER — see Firing Order.") + "</li>" +
       "<li>" + t("Every job reads values off OTHER faces. The defuser can't read this manual and you can't see the bomb — so make them flip the cube around and describe what they see.") + "</li>" +
       "<li>" + t("A wrong action, or acting out of order, is a strike. Three strikes — or the clock hitting zero — and it blows.") + "</li>" +
       "</ol>";
@@ -686,7 +789,7 @@
   function manualOrder() {
     var rows = Object.keys(FIRING_SIGILS).map(function (s) { return "<tr><td class='zz-sig'>" + s + "</td><td>" + t(stageLabel(FIRING_SIGILS[s])) + "</td></tr>"; }).join("");
     return "<p class='zz-fine'>" + t("The firing sequence is fixed at manufacture and cannot be reordered in the field.") + "</p>" +
-      "<p>" + t("One face shows three sigils in a row. Translate each to a job, left to right — that's the order to commit them in.") + "</p>" +
+      "<p>" + t("One face shows a row of symbols. Each symbol maps in the table below to a module; read them left to right for the order.") + "</p>" +
       "<table class='zz-table'><thead><tr><th>" + t("Sigil") + "</th><th>" + t("Job") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
       "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
       "<p class='zz-fine'>" + t("Note: committing a stage out of sequence is logged as a fault and cannot be undone.") + "</p>";
@@ -844,13 +947,14 @@
   // ========================================================================
   function fmt(s) { var m = Math.floor(s / 60), r = s % 60; return m + ":" + (r < 10 ? "0" : "") + r; }
   function arraysEqual(a, b) { if (a.length !== b.length) return false; for (var i = 0; i < a.length; i++) if (a[i] !== b[i]) return false; return true; }
-  function stageLabel(st) { return st === "WIRES" ? "Wires" : st === "KEYPAD" ? "Keypad" : "Dials"; }
+  function stageLabel(st) { return st === "WIRES" ? "Wires" : st === "KEYPAD" ? "Keypad" : st === "MAZE" ? "Maze" : "Dials"; }
   function highlight(sel, value, an) { els.querySelectorAll(sel + " .chip").forEach(function (c) { c.classList.toggle("chip--active", c.getAttribute(an) === value); }); }
 
   module._test = {
     generate: generate, solve: solve, solveWire: solveWire, audit: audit,
     SYMBOLS: SYMBOLS, SYMBOL_TABLE: SYMBOL_TABLE, LETTER_BANK: LETTER_BANK,
-    peek: function () { return { bomb: bomb, dials: dials, solved: solved, solvedCount: solvedCount, strikes: strikes, timeLeft: timeLeft, activeFace: activeFace, frontSlot: frontSlot(M) }; }
+    mazeMove: function (dir) { mazeMove(dir); },
+    peek: function () { return { bomb: bomb, dials: dials, mazePos: mazePos, solved: solved, solvedCount: solvedCount, strikes: strikes, timeLeft: timeLeft, activeFace: activeFace, frontSlot: frontSlot(M) }; }
   };
 
   global.Spielecke = global.Spielecke || {};

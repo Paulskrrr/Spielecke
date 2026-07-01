@@ -76,9 +76,15 @@ Each stage reads values off **other** faces, forcing constant flipping:
 | Stage  | Reads from | Rule (summary) |
 |--------|-----------|----------------|
 | Dials  | serial (Core), VNT (Guts) | A = digit-sum mod 10; B = first letter via Letter Bank; VNT swaps |
-| Wires  | the live Dials, colour priority (Decoder) | cut wire numbered (A+B); else highest-priority colour; ties → leftmost |
-| Keypad | letter (Decoder), SIG (Guts), serial last digit (Core) | press the letter's glyph row; reverse on SIG; then append ONE glyph by grid position, keyed on the serial's last digit (`KEYPAD_SUFFIX`) |
+| Wires  | the live Dials, colour priority (Guts) | cut wire numbered (A+B); else highest-priority colour; ties → leftmost |
+| Keypad | letter (Guts), SIG (Guts), serial last digit (Core) | press the letter's glyph row; reverse on SIG; then append ONE glyph by grid position, keyed on the serial's last digit (`KEYPAD_SUFFIX`) |
+| Maze   | two marker cells (Maze face) | expert IDs the maze from the two rings, then guides the lit cell to the red target around invisible walls; a wall bump is a strike |
 | Order  | sigils (Core), serial parity | decode sigils → stages; reverse if last digit even |
+
+Six faces: **Core** (firing sigils + progress LEDs + serial), **Guts** (reference hub: decoder
+letter, colour priority, indicators, batteries), and four interactive modules **Wires / Keypad /
+Dials / Maze**. The old standalone Decoder face was folded into Guts to make room for the Maze.
+Mazes are a fixed hard-coded set (`MAZES`) so the expert's manual and the bomb always agree.
 
 `CLR` (indicator) and the **batteries** are **decoys** — no rule reads them (the manual says so;
 the defuser doesn't know that). The serial is deliberately hot: its digits/last-digit feed the
