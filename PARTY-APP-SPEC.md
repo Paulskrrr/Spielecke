@@ -450,27 +450,35 @@ single timer chain is cleared on unmount.
 
 A new genre: asymmetric co-op, *Keep Talking and Nobody Explodes* in miniature. On entry you
 pick a role. **The bomb** (a MacBook on the table) shows a six-faced device you flip through —
-Core, Wires, Keypad, Dials, Guts, Decoder — with a live countdown and three strikes. **Experts**
+**Core** (firing sigils + progress LEDs + serial + the red **arming control**), **Guts** (the
+reference hub: decoder letter, colour priority, indicators, batteries) and four interactive
+modules **Wires / Keypad / Dials / Maze** — with a live countdown and three strikes. **Experts**
 open the same link on their phones and get the **Defusal Manual** (rules, tables, legends) but
 never see the bomb. Neither device talks to the other: the defuser reads out what they see, the
 experts read back what to do. The humans are the wire.
 
-One interlocking puzzle, not a linear checklist. Three action stages — **Wires / Keypad /
-Dials** — must be committed in an order the bomb hides in its **firing sigils** (reversed when
-the serial's last digit is even). Each stage reads values off *other* faces: the dials feed the
-wire-cut channel; the Decoder letter + Guts indicators/batteries drive the keypad; the serial
-feeds the dials; `CLR` is a deliberate decoy. Acting out of order, or a wrong action, is a
-strike; three strikes (or the clock) → 💥.
+One interlocking puzzle, not a linear checklist. Four action stages — **Wires / Keypad / Dials /
+Maze** — must be committed in an order the bomb hides in its **firing sigils** (reversed when the
+serial's last digit is even). Each stage reads values off *other* faces: the dials feed the
+wire-cut channel; the decoder letter + indicators drive the keypad; the serial feeds the dials;
+the **Maze** hides its walls from the defuser so the expert must navigate them turn-by-turn.
+Crucially the step spans faces — the **Keypad and Dials don't commit on their own face**: you set
+them, flip to the Core and **hold the arming control, releasing as the timer's last digit hits the
+arming digit** `(lit indicators + batteries) mod 10`, so the once-decoy batteries now matter (`CLR`
+is still a pure decoy). Wires and Maze commit on their own face. Acting out of order, a wrong
+action, or bumping a maze wall is a strike; three strikes (or the clock) → 💥.
 
 **Solver ↔ manual lockstep:** the rule tables (`SYMBOL_TABLE`, `FIRING_SIGILS`, `LETTER_BANK`,
-colour-priority) are the single source of truth — the host generator/solver and the expert
-manual both read them, so the page the expert reads and the answer the bomb expects can never
-drift. The pure rule engine is exposed under `module._test` and audited (20k generated bombs,
-all solvable; full happy- and lose-path driven through the real UI headlessly). Currently a
+colour-priority, and the fixed `MAZES` set) are the single source of truth — the host
+generator/solver and the expert manual both read them, so the page the expert reads and the answer
+the bomb expects can never drift. Mazes are hard-coded (not generated) precisely so the expert's
+phone and the bomb agree. The pure rule engine is exposed under `module._test` and audited (3k
+generated bombs: order always four stages, every maze reachable, arming digit in range, all
+solvable; the timed arming commit driven end-to-end through the real UI headlessly). Currently a
 single bomb solvable by one expert; designed so the manual's pages can be *dealt out* across
-several experts later (forcing expert-to-expert talk), with more modules/faces to follow.
-Difficulty sets the fuse (Rookie 6:00 / Standard 4:30 / Lethal 3:00). The countdown interval,
-Web-Audio alarms and key handler are all torn down on unmount.
+several experts later (forcing expert-to-expert talk), with more modules to follow. Difficulty
+sets the fuse (Rookie 6:00 / Standard 4:30 / Lethal 3:00). The countdown interval, Web-Audio
+alarms and key handler are all torn down on unmount.
 
 ---
 
