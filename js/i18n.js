@@ -766,6 +766,17 @@
     "Have the operator read out the two ringed marker cells. Find the diagram below with rings in the SAME two cells — that is the active maze.": "Lass dir die beiden umringten Markierungszellen ansagen. Suche unten das Diagramm mit Ringen in denselben zwei Zellen — das ist das aktive Labyrinth.",
     "Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.": "Führe dann die leuchtende Zelle Schritt für Schritt (hoch/runter/links/rechts) zur roten Zielzelle und umgehe dabei die Wände, die nur du siehst.",
     "Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.": "Die Sonde gegen eine Wand zu fahren, schlägt am Manipulationsschutz an. Bestätige jeden Schritt, bevor du ihn ansagst.",
+
+    // ── Zeitzünder v9 — timed commit / arming control ──────────────────────
+    "ARM": "SCHARF",
+    "Ch. 8 — Arming the detonator": "Kapitel 8 — Zünder scharf schalten",
+    "The Dials do not take on their own face — once set, fire them from the arming control (see Arming).": "Die Regler übernehmen nicht auf ihrer eigenen Seite — sind sie eingestellt, werden sie über die Scharfschaltung ausgelöst (siehe Scharfschalten).",
+    "Nine glyphs, scrambled. Press the sequence, then fire it from the arming control (see Arming).": "Neun Glyphen, gemischt. Gib die Folge ein und löse sie dann über die Scharfschaltung aus (siehe Scharfschalten).",
+    "The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.": "Tastenfeld und Regler lassen sich nicht auf ihrer eigenen Seite bestätigen. Einmal eingestellt, werden sie über die runde Scharfschaltung auf der Anzeigenseite ausgelöst.",
+    "Work out the ARMING DIGIT: count the LIT indicators, ADD the number of batteries, and keep only the last digit.": "Ermittle die SCHARF-ZIFFER: zähle die LEUCHTENDEN Anzeigen, ADDIERE die Anzahl der Batterien und behalte nur die letzte Ziffer.",
+    "Have the operator hold the arming control and RELEASE it the moment the timer's last digit equals the arming digit.": "Lass den Entschärfer die Scharfschaltung halten und GENAU dann loslassen, wenn die letzte Ziffer der Uhr der Scharf-Ziffer entspricht.",
+    "Released at the wrong instant it simply will not fire — keep holding and take the next pass. A wrong Keypad or Dials value still trips the tamper protection.": "Zum falschen Zeitpunkt losgelassen, löst sie einfach nicht aus — weiter halten und den nächsten Durchlauf abwarten. Ein falscher Tastenfeld- oder Reglerwert schlägt weiterhin am Manipulationsschutz an.",
+    "Counted, with the lit indicators, into the arming digit.": "Zählt zusammen mit den leuchtenden Anzeigen in die Scharf-Ziffer.",
   };
 
   function getLang() {

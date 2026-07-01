@@ -148,7 +148,11 @@
     if (b.indicators.SIG) seq.reverse();
     var suf = KEYPAD_SUFFIX[b.serial.d2];
     if (suf >= 0) seq.push(b.keypadLayout[suf]);
-    return { order: order, dialA: a, dialB: bb, keypad: seq };
+    // ARMING: the Keypad and Dials are fired from the Core commit control, and
+    // only take when released as the timer's last digit hits the arming digit.
+    var lit = INDICATORS.reduce(function (n, k) { return n + (b.indicators[k] ? 1 : 0); }, 0);
+    var armDigit = (lit + b.batteries) % 10;
+    return { order: order, dialA: a, dialB: bb, keypad: seq, armDigit: armDigit };
   }
   function solveWire(dials, b) {
     var channel = dials.a + dials.b;
@@ -165,6 +169,7 @@
     if (!(sol.dialA >= 0 && sol.dialA <= 9)) problems.push("dialA");
     if (!(sol.dialB >= 0 && sol.dialB <= 9)) problems.push("dialB");
     if (!sol.keypad.length) problems.push("keypad");
+    if (!(sol.armDigit >= 0 && sol.armDigit <= 9)) problems.push("armDigit");
     sol.keypad.forEach(function (g) { if (SYMBOLS.indexOf(g) < 0) problems.push("glyph"); });
     var w = solveWire({ a: sol.dialA, b: sol.dialB }, b);
     if (!(w >= 0 && w < b.wires.length)) problems.push("wire");
@@ -381,7 +386,8 @@
     return '<div class="zz-serialplate"><span class="zz-serialplate__lbl">' + t("Serial no.") + '</span><span class="zz-serial">' + esc(bomb.serial.text) + "</span></div>" +
       '<div class="zz-coreface">' +
       '<div class="zz-sigrow">' + sig + "</div>" +
-      '<div class="zz-ledrow">' + leds + "</div></div>";
+      '<div class="zz-ledrow">' + leds + "</div>" +
+      '<button class="zz-commit" id="zz-commit"><span class="zz-commit__ring"></span><span class="zz-commit__cap">' + t("ARM") + "</span></button></div>";
   }
   // Wiring Maze: a 6×6 grid with the current position (green), the goal (red)
   // and two identifier markers. Walls are INVISIBLE — the expert reads them.
@@ -418,11 +424,10 @@
     return '<div class="zz-keypad">' +
       '<div class="zz-keys" id="zz-keys">' + grid + "</div>" +
       '<div class="zz-entry" id="zz-entry"></div>' +
-      '<div class="zz-keyactions"><button id="zz-key-clear" class="zz-mini" aria-label="clear">✕</button><button id="zz-key-submit" class="zz-mini zz-mini--go" aria-label="submit">✓</button></div></div>';
+      '<div class="zz-keyactions"><button id="zz-key-clear" class="zz-mini" aria-label="clear">✕</button></div></div>';
   }
   function dialsFace() {
-    return '<div class="zz-dialface"><div class="zz-dials">' + dialHtml("a") + dialHtml("b") + "</div>" +
-      '<button id="zz-dial-confirm" class="zz-mini zz-mini--go" aria-label="confirm">✓</button></div>';
+    return '<div class="zz-dialface"><div class="zz-dials">' + dialHtml("a") + dialHtml("b") + "</div></div>";
   }
   function dialHtml(which) {
     return '<div class="zz-dial"><button class="zz-dial__btn" data-dial="' + which + '" data-dir="1">▲</button>' +
@@ -448,7 +453,6 @@
     els.querySelectorAll("#zz-wires .zz-wire").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) attemptCut(parseInt(b.getAttribute("data-i"), 10)); }); });
     els.querySelectorAll("#zz-keys .zz-key").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) keypadPress(b.getAttribute("data-glyph")); }); });
     var kc = els.querySelector("#zz-key-clear"); if (kc) kc.addEventListener("click", function () { if (justDragged) return; entry = []; updateEntry(); });
-    var ks = els.querySelector("#zz-key-submit"); if (ks) ks.addEventListener("click", function () { if (!justDragged) attemptKeypad(); });
     els.querySelectorAll(".zz-dial__btn").forEach(function (b) {
       b.addEventListener("click", function () {
         if (justDragged || solved.DIALS) return;
@@ -458,8 +462,8 @@
         blip(620);
       });
     });
-    var dc = els.querySelector("#zz-dial-confirm"); if (dc) dc.addEventListener("click", function () { if (!justDragged) attemptDials(); });
     els.querySelectorAll(".zz-mpad").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) mazeMove(b.getAttribute("data-mdir")); }); });
+    attachCommit(els.querySelector("#zz-commit"));
     els.querySelector("#zz-quit").addEventListener("click", renderRolePicker);
     els.querySelectorAll(".zz-flip").forEach(function (b) {
       b.addEventListener("click", function () {
@@ -538,6 +542,33 @@
     }
     mazePos = [nr, nc]; renderMazeGrid(); blip(720);
     if (nr === bomb.maze.gr && nc === bomb.maze.gc) solveStage("MAZE");
+  }
+  // The Core commit control fires the Keypad and Dials modules: you hold it and
+  // release as the timer's last digit hits the arming digit. Wrong timing just
+  // misfires (retry); a wrong answer strikes. Wires and Maze fire on their face.
+  function attachCommit(btn) {
+    if (!btn) return;
+    var holding = false;
+    function down(e) {
+      var ns = nextStage(); if (ns !== "KEYPAD" && ns !== "DIALS") return;
+      if (e && e.preventDefault) e.preventDefault();
+      holding = true; btn.classList.add("is-holding"); blip(520);
+    }
+    function up() { if (!holding) return; holding = false; btn.classList.remove("is-holding"); releaseCommit(); }
+    function cancel() { holding = false; btn.classList.remove("is-holding"); }
+    btn.addEventListener("pointerdown", down);
+    btn.addEventListener("pointerup", up);
+    btn.addEventListener("pointerleave", cancel);
+    btn.addEventListener("pointercancel", cancel);
+  }
+  function releaseCommit() {
+    var ns = nextStage();
+    if (ns !== "KEYPAD" && ns !== "DIALS") { buzz(20); return; }
+    if (timeLeft % 10 !== bomb.solution.armDigit) { // mistimed — misfire, no strike
+      var b = els.querySelector("#zz-commit"); if (b) { b.classList.remove("zz-mshake"); void b.offsetWidth; b.classList.add("zz-mshake"); }
+      blip(240); buzz(30); return;
+    }
+    if (ns === "KEYPAD") attemptKeypad(); else attemptDials();
   }
   function solveStage(name) {
     if (solved[name]) return;
@@ -699,8 +730,17 @@
       { icon: "🛠️", title: "Annex VI — Troubleshooting", spam: true, html: manualTroubleshoot() },
       { icon: "🔌", title: "Ch. 6 — Wires (full procedure)", html: manualWires() },
       { icon: "🧭", title: "Ch. 7 — Wiring Maze", html: manualMaze() },
+      { icon: "🔴", title: "Ch. 8 — Arming the detonator", html: manualArming() },
       { icon: "♻️", title: "Annex VII — Disposal, Conformity & Index", spam: true, html: manualDisposal() }
     ];
+  }
+  function manualArming() {
+    return "<p class='zz-fine'>" + t("The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.") + "</p>" +
+      "<ul class='zz-rules'>" +
+      "<li>" + t("Work out the ARMING DIGIT: count the LIT indicators, ADD the number of batteries, and keep only the last digit.") + "</li>" +
+      "<li>" + t("Have the operator hold the arming control and RELEASE it the moment the timer's last digit equals the arming digit.") + "</li>" +
+      "<li class='zz-fine'>" + t("Released at the wrong instant it simply will not fire — keep holding and take the next pass. A wrong Keypad or Dials value still trips the tamper protection.") + "</li>" +
+      "</ul>";
   }
   // Draw one maze as a wall diagram with its two identifier rings, so the expert
   // can match it to the bomb and read the (invisible-on-the-bomb) walls.
@@ -804,6 +844,7 @@
       "<li>" + t("<b>Dial B</b> = the serial's FIRST letter, looked up in the Letter Bank below.") + "</li>" +
       "<li class='zz-warn'>⚠ " + t("If indicator VNT is lit, SWAP the two targets (A takes B's number, B takes A's).") + "</li>" +
       "</ul><div class='zz-bank'>" + cells + "</div>" +
+      "<p>" + t("The Dials do not take on their own face — once set, fire them from the arming control (see Arming).") + "</p>" +
       "<p class='zz-fine'>" + t("Dials are factory-calibrated; field recalibration requires tools not supplied with this unit.") + "</p>";
   }
   function manualWires() {
@@ -837,7 +878,7 @@
   function manualKeypad() {
     var rows = DECODER_LETTERS.map(function (L) { return "<tr><td><b>" + L + "</b></td><td class='zz-glyphs'>" + SYMBOL_TABLE[L].map(function (g) { return "<span>" + g + "</span>"; }).join("") + "</td></tr>"; }).join("");
     return "<p class='zz-fine'>" + t("The keypad uses a non-standard glyph set for tamper resistance; positions are randomised per unit. Identify glyphs by shape, not location.") + "</p>" +
-      "<p>" + t("Nine glyphs, scrambled. Press a sequence, then ✓.") + "</p>" +
+      "<p>" + t("Nine glyphs, scrambled. Press the sequence, then fire it from the arming control (see Arming).") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("Read the Decoder LETTER. Find its row in the Sequence table → press those glyphs in order.") + "</li>" +
       "<li class='zz-warn'>⚠ " + t("If indicator SIG is lit, press them in REVERSE order.") + "</li>" +
@@ -864,7 +905,7 @@
       "<ul class='zz-rules'>" +
       "<li>" + t("<b>Serial</b>: a two-letter code, a batch number, then a two-digit code, e.g. KQ-4827-37. Only the FIRST letter and the LAST TWO digits matter — they drive the Dials, the Firing order AND the Keypad. The middle batch number is not used.") + "</li>" +
       "<li>" + t("<b>Indicators</b>: SIG affects the Keypad, VNT affects the Dials.") + " <span class='zz-warn'>" + t("CLR does NOTHING — it's a decoy.") + "</span></li>" +
-      "<li>" + t("<b>Batteries</b>: 0–4 little cells.") + " <span class='zz-warn'>" + t("A decoy — no rule uses them.") + "</span></li>" +
+      "<li>" + t("<b>Batteries</b>: 0–4 little cells.") + " " + t("Counted, with the lit indicators, into the arming digit.") + "</li>" +
       "<li>" + t("<b>Decoder</b>: a big letter A–H and a numbered list of colour swatches (the colour priority).") + "</li>" +
       "</ul>";
   }

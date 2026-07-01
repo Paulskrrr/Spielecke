@@ -2056,6 +2056,17 @@ body::before {
 .zz-ledrow { display: flex; gap: 20px; }
 .zz-led i { display: block; width: 22px; height: 22px; border-radius: 50%; background: #3a3d44; box-shadow: inset 0 0 4px #000; }
 .zz-led.is-on i { background: var(--green); box-shadow: 0 0 12px var(--green); }
+/* Commit / arming control — fires the Keypad & Dials on a timed release */
+.zz-commit {
+  margin-top: 4px; width: 74px; height: 74px; border-radius: 50%; cursor: pointer; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 36%, #d24436, #7a1f16 78%);
+  border: 4px solid #14161a; box-shadow: 0 4px 0 #14161a, inset 0 2px 7px rgba(255,255,255,0.28);
+  color: #fff; font-weight: 900; font-family: ui-monospace, Menlo, monospace; letter-spacing: 1px;
+}
+.zz-commit__ring { position: absolute; inset: 7px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.35); }
+.zz-commit__cap { position: relative; font-size: 0.9rem; }
+.zz-commit:active, .zz-commit.is-holding { transform: translateY(4px); box-shadow: inset 0 2px 8px rgba(0,0,0,0.55), 0 0 20px rgba(255,90,60,0.85); }
 
 /* ---- Wires face ------------------------------------------------------ */
 .zz-wires { display: flex; flex-direction: column; gap: 7px; width: 100%; max-width: 230px; }

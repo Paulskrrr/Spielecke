@@ -81,10 +81,17 @@ Each stage reads values off **other** faces, forcing constant flipping:
 | Maze   | two marker cells (Maze face) | expert IDs the maze from the two rings, then guides the lit cell to the red target around invisible walls; a wall bump is a strike |
 | Order  | sigils (Core), serial parity | decode sigils → stages; reverse if last digit even |
 
-Six faces: **Core** (firing sigils + progress LEDs + serial), **Guts** (reference hub: decoder
-letter, colour priority, indicators, batteries), and four interactive modules **Wires / Keypad /
-Dials / Maze**. The old standalone Decoder face was folded into Guts to make room for the Maze.
-Mazes are a fixed hard-coded set (`MAZES`) so the expert's manual and the bomb always agree.
+Six faces: **Core** (firing sigils + progress LEDs + serial + the **arming control**), **Guts**
+(reference hub: decoder letter, colour priority, indicators, batteries), and four interactive
+modules **Wires / Keypad / Dials / Maze**. The old standalone Decoder face was folded into Guts to
+make room for the Maze. Mazes are a fixed hard-coded set (`MAZES`) so the expert's manual and the
+bomb always agree.
+
+**Multi-face commit.** The Keypad and Dials do **not** take on their own faces — you set them, then
+flip to the Core and **hold the arming control, releasing as the timer's last digit hits the arming
+digit** (`armDigit = (lit indicators + batteries) mod 10`, so the batteries finally matter). Wrong
+timing just misfires (retry, no strike); a wrong value still strikes. Wires and Maze commit on their
+own face. So a single solving step spans faces: read on one → set on another → arm on the Core.
 
 `CLR` (indicator) and the **batteries** are **decoys** — no rule reads them (the manual says so;
 the defuser doesn't know that). The serial is deliberately hot: its digits/last-digit feed the
