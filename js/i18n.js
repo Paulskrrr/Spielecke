@@ -525,12 +525,29 @@
     "Pasch": "Pasch",
   };
 
+  // Cached after the first read so every t()/L() call — including ones inside
+  // hot loops like Horse Race's per-frame animation — doesn't round-trip
+  // through localStorage. setLang() keeps the cache and the store in sync.
+  var langCache;
+
+  // index.html hardcodes lang="en" as a static attribute, which is wrong the
+  // instant the app defaults to German — keep it honest here instead.
+  function applyDocLang(lang) {
+    try { global.document.documentElement.lang = lang; } catch (e) { /* ignore */ }
+  }
+
   function getLang() {
-    return global.Spielecke.Store.appGet(LANG_KEY, DEFAULT_LANG) || DEFAULT_LANG;
+    if (langCache === undefined) {
+      langCache = global.Spielecke.Store.appGet(LANG_KEY, DEFAULT_LANG) || DEFAULT_LANG;
+      applyDocLang(langCache);
+    }
+    return langCache;
   }
 
   function setLang(lang) {
-    global.Spielecke.Store.appSet(LANG_KEY, lang === "en" ? "en" : "de");
+    langCache = lang === "en" ? "en" : "de";
+    global.Spielecke.Store.appSet(LANG_KEY, langCache);
+    applyDocLang(langCache);
   }
 
   function t(key) {
@@ -557,4 +574,6 @@
   global.Spielecke.L = L;
   global.Spielecke.getLang = getLang;
   global.Spielecke.setLang = setLang;
+
+  getLang(); // resolve + apply the correct <html lang> as early as possible
 })(window);
