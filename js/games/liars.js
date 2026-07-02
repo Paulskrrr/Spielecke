@@ -178,7 +178,8 @@
   }
 
   function fmt(n) {
-    return (Math.round(n * 100) / 100).toLocaleString("en-US");
+    var locale = global.Spielecke.getLang() === "de" ? "de-DE" : "en-US";
+    return (Math.round(n * 100) / 100).toLocaleString(locale);
   }
   var esc = global.Spielecke.esc;
   var shuffle = global.Spielecke.shuffle;

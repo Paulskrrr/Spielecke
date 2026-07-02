@@ -268,7 +268,7 @@
       "  </div>" +
       "</section>";
     els.querySelector("#im-caught").addEventListener("click", function () {
-      renderOutcome(t("🎯 Caught!"), t("The table wins — ") + joined + " " + t("got busted!"));
+      renderOutcome(t("🎯 Caught!"), t("The table wins — ") + joined + " " + t(plural ? "got busted, all of them!" : "got busted!"));
     });
     els.querySelector("#im-fooled").addEventListener("click", function () {
       renderOutcome(t("🤡 Fooled!"), joined + " " + t(plural ? "got away with it — imposters win!" : "got away with it — imposter wins!"));

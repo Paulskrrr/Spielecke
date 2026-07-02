@@ -139,7 +139,7 @@
     var input = els.querySelector("#dd-input");
     input.focus();
     els.querySelector("#dd-submit").addEventListener("click", function () {
-      var v = (input.value || "").trim() || "(no idea)";
+      var v = (input.value || "").trim() || t("(no idea)");
       chain.push({ kind: "guess", by: players[step], value: v });
       advance();
     });

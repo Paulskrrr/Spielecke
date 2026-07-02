@@ -136,12 +136,26 @@
     };
   }
 
-  // Make a loaded state safe against content edits (unknown card ids dropped).
+  // Make a loaded state safe against content edits (unknown card ids dropped)
+  // AND against a language switch since the state was saved: hofgesetze/active
+  // entries store their title/text pre-resolved (not the current language),
+  // so re-derive both from the current-language cardById, keeping only the
+  // per-instance data (who drew/holds it) rather than the frozen text.
   function reconcile(saved) {
     saved.draw = (saved.draw || []).filter(function (id) { return cardById[id]; });
     saved.discard = (saved.discard || []).filter(function (id) { return cardById[id]; });
-    saved.hofgesetze = saved.hofgesetze || [];
-    saved.active = saved.active || [];
+    // `|| t(...)` (not fillName's own currentPlayer() fallback) since `game`
+    // isn't assigned yet at this point in mount() — currentPlayer() would throw.
+    saved.hofgesetze = (saved.hofgesetze || []).map(function (r) {
+      var card = cardById[r.id];
+      if (!card) return r; // card removed from content entirely — keep as-is rather than drop history
+      return { id: r.id, title: card.title, text: fillName(card.text, r.by || t("the drawer")), by: r.by };
+    });
+    saved.active = (saved.active || []).map(function (a) {
+      var card = cardById[a.cardId];
+      if (!card) return a;
+      return { uid: a.uid, cardId: a.cardId, title: card.title, text: fillName(card.text, a.holder || t("the holder")), power: card.power || null, holder: a.holder };
+    });
     if (saved.dir !== 1 && saved.dir !== -1) saved.dir = 1;
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
     if (typeof saved.pendingExtraDraws !== "number" || saved.pendingExtraDraws < 0) saved.pendingExtraDraws = 0;
@@ -158,13 +172,17 @@
     game.turnIndex = (game.turnIndex + game.dir + n) % n;
   }
   function names() { return game.order.map(function (o) { return o.name; }); }
-  // Fill card tokens: {P} -> the drawer's name, {VERS} -> a random opening verse.
-  function fillName(text) {
-    var c = currentPlayer();
-    var out = String(text).replace(/\{P\}/g, c ? c.name : t("the drawer"));
+  // Fill card tokens: {P} -> the given name (defaults to the current player),
+  // {VERS} -> a random opening verse. The explicit-name form lets reconcile()
+  // re-derive an already-resolved card's text (e.g. after a language switch)
+  // using the ORIGINAL drawer/holder rather than currentPlayer(), which
+  // during reconcile reflects a game state that doesn't exist yet.
+  function fillName(text, forName) {
+    var name = forName !== undefined ? forName : (currentPlayer() ? currentPlayer().name : t("the drawer"));
+    var out = String(text).replace(/\{P\}/g, name);
     if (out.indexOf("{VERS}") !== -1) {
       var v = data.verses || [];
-      var verse = v.length ? v[Math.floor(Math.random() * v.length)] : "Der König spricht ein weises Wort,";
+      var verse = v.length ? v[Math.floor(Math.random() * v.length)] : t("The king speaks a wise word,");
       out = out.replace(/\{VERS\}/g, verse);
     }
     return out;

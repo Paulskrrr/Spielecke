@@ -150,6 +150,7 @@
     "🤡 Fooled!": "🤡 Reingelegt!",
     "The table wins — ": "Der Tisch gewinnt — ",
     "got busted!": "wurde erwischt!",
+    "got busted, all of them!": "wurden erwischt!",
     "got away with it — imposter wins!": "kam davon — Imposter gewinnt!",
     "got away with it — imposters win!": "kamen davon — Imposter gewinnen!",
     "Did the table catch them?": "Erwischt?",
@@ -205,6 +206,7 @@
     "Chain order ({n}): {names}": "Kettenreihenfolge ({n}): {names}",
     "No peeking — {name} is about to {task}.": "Nicht gucken — {name} ist dran.",
     "draw": "zeichnen",
+    "guess": "raten",
     "I'm {name} — go": "Ich bin {name} — los",
     "Draw: ": "Zeichne: ",
     "Clear 🧹": "Löschen 🧹",
@@ -212,6 +214,7 @@
     "What is this?": "Was ist das?",
     "Your guess…": "Dein Tipp…",
     "Lock guess 🔒": "Tipp abschicken 🔒",
+    "(no idea)": "(keine Ahnung)",
     "⚠ Needs at least {n} players. Add them from the header (👥).": "⚠ Mindestens {n} Spieler nötig. Oben (👥) hinzufügen.",
     "{name} drew:": "{name} zeichnete:",
     "{name} guessed:": "{name} erriet:",
@@ -226,6 +229,8 @@
     "The gallery 🖼️": "Die Galerie 🖼️",
 
     // ── Activity ───────────────────────────────────────────────────────────
+    "Change figure": "Figur wechseln",
+    "⏰ TIME!": "⏰ ZEIT UM!",
     "Explain": "Erklären",
     "Draw": "Zeichnen",
     "Charade": "Pantomime",
@@ -310,6 +315,10 @@
     "✋ STOP": "✋ STOP",
     "almost…": "fast…",
     "NOW? 👀": "JETZT? 👀",
+    "TAP! ⚡": "TIPPEN! ⚡",
+    "Left": "Links",
+    "Right": "Rechts",
+    "Took the duel {a}–{b}": "Duell gewonnen {a}–{b}",
 
     // ── Rank It ────────────────────────────────────────────────────────────
     "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
@@ -375,6 +384,7 @@
     "Whoever drew it": "Wer sie gezogen hat",
 
     // ── Hochadel (English keys; German values) ─────────────────────────────
+    "The king speaks a wise word,": "Der König spricht ein weises Wort,",
     "Choose Edition": "Edition wählen",
     "The Rapunzel Edition is coming soon. 👸": "Die Rapunzel-Edition ist bald verfügbar. 👸",
     "Seating Order": "Sitzordnung",

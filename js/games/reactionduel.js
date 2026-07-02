@@ -97,7 +97,7 @@
       if (li === ri) ri = (li + 1) % roster.length;
       duel = [{ name: roster[li].name }, { name: roster[ri].name }];
     } else {
-      duel = [{ name: "Left" }, { name: "Right" }];
+      duel = [{ name: t("Left") }, { name: t("Right") }];
     }
 
     var pickers = hasRoster
@@ -212,7 +212,7 @@
     }
   }
 
-  function goLive() { if (phase !== "armed") return; live = true; paint("rd-go", "TAP! ⚡"); }
+  function goLive() { if (phase !== "armed") return; live = true; paint("rd-go", t("TAP! ⚡")); }
 
   function scheduleBaits() {
     // 2–3 fakes during the wait, then the real GO
@@ -277,7 +277,7 @@
       '  <div class="result-emoji">⚡</div>' +
       '  <h2 class="result-title pop">' + esc(duel[winner].name) + t(" wins the round!") + "</h2>" +
       '  <p class="result-sub">' + esc(duel[loser].name) + " " + loserReason +
-      (settings.drinking ? "<br/>🍺 <strong>" + esc(duel[loser].name) + " drinks!</strong>" : "") +
+      (settings.drinking ? "<br/>🍺 <strong>" + esc(duel[loser].name) + " " + t("drinks!") + "</strong>" : "") +
       "</p>" +
       '  <div class="rd-scoreline">' + scoreLine() + "</div>" +
       '  <button id="rd-next" class="btn btn-primary btn-block btn-xl">' + t("Next round ▶️") + "</button>" +
@@ -290,7 +290,7 @@
       '<section class="screen rd-win">' +
       '  <div class="boom-flash">🏆</div>' +
       '  <h2 class="boom-title">' + esc(duel[winner].name) + t(" wins!") + "</h2>" +
-      '  <p class="result-sub">Took the duel ' + scores[winner] + "–" + scores[1 - winner] + "</p>" +
+      '  <p class="result-sub">' + t("Took the duel {a}–{b}").replace("{a}", scores[winner]).replace("{b}", scores[1 - winner]) + "</p>" +
       '  <div class="stack">' +
       '    <button id="rd-again" class="btn btn-primary btn-block btn-xl">' + t("Rematch 🔁") + "</button>" +
       '    <button id="rd-setup" class="btn btn-block">' + t("Change players") + "</button>" +

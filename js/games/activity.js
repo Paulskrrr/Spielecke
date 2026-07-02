@@ -128,7 +128,7 @@
     var team = teams[i];
     return (
       '<div class="act-team act-team--' + team.color + '">' +
-      '  <button id="act-fig' + i + '" class="act-figure" aria-label="Change figure">' + team.figure + "</button>" +
+      '  <button id="act-fig' + i + '" class="act-figure" aria-label="' + esc(t("Change figure")) + '">' + team.figure + "</button>" +
       '  <div class="act-team__name">' + t(i === 0 ? "Team A" : "Team B") + "</div>" +
       (members && members.length
         ? '<div class="act-team__members">' + esc(members.map(function (p) { return p.name; }).join(", ")) + "</div>"
@@ -320,7 +320,7 @@
       remaining--;
       var el = els && els.querySelector("#act-time");
       if (el) {
-        if (remaining <= 0) { el.textContent = "⏰ TIME!"; el.classList.add("hud-time--danger"); }
+        if (remaining <= 0) { el.textContent = t("⏰ TIME!"); el.classList.add("hud-time--danger"); }
         else { el.textContent = remaining + "s"; if (remaining <= 10) el.classList.add("hud-time--danger"); }
       }
       if (remaining <= 0) { stopTimer(); if (onZero) onZero(); }
