@@ -37,6 +37,13 @@
   var tickTimeout = null;
   var audio = null;      // { ctx } or null
   var currentPrompt = "";
+  // Wall-clock target for detonation + the fuse's total length. iOS freezes
+  // setTimeout while the screen is locked/backgrounded, so fuseTimeout's
+  // remaining budget can't be trusted after a hidden spell — these two let
+  // onVisibilityChange reconcile against real elapsed time instead.
+  var fuseDeadline = 0;
+  var fuseTotalMs = 0;
+  var wakeLock = null;   // WakeLockSentinel while a fuse is live, where supported
 
   // ========================================================================
   // Module
@@ -55,12 +62,14 @@
       els = container;
       ctx = context;
       settings = loadSettings(context.store);
+      global.document.addEventListener("visibilitychange", onVisibilityChange);
       renderSetup();
     },
 
     unmount: function () {
       stopFuse();
       teardownAudio();
+      global.document.removeEventListener("visibilitychange", onVisibilityChange);
       if (els) {
         els.innerHTML = "";
         els = null;
@@ -152,7 +161,8 @@
   // ========================================================================
   function startRound() {
     currentPrompt = pickPrompt();
-    var fuseMs = randomFuseMs();
+    fuseTotalMs = randomFuseMs();
+    fuseDeadline = Date.now() + fuseTotalMs;
 
     els.innerHTML =
       '<section class="screen bomb-play">' +
@@ -165,12 +175,36 @@
       "</section>";
 
     setupAudio();
-    scheduleTicks(fuseMs);
-
-    fuseTimeout = global.setTimeout(detonate, fuseMs);
+    scheduleTicks();
+    armFuseTimer();
+    requestWakeLock();
 
     els.querySelector("#bomb-pass").addEventListener("click", onPass);
     els.querySelector("#bomb-quit").addEventListener("click", renderSetup);
+  }
+
+  // Arms fuseTimeout for whatever's left of fuseDeadline. Called both at the
+  // start of a round and when reconciling after the tab was hidden.
+  function armFuseTimer() {
+    fuseTimeout = global.setTimeout(detonate, Math.max(0, fuseDeadline - Date.now()));
+  }
+
+  // iOS suspends JS timers (and the AudioContext) while the screen is locked
+  // or the app is backgrounded, so a fuseTimeout scheduled before that can
+  // fire arbitrarily late. On return, settle against the wall clock: detonate
+  // immediately if the deadline already passed, otherwise re-arm for exactly
+  // what's left. wakeLock is auto-released on hide, so re-request it too.
+  function onVisibilityChange() {
+    if (global.document.hidden || !fuseDeadline) return;
+    resumeAudio();
+    if (Date.now() >= fuseDeadline) {
+      stopFuse();
+      detonate();
+    } else {
+      if (fuseTimeout !== null) { global.clearTimeout(fuseTimeout); }
+      armFuseTimer();
+      requestWakeLock();
+    }
   }
 
   // Pure physical pass: the fuse keeps running regardless. Pass just gives a
@@ -190,8 +224,7 @@
   // Screen: Detonation (spec §2.2 step 5)
   // ========================================================================
   function detonate() {
-    fuseTimeout = null;
-    stopTicks();
+    stopFuse();
     explosionSound();
     buzz([120, 60, 200]);
 
@@ -234,21 +267,50 @@
       fuseTimeout = null;
     }
     stopTicks();
+    releaseWakeLock();
+    fuseDeadline = 0;
+    fuseTotalMs = 0;
   }
 
   // Ticking that accelerates as the fuse burns down (spec §2.2 step 3, §2.4).
   // Cosmetic only — detonation is driven by the precise fuseTimeout above.
-  function scheduleTicks(fuseMs) {
-    var start = Date.now();
+  // Paced off fuseDeadline (not a locally-captured start time) so the pacing
+  // stays correct if it's recomputed right after a visibilitychange reconcile.
+  function scheduleTicks() {
     function next() {
-      var elapsed = Date.now() - start;
-      var frac = Math.min(elapsed / fuseMs, 1); // 0..1
+      var remaining = fuseDeadline - Date.now();
+      var frac = Math.min(1, Math.max(0, 1 - remaining / fuseTotalMs)); // 0..1
       // interval shrinks from ~650ms down to ~110ms near the end
       var interval = 650 - frac * 540;
       tick();
       tickTimeout = global.setTimeout(next, Math.max(90, interval));
     }
     next();
+  }
+
+  // ========================================================================
+  // Screen Wake Lock — best-effort, keeps the screen from locking mid-fuse.
+  // Unsupported browsers (incl. iOS Safari < 16.4) silently no-op; the
+  // visibilitychange reconciliation above is the fallback that keeps the
+  // fuse honest even without it.
+  // ========================================================================
+  function requestWakeLock() {
+    try {
+      if (global.navigator && global.navigator.wakeLock && typeof global.navigator.wakeLock.request === "function") {
+        global.navigator.wakeLock.request("screen").then(function (lock) {
+          wakeLock = lock;
+        }, function () { /* denied / unsupported — ignore */ });
+      }
+    } catch (e) {
+      /* ignore */
+    }
+  }
+
+  function releaseWakeLock() {
+    if (wakeLock) {
+      try { wakeLock.release(); } catch (e) { /* ignore */ }
+      wakeLock = null;
+    }
   }
 
   function stopTicks() {
@@ -285,6 +347,15 @@
     audio = null;
   }
 
+  // iOS suspends a live AudioContext on screen lock / call interruption and
+  // does not auto-resume it — without this, ticks and the explosion go
+  // permanently silent for the rest of the round even with sound toggled on.
+  function resumeAudio() {
+    if (audio && audio.ctx && audio.ctx.state !== "running") {
+      try { audio.ctx.resume(); } catch (e) { /* ignore */ }
+    }
+  }
+
   function tick() {
     if (!audio || !audio.ctx) return;
     beep(900, 0.04, 0.12, "square");
@@ -296,6 +367,7 @@
   }
 
   function beep(freq, dur, gain, type) {
+    resumeAudio();
     var ac = audio.ctx;
     var now = ac.currentTime;
     var osc = ac.createOscillator();
@@ -311,6 +383,7 @@
 
   function explosionSound() {
     if (!audio || !audio.ctx) return;
+    resumeAudio();
     var ac = audio.ctx;
     var now = ac.currentTime;
     // white-noise burst through a falling low-pass = a satisfying "boom"

@@ -21,6 +21,7 @@
     "Edit": "Bearbeiten",
     "This game failed to load.": "Spiel konnte nicht geladen werden.",
     "← Back to shelf": "← Zur Spielecke",
+    "Leave this game? The round will be lost.": "Spiel verlassen? Die Runde geht verloren.",
 
     // ── Roster ─────────────────────────────────────────────────────────────
     "Players": "Spieler",

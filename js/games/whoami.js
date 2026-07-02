@@ -34,7 +34,14 @@
   var queue = [];      // shuffled identity queue — persists across turns within a session
   var queuePool = null; // which pool the current queue was built for
   var score = 0;
-  var remaining = 0;   // seconds left
+  var remaining = 0;   // seconds left, for display only
+  // Wall-clock target for the turn to end. The forehead pose means no touches
+  // ever happen during a turn, so iOS can auto-lock the screen mid-round —
+  // that suspends the setInterval below. Deriving `remaining` from this
+  // deadline (instead of decrementing a counter) makes the display and the
+  // end-of-turn trigger self-correct the moment ticking resumes, rather than
+  // trusting a timer that may have been frozen for the whole locked spell.
+  var endAt = 0;
 
   var module = {
     meta: {
@@ -50,16 +57,26 @@
       els = container;
       ctx = context;
       settings = loadSettings(context.store);
+      global.document.addEventListener("visibilitychange", onVisibilityChange);
       renderSetup();
     },
 
     unmount: function () {
       stopCountdown();
       teardownAudio();
+      global.document.removeEventListener("visibilitychange", onVisibilityChange);
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; queue = []; queuePool = null; score = 0;
     },
   };
+
+  // On return from a locked/backgrounded screen, jump straight to the result
+  // if the round's time is already up rather than leaving a stale countdown
+  // on screen until the next (possibly delayed) interval tick.
+  function onVisibilityChange() {
+    if (global.document.hidden || !endAt) return;
+    if (Date.now() >= endAt) finishTurn();
+  }
 
   // --- Settings ------------------------------------------------------------
   function loadSettings(store) {
@@ -173,6 +190,7 @@
   function startTurn() {
     score = 0;
     remaining = settings.roundSeconds;
+    endAt = Date.now() + settings.roundSeconds * 1000;
     if (!queue.length || queuePool !== poolKey()) {
       queue = buildQueue();
       queuePool = poolKey();
@@ -200,7 +218,10 @@
     els.querySelector("#wa-quit").addEventListener("click", finishTurn);
 
     countdownTimer = global.setInterval(function () {
-      remaining--;
+      // Derived from the wall clock, not decremented, so a delayed tick
+      // (after the screen was locked) catches up to the real time left in
+      // one step instead of ticking down 1s at a time from a stale value.
+      remaining = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
       var timeEl = els && els.querySelector("#wa-time");
       if (timeEl) {
         timeEl.textContent = remaining + "s";
@@ -258,6 +279,7 @@
 
   function stopCountdown() {
     if (countdownTimer !== null) { global.clearInterval(countdownTimer); countdownTimer = null; }
+    endAt = 0;
   }
 
   // --- Audio (Web Audio; no files) -----------------------------------------

@@ -815,7 +815,9 @@ body::before {
 .deck-rule { font-size: 1.15rem; font-weight: 700; margin: 0 0 16px; }
 
 /* ----- Tappable design elements (act as the button themselves) ---------- */
-.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+/* touch-action: manipulation kills the double-tap-to-zoom gesture on iOS,
+   which a game like Mäxchen's rapid-tap hat can otherwise trigger mid-round. */
+.tappable { cursor: pointer; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .tappable:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 /* A small "tap me" hint shown under/inside a tappable element */
 .tap-hint {

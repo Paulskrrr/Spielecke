@@ -55,6 +55,7 @@
       icon: "👑",
       minPlayers: 2,
       supportsDrinking: true, // it IS a drinking game — show the Trinkspiel marker
+      persistsState: true, // saves/reconciles full game state — safe to leave & return
     },
     mount: function (container, context) {
       els = container;
