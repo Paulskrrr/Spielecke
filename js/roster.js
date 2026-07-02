@@ -27,7 +27,6 @@
       '           maxlength="24" aria-label="' + t("Add a player…") + '" />' +
       '    <button type="submit" class="btn btn-primary">' + t("Add") + "</button>" +
       "  </form>" +
-      '  <div id="roster-warn" class="roster-warn"></div>' +
       '  <ul id="roster-list" class="roster-list"></ul>' +
       '  <button id="roster-done" class="btn btn-block">' + t("Done") + "</button>" +
       '  <div class="roster-lang">' +
@@ -40,7 +39,6 @@
       "</section>";
 
     var listEl = container.querySelector("#roster-list");
-    var warnEl = container.querySelector("#roster-warn");
     var inputEl = container.querySelector("#roster-input");
 
     function persist() {
@@ -73,8 +71,6 @@
 
       // No player-count nagging — you can deliberately play short-handed; the
       // app shouldn't second-guess that. Games still guard their own hard floor.
-      warnEl.textContent = "";
-      warnEl.style.display = "none";
       ctx.refreshHeader();
     }
 

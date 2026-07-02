@@ -614,9 +614,10 @@ body::before {
   border-top: 3px solid var(--ink);
   border-bottom: 3px solid var(--ink);
 }
-.wl-zone--far  { background: rgba(255, 255, 255, 0.30); }
-.wl-zone--near { background: rgba(255, 255, 255, 0.55); }
-.wl-zone--bull {
+/* Shared with .wl-rzone--* below (the reveal dial repeats the same bands). */
+.wl-zone--far,  .wl-rzone--far  { background: rgba(255, 255, 255, 0.30); }
+.wl-zone--near, .wl-rzone--near { background: rgba(255, 255, 255, 0.55); }
+.wl-zone--bull, .wl-rzone--bull {
   background: repeating-linear-gradient(
     45deg, rgba(255,255,255,0.95) 0 8px, rgba(255,207,51,0.95) 8px 16px
   );
@@ -730,13 +731,6 @@ body::before {
   top: var(--start); height: var(--size);
   border-top: 3px solid var(--ink);
   border-bottom: 3px solid var(--ink);
-}
-.wl-rzone--far  { background: rgba(255, 255, 255, 0.30); }
-.wl-rzone--near { background: rgba(255, 255, 255, 0.55); }
-.wl-rzone--bull {
-  background: repeating-linear-gradient(
-    45deg, rgba(255,255,255,0.95) 0 8px, rgba(255,207,51,0.95) 8px 16px
-  );
 }
 .wl-rcenter {
   position: absolute; left: 0; right: 0;
@@ -895,15 +889,6 @@ body::before {
   box-shadow: var(--pop); margin-bottom: 14px;
 }
 .dd-reveal { text-align: center; }
-.dd-chain { display: flex; flex-direction: column; gap: 14px; margin: 16px 0; text-align: left; }
-.dd-seed {
-  font-size: 1.2rem; padding: 12px 14px; background: var(--yellow);
-  border: 3px solid var(--ink); border-radius: 14px; text-align: center;
-}
-.dd-item { background: #fff; border: 3px solid var(--ink); border-radius: 16px; padding: 12px; box-shadow: var(--pop); }
-.dd-by { font-weight: 800; margin-bottom: 8px; color: var(--ink-soft); }
-.doodle-thumb { display: block; width: 100%; max-height: 320px; object-fit: contain; background: #fff; border-radius: 10px; }
-.dd-guesstext { font-size: 1.4rem; font-weight: 800; }
 
 /* Reveal step-through: one beat per screen, clicked through in order. */
 .dd-reveal--step, .dd-finale { text-align: center; }
@@ -961,7 +946,7 @@ body::before {
   border: 4px solid var(--ink); border-radius: var(--radius); box-shadow: var(--pop);
   background: #fff;
 }
-.act-team--blue { box-shadow: 0 5px 0 var(--ink); border-color: var(--blue); }
+.act-team--blue { border-color: var(--blue); }
 .act-team--red { border-color: var(--red); }
 .act-vs { font-weight: 900; font-size: 1.2rem; color: var(--ink-soft); }
 .act-figure {
@@ -1877,10 +1862,9 @@ body::before {
   100% { transform: translate(-5px, 0) rotate(-7deg); }
 }
 @keyframes mx-lift { to { transform: translateY(-130px) rotate(-16deg); opacity: 0; } }
-.mx-tap-hint {
-  font-size: 0.9rem; font-weight: 800; color: var(--ink-soft);
-  margin-top: 14px; animation: tap-hint-pulse 1.6s ease-in-out infinite;
-}
+/* Reuses .tap-hint (font/color/animation) — this is only the one place
+   Mäxchen's spacing needs to differ. */
+.mx-tap-hint { margin-top: 14px; }
 
 /* CSS pip dice — the premium reveal */
 .mx-dice { display: inline-flex; gap: 14px; justify-content: center; }
@@ -1907,9 +1891,10 @@ body::before {
 .mx-badge--maex { background: var(--yellow); }
 .mx-badge--pasch { background: var(--blue); color: #fff; }
 
-/* Respect reduced-motion */
+/* Respect reduced-motion. .tap-hint (not just .mx-tap-hint) so this covers
+   every game's "tap for the next" pulse, not only Mäxchen's. */
 @media (prefers-reduced-motion: reduce) {
   .mx-hat, .mx-hat--shaking, .mx-hat--lift,
   .mx-yourroll .mx-dice, .mx-revealroll .mx-dice,
-  .mx-tap-hint { animation: none; }
+  .tap-hint { animation: none; }
 }

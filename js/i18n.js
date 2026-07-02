@@ -34,7 +34,6 @@
     "No players yet.": "Noch keine Spieler.",
     "Done": "Fertig",
     "Language": "Sprache",
-    "⚠ Most games are better with {n}+ players.": "⚠ Die meisten Spiele sind besser mit {n}+ Spielern.",
 
     // ── Shelf ──────────────────────────────────────────────────────────────
     "🍻 drink mode": "🍻 Trinkspiel",
@@ -74,13 +73,11 @@
     "Everyone ranks the same five. Drift from the group and you lose.": "Alle ranken dieselben fünf. Wer vom Schwarm abweicht, verliert.",
 
     // ── Common ─────────────────────────────────────────────────────────────
-    "Back to shelf": "Zur Spielecke",
     "Change settings": "Einstellungen",
     "Next round 🔁": "Nächste Runde 🔁",
     "Next player ▶️": "Nächster Spieler ▶️",
     "New round 🔁": "Neue Runde 🔁",
     "Start ▶️": "Start ▶️",
-    "Next ▶️": "Weiter ▶️",
     "👆 Tap for the next": "👆 Tippen für die nächste",
     "👆 Tap to spin": "👆 Tippen zum Drehen",
     "👆 Tap to spin again": "👆 Tippen zum erneut Drehen",
@@ -88,7 +85,6 @@
     "Category": "Kategorie",
     "Categories": "Kategorien",
     "🎯 Mixed": "🎯 Gemischt",
-    "🎯 Mixed (all)": "🎯 Gemischt",
     "Change pool": "Kategorie wechseln",
     "🍻 Drinking mode": "🍻 Trinkspiel",
     "🍻 Drinking mode (wrong = drink too)": "🍻 Trinkspiel (Falsch = trinken)",
@@ -162,8 +158,6 @@
     // ── Wavelength ─────────────────────────────────────────────────────────
     "Spectrum pool": "Spektrum-Kategorie",
     "Start round 🎯": "Runde starten 🎯",
-    "Clue-giver only": "Nur für den Tipp-Geber",
-    "Show me the target 🎯": "Zeig mir das Ziel 🎯",
     "{name} sets the wavelength": "{name} gibt die Wavelength vor",
     "I'm {name} — show the target 🎯": "Ich bin {name} — Ziel zeigen 🎯",
     "Read the clue, then place your line where you think the target is.": "Lies den Tipp und platzier deine Linie da, wo du das Ziel vermutest.",
@@ -172,19 +166,9 @@
     "The clue": "Der Tipp",
     "{name}'s clue": "Tipp von {name}",
     "Hide & let them guess 🤐": "Verstecken & raten lassen 🤐",
-    "Where is it?": "Wo ist es?",
     "On the wavelength": "Auf einer Wellenlänge",
     "landed closest!": "war am nächsten dran!",
     "Lock it in 🔒": "Festlegen 🔒",
-    "BULLSEYE!": "VOLLTREFFER!",
-    "So close!": "Fast!",
-    "On the board!": "Auf dem Brett!",
-    "Way off!": "Danebengegriffen!",
-    "The clue-giver's a legend — ": "Der Tipgeber ist eine Legende — ",
-    "Great read — ": "Starke Einschätzung — ",
-    "Decent reading — ": "Gute Einschätzung — ",
-    "Total miss — ": "Komplett daneben — ",
-    " points!": " Punkte!",
     " points.": " Punkte.",
 
     // ── NHIE ───────────────────────────────────────────────────────────────
@@ -221,7 +205,6 @@
     "Chain order ({n}): {names}": "Kettenreihenfolge ({n}): {names}",
     "No peeking — {name} is about to {task}.": "Nicht gucken — {name} ist dran.",
     "draw": "zeichnen",
-    "guess": "raten",
     "I'm {name} — go": "Ich bin {name} — los",
     "Draw: ": "Zeichne: ",
     "Clear 🧹": "Löschen 🧹",
@@ -281,8 +264,6 @@
     "Correct!": "Richtig!",
     "Wrong!": "Falsch!",
     "Safe — well played.": "Sicher — gut gespielt.",
-    "Answer: {answer}. −1 heart.": "Antwort: {answer}. −1 Herz.",
-    "Answer: {answer}. 💀 {name} is out!": "Antwort: {answer}. 💀 {name} ist raus!",
     " is OUT!": " ist RAUS!",
     "Last one standing — quiz champion!": "Letzter Überlebender — Quiz-Champion!",
     "Everyone's out!": "Alle sind raus!",
@@ -301,8 +282,6 @@
     "Answer honestly!": "Ehrlich antworten!",
 
     // ── Chooser ────────────────────────────────────────────────────────────
-    "SPIN 🎯": "DREHEN 🎯",
-    "SPIN AGAIN 🎯": "NOCHMAL DREHEN 🎯",
     "⚠ Add some players from the header (👥) to spin.": "⚠ Füge oben Spieler hinzu (👥).",
 
     // ── Reaction Duel ──────────────────────────────────────────────────────
@@ -369,10 +348,8 @@
     "⚠ The Bomb is best with {n}+ players. Add more from the header.": "⚠ Die Bombe ist am besten mit {n}+ Spielern. Oben (👥) mehr hinzufügen.",
     "Name something. Anything. Go!": "Nenn irgendwas. Egal was. Los!",
     // Wavelength
-    "One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.": "Ein Spieler sieht einen versteckten Punkt auf dem Dial und gibt einen Ein-Satz-Tipp zwischen den beiden Enden. Alle anderen schieben den Regler zu ihrem Tipp. Volltreffer = Ruhm, voll daneben = saufen.",
     "One player is picked to set the wavelength and write a clue. Everyone else then places their line one by one. Closest to the hidden target wins the round.": "Ein Spieler wird ausgelost, gibt die Wavelength vor und schreibt einen Tipp. Alle anderen platzieren danach nacheinander ihre Linie. Wer am nächsten am versteckten Ziel ist, gewinnt die Runde.",
     "Pass the phone to {name}. Everyone else: look away while they peek at the target and write the clue.": "Gib das Handy an {name}. Alle anderen: wegschauen, während er/sie das Ziel ansieht und den Tipp schreibt.",
-    "Everyone else: look away! One person picks up the phone to see the secret target.": "Alle anderen: weggucken! Einer schnappt sich das Handy, um das geheime Ziel zu sehen.",
     "Write a clue between the two ends that points right at the band — the others only see your clue, not the target.": "Schreib einen Tipp zwischen den beiden Enden, der genau auf das Band zeigt — die anderen sehen nur deinen Tipp, nicht das Ziel.",
     // Princess Treatment
     "Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.": "Jede Runde wechselt zwischen 👑 Prinzessin (für die Mädels) und 🤴 König (für die Jungs). Lest den Spruch vor, dann entscheidet der Tisch.",
@@ -422,10 +399,6 @@
     "Passive / Rule": "Passiv / Regel",
     "Trump": "Trumpf",
     "Mini-game": "Minispiel",
-    "Crimson": "Karmesin",
-    "Sapphire": "Saphir",
-    "Gold": "Gold",
-    "Purple": "Purpur",
     " draws …": " zieht …",
     "Done ✓": "Erledigt ✓",
     "Add as standing rule ✓": "Als Hofgesetz eintragen ✓",
@@ -502,7 +475,6 @@
     "than {r}": "als {r}",
     "Spot on!": "Volltreffer!",
     "It was": "Es war",
-    "Next card ▶️": "Nächste Karte ▶️",
     "Cards drawn": "Gezogene Karten",
     "No cards drawn yet — the pile builds up here.": "Noch keine Karten gezogen — hier wächst der Stapel.",
 

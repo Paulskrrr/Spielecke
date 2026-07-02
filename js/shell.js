@@ -206,6 +206,4 @@
   } else {
     boot();
   }
-
-  S.Shell = { showShelf: showShelf, showRoster: showRoster, mountGame: mountGame };
 })(window);

@@ -135,7 +135,7 @@
       body +
       "</section>";
 
-    highlight("#wa-modes", "mode", settings.mode, "data-mode");
+    highlight("#wa-modes", settings.mode, "data-mode");
     els.querySelectorAll("#wa-modes .chip").forEach(function (c) {
       c.addEventListener("click", function () {
         settings.mode = c.getAttribute("data-mode"); saveSettings();
@@ -155,7 +155,7 @@
       return;
     }
 
-    highlight("#wa-times", "secs", String(settings.roundSeconds), "data-secs");
+    highlight("#wa-times", String(settings.roundSeconds), "data-secs");
 
     Pools().bind(els.querySelector("#wa-pools"), poolsFor(),
       function () { return settings.pools; },
@@ -164,7 +164,7 @@
     els.querySelectorAll("#wa-times .chip").forEach(function (c) {
       c.addEventListener("click", function () {
         settings.roundSeconds = parseInt(c.getAttribute("data-secs"), 10); saveSettings();
-        highlight("#wa-times", "secs", String(settings.roundSeconds), "data-secs");
+        highlight("#wa-times", String(settings.roundSeconds), "data-secs");
       });
     });
     els.querySelector("#wa-sound").addEventListener("change", function (e) {
@@ -298,7 +298,7 @@
       ? global.Spielecke.termPoolsFor("whoami")
       : (global.Spielecke.Terms || {});
   }
-  function highlight(sel, key, value, attrName) {
+  function highlight(sel, value, attrName) {
     els.querySelectorAll(sel + " .chip").forEach(function (c) {
       c.classList.toggle("chip--active", c.getAttribute(attrName) === value);
     });
