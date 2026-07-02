@@ -15,7 +15,8 @@
   function poolsOf() { return global.Spielecke.L(global.Spielecke.MostLikely) || {}; }
   function Pools() { return global.Spielecke.Pools; }
 
-  var els = null, ctx = null, settings = null, queue = [];
+  var els = null, ctx = null, settings = null;
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, poolsOf(), "prompts"); });
 
   var module = {
     meta: {
@@ -36,7 +37,7 @@
     },
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; queue = [];
+      ctx = null; settings = null; bag.reset();
     },
   };
 
@@ -56,17 +57,17 @@
     Pools().bind(els.querySelector("#ml-pools"), poolsOf(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; Pools().save(ctx.store, v); },
-      function () { queue = []; });
+      function () { bag.reset(); });
     els.querySelector("#ml-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
     els.querySelector("#ml-start").addEventListener("click", function () {
-      queue = buildQueue(); renderCard();
+      bag.reset(); renderCard();
     });
   }
 
   function renderCard() {
-    var line = nextPrompt();
+    var line = bag.next("make something up!");
     els.innerHTML =
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + t("Most likely to…") + "</div>" +
@@ -81,17 +82,6 @@
     global.Spielecke.tappable(els.querySelector("#ml-card"), renderCard);
   }
 
-  function buildQueue() {
-    return shuffle(Pools().gather(settings.pools, poolsOf(), "prompts").slice());
-  }
-  function nextPrompt() {
-    if (!queue.length) queue = buildQueue();
-    return queue.length ? queue.pop() : "make something up!";
-  }
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
-    return a;
-  }
   var esc = global.Spielecke.esc;
 
   global.Spielecke = global.Spielecke || {};

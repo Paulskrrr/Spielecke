@@ -23,6 +23,7 @@
   // Reveal-time data kept around so the compare view can replay each player's
   // ranking against the group consensus.
   var consensusRank = [], compare = [];
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, sets(), "sets"); });
 
   var module = {
     meta: {
@@ -45,6 +46,7 @@
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; players = []; set = null; rankings = []; idx = 0; current = [];
       consensusRank = []; compare = [];
+      bag.reset();
     },
   };
 
@@ -70,7 +72,8 @@
 
     Pools().bind(els.querySelector("#ri-pools"), sets(),
       function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { bag.reset(); });
     els.querySelector("#ri-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -229,14 +232,6 @@
     });
   }
 
-  function shuffle(arr) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-    }
-    return arr;
-  }
-
   function renderReveal() {
     var items = set.items;
     var n = items.length;
@@ -376,14 +371,13 @@
   }
 
   function pickSet() {
-    var list = Pools().gather(settings.pools, sets(), "sets");
-    if (!list.length) return { title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] };
-    return list[Math.floor(Math.random() * list.length)];
+    return bag.next({ title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] });
   }
 
   // Current-language pools from the bilingual { de, en } content bundle.
   function sets() { return global.Spielecke.L(global.Spielecke.RankItSets) || {}; }
   var esc = global.Spielecke.esc;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

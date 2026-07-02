@@ -30,6 +30,11 @@
   var secretHint = "";
   var revealIdx = 0;
   var roleShown = false;
+  // A flat {word, category, hint} per term across every selected pool — flat
+  // (not pool-then-word) so every individual word is equally likely to be
+  // picked regardless of how big its pool is, and so the shared draw-bag can
+  // track "already used this session" by word instead of by pool.
+  var bag = global.Spielecke.drawBag(allWords);
 
   var module = {
     meta: {
@@ -56,6 +61,7 @@
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; players = []; imposterSet = {}; secretWord = ""; secretCategory = ""; secretHint = "";
+      bag.reset();
     },
   };
 
@@ -106,7 +112,8 @@
 
     Pools().bind(els.querySelector("#im-pools"), poolsFor(),
       function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { bag.reset(); });
     if (enough) {
       highlight("#im-count", String(settings.imposterCount), "data-count");
       els.querySelectorAll("#im-count .chip").forEach(function (c) {
@@ -286,16 +293,24 @@
   }
 
   // --- Word picking --------------------------------------------------------
-  function pickWord() {
+  // Every {word, category, hint} across every selected pool, flattened —
+  // called fresh by the draw bag each time it needs to (re)shuffle, so it
+  // always reflects the live pool selection and current language.
+  function allWords() {
     var pools = poolsFor();
-    var keys = Pools().resolve(settings.pools, pools); // valid selected pools (or all)
-    if (!keys.length) return { word: "Beer", category: "Party" };
+    var keys = Pools().resolve(settings.pools, pools);
+    var out = [];
+    keys.forEach(function (key) {
+      var category = (pools[key].label || key).replace(/^[^\w]+\s*/, "");
+      (pools[key].terms || []).forEach(function (word) {
+        out.push({ word: word, category: category, hint: hintFor(key, word) });
+      });
+    });
+    return out;
+  }
 
-    var key = keys[Math.floor(Math.random() * keys.length)];
-    var words = pools[key].terms || [];
-    var word = words.length ? words[Math.floor(Math.random() * words.length)] : "Beer";
-    var category = (pools[key].label || key).replace(/^[^\w]+\s*/, "");
-    return { word: word, category: category, hint: hintFor(key, word) };
+  function pickWord() {
+    return bag.next({ word: "Beer", category: "Party", hint: "" });
   }
 
   // Look up the distant decoy hint for this secret (current language). Missing

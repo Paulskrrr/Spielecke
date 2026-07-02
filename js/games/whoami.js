@@ -17,7 +17,6 @@
 
   function t(k) { return global.Spielecke.t(k); }
   function Pools() { return global.Spielecke.Pools; }
-  function poolKey() { return (settings.pools || []).slice().sort().join(","); }
 
   var ROUND_OPTIONS = [30, 60, 90]; // seconds
   var TARGET = 3; // beat this for a 🎉
@@ -31,8 +30,7 @@
   var countdownTimer = null;
   var audio = null;
 
-  var queue = [];      // shuffled identity queue — persists across turns within a session
-  var queuePool = null; // which pool the current queue was built for
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, poolsFor(), "terms"); });
   var score = 0;
   var remaining = 0;   // seconds left, for display only
   // Wall-clock target for the turn to end. The forehead pose means no touches
@@ -66,7 +64,7 @@
       teardownAudio();
       global.document.removeEventListener("visibilitychange", onVisibilityChange);
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; queue = []; queuePool = null; score = 0;
+      ctx = null; settings = null; bag.reset(); score = 0;
     },
   };
 
@@ -162,7 +160,7 @@
     Pools().bind(els.querySelector("#wa-pools"), poolsFor(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; saveSettings(); },
-      function () { queue = []; });
+      function () { bag.reset(); });
     els.querySelectorAll("#wa-times .chip").forEach(function (c) {
       c.addEventListener("click", function () {
         settings.roundSeconds = parseInt(c.getAttribute("data-secs"), 10); saveSettings();
@@ -191,17 +189,13 @@
     score = 0;
     remaining = settings.roundSeconds;
     endAt = Date.now() + settings.roundSeconds * 1000;
-    if (!queue.length || queuePool !== poolKey()) {
-      queue = buildQueue();
-      queuePool = poolKey();
-    }
     setupAudio();
 
     els.innerHTML =
       '<section class="screen whoami-play">' +
       '  <div class="play-hud"><span id="wa-time" class="hud-time">' + remaining + "s</span>" +
       '    <span id="wa-score" class="hud-score">✅ 0</span></div>' +
-      '  <div class="whoami-word-wrap"><div id="wa-word" class="whoami-word">' + esc(nextWord()) + "</div></div>" +
+      '  <div class="whoami-word-wrap"><div id="wa-word" class="whoami-word">' + esc(bag.next(t("Make one up!"))) + "</div></div>" +
       '  <div class="whoami-actions">' +
       '    <button id="wa-skip" class="btn btn-skip">' + t("SKIP ⏭️") + "</button>" +
       '    <button id="wa-got" class="btn btn-got">' + t("GOT IT ✅") + "</button>" +
@@ -234,7 +228,7 @@
   function advance() {
     var w = els && els.querySelector("#wa-word");
     var s = els && els.querySelector("#wa-score");
-    if (w) w.textContent = nextWord();
+    if (w) w.textContent = bag.next(t("Make one up!"));
     if (s) s.textContent = "✅ " + score;
   }
 
@@ -259,22 +253,6 @@
       "</section>";
     els.querySelector("#wa-next").addEventListener("click", startTurn);
     els.querySelector("#wa-settings").addEventListener("click", renderSetup);
-  }
-
-  // --- Word queue ----------------------------------------------------------
-  function buildQueue() {
-    return shuffle(Pools().gather(settings.pools, poolsFor(), "terms").slice());
-  }
-  function nextWord() {
-    if (!queue.length) queue = buildQueue();
-    return queue.length ? queue.pop() : "Make one up!";
-  }
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
   }
 
   function stopCountdown() {

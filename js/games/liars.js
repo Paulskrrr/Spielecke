@@ -20,6 +20,7 @@
 
   var els = null, ctx = null, settings = null;
   var players = [], question = null, guesses = [], idx = 0;
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, pools(), "questions"); });
 
   var module = {
     meta: {
@@ -41,6 +42,7 @@
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; players = []; question = null; guesses = [];
+      bag.reset();
     },
   };
 
@@ -66,7 +68,8 @@
 
     Pools().bind(els.querySelector("#ln-pools"), pools(),
       function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { bag.reset(); });
     els.querySelector("#ln-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -171,9 +174,7 @@
   }
 
   function pickQuestion() {
-    var list = Pools().gather(settings.pools, pools(), "questions");
-    if (!list.length) return { q: t("Pick a number 1–100"), a: 50 };
-    return list[Math.floor(Math.random() * list.length)];
+    return bag.next({ q: t("Pick a number 1–100"), a: 50 });
   }
 
   function fmt(n) {
