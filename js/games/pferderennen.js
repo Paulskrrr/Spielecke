@@ -55,7 +55,9 @@
         lossFormula: context.store.get("lossFormula", DEFAULTS.lossFormula) === "lengths" ? "lengths" : "flat",
         flatLossSips: DEFAULTS.flatLossSips,
       };
-      bets = context.store.get("bets", {}) || {};
+      // Bets are session-only — never resumed from a previous visit, so a bet
+      // placed last time can't be silently replayed into tonight's payout.
+      bets = {};
       renderSetup();
     },
     unmount: function () {
@@ -126,10 +128,12 @@
         var rowEl = b.closest(".hr-betrow");
         var player = rowEl.getAttribute("data-player");
         var suit = b.getAttribute("data-suit");
-        bets[player] = suit;
-        ctx.store.set("bets", bets);
+        // Tapping the already-active suit clears the bet — the only way to opt
+        // a player back out once they've bet.
+        if (bets[player] === suit) delete bets[player];
+        else bets[player] = suit;
         rowEl.querySelectorAll(".hr-suit").forEach(function (x) {
-          x.classList.toggle("hr-suit--on", x.getAttribute("data-suit") === suit);
+          x.classList.toggle("hr-suit--on", x.getAttribute("data-suit") === bets[player]);
         });
       });
     });

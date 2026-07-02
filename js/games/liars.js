@@ -122,29 +122,41 @@
     var ranked = guesses.slice().sort(function (x, y) {
       return Math.abs(x.guess - a) - Math.abs(y.guess - a);
     });
-    var winner = ranked[0];
-    var loser = ranked[ranked.length - 1];
+    var dist = function (g) { return Math.abs(g.guess - a); };
+    var minD = dist(ranked[0]);
+    var maxD = dist(ranked[ranked.length - 1]);
+    // minD === maxD means every guess is equally far off (identical guesses
+    // included) — a wash, not a coincidental single winner/loser.
+    var allTied = minD === maxD;
+    var winners = ranked.filter(function (g) { return dist(g) === minD; });
+    var losers = ranked.filter(function (g) { return dist(g) === maxD; });
+    var namesOf = function (list) { return list.map(function (g) { return esc(g.name); }).join(" & "); };
 
-    var rows = ranked.map(function (g, i) {
-      var d = Math.abs(g.guess - a);
-      var tag = i === 0 ? "👑" : (i === ranked.length - 1 ? (settings.drinking ? "🍺" : "💀") : "");
+    var rows = ranked.map(function (g) {
+      var d = dist(g);
+      var isWin = !allTied && d === minD;
+      var isLose = !allTied && d === maxD;
+      var tag = isWin ? "👑" : (isLose ? (settings.drinking ? "🍺" : "💀") : "");
       return (
-        '<li class="ln-row' + (i === 0 ? " ln-row--win" : (i === ranked.length - 1 ? " ln-row--lose" : "")) + '">' +
+        '<li class="ln-row' + (isWin ? " ln-row--win" : (isLose ? " ln-row--lose" : "")) + '">' +
         '<span class="ln-row__name">' + tag + " " + esc(g.name) + "</span>" +
         '<span class="ln-row__guess">' + fmt(g.guess) + ' <span class="muted">' + t("(off {n})").replace("{n}", fmt(d)) + "</span></span>" +
         "</li>"
       );
     }).join("");
 
-    var loseLine = settings.drinking
-      ? "🍺 <strong>" + esc(loser.name) + "</strong> " + t("was furthest — drink!")
-      : "💀 <strong>" + esc(loser.name) + "</strong> " + t("was furthest off.");
+    var verdict = allTied
+      ? '<p class="result-sub">' + t("Dead heat — everyone was equally off. 🤷") + "</p>"
+      : '<p class="result-sub">🏆 <strong>' + namesOf(winners) + "</strong> " + t("nailed it!") + "<br/>" +
+        (settings.drinking
+          ? "🍺 <strong>" + namesOf(losers) + "</strong> " + t("was furthest — drink!")
+          : "💀 <strong>" + namesOf(losers) + "</strong> " + t("was furthest off.")) + "</p>";
 
     els.innerHTML =
       '<section class="screen ln-reveal">' +
       '  <div class="result-emoji">🔢</div>' +
       '  <h2 class="result-title pop">' + t("Answer: ") + fmt(a) + "</h2>" +
-      '  <p class="result-sub">🏆 <strong>' + esc(winner.name) + "</strong> " + t("nailed it!") + "<br/>" + loseLine + "</p>" +
+      verdict +
       '  <ul class="ln-list">' + rows + "</ul>" +
       '  <div class="stack">' +
       '    <button id="ln-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +

@@ -15,7 +15,7 @@
   function Pools() { return global.Spielecke.Pools; }
 
   var els = null, ctx = null, settings = null;
-  var queue = [], lastName = null;
+  var queue = [], lastId = null;
 
   var module = {
     meta: {
@@ -36,7 +36,7 @@
     },
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; queue = []; lastName = null;
+      ctx = null; settings = null; queue = []; lastId = null;
     },
   };
 
@@ -84,12 +84,14 @@
   function pickName() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
     if (!roster.length) return null;
-    if (roster.length === 1) return roster[0].name;
-    var name;
-    do { name = roster[Math.floor(Math.random() * roster.length)].name; }
-    while (name === lastName);
-    lastName = name;
-    return name;
+    if (roster.length === 1) { lastId = roster[0].id; return roster[0].name; }
+    // Filter by id, not name, so duplicate player names can't stall this — a
+    // name-equality loop never terminates when every player shares a name.
+    var candidates = roster.filter(function (p) { return p.id !== lastId; });
+    if (!candidates.length) candidates = roster; // shouldn't happen, but never hang
+    var p = candidates[Math.floor(Math.random() * candidates.length)];
+    lastId = p.id;
+    return p.name;
   }
 
   function buildQueue() {

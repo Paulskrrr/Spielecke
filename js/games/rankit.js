@@ -268,7 +268,14 @@
 
     var winner = scored[0];
     var loser = scored[scored.length - 1];
-    var split = winner.drift !== loser.drift; // everyone identical → no win/lose
+    // "Perfect match" only when every ranking is byte-identical — a tied drift
+    // score does NOT mean the orders match (symmetric drifts are common).
+    var allSame = rankings.every(function (r) { return r.order.join(",") === rankings[0].order.join(","); });
+    var driftTie = !allSame && winner.drift === loser.drift; // everyone equally off, but differently
+    var split = !allSame && !driftTie;
+    var winners = scored.filter(function (s) { return s.drift === winner.drift; });
+    var losers = scored.filter(function (s) { return s.drift === loser.drift; });
+    var namesOf = function (list) { return list.map(function (s) { return esc(s.name); }).join(" & "); };
 
     var consensusList = consensusOrder.map(function (itemIdx, pos) {
       return (
@@ -279,9 +286,13 @@
       );
     }).join("");
 
-    var playerRows = scored.map(function (s, i) {
-      var tag = !split ? "" : (i === 0 ? "👑" : (i === scored.length - 1 ? (settings.drinking ? "🍺" : "💀") : ""));
-      var cls = !split ? "" : (i === 0 ? " ri-prow--win" : (i === scored.length - 1 ? " ri-prow--lose" : ""));
+    var playerRows = scored.map(function (s) {
+      // Tag by drift value, not index, so every player tied for best/worst is
+      // crowned/flagged together instead of only the first or last in sort order.
+      var isWin = split && s.drift === winner.drift;
+      var isLose = split && s.drift === loser.drift;
+      var tag = isWin ? "👑" : (isLose ? (settings.drinking ? "🍺" : "💀") : "");
+      var cls = isWin ? " ri-prow--win" : (isLose ? " ri-prow--lose" : "");
       return (
         '<li class="ri-prow' + cls + '">' +
         '<span class="ri-prow__name">' + tag + " " + esc(s.name) + "</span>" +
@@ -290,12 +301,14 @@
       );
     }).join("");
 
-    var verdict = !split
+    var verdict = allSame
       ? '<p class="result-sub">' + t("A perfect match — the whole table agrees! 🤝") + "</p>"
-      : '<p class="result-sub">👑 <strong>' + esc(winner.name) + "</strong> " + t("is the most in sync.") + "<br/>" +
+      : driftTie
+      ? '<p class="result-sub">' + t("Dead heat — everyone drifted the same amount, just differently. 🤷") + "</p>"
+      : '<p class="result-sub">👑 <strong>' + namesOf(winners) + "</strong> " + t("is the most in sync.") + "<br/>" +
         (settings.drinking
-          ? "🍺 <strong>" + esc(loser.name) + "</strong> " + t("drifted furthest — drink!")
-          : "💀 <strong>" + esc(loser.name) + "</strong> " + t("drifted furthest.")) + "</p>";
+          ? "🍺 <strong>" + namesOf(losers) + "</strong> " + t("drifted furthest — drink!")
+          : "💀 <strong>" + namesOf(losers) + "</strong> " + t("drifted furthest.")) + "</p>";
 
     els.innerHTML =
       '<section class="screen ri-reveal">' +

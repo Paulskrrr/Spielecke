@@ -205,6 +205,7 @@
     "nailed it!": "perfekt getroffen!",
     "was furthest — drink!": "lag am weitesten daneben — trinken!",
     "was furthest off.": "lag am weitesten daneben.",
+    "Dead heat — everyone was equally off. 🤷": "Unentschieden — alle lagen gleich weit daneben. 🤷",
 
     // ── Princess ───────────────────────────────────────────────────────────
     "For the girls": "Für die Mädels",
@@ -340,6 +341,7 @@
     "Players ({n}): {names}": "Spieler ({n}): {names}",
     "The group has spoken": "Der Schwarm hat entschieden",
     "A perfect match — the whole table agrees! 🤝": "Perfekte Übereinstimmung — der ganze Tisch ist sich einig! 🤝",
+    "Dead heat — everyone drifted the same amount, just differently. 🤷": "Unentschieden — alle wichen gleich weit ab, nur anders. 🤷",
     "is the most in sync.": "liegt am nächsten am Schwarm.",
     "drifted furthest — drink!": "wich am weitesten ab — trinken!",
     "drifted furthest.": "wich am weitesten ab.",
