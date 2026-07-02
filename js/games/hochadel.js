@@ -141,6 +141,7 @@
       uidSeq: 1,
       draw: buildDeck(edition),
       discard: [],
+      pendingExtraDraws: 0, // remaining forced draws that don't advance the turn (effect: "extraTurn")
     };
   }
 
@@ -152,6 +153,7 @@
     saved.active = saved.active || [];
     if (saved.dir !== 1 && saved.dir !== -1) saved.dir = 1;
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
+    if (typeof saved.pendingExtraDraws !== "number" || saved.pendingExtraDraws < 0) saved.pendingExtraDraws = 0;
     if (typeof saved.turnIndex !== "number" || saved.turnIndex >= saved.order.length) saved.turnIndex = 0;
     if (saved.draw.length === 0 && saved.discard.length === 0) saved.draw = buildDeck(saved.edition);
     return saved;
@@ -511,6 +513,12 @@
   function resolveCard(card, filledText) {
     if (filledText == null) filledText = fillName(card.text);
     if (card.effect === "reverse") game.dir = -game.dir;
+    // "Dreifacher Zug" et al: the drawer stays at turn for N more draws. Adding
+    // to any streak already in progress lets a second copy drawn mid-streak
+    // extend it rather than overwrite it.
+    if (card.effect === "extraTurn") {
+      game.pendingExtraDraws = (game.pendingExtraDraws || 0) + (card.extraDraws || 0);
+    }
     if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
@@ -527,7 +535,16 @@
         holder: cur ? cur.name : "—",
       });
     }
-    nextTurn();
+    // A card resolved while a streak is pending (including this one, the
+    // instant it grants the streak) keeps the same player at turn instead of
+    // advancing — so fillName()/{P}, the Hofgesetz "by", and the Trump
+    // "holder" all correctly stay attributed to the drawer for every forced
+    // draw, not just the first.
+    if (game.pendingExtraDraws > 0) {
+      game.pendingExtraDraws--;
+    } else {
+      nextTurn();
+    }
     saveState();
     renderTable();
   }
