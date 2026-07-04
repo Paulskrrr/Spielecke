@@ -21,6 +21,8 @@
     "Edit": "Bearbeiten",
     "This game failed to load.": "Spiel konnte nicht geladen werden.",
     "← Back to shelf": "← Zur Spielecke",
+    "Games didn't load — this is usually a hiccup fetching the page. Reload to try again.": "Die Spiele wurden nicht geladen — meist nur ein Aussetzer beim Laden der Seite. Lade neu, um es erneut zu versuchen.",
+    "Reload 🔄": "Neu laden 🔄",
 
     // ── Roster ─────────────────────────────────────────────────────────────
     "Players": "Spieler",

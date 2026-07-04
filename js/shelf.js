@@ -43,10 +43,24 @@
       '  <span class="game-card__name">Coming soon</span>' +
       "</button>";
 
+    // If the registry came up empty, none of the game scripts loaded — surface
+    // that (with a reload) rather than silently showing just the Coming Soon
+    // tile, which reads as "there's only one game" instead of "something broke".
+    var loadWarn = games.length === 0
+      ? '<div class="shelf-warn">' +
+        '  <p>' + t("Games didn't load — this is usually a hiccup fetching the page. Reload to try again.") + "</p>" +
+        '  <button id="shelf-reload" class="btn btn-primary">' + t("Reload 🔄") + "</button>" +
+        "</div>"
+      : "";
+
     container.innerHTML =
       '<section class="screen shelf-screen">' +
+      loadWarn +
       '  <div class="game-grid">' + cards + soonTile + "</div>" +
       "</section>";
+
+    var reload = container.querySelector("#shelf-reload");
+    if (reload) reload.addEventListener("click", function () { global.location.reload(); });
 
     container.querySelectorAll(".game-card").forEach(function (el) {
       el.addEventListener("click", function () {
