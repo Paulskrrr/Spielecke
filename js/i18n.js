@@ -39,7 +39,7 @@
     "🍻 drink mode": "🍻 Trinkspiel",
 
     // ── Game names & taglines ──────────────────────────────────────────────
-    "The Bomb": "Die Bombe",
+    "Hot Potato": "Heiße Kartoffel",
     "Name it fast, pass it faster. Don't be holding it when it blows.": "Schnell benennen, schnell weitergeben. Wer sie hält, verliert.",
     "Who Am I?": "Wer bin ich?",
     "Phone on your forehead. They shout, you guess. Beat the clock.": "Handy auf die Stirn. Die anderen rufen, du rätst.",
@@ -157,6 +157,27 @@
     "got away with it — imposters win!": "kamen davon — Imposter gewinnen!",
     "Did the table catch them?": "Erwischt?",
     "Did the table catch them all?": "Alle erwischt?",
+
+    // ── Imposter · Timer mode (Zeitzünder) ─────────────────────────────────
+    "Mode": "Modus",
+    "🕵️ Words": "🕵️ Wörter",
+    "⏱️ Timer": "⏱️ Zeitzünder",
+    "No clock is ever shown. Everyone but the imposter secretly sees a target of 1–15 seconds, then each player buzzes when they think that long has passed. Closest wins — the imposter is just guessing.": "Keine Uhr ist je zu sehen. Alle außer dem Imposter sehen heimlich eine Zielzeit von 1–15 Sekunden, dann drückt jeder den Buzzer, wenn er glaubt, dass so viel Zeit vergangen ist. Am nächsten dran gewinnt — der Imposter rät nur.",
+    "Deal & buzz 🔔": "Austeilen & buzzern 🔔",
+    "You don't know the time — buzz on instinct.": "Du kennst die Zeit nicht — buzzer nach Gefühl.",
+    "Count exactly": "Zähl genau",
+    "second": "Sekunde",
+    "seconds": "Sekunden",
+    "No clock will show — count it in your head.": "Keine Uhr — zähl im Kopf mit.",
+    "Got it — to the buzzer 🔔": "Verstanden — zum Buzzer 🔔",
+    "Tap to start, then hit the buzzer when the time feels up.": "Tippe zum Starten, dann buzzer, wenn die Zeit gefühlt um ist.",
+    "START ⏱️": "START ⏱️",
+    "BUZZ! 🔔": "BUZZER! 🔔",
+    "Counting… no peeking at a clock!": "Es läuft… keine Uhr angucken!",
+    "🔔 Everyone buzzed": "🔔 Alle haben gebuzzert",
+    "Who looked like they had no idea how long to wait? Talk it out and pick your imposter — then reveal how close everyone landed.": "Wer wirkte, als hätte er keine Ahnung, wie lange zu warten? Diskutiert und tippt euren Imposter — dann zeigt, wie nah alle dran waren.",
+    "Reveal the ranking 🎯": "Rangliste zeigen 🎯",
+    "The time was {n}s": "Die Zeit war {n}s",
 
     // ── Wavelength ─────────────────────────────────────────────────────────
     "Spectrum pool": "Spektrum-Kategorie",
@@ -362,8 +383,8 @@
     "them all": "alle",
     "them": "ihn/sie",
     "Go round the table. Each person says <strong>one word</strong> hinting at the secret. The imposter is faking it. After a round or two, <strong>vote</strong> on who the faker is.": "Geht reihum. Jeder sagt <strong>ein Wort</strong>, das auf das geheime Wort anspielt. Der Imposter tut nur so. Nach ein, zwei Runden <strong>stimmt ab</strong>, wer der Faker ist.",
-    // The Bomb
-    "⚠ The Bomb is best with {n}+ players. Add more from the header.": "⚠ Die Bombe ist am besten mit {n}+ Spielern. Oben (👥) mehr hinzufügen.",
+    // Hot Potato
+    "⚠ Hot Potato is best with {n}+ players. Add more from the header.": "⚠ Heiße Kartoffel ist am besten mit {n}+ Spielern. Oben (👥) mehr hinzufügen.",
     "Name something. Anything. Go!": "Nenn irgendwas. Egal was. Los!",
     // Wavelength
     "One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.": "Ein Spieler sieht einen versteckten Punkt auf dem Dial und gibt einen Ein-Satz-Tipp zwischen den beiden Enden. Alle anderen schieben den Regler zu ihrem Tipp. Volltreffer = Ruhm, voll daneben = saufen.",

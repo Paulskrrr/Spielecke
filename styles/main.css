@@ -554,6 +554,128 @@ body::before {
 
 .imposter-talk p { font-size: 1.1rem; line-height: 1.5; }
 
+/* ----- Imposter · Timer mode (Zeitzünder) ------------------------------- */
+
+/* The seconds unit rides small beside the big number on role card + reveal. */
+.role-big .tz-unit,
+.tz-target-title .tz-unit {
+  font-size: 0.42em;
+  font-weight: 800;
+  margin-left: 6px;
+  opacity: 0.85;
+}
+.tz-explain { line-height: 1.5; }
+
+/* Buzzer screen: one big round button that starts on the first tap and locks
+   the elapsed time on the second — no clock is ever shown between them. */
+.tz-buzz { text-align: center; padding-top: 3vh; }
+.tz-buzzer {
+  display: block;
+  width: min(72vw, 260px);
+  height: min(72vw, 260px);
+  margin: 22px auto 10px;
+  border: 6px solid var(--ink);
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+  font-family: inherit;
+  font-size: clamp(1.4rem, 7vw, 2rem);
+  font-weight: 900;
+  box-shadow: var(--pop-lg);
+  cursor: pointer;
+  transition: transform .08s ease, background .15s ease;
+}
+.tz-buzzer:active { transform: translateY(4px) scale(0.98); box-shadow: 0 3px 0 var(--ink); }
+.tz-buzzer.is-live { background: var(--red); animation: tz-pulse 0.9s ease-in-out infinite; }
+@keyframes tz-pulse {
+  0%, 100% { box-shadow: var(--pop-lg); }
+  50% { box-shadow: 0 8px 0 var(--ink), 0 0 0 12px rgba(255, 77, 94, 0.22); }
+}
+.tz-buzz-hint { min-height: 1.4em; font-weight: 800; color: var(--ink-soft); }
+
+/* Reveal: a timeline with the hidden target marked and every buzz pinned. */
+.tz-reveal { text-align: center; }
+.tz-target-title { font-size: clamp(2.6rem, 16vw, 5rem); }
+.tz-track {
+  position: relative;
+  height: 92px;
+  margin: 28px 6px 8px;
+  border: 4px solid var(--ink);
+  border-radius: 16px;
+  background-color: var(--paper-2);
+  background-image: repeating-linear-gradient(90deg, rgba(36, 27, 77, 0.07) 0 1px, transparent 1px 10%);
+  box-shadow: var(--pop);
+  cursor: pointer;
+}
+.tz-target {
+  position: absolute;
+  top: -6px; bottom: -6px;
+  left: var(--pos);
+  width: 4px;
+  margin-left: -2px;
+  background: var(--ink);
+  border-radius: 2px;
+}
+.tz-target-flag {
+  position: absolute;
+  top: -26px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.3rem;
+}
+.tz-pin {
+  position: absolute;
+  top: 50%; left: var(--pos);
+  width: 20px; height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: var(--pop);
+  opacity: 0;
+  transform: scale(0.4);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.tz-pin.is-in { opacity: 1; transform: scale(1); }
+.tz-pin--imp { background: var(--orange); }
+.tz-pin--win { background: var(--green); width: 24px; height: 24px; margin: -12px 0 0 -12px; z-index: 2; }
+.tz-scale {
+  position: absolute;
+  left: 8px; right: 8px; bottom: -22px;
+  display: flex; justify-content: space-between;
+  font-size: 0.8rem; font-weight: 800; color: var(--ink-soft);
+}
+
+/* Leaderboard, drips in furthest-off → closest. */
+.tz-board { list-style: none; margin: 32px 0 8px; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.tz-row {
+  display: grid;
+  grid-template-columns: 2.2rem 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: var(--paper-2);
+  box-shadow: var(--pop);
+  text-align: left;
+  opacity: 0;
+  transform: translateX(-10px);
+  transition: opacity .3s ease, transform .3s ease;
+}
+.tz-row.is-in { opacity: 1; transform: translateX(0); }
+.tz-row--win { background: var(--green); }
+.tz-row--imp { border-style: dashed; }
+.tz-medal { font-size: 1.2rem; font-weight: 900; text-align: center; }
+.tz-name { font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tz-mask { font-size: 0.95em; }
+.tz-time { font-weight: 900; font-variant-numeric: tabular-nums; }
+.tz-diff { font-weight: 800; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.tz-row--win .tz-diff { color: var(--ink); }
+
+.tz-actions { opacity: 0; transition: opacity .4s ease; }
+.tz-actions.is-in { opacity: 1; }
+.tz-impline { margin-top: -6px; }
+
 /* ----- Wavelength ------------------------------------------------------- */
 
 .wl-handover, .wl-reveal, .wl-guess { text-align: center; }

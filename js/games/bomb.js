@@ -44,7 +44,7 @@
   var module = {
     meta: {
       id: "bomb",
-      name: "The Bomb",
+      name: "Hot Potato",
       tagline: "Name it fast, pass it faster. Don't be holding it when it blows.",
       icon: "💣",
       minPlayers: 2,
@@ -101,7 +101,7 @@
     var warn =
       playerCount > 0 && playerCount < module.meta.minPlayers
         ? '<div class="roster-warn" style="display:block">' +
-          t("⚠ The Bomb is best with {n}+ players. Add more from the header.").replace(
+          t("⚠ Hot Potato is best with {n}+ players. Add more from the header.").replace(
             "{n}",
             module.meta.minPlayers
           ) +
@@ -110,7 +110,7 @@
 
     els.innerHTML =
       '<section class="screen bomb-setup">' +
-      '  <h2 class="screen-title neon">💣 ' + t("The Bomb") + "</h2>" +
+      '  <h2 class="screen-title neon">💣 ' + t("Hot Potato") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       warn +
       '  <h3 class="bomb-sub">' + t("Category pool") + "</h3>" +
