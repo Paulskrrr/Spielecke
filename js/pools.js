@@ -2,7 +2,7 @@
  * pools.js — shared category-pool selection (multi-select) + draw-time guard
  *
  * Every content game (Never Have I Ever, Most Likely To, Imposter, Who Am I?,
- * Doodle, Wavelength, Liar's Numbers, Truth, Princess, Rank It, The Bomb) lets
+ * Doodle, Wavelength, Liar's Numbers, Truth, Princess, Rank It, Hot Potato) lets
  * you pick which category pools are in play. This used to be single-select with
  * a "Mixed" chip; now pools toggle on/off so several can be active at once.
  *

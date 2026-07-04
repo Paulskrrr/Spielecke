@@ -95,7 +95,7 @@
     "wins!": "gewinnt!",
     " wins!": " gewinnt!",
 
-    // ── Bomb ───────────────────────────────────────────────────────────────
+    // ── Hot Potato ───────────────────────────────────────────────────────────────
     "Category pool": "Kategorien",
     "⏱️ The fuse is random — and hidden from everyone.": "⏱️ Die Zündschnur ist zufällig — für alle verborgen.",
     "🔊 Ticking & explosion sound": "🔊 Ticken & Explosion",

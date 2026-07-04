@@ -27,7 +27,7 @@
   }
 
   var GAMES = [
-    entry(Games.bomb),
+    entry(Games.hotpotato),
     entry(Games.mostlikely),
     entry(Games.nhie),
     entry(Games.whoami),

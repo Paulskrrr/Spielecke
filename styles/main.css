@@ -165,7 +165,7 @@ body::before {
 }
 
 .screen-title { font-size: 1.9rem; font-weight: 800; margin: 4px 0 12px; }
-.sub, .bomb-sub {
+.sub, .hp-sub {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -422,8 +422,8 @@ body::before {
   border-radius: 16px;
 }
 
-.bomb-play { display: flex; flex-direction: column; min-height: 70vh; text-align: center; }
-.bomb-status {
+.hp-play { display: flex; flex-direction: column; min-height: 70vh; text-align: center; }
+.hp-status {
   font-weight: 800;
   color: var(--red);
   font-size: 1.1rem;
@@ -431,8 +431,8 @@ body::before {
 }
 @keyframes wiggle { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
 
-.bomb-prompt-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 8px; }
-.bomb-prompt { font-size: clamp(1.9rem, 8vw, 3.4rem); font-weight: 800; line-height: 1.15; }
+.hp-prompt-wrap { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px 8px; }
+.hp-prompt { font-size: clamp(1.9rem, 8vw, 3.4rem); font-weight: 800; line-height: 1.15; }
 
 .btn-pass {
   width: 100%;
@@ -453,7 +453,7 @@ body::before {
   0% { transform: scale(1); } 50% { transform: scale(0.96); filter: brightness(1.2); } 100% { transform: scale(1); }
 }
 
-.bomb-boom { text-align: center; padding-top: 5vh; }
+.hp-boom { text-align: center; padding-top: 5vh; }
 .boom-flash { font-size: clamp(5rem, 30vw, 12rem); line-height: 1; animation: boom 0.5s ease-out; }
 @keyframes boom {
   0% { transform: scale(0.2) rotate(-12deg); opacity: 0; }

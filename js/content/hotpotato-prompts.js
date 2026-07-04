@@ -1,5 +1,5 @@
 /*
- * content/bomb-prompts.js — content for The Bomb (spec §2.3)
+ * content/hotpotato-prompts.js — content for Hot Potato (spec §2.3)
  *
  * EDIT ME. Pure content, no game logic. These are CATEGORY PROMPTS (a different
  * shape from the shared single-term database in terms.js) — each is a topic the
@@ -13,7 +13,7 @@
 (function (global) {
   "use strict";
 
-  var BOMB_CATEGORIES = {
+  var HOT_POTATO_CATEGORIES = {
     de: {
       football: {
         label: "⚽ Fußball",
@@ -201,5 +201,5 @@
   };
 
   global.Spielecke = global.Spielecke || {};
-  global.Spielecke.BombCategories = BOMB_CATEGORIES;
+  global.Spielecke.HotPotatoCategories = HOT_POTATO_CATEGORIES;
 })(window);

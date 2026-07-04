@@ -22,7 +22,7 @@
  * English words are translated. Common-word pools (general, party, nsfw,
  * doodle_hard) have their terms translated to natural German.
  *
- * (The Bomb and Wavelength use different content shapes — prompts and opposite
+ * (Hot Potato and Wavelength use different content shapes — prompts and opposite
  * pairs — so they keep their own files.)
  */
 (function (global) {
