@@ -97,7 +97,7 @@
       '<section class="screen mx-turn mx-hub">' +
       '  <div class="mx-stage">' +
       '    <div id="mx-hat" class="mx-hat" role="button" aria-label="' + attr(t("Roll the dice")) + '" data-primary>🎩</div>' +
-      '    <div class="mx-tap-hint">' + t("Tap the hat to roll — keep the screen to yourself") + "</div>" +
+      '    <div class="tap-hint mx-tap-hint">' + t("Tap the hat to roll — keep the screen to yourself") + "</div>" +
       "  </div>" +
       '  <div class="mx-hub__foot">' +
       (underHat
@@ -114,6 +114,7 @@
   function rollDice() {
     var hat = els.querySelector("#mx-hat");
     if (!hat || hat.classList.contains("mx-hat--shaking")) return;
+    clearTimer(); // never leave a stale reveal timer pending under a fresh roll
     hat.classList.add("mx-hat--shaking");
     var roll = { a: 1 + Math.floor(Math.random() * 6), b: 1 + Math.floor(Math.random() * 6) };
     timer = global.setTimeout(function () { renderRoll(roll); }, SHAKE_MS);
@@ -137,6 +138,10 @@
 
   function doReveal() {
     var hat = els.querySelector("#mx-hat");
+    // A roll is already mid-shake with its own timer pending — lifting now
+    // would leave THAT timer orphaned to fire later and stomp this reveal.
+    if (hat && hat.classList.contains("mx-hat--shaking")) return;
+    clearTimer();
     if (hat) hat.classList.add("mx-hat--lift");
     timer = global.setTimeout(renderReveal, LIFT_MS);
   }

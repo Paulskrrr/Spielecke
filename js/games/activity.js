@@ -39,6 +39,10 @@
   var drinking = false;
   // drawing board (for "draw" fields)
   var canvas = null, cctx = null, drawing = false, lastX = 0, lastY = 0, drawFrozen = false;
+  // One no-repeat bag per point tier (2/3/4) — words are picked with
+  // replacement otherwise, so the same word can (and often does) show up
+  // more than once in a single game.
+  var wordBags = {};
 
   var module = {
     meta: {
@@ -52,9 +56,14 @@
     mount: function (container, context) {
       els = container; ctx = context;
       drinking = context.store.get("drinking", false) === true;
+      // Whitelist against FIGURES rather than escaping at each of the ~10
+      // places these render raw — a hand-edited/corrupted localStorage value
+      // otherwise reaches innerHTML unescaped (the only raw store round-trip
+      // in the app). Every other mutation path (cycleFigure) already only
+      // ever assigns a FIGURES value, so this one gate covers all of them.
       teams = [
-        { figure: context.store.get("fig0", FIGURES[0]), color: "blue", pos: 0 },
-        { figure: context.store.get("fig1", FIGURES[1]), color: "red", pos: 0 },
+        { figure: validFigure(context.store.get("fig0", FIGURES[0]), FIGURES[0]), color: "blue", pos: 0 },
+        { figure: validFigure(context.store.get("fig1", FIGURES[1]), FIGURES[1]), color: "red", pos: 0 },
       ];
       assign = context.store.get("teamAssign", {}) || {};
       renderSetup();
@@ -63,7 +72,7 @@
       stopTimer();
       teardownCanvas();
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; teams = null; board = []; assign = null;
+      ctx = null; teams = null; board = []; assign = null; wordBags = {};
     },
   };
 
@@ -119,7 +128,7 @@
     var team = teams[i];
     return (
       '<div class="act-team act-team--' + team.color + '">' +
-      '  <button id="act-fig' + i + '" class="act-figure" aria-label="Change figure">' + team.figure + "</button>" +
+      '  <button id="act-fig' + i + '" class="act-figure" aria-label="' + esc(t("Change figure")) + '">' + team.figure + "</button>" +
       '  <div class="act-team__name">' + t(i === 0 ? "Team A" : "Team B") + "</div>" +
       (members && members.length
         ? '<div class="act-team__members">' + esc(members.map(function (p) { return p.name; }).join(", ")) + "</div>"
@@ -150,6 +159,10 @@
       '<span class="act-legend__item act-' + type + '">' +
       info.icon + " " + t(info.label) + "</span>"
     );
+  }
+
+  function validFigure(f, fallback) {
+    return FIGURES.indexOf(f) !== -1 ? f : fallback;
   }
 
   function cycleFigure(i) {
@@ -307,7 +320,7 @@
       remaining--;
       var el = els && els.querySelector("#act-time");
       if (el) {
-        if (remaining <= 0) { el.textContent = "⏰ TIME!"; el.classList.add("hud-time--danger"); }
+        if (remaining <= 0) { el.textContent = t("⏰ TIME!"); el.classList.add("hud-time--danger"); }
         else { el.textContent = remaining + "s"; if (remaining <= 10) el.classList.add("hud-time--danger"); }
       }
       if (remaining <= 0) { stopTimer(); if (onZero) onZero(); }
@@ -445,10 +458,14 @@
 
   // --- Helpers -------------------------------------------------------------
   function pickWord(p) {
-    var pools = global.Spielecke.L(global.Spielecke.ActivityWords) || {};
-    var tier = pools[p] || pools[2] || { words: ["Beer"] };
-    var words = tier.words || ["Beer"];
-    return words[Math.floor(Math.random() * words.length)];
+    if (!wordBags[p]) {
+      wordBags[p] = global.Spielecke.drawBag(function () {
+        var pools = global.Spielecke.L(global.Spielecke.ActivityWords) || {};
+        var tier = pools[p] || pools[2] || { words: ["Beer"] };
+        return tier.words || ["Beer"];
+      });
+    }
+    return wordBags[p].next("Beer");
   }
   function stopTimer() {
     if (timer !== null) { global.clearInterval(timer); timer = null; }

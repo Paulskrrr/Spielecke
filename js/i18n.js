@@ -21,6 +21,7 @@
     "Edit": "Bearbeiten",
     "This game failed to load.": "Spiel konnte nicht geladen werden.",
     "← Back to shelf": "← Zur Spielecke",
+    "Leave this game? The round will be lost.": "Spiel verlassen? Die Runde geht verloren.",
 
     // ── Roster ─────────────────────────────────────────────────────────────
     "Players": "Spieler",
@@ -33,7 +34,6 @@
     "No players yet.": "Noch keine Spieler.",
     "Done": "Fertig",
     "Language": "Sprache",
-    "⚠ Most games are better with {n}+ players.": "⚠ Die meisten Spiele sind besser mit {n}+ Spielern.",
 
     // ── Shelf ──────────────────────────────────────────────────────────────
     "🍻 drink mode": "🍻 Trinkspiel",
@@ -73,13 +73,11 @@
     "Everyone ranks the same five. Drift from the group and you lose.": "Alle ranken dieselben fünf. Wer vom Schwarm abweicht, verliert.",
 
     // ── Common ─────────────────────────────────────────────────────────────
-    "Back to shelf": "Zur Spielecke",
     "Change settings": "Einstellungen",
     "Next round 🔁": "Nächste Runde 🔁",
     "Next player ▶️": "Nächster Spieler ▶️",
     "New round 🔁": "Neue Runde 🔁",
     "Start ▶️": "Start ▶️",
-    "Next ▶️": "Weiter ▶️",
     "👆 Tap for the next": "👆 Tippen für die nächste",
     "👆 Tap to spin": "👆 Tippen zum Drehen",
     "👆 Tap to spin again": "👆 Tippen zum erneut Drehen",
@@ -87,7 +85,6 @@
     "Category": "Kategorie",
     "Categories": "Kategorien",
     "🎯 Mixed": "🎯 Gemischt",
-    "🎯 Mixed (all)": "🎯 Gemischt",
     "Change pool": "Kategorie wechseln",
     "🍻 Drinking mode": "🍻 Trinkspiel",
     "🍻 Drinking mode (wrong = drink too)": "🍻 Trinkspiel (Falsch = trinken)",
@@ -153,6 +150,7 @@
     "🤡 Fooled!": "🤡 Reingelegt!",
     "The table wins — ": "Der Tisch gewinnt — ",
     "got busted!": "wurde erwischt!",
+    "got busted, all of them!": "wurden erwischt!",
     "got away with it — imposter wins!": "kam davon — Imposter gewinnt!",
     "got away with it — imposters win!": "kamen davon — Imposter gewinnen!",
     "Did the table catch them?": "Erwischt?",
@@ -161,8 +159,6 @@
     // ── Wavelength ─────────────────────────────────────────────────────────
     "Spectrum pool": "Spektrum-Kategorie",
     "Start round 🎯": "Runde starten 🎯",
-    "Clue-giver only": "Nur für den Tipp-Geber",
-    "Show me the target 🎯": "Zeig mir das Ziel 🎯",
     "{name} sets the wavelength": "{name} gibt die Wavelength vor",
     "I'm {name} — show the target 🎯": "Ich bin {name} — Ziel zeigen 🎯",
     "Read the clue, then place your line where you think the target is.": "Lies den Tipp und platzier deine Linie da, wo du das Ziel vermutest.",
@@ -171,19 +167,9 @@
     "The clue": "Der Tipp",
     "{name}'s clue": "Tipp von {name}",
     "Hide & let them guess 🤐": "Verstecken & raten lassen 🤐",
-    "Where is it?": "Wo ist es?",
     "On the wavelength": "Auf einer Wellenlänge",
     "landed closest!": "war am nächsten dran!",
     "Lock it in 🔒": "Festlegen 🔒",
-    "BULLSEYE!": "VOLLTREFFER!",
-    "So close!": "Fast!",
-    "On the board!": "Auf dem Brett!",
-    "Way off!": "Danebengegriffen!",
-    "The clue-giver's a legend — ": "Der Tipgeber ist eine Legende — ",
-    "Great read — ": "Starke Einschätzung — ",
-    "Decent reading — ": "Gute Einschätzung — ",
-    "Total miss — ": "Komplett daneben — ",
-    " points!": " Punkte!",
     " points.": " Punkte.",
 
     // ── NHIE ───────────────────────────────────────────────────────────────
@@ -205,6 +191,7 @@
     "nailed it!": "perfekt getroffen!",
     "was furthest — drink!": "lag am weitesten daneben — trinken!",
     "was furthest off.": "lag am weitesten daneben.",
+    "Dead heat — everyone was equally off. 🤷": "Unentschieden — alle lagen gleich weit daneben. 🤷",
 
     // ── Princess ───────────────────────────────────────────────────────────
     "For the girls": "Für die Mädels",
@@ -227,6 +214,7 @@
     "What is this?": "Was ist das?",
     "Your guess…": "Dein Tipp…",
     "Lock guess 🔒": "Tipp abschicken 🔒",
+    "(no idea)": "(keine Ahnung)",
     "⚠ Needs at least {n} players. Add them from the header (👥).": "⚠ Mindestens {n} Spieler nötig. Oben (👥) hinzufügen.",
     "{name} drew:": "{name} zeichnete:",
     "{name} guessed:": "{name} erriet:",
@@ -241,6 +229,8 @@
     "The gallery 🖼️": "Die Galerie 🖼️",
 
     // ── Activity ───────────────────────────────────────────────────────────
+    "Change figure": "Figur wechseln",
+    "⏰ TIME!": "⏰ ZEIT UM!",
     "Explain": "Erklären",
     "Draw": "Zeichnen",
     "Charade": "Pantomime",
@@ -279,8 +269,6 @@
     "Correct!": "Richtig!",
     "Wrong!": "Falsch!",
     "Safe — well played.": "Sicher — gut gespielt.",
-    "Answer: {answer}. −1 heart.": "Antwort: {answer}. −1 Herz.",
-    "Answer: {answer}. 💀 {name} is out!": "Antwort: {answer}. 💀 {name} ist raus!",
     " is OUT!": " ist RAUS!",
     "Last one standing — quiz champion!": "Letzter Überlebender — Quiz-Champion!",
     "Everyone's out!": "Alle sind raus!",
@@ -299,8 +287,6 @@
     "Answer honestly!": "Ehrlich antworten!",
 
     // ── Chooser ────────────────────────────────────────────────────────────
-    "SPIN 🎯": "DREHEN 🎯",
-    "SPIN AGAIN 🎯": "NOCHMAL DREHEN 🎯",
     "⚠ Add some players from the header (👥) to spin.": "⚠ Füge oben Spieler hinzu (👥).",
 
     // ── Reaction Duel ──────────────────────────────────────────────────────
@@ -329,6 +315,10 @@
     "✋ STOP": "✋ STOP",
     "almost…": "fast…",
     "NOW? 👀": "JETZT? 👀",
+    "TAP! ⚡": "TIPPEN! ⚡",
+    "Left": "Links",
+    "Right": "Rechts",
+    "Took the duel {a}–{b}": "Duell gewonnen {a}–{b}",
 
     // ── Rank It ────────────────────────────────────────────────────────────
     "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
@@ -340,6 +330,7 @@
     "Players ({n}): {names}": "Spieler ({n}): {names}",
     "The group has spoken": "Der Schwarm hat entschieden",
     "A perfect match — the whole table agrees! 🤝": "Perfekte Übereinstimmung — der ganze Tisch ist sich einig! 🤝",
+    "Dead heat — everyone drifted the same amount, just differently. 🤷": "Unentschieden — alle wichen gleich weit ab, nur anders. 🤷",
     "is the most in sync.": "liegt am nächsten am Schwarm.",
     "drifted furthest — drink!": "wich am weitesten ab — trinken!",
     "drifted furthest.": "wich am weitesten ab.",
@@ -366,10 +357,8 @@
     "⚠ The Bomb is best with {n}+ players. Add more from the header.": "⚠ Die Bombe ist am besten mit {n}+ Spielern. Oben (👥) mehr hinzufügen.",
     "Name something. Anything. Go!": "Nenn irgendwas. Egal was. Los!",
     // Wavelength
-    "One player sees a hidden spot on the dial and gives a one-line clue between the two ends. Everyone else slides to their guess. Closest = glory, way off = drinks.": "Ein Spieler sieht einen versteckten Punkt auf dem Dial und gibt einen Ein-Satz-Tipp zwischen den beiden Enden. Alle anderen schieben den Regler zu ihrem Tipp. Volltreffer = Ruhm, voll daneben = saufen.",
     "One player is picked to set the wavelength and write a clue. Everyone else then places their line one by one. Closest to the hidden target wins the round.": "Ein Spieler wird ausgelost, gibt die Wavelength vor und schreibt einen Tipp. Alle anderen platzieren danach nacheinander ihre Linie. Wer am nächsten am versteckten Ziel ist, gewinnt die Runde.",
     "Pass the phone to {name}. Everyone else: look away while they peek at the target and write the clue.": "Gib das Handy an {name}. Alle anderen: wegschauen, während er/sie das Ziel ansieht und den Tipp schreibt.",
-    "Everyone else: look away! One person picks up the phone to see the secret target.": "Alle anderen: weggucken! Einer schnappt sich das Handy, um das geheime Ziel zu sehen.",
     "Write a clue between the two ends that points right at the band — the others only see your clue, not the target.": "Schreib einen Tipp zwischen den beiden Enden, der genau auf das Band zeigt — die anderen sehen nur deinen Tipp, nicht das Ziel.",
     // Princess Treatment
     "Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.": "Jede Runde wechselt zwischen 👑 Prinzessin (für die Mädels) und 🤴 König (für die Jungs). Lest den Spruch vor, dann entscheidet der Tisch.",
@@ -395,6 +384,7 @@
     "Whoever drew it": "Wer sie gezogen hat",
 
     // ── Hochadel (English keys; German values) ─────────────────────────────
+    "The king speaks a wise word,": "Der König spricht ein weises Wort,",
     "Choose Edition": "Edition wählen",
     "The Rapunzel Edition is coming soon. 👸": "Die Rapunzel-Edition ist bald verfügbar. 👸",
     "Seating Order": "Sitzordnung",
@@ -419,10 +409,6 @@
     "Passive / Rule": "Passiv / Regel",
     "Trump": "Trumpf",
     "Mini-game": "Minispiel",
-    "Crimson": "Karmesin",
-    "Sapphire": "Saphir",
-    "Gold": "Gold",
-    "Purple": "Purpur",
     " draws …": " zieht …",
     "Done ✓": "Erledigt ✓",
     "Add as standing rule ✓": "Als Hofgesetz eintragen ✓",
@@ -499,7 +485,6 @@
     "than {r}": "als {r}",
     "Spot on!": "Volltreffer!",
     "It was": "Es war",
-    "Next card ▶️": "Nächste Karte ▶️",
     "Cards drawn": "Gezogene Karten",
     "No cards drawn yet — the pile builds up here.": "Noch keine Karten gezogen — hier wächst der Stapel.",
 
@@ -550,12 +535,29 @@
     "Pasch": "Pasch",
   };
 
+  // Cached after the first read so every t()/L() call — including ones inside
+  // hot loops like Horse Race's per-frame animation — doesn't round-trip
+  // through localStorage. setLang() keeps the cache and the store in sync.
+  var langCache;
+
+  // index.html hardcodes lang="en" as a static attribute, which is wrong the
+  // instant the app defaults to German — keep it honest here instead.
+  function applyDocLang(lang) {
+    try { global.document.documentElement.lang = lang; } catch (e) { /* ignore */ }
+  }
+
   function getLang() {
-    return global.Spielecke.Store.appGet(LANG_KEY, DEFAULT_LANG) || DEFAULT_LANG;
+    if (langCache === undefined) {
+      langCache = global.Spielecke.Store.appGet(LANG_KEY, DEFAULT_LANG) || DEFAULT_LANG;
+      applyDocLang(langCache);
+    }
+    return langCache;
   }
 
   function setLang(lang) {
-    global.Spielecke.Store.appSet(LANG_KEY, lang === "en" ? "en" : "de");
+    langCache = lang === "en" ? "en" : "de";
+    global.Spielecke.Store.appSet(LANG_KEY, langCache);
+    applyDocLang(langCache);
   }
 
   function t(key) {
@@ -582,4 +584,6 @@
   global.Spielecke.L = L;
   global.Spielecke.getLang = getLang;
   global.Spielecke.setLang = setLang;
+
+  getLang(); // resolve + apply the correct <html lang> as early as possible
 })(window);

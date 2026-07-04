@@ -103,7 +103,5 @@
     gameStore: gameStore,
     appGet: appGet,
     appSet: appSet,
-    // true when persistence is real (not the in-memory fallback)
-    isPersistent: !!backend,
   };
 })(window);

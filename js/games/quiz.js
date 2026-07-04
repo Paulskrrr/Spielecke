@@ -25,8 +25,16 @@
   var players = [];      // [{ name, lives }]
   var roundQueue = [];   // players still to act this round
   var round = -1;        // -> level index after beginRound()
-  var used = {};         // used question indices per level
   var currentPlayer = null, currentQ = null, currentOpts = null;
+  // One no-repeat draw bag per level index, plus a session-wide "already
+  // served" set. The bag alone isn't enough: shallow categories clamp to
+  // their hardest level and keep contributing the SAME array at every level
+  // number past their depth, so a per-level bag alone would still let two
+  // different level numbers independently re-draw a question the table
+  // already saw. Filtering each bag's build() against usedQuestions closes
+  // that gap; drawBag's own no-immediate-repeat guarantee handles the rest.
+  var levelBags = {};
+  var usedQuestions = [];
 
   var module = {
     meta: {
@@ -48,7 +56,8 @@
     },
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; players = []; roundQueue = []; used = {};
+      ctx = null; settings = null; players = []; roundQueue = [];
+      levelBags = {}; usedQuestions = [];
     },
   };
 
@@ -100,7 +109,8 @@
   function startGame(roster) {
     // Randomise turn order each game so it isn't the same rotation every time.
     players = shuffle(roster).map(function (p) { return { name: p.name, lives: settings.hearts }; });
-    roundQueue = []; round = -1; used = {};
+    roundQueue = []; round = -1;
+    levelBags = {}; usedQuestions = [];
     nextTurn();
   }
 
@@ -200,11 +210,11 @@
     if (chosen.correct) {
       renderFeedback(true, null);
     } else {
+      // Elimination just needs the life to hit 0 — active() (which drives
+      // both nextTurn()'s win check and beginRound()'s next queue) already
+      // filters on lives, and currentPlayer was already shift()'d off
+      // roundQueue in nextTurn(), so there's nothing left here to remove it from.
       currentPlayer.lives--;
-      // if eliminated, drop from this round's remaining queue
-      if (currentPlayer.lives <= 0) {
-        roundQueue = roundQueue.filter(function (p) { return p !== currentPlayer; });
-      }
       renderFeedback(false, correctText);
     }
   }
@@ -257,16 +267,24 @@
   }
 
   // --- Questions -----------------------------------------------------------
+  var FALLBACK_Q = { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
+
   function pickQuestion(level) {
-    var pool = levelPool(level);
-    if (!pool.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
-    var u = used[level] = used[level] || {};
-    var avail = [];
-    for (var i = 0; i < pool.length; i++) if (!u[i]) avail.push(i);
-    if (!avail.length) { used[level] = u = {}; for (var k = 0; k < pool.length; k++) avail.push(k); }
-    var pick = avail[Math.floor(Math.random() * avail.length)];
-    u[pick] = true;
-    return pool[pick];
+    if (!levelPool(level).length) return FALLBACK_Q;
+    if (!levelBags[level]) {
+      levelBags[level] = global.Spielecke.drawBag(function () {
+        var pool = levelPool(level);
+        var fresh = pool.filter(function (q) { return usedQuestions.indexOf(q) === -1; });
+        // Every question at this level has already been served (a deep
+        // session, or a shallow category clamped into an earlier level too)
+        // — fall back to the full pool rather than come up empty.
+        return fresh.length ? fresh : pool;
+      });
+    }
+    var picked = levelBags[level].next(null);
+    if (!picked) return FALLBACK_Q;
+    usedQuestions.push(picked);
+    return picked;
   }
 
   function shuffleOptions(q) {

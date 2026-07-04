@@ -218,7 +218,9 @@
     revealTimer = global.setTimeout(function () {
       revealTimer = null;
       if (!els) return;
-      if (correct === "tie" || correct === false) {
+      // judge() only ever returns "tie" when settings.tieWrong is OFF (the house
+      // rule says a tie must NOT count as wrong) — so a tie always advances.
+      if (correct === false) {
         fail();
       } else {
         step++;

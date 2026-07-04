@@ -9,8 +9,6 @@
  *   shuffle(arr)           -> in-place Fisher–Yates, returns arr
  *   value(card)            -> 2..14 rank value (A high) for comparisons
  *   colour(card)           -> "red" | "black"
- *   sameSuit(a,b) / sameRank(a,b)
- *   rankLabel(card)        -> "2".."10","J","Q","K","A"
  *   suitSymbol(card)       -> ♠ ♥ ♦ ♣
  *   faceHtml(card, opts)   -> a static card face (rank + suit, red/black)
  *   backHtml(opts)         -> a face-down card back
@@ -56,10 +54,6 @@
   }
   function colour(card) { return SUITS[card.suit].colour; }
   function suitSymbol(card) { return SUITS[card.suit].symbol; }
-  function suitLabel(suit) { return SUITS[suit].label; }
-  function rankLabel(card) { return card.rank; }
-  function sameSuit(a, b) { return a.suit === b.suit; }
-  function sameRank(a, b) { return a.rank === b.rank; }
 
   // --- Rendering -----------------------------------------------------------
 
@@ -113,10 +107,6 @@
     value: value,
     colour: colour,
     suitSymbol: suitSymbol,
-    suitLabel: suitLabel,
-    rankLabel: rankLabel,
-    sameSuit: sameSuit,
-    sameRank: sameRank,
     faceHtml: faceHtml,
     backHtml: backHtml,
     flipHtml: flipHtml,

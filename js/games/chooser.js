@@ -24,7 +24,7 @@
       tagline: "Spin the wheel. Let fate pick the victim.",
       icon: "🎡",
       minPlayers: 2,
-      supportsDrinking: true,
+      supportsDrinking: false, // "Not a drinking game" (see file header) — no toggle exists
     },
     mount: function (container, context) {
       els = container; ctx = context;

@@ -18,7 +18,8 @@
 
   var els = null, ctx = null, settings = null;
   var isPrincess = true;
-  var qPrincess = [], qKing = [];
+  var bagPrincess = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, pools(), "princess"); });
+  var bagKing = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, pools(), "king"); });
 
   var module = {
     meta: {
@@ -37,7 +38,7 @@
     },
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; qPrincess = []; qKing = [];
+      ctx = null; settings = null; bagPrincess.reset(); bagKing.reset();
     },
   };
 
@@ -57,7 +58,7 @@
     Pools().bind(els.querySelector("#pr-pools"), pools(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; Pools().save(ctx.store, v); },
-      function () { qPrincess = []; qKing = []; });
+      function () { bagPrincess.reset(); bagKing.reset(); });
     els.querySelector("#pr-start").addEventListener("click", renderCard);
   }
 
@@ -91,21 +92,8 @@
     renderCard();
   }
 
-  function buildQueue(gender) {
-    var field = gender ? "princess" : "king";
-    return shuffle(Pools().gather(settings.pools, pools(), field).slice());
-  }
   function nextPrompt(gender) {
-    var q = gender ? qPrincess : qKing;
-    if (!q.length) {
-      q = buildQueue(gender);
-      if (gender) qPrincess = q; else qKing = q;
-    }
-    return q.length ? q.pop() : t("Make one up!");
-  }
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
-    return a;
+    return (gender ? bagPrincess : bagKing).next(t("Make one up!"));
   }
   var esc = global.Spielecke.esc;
 

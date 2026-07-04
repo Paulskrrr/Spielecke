@@ -15,7 +15,8 @@
   function Pools() { return global.Spielecke.Pools; }
 
   var els = null, ctx = null, settings = null;
-  var queue = [], lastName = null;
+  var lastId = null;
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, pools(), "prompts"); });
 
   var module = {
     meta: {
@@ -36,7 +37,7 @@
     },
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; queue = []; lastName = null;
+      ctx = null; settings = null; bag.reset(); lastId = null;
     },
   };
 
@@ -56,12 +57,12 @@
     Pools().bind(els.querySelector("#tr-pools"), pools(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; Pools().save(ctx.store, v); },
-      function () { queue = []; });
+      function () { bag.reset(); });
     els.querySelector("#tr-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
     els.querySelector("#tr-start").addEventListener("click", function () {
-      queue = buildQueue(); renderCard();
+      bag.reset(); renderCard();
     });
   }
 
@@ -73,7 +74,7 @@
       '<section class="screen deck-card">' +
       '  <div class="deck-kicker">' + who + "</div>" +
       '  <div class="deck-tapwrap">' +
-      '    <div id="tr-card" class="deck-prompt" role="button" data-primary>' + esc(nextPrompt()) + "</div>" +
+      '    <div id="tr-card" class="deck-prompt" role="button" data-primary>' + esc(bag.next(t("Make one up!"))) + "</div>" +
       "  </div>" +
       '  <p class="deck-rule">' + (settings.drinking ? t("Answer honestly, or take a 🍺 drink to dodge.") : t("Answer honestly!")) + "</p>" +
       '  <div class="tap-hint">' + t("👆 Tap for the next") + "</div>" +
@@ -84,25 +85,16 @@
   function pickName() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
     if (!roster.length) return null;
-    if (roster.length === 1) return roster[0].name;
-    var name;
-    do { name = roster[Math.floor(Math.random() * roster.length)].name; }
-    while (name === lastName);
-    lastName = name;
-    return name;
+    if (roster.length === 1) { lastId = roster[0].id; return roster[0].name; }
+    // Filter by id, not name, so duplicate player names can't stall this — a
+    // name-equality loop never terminates when every player shares a name.
+    var candidates = roster.filter(function (p) { return p.id !== lastId; });
+    if (!candidates.length) candidates = roster; // shouldn't happen, but never hang
+    var p = candidates[Math.floor(Math.random() * candidates.length)];
+    lastId = p.id;
+    return p.name;
   }
 
-  function buildQueue() {
-    return shuffle(Pools().gather(settings.pools, pools(), "prompts").slice());
-  }
-  function nextPrompt() {
-    if (!queue.length) queue = buildQueue();
-    return queue.length ? queue.pop() : "Make one up!";
-  }
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var tmp = a[i]; a[i] = a[j]; a[j] = tmp; }
-    return a;
-  }
   var esc = global.Spielecke.esc;
 
   global.Spielecke = global.Spielecke || {};

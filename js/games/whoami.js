@@ -17,7 +17,6 @@
 
   function t(k) { return global.Spielecke.t(k); }
   function Pools() { return global.Spielecke.Pools; }
-  function poolKey() { return (settings.pools || []).slice().sort().join(","); }
 
   var ROUND_OPTIONS = [30, 60, 90]; // seconds
   var TARGET = 3; // beat this for a 🎉
@@ -31,10 +30,16 @@
   var countdownTimer = null;
   var audio = null;
 
-  var queue = [];      // shuffled identity queue — persists across turns within a session
-  var queuePool = null; // which pool the current queue was built for
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, poolsFor(), "terms"); });
   var score = 0;
-  var remaining = 0;   // seconds left
+  var remaining = 0;   // seconds left, for display only
+  // Wall-clock target for the turn to end. The forehead pose means no touches
+  // ever happen during a turn, so iOS can auto-lock the screen mid-round —
+  // that suspends the setInterval below. Deriving `remaining` from this
+  // deadline (instead of decrementing a counter) makes the display and the
+  // end-of-turn trigger self-correct the moment ticking resumes, rather than
+  // trusting a timer that may have been frozen for the whole locked spell.
+  var endAt = 0;
 
   var module = {
     meta: {
@@ -50,16 +55,26 @@
       els = container;
       ctx = context;
       settings = loadSettings(context.store);
+      global.document.addEventListener("visibilitychange", onVisibilityChange);
       renderSetup();
     },
 
     unmount: function () {
       stopCountdown();
       teardownAudio();
+      global.document.removeEventListener("visibilitychange", onVisibilityChange);
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; queue = []; queuePool = null; score = 0;
+      ctx = null; settings = null; bag.reset(); score = 0;
     },
   };
+
+  // On return from a locked/backgrounded screen, jump straight to the result
+  // if the round's time is already up rather than leaving a stale countdown
+  // on screen until the next (possibly delayed) interval tick.
+  function onVisibilityChange() {
+    if (global.document.hidden || !endAt) return;
+    if (Date.now() >= endAt) finishTurn();
+  }
 
   // --- Settings ------------------------------------------------------------
   function loadSettings(store) {
@@ -120,7 +135,7 @@
       body +
       "</section>";
 
-    highlight("#wa-modes", "mode", settings.mode, "data-mode");
+    highlight("#wa-modes", settings.mode, "data-mode");
     els.querySelectorAll("#wa-modes .chip").forEach(function (c) {
       c.addEventListener("click", function () {
         settings.mode = c.getAttribute("data-mode"); saveSettings();
@@ -140,16 +155,16 @@
       return;
     }
 
-    highlight("#wa-times", "secs", String(settings.roundSeconds), "data-secs");
+    highlight("#wa-times", String(settings.roundSeconds), "data-secs");
 
     Pools().bind(els.querySelector("#wa-pools"), poolsFor(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; saveSettings(); },
-      function () { queue = []; });
+      function () { bag.reset(); });
     els.querySelectorAll("#wa-times .chip").forEach(function (c) {
       c.addEventListener("click", function () {
         settings.roundSeconds = parseInt(c.getAttribute("data-secs"), 10); saveSettings();
-        highlight("#wa-times", "secs", String(settings.roundSeconds), "data-secs");
+        highlight("#wa-times", String(settings.roundSeconds), "data-secs");
       });
     });
     els.querySelector("#wa-sound").addEventListener("change", function (e) {
@@ -173,17 +188,14 @@
   function startTurn() {
     score = 0;
     remaining = settings.roundSeconds;
-    if (!queue.length || queuePool !== poolKey()) {
-      queue = buildQueue();
-      queuePool = poolKey();
-    }
+    endAt = Date.now() + settings.roundSeconds * 1000;
     setupAudio();
 
     els.innerHTML =
       '<section class="screen whoami-play">' +
       '  <div class="play-hud"><span id="wa-time" class="hud-time">' + remaining + "s</span>" +
       '    <span id="wa-score" class="hud-score">✅ 0</span></div>' +
-      '  <div class="whoami-word-wrap"><div id="wa-word" class="whoami-word">' + esc(nextWord()) + "</div></div>" +
+      '  <div class="whoami-word-wrap"><div id="wa-word" class="whoami-word">' + esc(bag.next(t("Make one up!"))) + "</div></div>" +
       '  <div class="whoami-actions">' +
       '    <button id="wa-skip" class="btn btn-skip">' + t("SKIP ⏭️") + "</button>" +
       '    <button id="wa-got" class="btn btn-got">' + t("GOT IT ✅") + "</button>" +
@@ -200,7 +212,10 @@
     els.querySelector("#wa-quit").addEventListener("click", finishTurn);
 
     countdownTimer = global.setInterval(function () {
-      remaining--;
+      // Derived from the wall clock, not decremented, so a delayed tick
+      // (after the screen was locked) catches up to the real time left in
+      // one step instead of ticking down 1s at a time from a stale value.
+      remaining = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
       var timeEl = els && els.querySelector("#wa-time");
       if (timeEl) {
         timeEl.textContent = remaining + "s";
@@ -213,7 +228,7 @@
   function advance() {
     var w = els && els.querySelector("#wa-word");
     var s = els && els.querySelector("#wa-score");
-    if (w) w.textContent = nextWord();
+    if (w) w.textContent = bag.next(t("Make one up!"));
     if (s) s.textContent = "✅ " + score;
   }
 
@@ -240,24 +255,9 @@
     els.querySelector("#wa-settings").addEventListener("click", renderSetup);
   }
 
-  // --- Word queue ----------------------------------------------------------
-  function buildQueue() {
-    return shuffle(Pools().gather(settings.pools, poolsFor(), "terms").slice());
-  }
-  function nextWord() {
-    if (!queue.length) queue = buildQueue();
-    return queue.length ? queue.pop() : "Make one up!";
-  }
-  function shuffle(a) {
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
-  }
-
   function stopCountdown() {
     if (countdownTimer !== null) { global.clearInterval(countdownTimer); countdownTimer = null; }
+    endAt = 0;
   }
 
   // --- Audio (Web Audio; no files) -----------------------------------------
@@ -298,7 +298,7 @@
       ? global.Spielecke.termPoolsFor("whoami")
       : (global.Spielecke.Terms || {});
   }
-  function highlight(sel, key, value, attrName) {
+  function highlight(sel, value, attrName) {
     els.querySelectorAll(sel + " .chip").forEach(function (c) {
       c.classList.toggle("chip--active", c.getAttribute(attrName) === value);
     });

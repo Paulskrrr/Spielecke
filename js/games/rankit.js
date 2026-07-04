@@ -23,6 +23,7 @@
   // Reveal-time data kept around so the compare view can replay each player's
   // ranking against the group consensus.
   var consensusRank = [], compare = [];
+  var bag = global.Spielecke.drawBag(function () { return Pools().gather(settings.pools, sets(), "sets"); });
 
   var module = {
     meta: {
@@ -45,6 +46,7 @@
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; players = []; set = null; rankings = []; idx = 0; current = [];
       consensusRank = []; compare = [];
+      bag.reset();
     },
   };
 
@@ -70,7 +72,8 @@
 
     Pools().bind(els.querySelector("#ri-pools"), sets(),
       function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); },
+      function () { bag.reset(); });
     els.querySelector("#ri-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -229,14 +232,6 @@
     });
   }
 
-  function shuffle(arr) {
-    for (var i = arr.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = arr[i]; arr[i] = arr[j]; arr[j] = tmp;
-    }
-    return arr;
-  }
-
   function renderReveal() {
     var items = set.items;
     var n = items.length;
@@ -268,7 +263,14 @@
 
     var winner = scored[0];
     var loser = scored[scored.length - 1];
-    var split = winner.drift !== loser.drift; // everyone identical → no win/lose
+    // "Perfect match" only when every ranking is byte-identical — a tied drift
+    // score does NOT mean the orders match (symmetric drifts are common).
+    var allSame = rankings.every(function (r) { return r.order.join(",") === rankings[0].order.join(","); });
+    var driftTie = !allSame && winner.drift === loser.drift; // everyone equally off, but differently
+    var split = !allSame && !driftTie;
+    var winners = scored.filter(function (s) { return s.drift === winner.drift; });
+    var losers = scored.filter(function (s) { return s.drift === loser.drift; });
+    var namesOf = function (list) { return list.map(function (s) { return esc(s.name); }).join(" & "); };
 
     var consensusList = consensusOrder.map(function (itemIdx, pos) {
       return (
@@ -279,9 +281,13 @@
       );
     }).join("");
 
-    var playerRows = scored.map(function (s, i) {
-      var tag = !split ? "" : (i === 0 ? "👑" : (i === scored.length - 1 ? (settings.drinking ? "🍺" : "💀") : ""));
-      var cls = !split ? "" : (i === 0 ? " ri-prow--win" : (i === scored.length - 1 ? " ri-prow--lose" : ""));
+    var playerRows = scored.map(function (s) {
+      // Tag by drift value, not index, so every player tied for best/worst is
+      // crowned/flagged together instead of only the first or last in sort order.
+      var isWin = split && s.drift === winner.drift;
+      var isLose = split && s.drift === loser.drift;
+      var tag = isWin ? "👑" : (isLose ? (settings.drinking ? "🍺" : "💀") : "");
+      var cls = isWin ? " ri-prow--win" : (isLose ? " ri-prow--lose" : "");
       return (
         '<li class="ri-prow' + cls + '">' +
         '<span class="ri-prow__name">' + tag + " " + esc(s.name) + "</span>" +
@@ -290,12 +296,14 @@
       );
     }).join("");
 
-    var verdict = !split
+    var verdict = allSame
       ? '<p class="result-sub">' + t("A perfect match — the whole table agrees! 🤝") + "</p>"
-      : '<p class="result-sub">👑 <strong>' + esc(winner.name) + "</strong> " + t("is the most in sync.") + "<br/>" +
+      : driftTie
+      ? '<p class="result-sub">' + t("Dead heat — everyone drifted the same amount, just differently. 🤷") + "</p>"
+      : '<p class="result-sub">👑 <strong>' + namesOf(winners) + "</strong> " + t("is the most in sync.") + "<br/>" +
         (settings.drinking
-          ? "🍺 <strong>" + esc(loser.name) + "</strong> " + t("drifted furthest — drink!")
-          : "💀 <strong>" + esc(loser.name) + "</strong> " + t("drifted furthest.")) + "</p>";
+          ? "🍺 <strong>" + namesOf(losers) + "</strong> " + t("drifted furthest — drink!")
+          : "💀 <strong>" + namesOf(losers) + "</strong> " + t("drifted furthest.")) + "</p>";
 
     els.innerHTML =
       '<section class="screen ri-reveal">' +
@@ -363,14 +371,13 @@
   }
 
   function pickSet() {
-    var list = Pools().gather(settings.pools, sets(), "sets");
-    if (!list.length) return { title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] };
-    return list[Math.floor(Math.random() * list.length)];
+    return bag.next({ title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] });
   }
 
   // Current-language pools from the bilingual { de, en } content bundle.
   function sets() { return global.Spielecke.L(global.Spielecke.RankItSets) || {}; }
   var esc = global.Spielecke.esc;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

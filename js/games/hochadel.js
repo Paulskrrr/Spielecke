@@ -55,6 +55,7 @@
       icon: "👑",
       minPlayers: 2,
       supportsDrinking: true, // it IS a drinking game — show the Trinkspiel marker
+      persistsState: true, // saves/reconciles full game state — safe to leave & return
     },
     mount: function (container, context) {
       els = container;
@@ -95,15 +96,6 @@
   }
 
   // --- state ---------------------------------------------------------------
-  function shuffle(arr) {
-    var a = arr.slice();
-    for (var i = a.length - 1; i > 0; i--) {
-      var j = Math.floor(Math.random() * (i + 1));
-      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
-    }
-    return a;
-  }
-
   function buildDeck(edition) {
     var ids = data.deck
       .filter(function (c) { return c.editions.indexOf(edition) !== -1; })
@@ -140,17 +132,33 @@
       uidSeq: 1,
       draw: buildDeck(edition),
       discard: [],
+      pendingExtraDraws: 0, // remaining forced draws that don't advance the turn (effect: "extraTurn")
     };
   }
 
-  // Make a loaded state safe against content edits (unknown card ids dropped).
+  // Make a loaded state safe against content edits (unknown card ids dropped)
+  // AND against a language switch since the state was saved: hofgesetze/active
+  // entries store their title/text pre-resolved (not the current language),
+  // so re-derive both from the current-language cardById, keeping only the
+  // per-instance data (who drew/holds it) rather than the frozen text.
   function reconcile(saved) {
     saved.draw = (saved.draw || []).filter(function (id) { return cardById[id]; });
     saved.discard = (saved.discard || []).filter(function (id) { return cardById[id]; });
-    saved.hofgesetze = saved.hofgesetze || [];
-    saved.active = saved.active || [];
+    // `|| t(...)` (not fillName's own currentPlayer() fallback) since `game`
+    // isn't assigned yet at this point in mount() — currentPlayer() would throw.
+    saved.hofgesetze = (saved.hofgesetze || []).map(function (r) {
+      var card = cardById[r.id];
+      if (!card) return r; // card removed from content entirely — keep as-is rather than drop history
+      return { id: r.id, title: card.title, text: fillName(card.text, r.by || t("the drawer")), by: r.by };
+    });
+    saved.active = (saved.active || []).map(function (a) {
+      var card = cardById[a.cardId];
+      if (!card) return a;
+      return { uid: a.uid, cardId: a.cardId, title: card.title, text: fillName(card.text, a.holder || t("the holder")), power: card.power || null, holder: a.holder };
+    });
     if (saved.dir !== 1 && saved.dir !== -1) saved.dir = 1;
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
+    if (typeof saved.pendingExtraDraws !== "number" || saved.pendingExtraDraws < 0) saved.pendingExtraDraws = 0;
     if (typeof saved.turnIndex !== "number" || saved.turnIndex >= saved.order.length) saved.turnIndex = 0;
     if (saved.draw.length === 0 && saved.discard.length === 0) saved.draw = buildDeck(saved.edition);
     return saved;
@@ -164,13 +172,17 @@
     game.turnIndex = (game.turnIndex + game.dir + n) % n;
   }
   function names() { return game.order.map(function (o) { return o.name; }); }
-  // Fill card tokens: {P} -> the drawer's name, {VERS} -> a random opening verse.
-  function fillName(text) {
-    var c = currentPlayer();
-    var out = String(text).replace(/\{P\}/g, c ? c.name : t("the drawer"));
+  // Fill card tokens: {P} -> the given name (defaults to the current player),
+  // {VERS} -> a random opening verse. The explicit-name form lets reconcile()
+  // re-derive an already-resolved card's text (e.g. after a language switch)
+  // using the ORIGINAL drawer/holder rather than currentPlayer(), which
+  // during reconcile reflects a game state that doesn't exist yet.
+  function fillName(text, forName) {
+    var name = forName !== undefined ? forName : (currentPlayer() ? currentPlayer().name : t("the drawer"));
+    var out = String(text).replace(/\{P\}/g, name);
     if (out.indexOf("{VERS}") !== -1) {
       var v = data.verses || [];
-      var verse = v.length ? v[Math.floor(Math.random() * v.length)] : "Der König spricht ein weises Wort,";
+      var verse = v.length ? v[Math.floor(Math.random() * v.length)] : t("The king speaks a wise word,");
       out = out.replace(/\{VERS\}/g, verse);
     }
     return out;
@@ -510,6 +522,12 @@
   function resolveCard(card, filledText) {
     if (filledText == null) filledText = fillName(card.text);
     if (card.effect === "reverse") game.dir = -game.dir;
+    // "Dreifacher Zug" et al: the drawer stays at turn for N more draws. Adding
+    // to any streak already in progress lets a second copy drawn mid-streak
+    // extend it rather than overwrite it.
+    if (card.effect === "extraTurn") {
+      game.pendingExtraDraws = (game.pendingExtraDraws || 0) + (card.extraDraws || 0);
+    }
     if (card.type === "sofort" || card.type === "minispiel") {
       game.discard.push(card.id);
     } else if (card.type === "regel") {
@@ -526,7 +544,16 @@
         holder: cur ? cur.name : "—",
       });
     }
-    nextTurn();
+    // A card resolved while a streak is pending (including this one, the
+    // instant it grants the streak) keeps the same player at turn instead of
+    // advancing — so fillName()/{P}, the Hofgesetz "by", and the Trump
+    // "holder" all correctly stay attributed to the drawer for every forced
+    // draw, not just the first.
+    if (game.pendingExtraDraws > 0) {
+      game.pendingExtraDraws--;
+    } else {
+      nextTurn();
+    }
     saveState();
     renderTable();
   }
@@ -631,6 +658,7 @@
   // --- util ----------------------------------------------------------------
   var esc = global.Spielecke.esc;
   var attr = global.Spielecke.attr;
+  var shuffle = global.Spielecke.shuffle;
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};

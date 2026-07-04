@@ -3,14 +3,15 @@
  *
  * A dealer holds the virtual deck; the table guesses the rank of the next card.
  *   - First guess wrong  -> dealer gives a höher/tiefer hint, second guess.
- *   - Second guess wrong -> guesser trinkt (rank-gap sips, configurable).
- *   - Guessed right       -> the dealer trinkt (configurable amount).
- * The card is revealed & discarded; play passes to the next guesser. The dealer
- * passes left when the deck is twice exhausted (configurable).
+ *   - Second guess wrong -> guesser trinkt (rank-gap sips, or flat — the
+ *                           setup screen's chips pick the formula).
+ *   - Guessed right       -> the dealer trinkt a fixed amount.
+ * The card is revealed & discarded; play passes to the next guesser. The
+ * dealer passes left after the deck has been reshuffled twice.
  *
  * Reuses the shared deck/card-face (Spielecke.Cards) and the shell contract
- * (roster for dealer + guessers, namespaced store for config). The single
- * reveal timer is cleared on unmount.
+ * (roster for dealer + guessers, namespaced store for the wrong-formula
+ * setting).
  */
 (function (global) {
   "use strict";
@@ -32,7 +33,7 @@
   var current = null;        // the live top card
   var firstGuess = null;     // rank string of the first (wrong) guess
   var phase = "first";       // "first" | "second"
-  var revealTimer = null, busy = false;
+  var busy = false;
 
   var module = {
     meta: {
@@ -46,25 +47,20 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        dealerHitSips: num(context.store.get("dealerHitSips", DEFAULTS.dealerHitSips), DEFAULTS.dealerHitSips),
+        // No setup control adjusts these two — they're fixed, unlike
+        // wrongFormula (which the #fd-formula chips below do control).
+        dealerHitSips: DEFAULTS.dealerHitSips,
+        flatWrongSips: DEFAULTS.flatWrongSips,
         wrongFormula: context.store.get("wrongFormula", DEFAULTS.wrongFormula) === "flat" ? "flat" : "gap",
-        flatWrongSips: num(context.store.get("flatWrongSips", DEFAULTS.flatWrongSips), DEFAULTS.flatWrongSips),
-        rotateAfterExhausts: DEFAULTS.rotateAfterExhausts,
       };
       dealerIdx = 0;
       renderSetup();
     },
     unmount: function () {
-      clearTimer();
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; deck = []; discard = []; current = null; busy = false;
     },
   };
-
-  function clearTimer() {
-    if (revealTimer !== null) { global.clearTimeout(revealTimer); revealTimer = null; }
-  }
-  function num(v, d) { var n = parseInt(v, 10); return isNaN(n) ? d : n; }
 
   function names() {
     return (ctx.players || []).filter(function (p) { return p && p.name; }).map(function (p) { return p.name; });
@@ -74,7 +70,6 @@
 
   // ── Setup ────────────────────────────────────────────────────────────────
   function renderSetup() {
-    clearTimer();
     var ns = names();
     if (ns.length < 2) {
       els.innerHTML =
@@ -135,7 +130,7 @@
       deck = Cards.shuffle(discard);
       discard = [];
       exhausts++;
-      if (exhausts >= settings.rotateAfterExhausts) {
+      if (exhausts >= DEFAULTS.rotateAfterExhausts) {
         exhausts = 0;
         var n = names().length;
         dealerIdx = (dealerIdx + 1) % n;

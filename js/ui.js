@@ -15,6 +15,17 @@
  * untouched. Turn-order games (Doodle, Quiz, Wavelength, …) call this when a
  * round starts so the roster order isn't identical every round — the entered
  * roster stays the canonical list; only that round's play order is randomised.
+ *
+ * drawBag(build): the shared "draw without repeats until exhausted, then
+ * reshuffle" queue every content-pool game wants. `build` is called with no
+ * args and must return a fresh array each time (so it can react to a changed
+ * pool selection) — the bag shuffles lazily on first use and whenever it runs
+ * dry. next(fallback) pops one item, returning fallback if build() is empty.
+ * reset() drops the current queue so the next draw rebuilds from `build()`
+ * (call this when the active pools change). Also guards the one seam a naive
+ * version gets wrong: since a reshuffle is independent of what was just
+ * drawn, the freshly-shuffled queue could otherwise put the same item right
+ * back on top — next() swaps that away when there's more than one item.
  */
 (function (global) {
   "use strict";
@@ -56,8 +67,37 @@
     return a;
   }
 
+  function drawBag(build) {
+    var queue = [];
+    var last; // the previously-drawn item, so a reshuffle can't repeat it immediately
+
+    function refill() {
+      queue = shuffle(build());
+      if (queue.length > 1 && queue[queue.length - 1] === last) {
+        var swapWith = Math.floor(Math.random() * (queue.length - 1));
+        var tmp = queue[queue.length - 1];
+        queue[queue.length - 1] = queue[swapWith];
+        queue[swapWith] = tmp;
+      }
+    }
+
+    return {
+      next: function (fallback) {
+        if (!queue.length) refill();
+        if (!queue.length) return fallback;
+        last = queue.pop();
+        return last;
+      },
+      reset: function () {
+        queue = [];
+        last = undefined;
+      },
+    };
+  }
+
   S.tappable = tappable;
   S.esc = esc;
   S.attr = attr;
   S.shuffle = shuffle;
+  S.drawBag = drawBag;
 })(window);
