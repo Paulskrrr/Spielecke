@@ -160,10 +160,13 @@
     "Did the table catch them?": "Erwischt?",
     "Did the table catch them all?": "Alle erwischt?",
 
-    // ── Imposter · Timer mode ──────────────────────────────────────────────
-    "Mode": "Modus",
-    "🕵️ Words": "🕵️ Wörter",
-    "⏱️ Timer": "⏱️ Timer",
+    // ── Imposter · Buzzer category ─────────────────────────────────────────
+    "🔔 Buzzer": "🔔 Buzzer",
+    "Everyone's ready — buzz! 🔔": "Alle bereit — buzzern! 🔔",
+    "🔔 Buzzer time": "🔔 Buzzer-Zeit",
+    "Everyone has seen their role. Now the buzzer goes round the table — hit the seconds you were given (the imposter just has to guess).": "Alle haben ihre Rolle gesehen. Jetzt geht der Buzzer reihum — triff die Sekunden, die du bekommen hast (der Imposter muss nur raten).",
+    "Start the buzzer 🔔": "Buzzer starten 🔔",
+    "Buzz when you think the time is up — no clock will show.": "Buzzer, wenn du denkst die Zeit ist um — keine Uhr wird angezeigt.",
     "No clock is ever shown. Everyone but the imposter secretly sees a target of 1–15 seconds, then each player buzzes when they think that long has passed. Closest wins — the imposter is just guessing.": "Keine Uhr ist je zu sehen. Alle außer dem Imposter sehen heimlich eine Zielzeit von 1–15 Sekunden, dann drückt jeder den Buzzer, wenn er glaubt, dass so viel Zeit vergangen ist. Am nächsten dran gewinnt — der Imposter rät nur.",
     "Deal & buzz 🔔": "Austeilen & buzzern 🔔",
     "You don't know the time — buzz on instinct.": "Du kennst die Zeit nicht — buzzer nach Gefühl.",

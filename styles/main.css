@@ -565,7 +565,13 @@ body::before {
 
 .imposter-talk p { font-size: 1.1rem; line-height: 1.5; }
 
-/* ----- Imposter · Timer mode (Zeitzünder) ------------------------------- */
+/* ----- Imposter · Buzzer category --------------------------------------- */
+
+/* The Buzzer chip sits inline with the word-pool chips; the pools wrapper is
+   display:contents so its chips flow in the same row as the Buzzer chip. */
+.pools-contents { display: contents; }
+.im-pools--off .chip { opacity: 0.45; }
+.im-buzzer { border-style: dashed; }
 
 /* The seconds unit rides small beside the big number on role card + reveal. */
 .role-big .tz-unit,

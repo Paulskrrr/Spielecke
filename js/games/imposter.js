@@ -36,6 +36,7 @@
   // when they think that many seconds have passed (no clock is ever shown).
   var targetTime = 0;     // the hidden target in whole seconds (1..15)
   var buzzes = [];        // [{ name, seconds, isImposter }] locked in per player
+  var buzzIdx = 0;        // whose turn it is in the buzzer pass (phase 2)
   var revealTimer = null; // pending reveal-drip timeout
   function clearRevealTimer() { if (revealTimer) { clearTimeout(revealTimer); revealTimer = null; } }
 
@@ -66,7 +67,7 @@
       clearRevealTimer();
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; players = []; imposterSet = {}; secretWord = ""; secretCategory = ""; secretHint = "";
-      targetTime = 0; buzzes = [];
+      targetTime = 0; buzzes = []; buzzIdx = 0;
     },
   };
 
@@ -85,14 +86,6 @@
       : '<div class="roster-warn" style="display:block">' +
         t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
-    // Mode picker: classic word-hunt vs the Timer buzzer variant.
-    var modeSection =
-      '<h3 class="sub">' + t("Mode") + "</h3>" +
-      '<div class="chip-row" id="im-mode">' +
-      '  <button class="chip" data-mode="classic">' + t("🕵️ Words") + "</button>" +
-      '  <button class="chip" data-mode="timer">' + t("⏱️ Timer") + "</button>" +
-      "</div>";
-
     var countSection = "";
     if (enough) {
       if (settings.imposterCount !== "random") {
@@ -110,14 +103,20 @@
         '<p class="muted small">' + t("🎲 Random leans toward fewer imposters — big groups stay tense.") + "</p>";
     }
 
-    // Word-hunt mode picks a pool + optional imposter hint; Timer mode drops both
-    // (there's no word) and instead explains the buzzer round.
-    var contentSection = timer
+    // The buzzer is just another category chip in the same row as the word pools
+    // (not a separate mode). Picking it runs the seconds-guessing variant.
+    var categorySection =
+      '<h3 class="sub">' + t("Category") + "</h3>" +
+      '<div class="chip-row">' +
+      '  <span id="im-pools" class="pools-contents">' + chips + "</span>" +
+      '  <button class="chip im-buzzer' + (timer ? " chip--active" : "") + '" id="im-buzzer">' + t("🔔 Buzzer") + "</button>" +
+      "</div>";
+
+    // Below the chips: Buzzer explains its round; word-hunt offers the hint.
+    var belowSection = timer
       ? '<p class="muted small tz-explain">' +
           t("No clock is ever shown. Everyone but the imposter secretly sees a target of 1–15 seconds, then each player buzzes when they think that long has passed. Closest wins — the imposter is just guessing.") + "</p>"
-      : '<h3 class="sub">' + t("Word pool") + "</h3>" +
-        '<div class="chip-row" id="im-pools">' + chips + "</div>" +
-        '<label class="toggle im-hints-toggle"><input type="checkbox" id="im-hints"' +
+      : '<label class="toggle im-hints-toggle"><input type="checkbox" id="im-hints"' +
         (settings.hints ? " checked" : "") + ' /><span>' + t("Give imposters a hint") + "</span></label>" +
         '<p class="muted small">' + t("Imposters secretly get a distant, cryptic clue — enough to bluff, not enough to know.") + "</p>";
 
@@ -126,25 +125,33 @@
       '  <h2 class="screen-title pop">🕵️ ' + t("Imposter") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       rosterNote +
-      modeSection +
       countSection +
-      contentSection +
+      categorySection +
+      belowSection +
       '  <button id="im-deal" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") +
       ">" + (timer ? t("Deal & buzz 🔔") : t("Deal roles 🂴")) + "</button>" +
       "</section>";
 
-    highlight("#im-mode", settings.mode, "data-mode");
-    els.querySelectorAll("#im-mode .chip").forEach(function (c) {
-      c.addEventListener("click", function () {
-        settings.mode = c.getAttribute("data-mode") === "timer" ? "timer" : "classic";
-        ctx.store.set("imposterMode", settings.mode);
-        renderSetup();
-      });
-    });
-
-    if (!timer) Pools().bind(els.querySelector("#im-pools"), poolsFor(),
+    // Word pools are always bound; picking one switches out of Buzzer mode.
+    Pools().bind(els.querySelector("#im-pools"), poolsFor(),
       function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+      function (v) {
+        settings.pools = v; Pools().save(ctx.store, v);
+        if (settings.mode === "timer") { settings.mode = "classic"; ctx.store.set("imposterMode", "classic"); renderSetup(); }
+      });
+    // While Buzzer is active the word pools read as inactive — but stay tappable,
+    // so tapping one switches straight back to the word hunt.
+    var poolsSpan = els.querySelector("#im-pools");
+    if (timer && poolsSpan) {
+      poolsSpan.classList.add("im-pools--off");
+      poolsSpan.querySelectorAll(".chip").forEach(function (c) { c.classList.remove("chip--active"); });
+    }
+    var buzzerChip = els.querySelector("#im-buzzer");
+    if (buzzerChip) buzzerChip.addEventListener("click", function () {
+      settings.mode = settings.mode === "timer" ? "classic" : "timer";
+      ctx.store.set("imposterMode", settings.mode);
+      renderSetup();
+    });
     if (enough) {
       highlight("#im-count", String(settings.imposterCount), "data-count");
       els.querySelectorAll("#im-count .chip").forEach(function (c) {
@@ -277,10 +284,10 @@
     });
   }
 
-  // --- Timer mode: role → buzz (one pass), discuss, then rank -------------
-  // Show this player's role. Non-imposters see the flat target in seconds; the
-  // imposter only learns they're in the dark. Either way the next step is the
-  // buzzer — the number is never on screen while they count.
+  // --- Buzzer category: all roles first, then the buzzer goes round --------
+  // Phase 1 — reveal each player's role in a pass-around (exactly like the word
+  // hunt). Non-imposters see the flat target in seconds; the imposter only learns
+  // they're in the dark. Nobody buzzes until everyone has looked.
   function showTimerRole() {
     var isImposter = !!imposterSet[revealIdx];
     var total = imposterTotal();
@@ -301,24 +308,58 @@
         '  <div class="role-note">' + t("No clock will show — count it in your head.") + "</div>" +
         "</div>";
 
+    var last = revealIdx === players.length - 1;
     els.innerHTML =
       '<section class="screen imposter-role">' + body +
-      '  <button id="im-hide" class="btn btn-block btn-xl" data-primary>' + t("Got it — to the buzzer 🔔") + "</button>" +
+      '  <button id="im-hide" class="btn btn-block btn-xl" data-primary>' +
+      (last ? t("Everyone's ready — buzz! 🔔") : t("Hide & pass on ➡️")) + "</button>" +
       "</section>";
-    els.querySelector("#im-hide").addEventListener("click", renderBuzz);
+    els.querySelector("#im-hide").addEventListener("click", function () {
+      if (last) startBuzzPhase();
+      else { revealIdx++; renderPassTo(); }
+    });
+  }
+
+  // Phase 2 begins only once every role has been seen: an intro, then the buzzer
+  // travels round the table one player at a time.
+  function startBuzzPhase() {
+    buzzIdx = 0;
+    buzzes = [];
+    els.innerHTML =
+      '<section class="screen imposter-talk tz-intro">' +
+      '  <div class="pass-emoji">🔔</div>' +
+      '  <h2 class="screen-title pop">' + t("🔔 Buzzer time") + "</h2>" +
+      '  <p>' + t("Everyone has seen their role. Now the buzzer goes round the table — hit the seconds you were given (the imposter just has to guess).") + "</p>" +
+      '  <button id="tz-go" class="btn btn-primary btn-block btn-xl">' + t("Start the buzzer 🔔") + "</button>" +
+      "</section>";
+    els.querySelector("#tz-go").addEventListener("click", renderBuzzHandover);
+  }
+
+  // Hand the phone to the next buzzer.
+  function renderBuzzHandover() {
+    var name = players[buzzIdx];
+    els.innerHTML =
+      '<section class="screen imposter-pass">' +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", buzzIdx + 1).replace("{n}", players.length) + "</div>" +
+      '  <div class="pass-emoji">🔔</div>' +
+      '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
+      '  <p class="muted">' + t("Buzz when you think the time is up — no clock will show.") + "</p>" +
+      '  <button id="tz-take" class="btn btn-primary btn-block btn-xl">' + t("I'm {name} — go").replace("{name}", esc(name)) + "</button>" +
+      "</section>";
+    els.querySelector("#tz-take").addEventListener("click", renderBuzz);
   }
 
   // The buzzer: tap once to start (silently), tap again the instant it feels like
   // the target has elapsed. No timer is ever displayed. We store the real elapsed
   // time so the reveal can rank everyone against the hidden target.
   function renderBuzz() {
-    var name = players[revealIdx];
-    var last = revealIdx === players.length - 1;
+    var name = players[buzzIdx];
+    var last = buzzIdx === players.length - 1;
     var startAt = null;
 
     els.innerHTML =
       '<section class="screen tz-buzz">' +
-      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", revealIdx + 1).replace("{n}", players.length) + "</div>" +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", buzzIdx + 1).replace("{n}", players.length) + "</div>" +
       '  <h2 class="pass-name pop">' + esc(name) + "</h2>" +
       '  <p class="muted">' + t("Tap to start, then hit the buzzer when the time feels up.") + "</p>" +
       '  <button id="tz-buzzer" class="tz-buzzer" data-state="idle">' + t("START ⏱️") + "</button>" +
@@ -338,10 +379,10 @@
       } else if (btn.getAttribute("data-state") === "live") {
         btn.setAttribute("data-state", "done");
         var elapsed = (Date.now() - startAt) / 1000;
-        buzzes.push({ name: name, seconds: elapsed, isImposter: !!imposterSet[revealIdx] });
+        buzzes.push({ name: name, seconds: elapsed, isImposter: !!imposterSet[buzzIdx] });
         vibrate([20, 40, 20]);
         if (last) renderTimerDiscussion();
-        else { revealIdx++; renderPassTo(); }
+        else { buzzIdx++; renderBuzzHandover(); }
       }
     });
   }
