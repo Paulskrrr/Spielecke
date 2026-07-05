@@ -102,7 +102,7 @@
     "⏱️ The fuse is random — and hidden from everyone.": "⏱️ Die Zündschnur ist zufällig — für alle verborgen.",
     "🔊 Ticking & explosion sound": "🔊 Ticken & Explosion",
     "ARM & START 💥": "STARTEN 💥",
-    "💣 LIVE — pass it on!": "💣 LIVE — weitergeben!",
+    "🥔 LIVE — pass it on!": "🥔 LIVE — weitergeben!",
     "PASS ➡️": "WEITER ➡️",
     "Give up · back to setup": "Aufgeben · zurück",
     "BOOM!": "BOOM!",

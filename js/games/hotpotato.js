@@ -46,7 +46,7 @@
       id: "hotpotato",
       name: "Hot Potato",
       tagline: "Name it fast, pass it faster. Don't be holding it when it blows.",
-      icon: "💣",
+      icon: "🥔",
       minPlayers: 2,
       supportsDrinking: true,
     },
@@ -110,7 +110,7 @@
 
     els.innerHTML =
       '<section class="screen hp-setup">' +
-      '  <h2 class="screen-title neon">💣 ' + t("Hot Potato") + "</h2>" +
+      '  <h2 class="screen-title neon">🥔 ' + t("Hot Potato") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       warn +
       '  <h3 class="hp-sub">' + t("Category pool") + "</h3>" +
@@ -156,7 +156,7 @@
 
     els.innerHTML =
       '<section class="screen hp-play">' +
-      '  <div class="hp-status">' + t("💣 LIVE — pass it on!") + "</div>" +
+      '  <div class="hp-status">' + t("🥔 LIVE — pass it on!") + "</div>" +
       '  <div class="hp-prompt-wrap">' +
       '    <div class="hp-prompt">' + esc(currentPrompt) + "</div>" +
       "  </div>" +
