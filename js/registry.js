@@ -27,7 +27,7 @@
     "hotpotato", "mostlikely", "nhie", "whoami", "imposter", "wavelength",
     "liars", "princess", "doodle", "activity", "quiz", "truth", "chooser",
     "reaction", "rankit", "hochadel", "maxchen", "busfahrt", "fuckdealer",
-    "pferderennen",
+    "pferderennen", "zeitzunder",
   ];
 
   // Build a registry entry straight from a module's meta so they never drift.

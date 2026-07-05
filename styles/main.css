@@ -1013,6 +1013,15 @@ body::before {
 .dd-pass { text-align: center; }
 .dd-draw, .dd-guess { text-align: center; }
 .dd-target { font-size: 1.3rem; font-weight: 800; margin: 8px 0 10px; }
+.dd-draw-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dd-draw-head .dd-target { margin: 8px 0; }
+.dd-timer {
+  flex: none; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 900;
+  font-size: 1.25rem; font-variant-numeric: tabular-nums; color: #fff; background: var(--purple);
+  border: 3px solid var(--ink); border-radius: 12px; box-shadow: 0 3px 0 var(--ink); padding: 4px 12px;
+}
+.dd-timer.is-urgent { background: var(--red); animation: dd-tick 1s steps(2) infinite; }
+@keyframes dd-tick { 50% { opacity: 0.45; } }
 .doodle-canvas {
   display: block; width: 100%; height: min(52vh, 380px);
   background: #fff; border: 4px solid var(--ink); border-radius: var(--radius);
@@ -2043,4 +2052,421 @@ body::before {
   .mx-hat, .mx-hat--shaking, .mx-hat--lift,
   .mx-yourroll .mx-dice, .mx-revealroll .mx-dice,
   .mx-tap-hint { animation: none; }
+}
+
+/* ======================================================================
+   Zeitzünder — asymmetric co-op bomb defusal
+   The bomb is a real 3D cube of GREY metal panels (screws, bevels) that the
+   defuser physically flips around — no labels, no map, no guidance. The
+   playful toy-box chrome only frames it. Class names are shared with
+   js/games/zeitzunder.js — keep in sync.
+   ====================================================================== */
+
+/* ---- Role picker ----------------------------------------------------- */
+.zz-roles { display: flex; flex-direction: column; gap: 12px; margin: 14px 0 6px; }
+.zz-role {
+  display: flex; flex-direction: column; gap: 4px; text-align: left;
+  padding: 16px; border: 4px solid var(--ink); border-radius: var(--radius);
+  background: var(--paper-2); box-shadow: var(--pop); cursor: pointer; font: inherit;
+}
+.zz-role:active { transform: translateY(5px); box-shadow: 0 0 0 var(--ink); }
+.zz-role--bomb { background: #4a4f57; color: #fff; }
+.zz-role--expert { background: var(--blue); color: #fff; }
+.zz-role__icon { font-size: 2rem; }
+.zz-role__name { font-size: 1.4rem; font-weight: 900; }
+.zz-role__hint { font-size: 0.9rem; opacity: 0.92; }
+
+/* ---- Bomb screen: break wider than the 880px column on a real screen --- */
+/* --zz-k scales the whole bomb (cube + chrome). It is 1 on tablet/desktop
+   (>=412px) so those look unchanged; it shrinks on smaller phones so the
+   cube + side buttons always fit the screen. */
+.zz-bomb { position: relative; --zz-k: 0.74; --zz-size: calc(270px * var(--zz-k)); text-align: center; overflow-x: clip; }
+.zz-quit {
+  position: absolute; top: 0; right: 0; width: 40px; height: 40px; font-size: 1.1rem;
+  background: var(--paper-2); color: var(--ink-soft); border: 3px solid var(--ink);
+  border-radius: 12px; box-shadow: 0 3px 0 var(--ink); cursor: pointer; line-height: 1;
+}
+.zz-quit:active { transform: translateY(3px); box-shadow: none; }
+
+/* ---- HUD: the bomb's own digital readout (black panel, red digits) ----- */
+.zz-hud {
+  position: relative; z-index: 5;
+  display: inline-flex; align-items: center; gap: 18px;
+  padding: 8px 20px; margin: 0 auto 6px;
+  background: #14161a; border: 4px solid #000; border-radius: 12px;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.8), var(--pop);
+}
+.zz-timer { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 2rem; font-weight: 800; color: #ff5a3c; letter-spacing: 2px; text-shadow: 0 0 10px rgba(255,90,60,0.7); }
+.zz-timer.is-danger { animation: zz-pulse 1s steps(2) infinite; }
+@keyframes zz-pulse { 50% { opacity: 0.4; } }
+.zz-strikes { display: flex; gap: 6px; }
+.zz-x { font-size: 1.2rem; font-weight: 900; color: #3a3d44; }
+.zz-x.is-lit { color: var(--red); text-shadow: 0 0 8px var(--red); }
+.zz-flash { animation: zz-flash 0.4s ease-out; }
+@keyframes zz-flash { 0% { background: #5a1a18; } 100% { background: #14161a; } }
+
+/* ---- The cube + its flip arrows -------------------------------------- */
+/* Grid puts the four directional arrows around the cube and scales with it.
+   These only ROTATE the cube (no face is named) — the defuser is still lost,
+   this is just easier than dragging in a browser. */
+.zz-stage {
+  display: grid; grid-template-columns: auto auto auto; grid-template-rows: auto auto auto;
+  align-items: center; justify-items: center; gap: calc(6px * var(--zz-k)); width: max-content; margin: 12px auto 24px;
+}
+.zz-stage .zz-rig { grid-column: 2; grid-row: 2; margin: 0; }
+.zz-roll { grid-column: 1; grid-row: 1; font-size: calc(1.4rem * var(--zz-k)); }
+.zz-flip--up { grid-column: 2; grid-row: 1; }
+.zz-flip--left { grid-column: 1; grid-row: 2; }
+.zz-flip--right { grid-column: 3; grid-row: 2; }
+.zz-flip--down { grid-column: 2; grid-row: 3; }
+.zz-flip {
+  width: calc(46px * var(--zz-k)); height: calc(46px * var(--zz-k)); border-radius: 50%; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: calc(1.2rem * var(--zz-k)); line-height: 1;
+  color: #f4f4f4; background: #4a4f57; border: 3px solid #14161a; box-shadow: 0 3px 0 #14161a;
+}
+.zz-flip:active { transform: translateY(3px); box-shadow: none; }
+
+.zz-rig {
+  width: var(--zz-size); height: var(--zz-size); margin: 14px auto 30px;
+  perspective: 1400px; touch-action: none; cursor: grab;
+}
+.zz-rig:active { cursor: grabbing; }
+.zz-cube {
+  position: relative; width: 100%; height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+/* Each face is a grey metal plate. translateZ is set inline per slot. */
+.zz-face { position: absolute; inset: 0; backface-visibility: hidden; pointer-events: none; }
+.zz-face.is-front { pointer-events: auto; }
+.zz-plate {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; gap: 8px; align-items: center; justify-content: center;
+  padding: calc(18px * var(--zz-k)); overflow: hidden;
+  background:
+    linear-gradient(150deg, #9aa0a8 0%, #7c828b 40%, #686d75 100%);
+  border: calc(5px * var(--zz-k)) solid #3c4047; border-radius: calc(12px * var(--zz-k));
+  box-shadow: inset 0 0 0 2px rgba(255,255,255,0.18), inset 0 -10px 22px rgba(0,0,0,0.32);
+  color: #1c1f24;
+}
+.zz-face.is-solved .zz-plate { box-shadow: inset 0 0 0 3px var(--green), inset 0 -10px 22px rgba(0,0,0,0.3); }
+/* Decorative PCB dressing behind the controls (isolate so it sits above the
+   panel background but below the controls, without becoming an offset parent) */
+.zz-plate { isolation: isolate; }
+.zz-decor { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+/* The interface on each face scales with the cube so it always fits. */
+.zz-coreface, .zz-wires, .zz-keypad, .zz-dialface, .zz-gutsface, .zz-decoderface, .zz-mazeface { transform: scale(var(--zz-k)); transform-origin: center; }
+/* corner screws */
+.zz-screw { position: absolute; width: calc(13px * var(--zz-k)); height: calc(13px * var(--zz-k)); border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #d7dadf, #6b7079 65%, #41454c);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.35); }
+.zz-screw::after { content: ""; position: absolute; inset: calc(4px * var(--zz-k)); border-top: calc(2px * var(--zz-k)) solid rgba(0,0,0,0.45); transform: rotate(35deg); }
+.zz-screw--tl { top: calc(8px * var(--zz-k)); left: calc(8px * var(--zz-k)); } .zz-screw--tr { top: calc(8px * var(--zz-k)); right: calc(8px * var(--zz-k)); }
+.zz-screw--bl { bottom: calc(8px * var(--zz-k)); left: calc(8px * var(--zz-k)); } .zz-screw--br { bottom: calc(8px * var(--zz-k)); right: calc(8px * var(--zz-k)); }
+
+/* ---- Core face ------------------------------------------------------- */
+.zz-coreface { display: flex; flex-direction: column; align-items: center; gap: 22px; }
+.zz-serialplate {
+  position: absolute; left: calc(32px * var(--zz-k)); bottom: calc(13px * var(--zz-k)); z-index: 2;
+  display: flex; align-items: baseline; gap: 5px;
+  background: none; padding: 0; box-shadow: none;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.14);
+  transform: scale(var(--zz-k)); transform-origin: bottom left;
+}
+.zz-serialplate__lbl {
+  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.5rem;
+  letter-spacing: 1.5px; text-transform: uppercase; color: rgba(20,22,26,0.5);
+}
+.zz-serial {
+  font-family: ui-monospace, Menlo, monospace; font-weight: 700; font-size: 0.72rem; letter-spacing: 1px;
+  color: rgba(20,22,26,0.6);
+}
+.zz-sigrow { display: flex; gap: 10px; }
+.zz-sigil {
+  font-size: 1.7rem; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
+  background: #1c1f24; color: #ffd84d; border-radius: 12px; box-shadow: inset 0 0 8px rgba(0,0,0,0.7);
+}
+.zz-ledrow { display: flex; gap: 20px; }
+.zz-led i { display: block; width: 22px; height: 22px; border-radius: 50%; background: #3a3d44; box-shadow: inset 0 0 4px #000; }
+.zz-led.is-on i { background: var(--green); box-shadow: 0 0 12px var(--green); }
+/* Commit / arming control — fires the Keypad & Dials on a timed release */
+.zz-commit {
+  margin-top: 4px; width: 74px; height: 74px; border-radius: 50%; cursor: pointer; position: relative;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 36%, #d24436, #7a1f16 78%);
+  border: 4px solid #14161a; box-shadow: 0 4px 0 #14161a, inset 0 2px 7px rgba(255,255,255,0.28);
+  color: #fff; font-weight: 900; font-family: ui-monospace, Menlo, monospace; letter-spacing: 1px;
+}
+.zz-commit__ring { position: absolute; inset: 7px; border-radius: 50%; border: 2px dashed rgba(255,255,255,0.35); }
+.zz-commit__cap { position: relative; font-size: 0.9rem; }
+.zz-commit:active, .zz-commit.is-holding { transform: translateY(4px); box-shadow: inset 0 2px 8px rgba(0,0,0,0.55), 0 0 20px rgba(255,90,60,0.85); }
+
+/* ---- Wires face ------------------------------------------------------ */
+.zz-wires { display: flex; flex-direction: column; gap: 7px; width: 100%; max-width: 230px; }
+.zz-wire {
+  display: flex; align-items: center; gap: 9px; padding: 5px 10px; cursor: pointer;
+  background: #23262b; border: 2px solid #14161a; border-radius: 9px; font: inherit;
+}
+.zz-wire__bolt {
+  width: 13px; height: 13px; border-radius: 50%; flex: none; position: relative;
+  background: radial-gradient(circle at 35% 30%, #dfe3e8, #9297a0 55%, #5c616b);
+  box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4), 0 1px 1px rgba(0,0,0,0.5);
+}
+.zz-wire__bolt::after { content: ""; position: absolute; inset: 3px 2px; border-top: 1.5px solid rgba(0,0,0,0.45); transform: rotate(38deg); }
+.zz-wire__line {
+  flex: 1; height: 11px; border-radius: 999px; border: 1px solid rgba(0,0,0,0.55);
+  background-image: linear-gradient(180deg, rgba(255,255,255,0.5), rgba(255,255,255,0.06) 45%, rgba(0,0,0,0.32));
+  box-shadow: 0 1px 2px rgba(0,0,0,0.45);
+}
+.zz-wire__num { color: #fff; font-weight: 900; font-size: 1.05rem; width: 18px; text-align: center; }
+.zz-wire.is-cut { opacity: 0.35; }
+.zz-wire.is-cut .zz-wire__line { background: #555 !important; clip-path: polygon(0 0,46% 0,46% 100%,0 100%); }
+.zz-wire.is-bad { animation: zz-shake 0.4s; border-color: var(--red); }
+.zz-wire:disabled { cursor: default; }
+@keyframes zz-shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+
+/* ---- Keypad face ----------------------------------------------------- */
+.zz-keypad { display: flex; flex-direction: column; gap: 7px; align-items: center; }
+.zz-keys { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.zz-key {
+  width: 42px; height: 42px; font-size: 1.3rem; cursor: pointer; color: #f4f4f4;
+  background: linear-gradient(#33373d, #23262b); border: 2px solid #14161a; border-radius: 9px; font-family: inherit;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+.zz-key:active { transform: translateY(2px); }
+.zz-key:disabled { opacity: 0.4; cursor: default; }
+.zz-entry {
+  min-height: 26px; display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; max-width: 180px; background: #14161a; border-radius: 7px; font-size: 1.2rem; color: #ffd84d; padding: 4px;
+}
+.zz-entry__dot { width: 8px; height: 8px; border-radius: 50%; background: #3a3d44; }
+.zz-keyactions { display: flex; gap: 8px; }
+.zz-mini {
+  width: 44px; height: 28px; font-size: 1rem; font-weight: 900; cursor: pointer; color: #fff;
+  background: #4a4f57; border: 2px solid #14161a; border-radius: 8px;
+}
+.zz-mini--go { background: var(--green); color: #14161a; }
+.zz-mini:disabled { opacity: 0.4; cursor: default; }
+
+/* ---- Dials face ------------------------------------------------------ */
+.zz-dialface { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.zz-dials { display: flex; gap: 26px; }
+.zz-dial { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.zz-dial__btn { width: 60px; height: 32px; font-size: 1.05rem; cursor: pointer; color: #f4f4f4; background: #33373d; border: 2px solid #14161a; border-radius: 8px; }
+.zz-dial__btn:disabled { opacity: 0.4; cursor: default; }
+.zz-dial__val { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-family: ui-monospace, Menlo, monospace; font-size: 2.2rem; font-weight: 800; color: #ffd84d; background: #14161a; border-radius: 10px; box-shadow: inset 0 0 8px rgba(0,0,0,0.8); }
+.zz-dial__lbl { font-weight: 900; font-size: 1rem; color: #14161a; }
+
+/* ---- Guts face ------------------------------------------------------- */
+.zz-gutsface { display: flex; flex-direction: column; gap: 24px; align-items: center; }
+.zz-batts { display: flex; gap: 10px; }
+.zz-batt { width: 38px; height: 22px; border-radius: 4px; background: #2c2f35; border: 2px solid #14161a; position: relative; }
+.zz-batt::after { content: ""; position: absolute; right: -7px; top: 5px; width: 5px; height: 10px; background: #14161a; border-radius: 0 2px 2px 0; }
+.zz-batt.is-on { background: var(--green); }
+.zz-inds { display: flex; gap: 10px; }
+.zz-ind { font-family: ui-monospace, Menlo, monospace; font-weight: 800; font-size: 0.9rem; letter-spacing: 1px; padding: 7px 11px; border-radius: 8px; background: #1c1f24; color: #4a4f57; border: 2px solid #14161a; }
+.zz-ind.is-lit { background: #fff3b0; color: #14161a; border-color: #d4a017; box-shadow: 0 0 12px #ffd84d; }
+
+/* ---- Decoder face ---------------------------------------------------- */
+.zz-decoderface { display: flex; flex-direction: column; gap: 18px; align-items: center; width: 100%; max-width: 300px; }
+.zz-readout {
+  align-self: stretch;
+  display: flex; align-items: center; justify-content: center; padding: 12px;
+  background: #0d0f12; border: 3px solid #2a2d33; border-radius: 10px;
+  box-shadow: inset 0 0 16px rgba(0,0,0,0.9), inset 0 0 0 2px rgba(255,255,255,0.05);
+}
+.zz-readout__val {
+  font-family: ui-monospace, Menlo, monospace; font-size: 3.4rem; font-weight: 800;
+  color: #ffd84d; letter-spacing: 2px; line-height: 1; text-shadow: 0 0 12px rgba(255,216,77,0.55);
+}
+.zz-ckeys {
+  display: flex; flex-direction: row; justify-content: center; gap: 8px; padding: 10px; border-radius: 9px;
+  background: rgba(0,0,0,0.16); box-shadow: inset 0 0 0 2px rgba(0,0,0,0.28);
+}
+.zz-ckey { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.zz-ckey__rank { font-family: ui-monospace, Menlo, monospace; font-weight: 900; font-size: 0.9rem; color: #14161a; }
+.zz-ckey__sw { width: 34px; height: 34px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.5); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.14), inset 0 -3px 6px rgba(0,0,0,0.28); }
+/* Reference hub (guts): a small decoder-letter readout beside the indicators,
+   the colour-priority strip and the batteries. */
+.zz-refrow { display: flex; align-items: center; gap: 12px; }
+.zz-readout--sm { align-self: auto; padding: 6px 12px; border-width: 2px; }
+.zz-readout--sm .zz-readout__val { font-size: 1.9rem; }
+
+/* ---- Maze face ------------------------------------------------------- */
+.zz-mazeface { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 14px; }
+.zz-maze-grid {
+  display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; width: 150px;
+  padding: 6px; background: #0d0f12; border-radius: 8px; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.45);
+}
+.zz-mshake { animation: zz-shake 0.4s; }
+.zz-mcell { aspect-ratio: 1; background: #2a2d33; border-radius: 2px; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4); }
+.zz-mcell.is-mark::after { content: ""; position: absolute; inset: 20%; border-radius: 50%; border: 2px solid #9297a0; }
+.zz-mcell.is-goal { background: var(--red); box-shadow: 0 0 7px rgba(192,57,43,0.85); }
+.zz-mcell.is-pos { background: var(--green); box-shadow: 0 0 9px var(--green); z-index: 1; }
+.zz-maze-pad { display: grid; grid-template-columns: repeat(3, 26px); grid-template-rows: repeat(3, 26px); gap: 4px; }
+.zz-mpad {
+  display: flex; align-items: center; justify-content: center; font-size: 0.85rem; line-height: 1;
+  color: #f4f4f4; background: #4a4f57; border: 2px solid #14161a; border-radius: 7px; cursor: pointer;
+}
+.zz-mpad:active { transform: translateY(2px); }
+.zz-mpad:disabled { opacity: 0.4; cursor: default; }
+.zz-mpad--up { grid-column: 2; grid-row: 1; } .zz-mpad--left { grid-column: 1; grid-row: 2; }
+.zz-mpad--right { grid-column: 3; grid-row: 2; } .zz-mpad--down { grid-column: 2; grid-row: 3; }
+
+/* ---- Toast ----------------------------------------------------------- */
+.zz-toast { position: fixed; left: 50%; top: 24%; transform: translateX(-50%); background: var(--ink); color: #fff; font-weight: 900; padding: 12px 22px; border-radius: 999px; box-shadow: var(--pop); z-index: 50; animation: zz-toast 1.1s ease-out forwards; }
+@keyframes zz-toast { 0% { opacity: 0; transform: translate(-50%, 8px); } 15%,70% { opacity: 1; transform: translateX(-50%); } 100% { opacity: 0; } }
+
+/* ---- Manual (expert) — a physical booklet you flip through ------------ */
+/* The manual fills the viewport so the flip buttons are ALWAYS reachable
+   without scrolling — slim ‹ › buttons hug the page edges, the page takes the
+   rest, and long pages scroll INSIDE the paper, not the screen. No top bar:
+   the app header's logo is the way out. */
+.app:has(.zz-manual) { padding: 8px 10px 0; }
+.zz-manual {
+  text-align: left; display: flex;
+  /* leave a small bottom gap so the page sits ON the normal background
+     instead of butting a white edge against the screen bottom */
+  height: calc(100svh - 84px - env(safe-area-inset-top)); overflow: hidden;
+  padding-bottom: 14px;
+}
+.zz-bookrow { display: flex; align-items: stretch; gap: 6px; flex: 1; min-height: 0; width: 100%; }
+.zz-bookbtn {
+  align-self: center; flex: none; width: 30px; height: 78px; border-radius: 999px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; padding: 0;
+  background: var(--purple); color: #fff; border: 3px solid var(--ink); box-shadow: 0 4px 0 var(--ink);
+}
+.zz-bookbtn:active { transform: translateY(4px); box-shadow: none; }
+.zz-bookbtn:disabled { opacity: 0.3; cursor: default; box-shadow: none; }
+.zz-book {
+  position: relative; flex: 1; min-width: 0; max-width: 520px; height: 100%; margin: 0 auto;
+  perspective: 1600px;
+}
+.zz-leaf {
+  position: absolute; inset: 0; transform-origin: left center; backface-visibility: hidden;
+  opacity: 0; transform: rotateY(14deg); pointer-events: none; z-index: 1;
+  transition: transform 0.42s cubic-bezier(0.3, 0.8, 0.3, 1), opacity 0.34s ease;
+}
+.zz-leaf.is-current { opacity: 1; transform: rotateY(0deg); pointer-events: auto; z-index: 3; }
+.zz-leaf.is-out-fwd { opacity: 0; transform: rotateY(-125deg); z-index: 2; }
+.zz-leaf.is-out-back { opacity: 0; transform: rotateY(125deg); z-index: 2; }
+.zz-paper {
+  position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; touch-action: pan-y;
+  padding: 18px 18px 30px;
+  background: var(--paper-2); border: 4px solid var(--ink); border-radius: 14px;
+  box-shadow: var(--pop);
+  background-image: linear-gradient(var(--paper-2) 0 0), repeating-linear-gradient(transparent, transparent 27px, rgba(36,27,77,0.05) 28px);
+}
+.zz-paper--spam { background-color: #f1ebdb; border-style: dashed; }
+.zz-paper__h { margin: 0 0 12px; font-size: 1.2rem; overflow-wrap: break-word; hyphens: auto; }
+.zz-pagenum { position: absolute; right: 16px; bottom: 8px; font-size: 0.75rem; font-weight: 800; color: var(--ink-soft); }
+
+.zz-pagecount { font-weight: 800; text-align: right; color: var(--ink-soft); }
+
+/* Cover */
+.zz-cover {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; text-align: center;
+  padding: 24px; border: 5px solid var(--ink); border-radius: 14px;
+  background: repeating-linear-gradient(45deg, #2a2d33, #2a2d33 14px, #2f3238 14px, #2f3238 28px);
+  color: #f4f4f4; box-shadow: var(--pop); overflow: hidden;
+}
+.zz-stamp {
+  position: absolute; top: 34px; right: -60px; width: 210px; z-index: 3;
+  transform: rotate(45deg); text-align: center;
+  background: var(--red); color: #fff; font-weight: 900; letter-spacing: 1.5px;
+  padding: 6px 0; font-size: 0.62rem;
+  border-top: 1px solid rgba(255,255,255,0.55); border-bottom: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 2px 7px rgba(0,0,0,0.45);
+}
+.zz-cover__art { font-size: 3.4rem; }
+.zz-cover__title { font-size: 1.8rem; font-weight: 900; color: #ffd84d; }
+.zz-cover__expert { font-weight: 800; letter-spacing: 1px; background: #14161a; padding: 4px 16px; border-radius: 999px; }
+.zz-cover__warn { margin-top: 6px; font-weight: 800; color: #ff8a3d; }
+.zz-cover__hint { font-size: 0.85rem; opacity: 0.7; }
+
+/* Post-it note */
+.zz-postit {
+  position: absolute; top: 12px; right: 12px; width: 116px; z-index: 4;
+  display: flex; flex-direction: column; align-items: center; gap: 1px;
+  padding: 12px 6px 10px; transform: rotate(5deg);
+  background: #fff07a; color: #4a4326; font-family: "Comic Sans MS", var(--font);
+  box-shadow: 2px 5px 9px rgba(0,0,0,0.28);
+}
+.zz-postit::before { content: ""; position: absolute; top: -7px; left: 50%; transform: translateX(-50%) rotate(-4deg); width: 50px; height: 18px; background: rgba(255,255,255,0.5); }
+.zz-postit__l { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; }
+.zz-postit b { font-size: 1.4rem; letter-spacing: 3px; }
+.zz-postit__s { font-size: 0.62rem; opacity: 0.8; }
+
+/* Coffee-stain decoy */
+.zz-coffeewrap { position: relative; }
+/* A real spilled-coffee splatter, drawn as an inline SVG whose smooth brown
+   blobs are roughened into organic jagged edges + speckle by a turbulence /
+   displacement filter (see coffeeSvg() in zeitzunder.js). No multiply — the
+   near-opaque pooled centre actually covers the lower steps so the section is
+   genuinely unreadable; the translucent halo lets edge text show through. */
+.zz-coffee {
+  position: absolute; left: -16%; top: 22%; width: 132%; height: 92%;
+  pointer-events: none; transform: rotate(-4deg);
+}
+.zz-coffee-svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.zz-coffeecap { font-style: italic; opacity: 0.7; }
+
+.zz-steps, .zz-rules { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+.zz-rules { list-style: none; padding-left: 0; }
+.zz-rules li { padding-left: 22px; position: relative; }
+.zz-rules li::before { content: "▸"; position: absolute; left: 4px; color: var(--purple); font-weight: 900; }
+.zz-warn { color: #c0392b; font-weight: 700; }
+.zz-fine { font-size: 0.82rem; color: #5b5742; line-height: 1.45; margin: 6px 0; }
+.zz-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.zz-table th, .zz-table td { border: 2px solid var(--ink); padding: 6px 10px; text-align: left; }
+.zz-table th { background: var(--purple); color: #fff; }
+.zz-sig { font-size: 1.4rem; text-align: center; }
+.zz-glyphs span { font-family: ui-monospace, Menlo, monospace; font-size: 1.2rem; margin-right: 8px; }
+.zz-bank { display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 5px; margin-top: 10px; }
+.zz-bankcell { display: flex; flex-direction: column; align-items: center; font-family: ui-monospace, Menlo, monospace; font-weight: 800; border: 2px solid var(--ink); border-radius: 8px; padding: 4px 0; background: var(--paper); }
+.zz-bankcell b { color: var(--purple); }
+.zz-mzgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px; }
+.zz-mzcard { display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 0.72rem; font-weight: 800; color: var(--ink); }
+.zz-mzimg { width: 100%; max-width: 118px; height: auto; display: block; }
+
+.zz-end { text-align: center; }
+
+/* Phone scaling: grow --zz-k toward 1 as the screen widens, so the cube +
+   side buttons always fit. At >=412px it is 1 (unchanged from desktop). */
+@media (min-width: 340px) { .zz-bomb { --zz-k: 0.80; } }
+@media (min-width: 360px) { .zz-bomb { --zz-k: 0.86; } }
+@media (min-width: 384px) { .zz-bomb { --zz-k: 0.93; } }
+@media (min-width: 412px) { .zz-bomb { --zz-k: 1; } }
+
+/* ---- Bigger cube on a real screen (the defuser's MacBook) ------------ */
+@media (min-width: 720px) {
+  .zz-bomb { --zz-size: 400px; }
+  .zz-sigil { width: 70px; height: 70px; font-size: 2.6rem; border-radius: 12px; }
+  .zz-led i { width: 26px; height: 26px; }
+  .zz-maze-grid { width: 208px; }
+  .zz-maze-pad { grid-template-columns: repeat(3, 36px); grid-template-rows: repeat(3, 36px); }
+  .zz-mpad { font-size: 1.1rem; }
+  .zz-readout--sm .zz-readout__val { font-size: 2.6rem; }
+  .zz-serial { font-size: 0.92rem; }
+  .zz-serialplate__lbl { font-size: 0.58rem; }
+  .zz-wires { max-width: 340px; }
+  .zz-wire__line { height: 16px; }
+  .zz-wire__bolt { width: 20px; height: 20px; }
+  .zz-wire__num { font-size: 1.5rem; }
+  .zz-key { width: 84px; height: 84px; font-size: 2.3rem; }
+  .zz-entry { max-width: 300px; font-size: 1.9rem; }
+  .zz-mini { width: 80px; height: 54px; font-size: 1.5rem; }
+  .zz-dial__val { width: 96px; height: 96px; font-size: 3.4rem; }
+  .zz-dial__btn { width: 96px; height: 52px; font-size: 1.5rem; }
+  .zz-batt { width: 54px; height: 30px; }
+  .zz-ind { font-size: 1.25rem; padding: 12px 20px; }
+  .zz-readout__val { font-size: 4.2rem; }
+  .zz-decoderface { max-width: 340px; }
+  .zz-ckey__sw { width: 48px; height: 48px; }
+  .zz-ckey__rank { font-size: 1.1rem; }
+}
+@media (min-width: 1100px) { .zz-bomb { --zz-size: 460px; } }
+@media (prefers-reduced-motion: reduce) {
+  .zz-cube { transition: none; }
+  .zz-timer.is-danger, .zz-wire.is-bad, .zz-toast { animation: none; }
 }

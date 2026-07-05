@@ -85,7 +85,7 @@
       : '<div class="roster-warn" style="display:block">' +
         t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
-    // Mode picker: classic word-hunt vs the Timer (Zeitzünder) buzzer variant.
+    // Mode picker: classic word-hunt vs the Timer buzzer variant.
     var modeSection =
       '<h3 class="sub">' + t("Mode") + "</h3>" +
       '<div class="chip-row" id="im-mode">' +
