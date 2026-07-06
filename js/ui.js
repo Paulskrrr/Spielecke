@@ -89,9 +89,34 @@
     return a;
   }
 
+  // --- Haptics -------------------------------------------------------------
+  // One light tick the moment a finger lands on any interactive element, in
+  // sync with the CSS press-down — so every button feels like a physical key.
+  // Delegated once here instead of wired per game; navigator.vibrate is a
+  // no-op where unsupported (iOS Safari), so this degrades silently. Games
+  // with their own stronger patterns (pop, boom) just layer on top.
+  function haptic(pattern) {
+    try {
+      if (global.navigator && typeof global.navigator.vibrate === "function") {
+        global.navigator.vibrate(pattern || 10);
+      }
+    } catch (e) { /* ignore */ }
+  }
+  global.document.addEventListener(
+    "pointerdown",
+    function (e) {
+      if (e.pointerType === "mouse") return; // touch/pen only
+      var t = e.target;
+      var el = t && t.closest ? t.closest("button, .tappable, .toggle") : null;
+      if (el && !el.disabled) haptic(8);
+    },
+    { passive: true }
+  );
+
   S.tappable = tappable;
   S.esc = esc;
   S.attr = attr;
   S.shuffle = shuffle;
   S.seededShuffle = seededShuffle;
+  S.haptic = haptic;
 })(window);

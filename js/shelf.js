@@ -17,15 +17,16 @@
     var games = global.Spielecke.shuffle(global.Spielecke.GAMES || []);
 
     var cards = games
-      .map(function (game) {
+      .map(function (game, i) {
         var drinkBadge = game.supportsDrinking
           ? '<span class="badge badge-drink">' + t("🍻 drink mode") + "</span>"
           : "";
         var betaBadge = game.beta
           ? '<span class="badge badge-beta">' + t("BETA") + "</span>"
           : "";
+        // --i drives the CSS entrance stagger (cards cascade in grid order)
         return (
-          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + '" data-id="' + escapeAttr(game.id) + '">' +
+          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + '" style="--i:' + i + '" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +
           '  <span class="game-card__name">' + escapeHtml(t(game.name) || game.name) + "</span>" +
           '  <span class="game-card__tagline">' + escapeHtml(t(game.tagline || "") || game.tagline || "") + "</span>" +
@@ -45,7 +46,7 @@
     // Deliberately bare: just the icon box and a "Coming soon" title (kept in
     // English in both languages), nothing else.
     var soonTile =
-      '<button class="game-card game-card--soon" type="button" aria-label="Coming soon">' +
+      '<button class="game-card game-card--soon" type="button" style="--i:' + games.length + '" aria-label="Coming soon">' +
       '  <span class="game-card__icon">✨</span>' +
       '  <span class="game-card__name">Coming soon</span>' +
       "</button>";
