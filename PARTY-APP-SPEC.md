@@ -20,11 +20,11 @@ next.
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
 - ✅ Shared term database for single-term games + optional drinking-mode toggle
-- ✅ **The Bomb** — hot-potato word game *(drinking-capable)*
+- ✅ **Hot Potato** — hot-potato word game *(drinking-capable)*
 - ✅ **Most Likely To** — pointing deck *(drinking-capable)*
 - ✅ **Never Have I Ever** — confession deck *(drinking-capable)*
 - ✅ **Who Am I?** — Heads-Up / forehead guessing
-- ✅ **Imposter** — hidden-role secret word
+- ✅ **Imposter** — hidden-role secret word (+ optional hints & a 🔔 Buzzer seconds-guess mode)
 - ✅ **Wavelength** — spectrum/dial guessing
 - ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
 - ✅ **Princess Treatment** — King/Princess debate deck
@@ -36,7 +36,7 @@ next.
 - ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
 - ✅ **Rank It** — privately rank the same set; drift from the group's consensus loses *(drinking-capable)*
 - ✅ **Hochadel** — royal-court action-card game; cards command who must *dienen* *(drinking-capable)*
-- ✅ **Mäxchen / Mia** — bluffing dice under a hat, passed around *(drinking-capable)*
+- ✅ **Mia** (a.k.a. Mäxchen) — bluffing dice under a hat, passed around *(drinking-capable)*
 - ✅ **Ride the Bus** — four-guess card gauntlet *(drinking-capable)*
 - ✅ **Fuck the Dealer** — guess-the-rank card game with dealer rotation *(drinking-capable)*
 - ✅ **Horse Race** — animated suit-betting card race *(drinking-capable)*
@@ -134,7 +134,8 @@ js/
   roster.js                players screen + DE/EN language toggle
   content/                 DATA ONLY (no logic) — bilingual { de, en } bundles
     terms.js               SHARED single-term DB (Who Am I?, Imposter, Doodle Drama)
-    bomb-prompts.js        The Bomb's category prompts
+    imposter-hints.js      Imposter's optional cryptic decoy hints (per word)
+    hotpotato-prompts.js   Hot Potato's category prompts
     wavelength.js          Wavelength's opposite pairs
     nhie.js / most-likely.js / truth.js   sentence-predicate decks
     numbers.js             Liar's Numbers question/answer bank
@@ -144,11 +145,11 @@ js/
     rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
     hochadel.js            Hochadel deck + ground rules + verses, tagged per edition
   games/                   one module per game (logic)
-    bomb.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
+    hotpotato.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
-    reactionduel.js  rankit.js  hochadel.js  maxchen.js
+    reactionduel.js  rankit.js  hochadel.js  maxchen.js  zeitzunder.js
     cards.js  busfahrt.js  fuckdealer.js  pferderennen.js   (card games; cards.js = shared deck)
-    (chooser, reactionduel & maxchen have no content file)
+    (chooser, reactionduel, maxchen & zeitzunder have no content file)
 assets/logo.png            the "Pauls Spielecke" wordmark
 ```
 
@@ -220,7 +221,7 @@ Two shapes of content, by what the game needs:
   read their pools via `Spielecke.termPoolsFor(id)`, which filters the chips **and** the
   "Mixed" draw so a scoped pool never leaks into a game it doesn't belong to.
 - **Per-game content** when the shape differs:
-  - The Bomb → category *prompts* (`bomb-prompts.js`, `{ label, prompts }`).
+  - Hot Potato → category *prompts* (`hotpotato-prompts.js`, `{ label, prompts }`).
   - Wavelength → *opposite pairs* (`wavelength.js`, `{ label, pairs:[{left,right}] }`).
   - Never Have I Ever / Most Likely To → *sentence predicates* (`nhie.js`, `most-likely.js`,
     `{ label, prompts }`) — separate because the grammar differs from each other.
@@ -250,9 +251,9 @@ Paul to fill.
 Outcomes below are the **plain** (default) framing. For drinking-capable games, the
 🍻 toggle swaps the resolution wording to drinks.
 
-### 3.1 The Bomb 💣 (`bomb`, 3+) — drinking-capable
+### 3.1 Hot Potato 🥔 (`hotpotato`, 2+) — drinking-capable
 
-Hot-potato. A category prompt shows; the device is the bomb. Holder names an answer, taps
+Hot-potato. A category prompt shows; the device is the potato. Holder names an answer, taps
 the big **Pass**, hands the phone on. A hidden fuse counts down.
 
 - **Pass model:** pure physical pass — the app runs the fuse only, doesn't track turns.
@@ -261,7 +262,7 @@ the big **Pass**, hands the phone on. A hidden fuse counts down.
 - **Config:** category pool, sound on/off, 🍻 drinking mode. Persisted.
 - **Outcome:** holder at detonation **loses the round** (drinking mode: drinks).
 
-### 3.2 Most Likely To 🫵 (`mostlikely`, 3+) — drinking-capable
+### 3.2 Most Likely To 🫵 (`mostlikely`, 2+) — drinking-capable
 
 Pointing deck. Card shows "Most likely to ___"; on 3-2-1 everyone points.
 
@@ -286,17 +287,26 @@ Heads-Up style. Two modes (toggle in setup):
   hold on the forehead — a digital sticky note for when you don't have paper ones. No timer,
   no score; "New character" to go again.
 
-### 3.5 Imposter 🕵️ (`imposter`, 3+) — plain
+### 3.5 Imposter 🕵️ (`imposter`, 2+) — plain gameplay
 
-Hidden roles on one device. Everyone gets the same secret word except one random
-**imposter**, who only sees the category. Pass to reveal each role privately (shared roster
-for order + names), then discuss, vote, unmask.
+Hidden roles on one device. Everyone gets the same secret word except one or more random
+**imposters**, who only see the category. Pass to reveal each role privately (shared roster
+for order + names, randomised each deal), then discuss, vote, unmask.
 
-- **Config:** word pool (shared Terms); **number of imposters** (1 up to the whole table,
-  chosen before dealing). Persisted.
-- **Outcome:** all imposter(s) caught → the table wins; fooled → the imposter(s) win.
+- **Config:** word pool (shared Terms); **number of imposters** — 1 up to the whole table, or
+  **🎲 Random** (skewed toward fewer). An optional **"give imposters a hint"** toggle hands each
+  imposter a distant, cryptic decoy clue (`content/imposter-hints.js`). Persisted.
+- **🔔 Buzzer mode:** a Buzzer chip sits in the category row; picking it swaps the word hunt for
+  a seconds-guessing round — no secret word, no clock ever shown. Everyone but the imposter
+  secretly sees a target of **1–15 seconds**, then each player buzzes when they think that long
+  has passed. The reveal ranks everyone by how close they landed and pins them on a timeline.
+- **Outcome:** word hunt — all imposter(s) caught → the table wins; fooled → the imposter(s)
+  win. Buzzer — closest to the target takes 👑; the imposter, guessing blind, usually drifts off.
+- **Drinking flag:** `meta.supportsDrinking` is `true` (so the shelf shows the 🍻 marker), but
+  the game does **not** implement an in-game drinking toggle yet — a meta/implementation drift
+  to reconcile (add the toggle or set the flag to `false`).
 
-### 3.6 Wavelength 📡 (`wavelength`, 3+) — plain
+### 3.6 Wavelength 📡 (`wavelength`, 2+) — plain
 
 A spectrum between two opposites (e.g. Cold ↔ Hot). A **clue-giver** secretly sees a hidden
 target band and gives a clue; the rest slide a dial to guess.
@@ -335,7 +345,7 @@ the whole chain at the end.
 - **Config:** word pool.
 - **Outcome:** none — reveal the carnage for laughs.
 
-### 3.10 Activity 🗺️ (`activity`, 4+) — drinking-capable
+### 3.10 Activity 🗺️ (`activity`, 2+ · best with 4) — drinking-capable
 
 Two teams race along a map. Each field is a type shown by **icon + colour, never words**:
 💬 explain · ✏️ draw · 🎭 charade. On your turn you're on a field of one type; pick a
@@ -376,6 +386,10 @@ A spinning wheel that lands on a random person from the roster. SVG wheel (one c
 slice + name per player), CSS-rotate spin with a fixed pointer at the top. No content file —
 it just spins the roster. "Spin again" to re-roll. Handy as a picker for any other game.
 
+- **Drinking flag:** `meta.supportsDrinking` is `true` (the shelf marks it) even though there's
+  no in-game drinking toggle — the whole game already *is* "who's the victim." A meta/
+  implementation drift to reconcile (add a toggle or clear the flag).
+
 ### 3.14 Reaction Duel ⚡ (`reaction`, 2+) — drinking-capable
 
 Two players, device flat between them; the screen splits into two tap zones (top half
@@ -415,7 +429,7 @@ deck is data, tagged per edition (active: *Diener & Könige*; *Rapunzel* is a lo
 reshuffles endlessly. Game state persists; the Sanduhr (secret timer) and the space-key
 shortcut are torn down on unmount.
 
-### 3.17 Mäxchen / Mia 🎩 (`maxchen`, 2+) — drinking-capable
+### 3.17 Mia (Mäxchen) 🎩 (`maxchen`, 2+) — drinking-capable
 
 Bluffing dice on one passed-around phone. Tap the hat to roll two dice in secret, announce a
 value out loud (truth or bluff, higher than the player before you), pass on; the next player
@@ -488,11 +502,13 @@ alarms and key handler are all torn down on unmount.
    content (see Part 0 visual identity).
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
-   penalties where they don't fit. Drinking-capable: Bomb, Most Likely To, Never Have I
-   Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity, Reaction Duel, Rank It, Hochadel,
-   Mäxchen, Ride the Bus, Fuck the Dealer, Horse Race.
-3. **The Bomb pass model** → pure physical pass (no turn tracking).
-4. **The Bomb fuse** → always random 20–90s, not configurable.
+   penalties where they don't fit. Games with a real 🍻 toggle: Hot Potato, Most Likely To,
+   Never Have I Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity, Reaction Duel, Rank
+   It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race. ⚠ **Known drift:** Chooser and
+   Imposter also set `supportsDrinking: true` (so the shelf marks them) but ship no toggle yet —
+   reconcile by adding one or clearing the flag.
+3. **Hot Potato pass model** → pure physical pass (no turn tracking).
+4. **Hot Potato fuse** → always random 20–90s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
    Drama) via canvas + Pointer Events works on both.
 6. **Module loading** → ordered classic `<script>` tags (no ES modules) for `file://`.

@@ -49,7 +49,9 @@ orient you; you're still meant to be lost.
 - **Random arrangement every game.** The six logical faces are dealt to the six physical sides
   of the cube at random, so "wires is on the right" is never learnable.
 - **Six faces:** `core` (serial, three firing sigils, three progress lamps), `wires`,
-  `keypad`, `dials`, `guts` (batteries + indicators), `decoder` (a letter + colour-priority).
+  `keypad`, `dials`, `guts` (batteries + indicators + the decoder letter + colour-priority),
+  and `maze` (a 6×6 grid with walls the defuser can't see). The old standalone `decoder` face
+  was folded into `guts` to make room for the Maze.
 - **Casing is grey**, deliberately industrial against the playful cream chrome. Decorative
   detailing (screws, bolts, bevels) frames the functional elements so it reads as a device.
 
@@ -67,8 +69,8 @@ orient you; you're still meant to be lost.
 
 ## 4. The puzzle
 
-Three **action stages** — `WIRES`, `KEYPAD`, `DIALS` — must be **committed in an order the
-bomb hides** in its three firing sigils (Core face), *reversed* when the serial's last digit
+Four **action stages** — `WIRES`, `KEYPAD`, `DIALS`, `MAZE` — must be **committed in an order
+the bomb hides** in its firing sigils (Core face), *reversed* when the serial's last digit
 is even. Acting out of order is a strike, so you can't brute-force left-to-right.
 
 Each stage reads values off **other** faces, forcing constant flipping:
@@ -119,14 +121,17 @@ page counter. The same content every game (only the bomb is random).
   **which expert you are** ("Expert 1") and **"Do not open until the timer starts."** The cover
   is the **multi-expert variation point**: `buildBook(expertId, expertCount)` already takes the
   expert — later, different experts get disjoint chapter sets and the cover names them.
-- **Real chapters** (numbered Ch. 1–6): How to defuse, Firing order, Dials, Keypad, Reading the
-  bomb, Wires (full procedure). Each is padded with believable boilerplate *filler* (factory
+- **Real chapters** (numbered Ch. 1–8): How to defuse, Firing order, Dials, Keypad, Reading the
+  bomb, Wires (full procedure, shelved at the back), Wiring Maze, and Arming the detonator. Each
+  is padded with believable boilerplate *filler* (factory
   notes, calibration disclaimers, read-only warnings) around the operative rule, so the real
   instruction is buried in officialese — but the rule lines themselves are never touched.
-- **Spam to dig through** — seven deadpan **annexes** interleaved between the chapters: Foreword
-  & Legal Notice, Safety Instructions, Data Protection (GDPR), Maintenance & Care, Warranty &
-  Liability, Troubleshooting, and Disposal/Conformity/Index. ~15 leaves total; dashed accent,
-  otherwise styled like real pages so they genuinely distract.
+- **Spam to dig through** — ten deadpan **annexes** (I–X) interleaved between the chapters:
+  Foreword & Legal Notice, Safety Instructions, Data Protection (GDPR), Maintenance & Care,
+  Warranty & Liability, Troubleshooting, Disposal/Conformity/Index, End-User Licence Agreement,
+  Frequently Asked Questions, and a Customer Satisfaction Survey. ~19 leaves total (cover + 8
+  chapters + 10 annexes); dashed accent, otherwise styled like real pages so they genuinely
+  distract.
 - **Coffee-stain misdirection.** The "Wire-Cutting Reference Card" reads as a believable, serious
   quick-reference, but a near-opaque coffee splatter (an SVG turbulence/displacement stain — no
   asset) genuinely buries the lower steps, while the real, complete procedure is at the **back**
@@ -141,8 +146,9 @@ More pages (spam, decoys, props) are cheap to add — they're pure content in `b
 
 - **Scope:** a single bomb, one shared manual, minimum 2 players (1 defuser + 1 expert). With
   one expert the manual isn't split yet.
-- **Verified:** rule engine audited over 20k generated bombs (0 unsolvable, all 6 firing orders,
-  modifiers fire); cube front-detection calibrated against real rendering (0 mismatches once
+- **Verified:** rule engine audited over thousands of generated bombs (0 unsolvable, every
+  firing order exercised, modifiers fire); cube front-detection calibrated against real
+  rendering (0 mismatches once
   settled, all 6 faces reachable across random arrangements); full happy- and lose-paths driven
   through the real UI headlessly with zero console errors. The pure engine is exposed under
   `module._test` for the Node audit + browser tests.
@@ -152,8 +158,9 @@ More pages (spam, decoys, props) are cheap to add — they're pure content in `b
 - **Multi-expert:** deal the manual's pages across several experts so chains force
   *expert-to-expert* talk (e.g. one holds the Letter Bank, another the wire rules). The manual
   is already chaptered for this.
-- **More faces / modules:** a maze (defuser reads coordinates, expert has the walls), a
-  Simon-style sequence, needy modules that periodically demand attention.
+- **More faces / modules:** the Maze shipped (defuser walks a lit cell, expert reads the
+  invisible walls); next could be a Simon-style sequence and needy modules that periodically
+  demand attention.
 - **Seeded per-game manuals:** shuffle the manual's tables per game (QR/seed handoff) so
   regulars can't memorise — a v2 once the static version is loved.
 - **More decoration:** non-functional wires/lights/vents that complement the real elements;
