@@ -2591,14 +2591,19 @@ body::before {
    ====================================================================== */
 
 /* ----- Ballon ----------------------------------------------------------- */
-.ballon-play { text-align: center; }
-.ballon-pot { display: inline-block; font-weight: 900; background: var(--yellow); color: var(--ink);
+.ballon-play { text-align: center; overflow-x: clip; }
+.ballon-pot { position: relative; z-index: 3; display: inline-block; font-weight: 900; background: var(--yellow); color: var(--ink);
   border: 3px solid var(--ink); border-radius: 999px; padding: 8px 18px; box-shadow: var(--pop); }
-.ballon-stage { height: 46vh; max-height: 340px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.ballon-body { font-size: 5rem; transition: transform 0.18s cubic-bezier(0.2,1.4,0.4,1); transform-origin: center bottom; }
+/* overflow is intentionally NOT hidden: a fat pot inflates the balloon past the
+   stage bounds — up over the pot, sideways over the buttons — for drama. */
+.ballon-stage { position: relative; height: 46vh; max-height: 340px; display: flex; align-items: center; justify-content: center; overflow: visible; }
+.ballon-body { position: relative; z-index: 1; font-size: 5rem; pointer-events: none; will-change: transform;
+  transition: transform 0.18s cubic-bezier(0.2,1.4,0.4,1); transform-origin: center bottom; }
 .ballon-body.is-tense { animation: wiggle 0.35s ease-in-out infinite; filter: saturate(1.4); }
-.ballon-pump { font-size: 1.5rem; }
-.ballon-pass { margin-top: 10px; }
+/* Buttons sit above the balloon so an over-sized balloon can spill behind them
+   and you can keep pumping. */
+.ballon-pump { position: relative; z-index: 3; font-size: 1.5rem; }
+.ballon-pass { position: relative; z-index: 3; margin-top: 10px; }
 .ballon-boom { text-align: center; }
 .ballon-flash { font-size: 5rem; animation: pop-in 0.3s cubic-bezier(0.2,1.6,0.4,1); }
 

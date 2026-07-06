@@ -549,6 +549,10 @@ whoever's pumping it then holds it when it blows.
 - **Burst point:** random each balloon, scaled to the table — `⌈2.5×players⌉` to
   `⌈5×players⌉` cumulative pumps — so a balloon survives roughly one to one-and-a-half laps
   regardless of group size. The pot is public; the threshold never is.
+- **Inflation:** the on-screen balloon scales with the **pot** (not the hidden threshold),
+  so it only ever grows and never appears to deflate before it pops. Up to ~7 sips it fits the
+  stage; past that it deliberately bloats over the top bounds — a fat pot looks tense and
+  faintly out of control. It overflows *behind* the pot badge and buttons, so you keep pumping.
 - **Config:** sound on/off (rising pump pitch + a Web-Audio pop + haptics), 🍻 drinking mode.
 - **Outcome:** holder at pop **drinks the pot** (plain: loses the round, pot becomes points).
 
