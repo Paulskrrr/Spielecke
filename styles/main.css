@@ -2044,6 +2044,9 @@ body::before {
 .fd-history::-webkit-scrollbar-track { background: transparent; }
 
 /* ── Horse Race (pferderennen.js) ───────────────────────────────────────── */
+/* The "how many sips" row only matters for the flat penalty — dim + lock it
+   while "lengths behind" is chosen so it reads as not-applicable. */
+.hr-sipsrow.hr-dim { opacity: 0.4; pointer-events: none; }
 .hr-horses { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 6px 0 4px; }
 .hr-horsechip { font-size: 1.3rem; font-weight: 800; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 10px; padding: 4px 10px; }
 .hr-suit--red { color: #e0294e; }

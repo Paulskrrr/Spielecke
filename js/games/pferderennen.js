@@ -26,6 +26,8 @@
     flatLossSips: 3,
   };
   var SPEEDS = { slow: 1300, normal: 850, fast: 450 };
+  var SIP_CHOICES = [1, 2, 3, 4, 5];   // how many sips a flat loss costs
+  function clampSips(n) { return Math.min(9, Math.max(1, n)); }
 
   var SUITS = Cards.SUIT_ORDER; // S H D C
   var HORSE_EMOJI = "🐎"; // all four lanes share the same horse; suit tells them apart
@@ -53,7 +55,7 @@
         hurdleCount: DEFAULTS.hurdleCount,
         flipMs: num(savedSpeed, DEFAULTS.flipMs),
         lossFormula: context.store.get("lossFormula", DEFAULTS.lossFormula) === "lengths" ? "lengths" : "flat",
-        flatLossSips: DEFAULTS.flatLossSips,
+        flatLossSips: clampSips(num(context.store.get("flatLossSips", DEFAULTS.flatLossSips), DEFAULTS.flatLossSips)),
       };
       bets = context.store.get("bets", {}) || {};
       renderSetup();
@@ -115,8 +117,12 @@
       "  </div>" +
       '  <h3 class="sub">' + t("Loss penalty") + "</h3>" +
       '  <div class="chip-row" id="hr-loss">' +
-      '    <button class="chip" data-l="flat">' + t("Flat") + " " + settings.flatLossSips + " " + t("sips") + "</button>" +
+      '    <button class="chip" data-l="flat">' + t("Flat") + "</button>" +
       '    <button class="chip" data-l="lengths">' + t("Lengths behind") + "</button>" +
+      "  </div>" +
+      '  <h3 class="sub">' + t("How many sips") + "</h3>" +
+      '  <div class="chip-row hr-sipsrow" id="hr-sips">' +
+      SIP_CHOICES.map(function (n) { return '<button class="chip" data-n="' + n + '">' + n + "</button>"; }).join("") +
       "  </div>" +
       '  <button id="hr-start" class="btn btn-primary btn-block btn-xl">' + t("To the start line 🏁") + "</button>" +
       "</section>";
@@ -148,9 +154,28 @@
         settings.lossFormula = c.getAttribute("data-l");
         ctx.store.set("lossFormula", settings.lossFormula);
         highlight("#hr-loss", settings.lossFormula, "data-l");
+        dimSipsRow();
       });
     });
+
+    // How many sips a flat loss costs. Only relevant to the "flat" penalty, so
+    // the row dims out (and stops taking taps) while "lengths behind" is on.
+    highlight("#hr-sips", String(settings.flatLossSips), "data-n");
+    els.querySelectorAll("#hr-sips .chip").forEach(function (c) {
+      c.addEventListener("click", function () {
+        settings.flatLossSips = clampSips(num(c.getAttribute("data-n"), DEFAULTS.flatLossSips));
+        ctx.store.set("flatLossSips", settings.flatLossSips);
+        highlight("#hr-sips", String(settings.flatLossSips), "data-n");
+      });
+    });
+    dimSipsRow();
+
     els.querySelector("#hr-start").addEventListener("click", setupRace);
+  }
+
+  function dimSipsRow() {
+    var row = els && els.querySelector("#hr-sips");
+    if (row) row.classList.toggle("hr-dim", settings.lossFormula === "lengths");
   }
 
   // ── Race build ─────────────────────────────────────────────────────────────

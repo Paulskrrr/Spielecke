@@ -545,6 +545,7 @@
     "Fast": "Schnell",
     "Loss penalty": "Verlierer-Strafe",
     "Lengths behind": "Längen zurück",
+    "How many sips": "Wie viele Schlücke",
     "To the start line 🏁": "An die Startlinie 🏁",
     "They're at the gate… 🏁": "Sie stehen am Gatter… 🏁",
     "cards in the pile": "Karten im Stapel",
