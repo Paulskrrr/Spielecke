@@ -1,7 +1,7 @@
 /*
- * games/bomb.js — The Bomb (spec Part 2)
+ * games/hotpotato.js — Hot Potato (spec Part 2)
  *
- * Hot-potato word game. A category shows on screen, the device is the bomb.
+ * Hot-potato word game. A category shows on screen, the device is the potato.
  * The holder says an answer, taps Pass, hands the phone on. A hidden, randomised
  * fuse counts down; whoever's holding it at zero loses and drinks.
  *
@@ -9,7 +9,7 @@
  * turn it is, so it can't name the loser. Less bookkeeping, more chaos. The
  * shared roster is shown for context but turn logic stays out of the app.
  *
- * Content lives in bomb.categories.js (Spielecke.BombCategories), not here.
+ * Content lives in hotpotato-prompts.js (Spielecke.HotPotatoCategories), not here.
  *
  * Contract: meta + mount(container, context) + unmount(). unmount() MUST kill
  * the fuse, the tick scheduler, and all audio — verified by the shell.
@@ -43,10 +43,10 @@
   // ========================================================================
   var module = {
     meta: {
-      id: "bomb",
-      name: "The Bomb",
+      id: "hotpotato",
+      name: "Hot Potato",
       tagline: "Name it fast, pass it faster. Don't be holding it when it blows.",
-      icon: "💣",
+      icon: "🥔",
       minPlayers: 2,
       supportsDrinking: true,
     },
@@ -101,7 +101,7 @@
     var warn =
       playerCount > 0 && playerCount < module.meta.minPlayers
         ? '<div class="roster-warn" style="display:block">' +
-          t("⚠ The Bomb is best with {n}+ players. Add more from the header.").replace(
+          t("⚠ Hot Potato is best with {n}+ players. Add more from the header.").replace(
             "{n}",
             module.meta.minPlayers
           ) +
@@ -109,42 +109,42 @@
         : "";
 
     els.innerHTML =
-      '<section class="screen bomb-setup">' +
-      '  <h2 class="screen-title neon">💣 ' + t("The Bomb") + "</h2>" +
+      '<section class="screen hp-setup">' +
+      '  <h2 class="screen-title neon">🥔 ' + t("Hot Potato") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       warn +
-      '  <h3 class="bomb-sub">' + t("Category pool") + "</h3>" +
-      '  <div class="chip-row" id="bomb-pools">' + chips + "</div>" +
+      '  <h3 class="hp-sub">' + t("Category pool") + "</h3>" +
+      '  <div class="chip-row" id="hp-pools">' + chips + "</div>" +
       '  <div class="fuse-note">' + t("⏱️ The fuse is random — and hidden from everyone.") + "</div>" +
       '  <label class="toggle">' +
-      '    <input type="checkbox" id="bomb-sound"' + (settings.soundOn ? " checked" : "") + " />" +
+      '    <input type="checkbox" id="hp-sound"' + (settings.soundOn ? " checked" : "") + " />" +
       "    <span>" + t("🔊 Ticking & explosion sound") + "</span>" +
       "  </label>" +
       '  <label class="toggle">' +
-      '    <input type="checkbox" id="bomb-drink"' + (settings.drinking ? " checked" : "") + " />" +
+      '    <input type="checkbox" id="hp-drink"' + (settings.drinking ? " checked" : "") + " />" +
       "    <span>" + t("🍻 Drinking mode") + "</span>" +
       "  </label>" +
-      '  <button id="bomb-start" class="btn btn-primary btn-block btn-xl">' + t("ARM & START 💥") + "</button>" +
+      '  <button id="hp-start" class="btn btn-primary btn-block btn-xl">' + t("ARM & START 💥") + "</button>" +
       "</section>";
 
     // Pool chips (multi-select)
-    Pools().bind(els.querySelector("#bomb-pools"), categories(),
+    Pools().bind(els.querySelector("#hp-pools"), categories(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; saveSettings(); });
 
     // Sound toggle
-    els.querySelector("#bomb-sound").addEventListener("change", function (e) {
+    els.querySelector("#hp-sound").addEventListener("change", function (e) {
       settings.soundOn = e.target.checked;
       saveSettings();
     });
 
-    els.querySelector("#bomb-drink").addEventListener("change", function (e) {
+    els.querySelector("#hp-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked;
       saveSettings();
     });
 
     // Start
-    els.querySelector("#bomb-start").addEventListener("click", startRound);
+    els.querySelector("#hp-start").addEventListener("click", startRound);
   }
 
   // ========================================================================
@@ -155,13 +155,13 @@
     var fuseMs = randomFuseMs();
 
     els.innerHTML =
-      '<section class="screen bomb-play">' +
-      '  <div class="bomb-status">' + t("💣 LIVE — pass it on!") + "</div>" +
-      '  <div class="bomb-prompt-wrap">' +
-      '    <div class="bomb-prompt">' + esc(currentPrompt) + "</div>" +
+      '<section class="screen hp-play">' +
+      '  <div class="hp-status">' + t("🥔 LIVE — pass it on!") + "</div>" +
+      '  <div class="hp-prompt-wrap">' +
+      '    <div class="hp-prompt">' + esc(currentPrompt) + "</div>" +
       "  </div>" +
-      '  <button id="bomb-pass" class="btn btn-pass">' + t("PASS ➡️") + "</button>" +
-      '  <button id="bomb-quit" class="btn btn-ghost btn-block">' + t("Give up · back to setup") + "</button>" +
+      '  <button id="hp-pass" class="btn btn-pass">' + t("PASS ➡️") + "</button>" +
+      '  <button id="hp-quit" class="btn btn-ghost btn-block">' + t("Give up · back to setup") + "</button>" +
       "</section>";
 
     setupAudio();
@@ -169,14 +169,14 @@
 
     fuseTimeout = global.setTimeout(detonate, fuseMs);
 
-    els.querySelector("#bomb-pass").addEventListener("click", onPass);
-    els.querySelector("#bomb-quit").addEventListener("click", renderSetup);
+    els.querySelector("#hp-pass").addEventListener("click", onPass);
+    els.querySelector("#hp-quit").addEventListener("click", renderSetup);
   }
 
   // Pure physical pass: the fuse keeps running regardless. Pass just gives a
   // tactile "handed off" pulse so the next player knows it's live.
   function onPass() {
-    var btn = els && els.querySelector("#bomb-pass");
+    var btn = els && els.querySelector("#hp-pass");
     if (!btn) return;
     btn.classList.remove("pulse");
     // reflow to restart the animation
@@ -196,7 +196,7 @@
     buzz([120, 60, 200]);
 
     els.innerHTML =
-      '<section class="screen bomb-boom">' +
+      '<section class="screen hp-boom">' +
       '  <div class="boom-flash">💥</div>' +
       '  <h2 class="boom-title">' + t("BOOM!") + "</h2>" +
       '  <p class="boom-sub">' +
@@ -205,13 +205,13 @@
         : t("🔥 Whoever's holding it loses the round!")) +
       "</p>" +
       '  <div class="boom-actions">' +
-      '    <button id="bomb-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
-      '    <button id="bomb-setup" class="btn btn-block">' + t("Change settings") + "</button>" +
+      '    <button id="hp-next" class="btn btn-primary btn-block btn-xl">' + t("Next round 🔁") + "</button>" +
+      '    <button id="hp-setup" class="btn btn-block">' + t("Change settings") + "</button>" +
       "  </div>" +
       "</section>";
 
-    els.querySelector("#bomb-next").addEventListener("click", startRound);
-    els.querySelector("#bomb-setup").addEventListener("click", renderSetup);
+    els.querySelector("#hp-next").addEventListener("click", startRound);
+    els.querySelector("#hp-setup").addEventListener("click", renderSetup);
   }
 
   // ========================================================================
@@ -350,9 +350,9 @@
   // ========================================================================
   var esc = global.Spielecke.esc;
 
-  function categories() { return global.Spielecke.L(global.Spielecke.BombCategories) || {}; }
+  function categories() { return global.Spielecke.L(global.Spielecke.HotPotatoCategories) || {}; }
 
   global.Spielecke = global.Spielecke || {};
   global.Spielecke.Games = global.Spielecke.Games || {};
-  global.Spielecke.Games.bomb = module;
+  global.Spielecke.Games.hotpotato = module;
 })(window);
