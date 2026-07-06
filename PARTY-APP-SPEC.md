@@ -114,14 +114,17 @@ Players screen.
   instant press-down, a small overshoot on release; a light `navigator.vibrate` tick fires
   on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
-  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon
-  cycle (coprime with the 7-step tilt cycle, so colour+angle only realign at 63 cards). The
-  home bar is a solid-purple app-bar lifted with a soft drop shadow. All of the above honours
-  `prefers-reduced-motion`.
+  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set
+  paired with a 7-step tilt set; both are **hashed from the game id** (`gc-*`/`gt-*` classes),
+  so a game keeps the same colour and angle no matter where it lands. The shelf order is
+  **shuffled once per page load** (not per render), so returning to it mid-session doesn't
+  re-scatter the tiles under your thumb. The home bar is a solid-purple app-bar lifted with a
+  soft drop shadow. All of the above honours `prefers-reduced-motion`.
 - **First-visit splash:** on the very first open (a localStorage flag, pre-checked in a tiny
   `<head>` script so returning visitors never see a flash) the logo shows in a game-tile-style
   card on a yellow field, then rolls up like a blind after ~0.5 s to reveal the shelf already
-  rendered behind it (`shell.runSplash`).
+  rendered behind it (`shell.runSplash`). A **CSS-only fail-safe** rolls the splash up after
+  ~1.6 s even if boot JS never runs, so it can never trap a first-time visitor.
 
 ---
 
@@ -577,7 +580,8 @@ land on the exact same word — tap **+1** on every miss. **MELD!** locks that t
 count; the next team takes the phone.
 
 - **Config:** word pools (🎲 Allgemein, 🔞 18+), 🍻 drinking mode. 🔀 Reshuffle re-teams and
-  redraws words.
+  redraws words; toggling a **word pool** re-deals only the seed words (the teams stay put, so
+  the on-screen team cards never go stale).
 - **Outcome:** fewest rounds to meld **wins**; most rounds **drinks** (drinking mode) or is
   simply named slowest (plain). A tie across all teams is a draw — nobody drinks.
 
@@ -597,7 +601,10 @@ mission in.
   only the DOM is torn down on `unmount()`), so the mission is still there when you come back.
 - **Co-op missions:** at 5+ players some missions pair two people on the same `{target}` —
   either told who their partner is, or left to find each other from the shared wording alone
-  ("someone at the table shares this exact mission"). Both cash in together.
+  ("someone at the table shares this exact mission"). Cashing one in **completes both partners
+  at once** — both hand out sips and both draw fresh missions.
+- **Hub status:** the hub shows a running tally — "*N* in play · *M* pulled off" — so a
+  quiet all-evening side-game still gives you a reason to check back on the tile.
 - **Config:** none — plain by design (some missions are naturally harder, no difficulty tag).
 - **Outcome:** pulled off → **hands out 2** and draws a fresh mission.
 
@@ -609,9 +616,10 @@ the DE build uses a native command-giver; the game id stays `simon`.*
 Voice-driven, not screen-driven. The phone is the announcer: it **reads commands aloud**
 (Web Speech `speechSynthesis`, falling back to a big on-screen phrase + beep if unsupported),
 randomly prefixing the authority phrase ("Simon says:" / "Der Chef sagt:") — obey only the
-prefixed ones. The calling cadence
-**accelerates** every command. The app can't see who reacted (no sync), so the table judges:
-tap ❌ to knock out whoever slipped.
+prefixed ones. The calling cadence **accelerates** every command, and the built-up speed
+**carries across knockouts and pauses** — only a genuinely new round restarts at the slow
+cadence, so the last two players are getting rapid-fire calls. The app can't see who reacted
+(no sync), so the table judges: tap ❌ to knock out whoever slipped.
 
 - **Config:** command category pools (🤸 Körper & Gesten, 🎉 Party, 🔞 18+), voice on/off,
   🍻 drinking mode.
@@ -625,9 +633,11 @@ A Cards Against Humanity mode, asymmetric like Zeitzünder: on entry you pick **
 screen, the table) or **🃏 Spieler** (your own hand). The two never talk to each other.
 
 - **Host:** generates a short **table code** and shows it big, alongside the current black
-  prompt, the rotating **Card Czar**, and a live scoreboard (tap a name to award the point).
-  Prompts have **one or two blanks**; a two-blank prompt shows a **PICK 2** badge so the table
-  knows to play two cards.
+  prompt, the rotating **Card Czar** (DE UI: *Kartenboss*), and a live scoreboard (tap a name to
+  award the point). Prompts have **one or two blanks**; a two-blank prompt shows a **PICK 2**
+  badge so the table knows to play two cards. **Next prompt** just advances the prompt +
+  Czar; **New table code** turns the whole table over together — since a new code re-deals
+  every player's hand, it also draws a fresh prompt and clears the scoreboard.
 - **Player:** types the host's code and calls out a **free seat number** (1–12) so no two
   players claim the same seat. Every phone then runs the *same* deterministic shuffle of the
   fixed answer deck off that code (`Spielecke.seededShuffle`) and slices out its seat's
@@ -636,9 +646,9 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
   to a fresh 8 (window steps by 8 through the seat's block, so a card is never re-dealt).
 - **Deck:** one fixed set per language (`content/geschmacklos.js`) — **~228 answer cards + 74
   prompts** (14 of them two-blank). Answers are deliberately **short (1–2 words on average**,
-  longer full-phrase gags the exception) and run filthy/absurd/politically-incorrect; the
-  content boundary (no slurs / hate against protected groups, no minors, nothing illegal) is
-  fixed and non-negotiable.
+  longer full-phrase gags the exception) and run filthy/absurd/politically-incorrect. Dark-noun
+  humour about shady/illegal things is fair game (it's CAH); the fixed, non-negotiable boundary
+  is only **no slurs / hate against protected groups, no minors**.
 - **Play:** tap your best card to blow it up full-screen, then read prompt + card aloud round
   the table (you can tell whose phone is whose) — no anonymity mechanic.
 - **Config:** none — one fixed deck (dropping category pools keeps the seat-block math
