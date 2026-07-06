@@ -115,16 +115,18 @@ Players screen.
   on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
   cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set
-  paired with a 7-step tilt set; both are **hashed from the game id** (`gc-*`/`gt-*` classes),
-  so a game keeps the same colour and angle no matter where it lands. The shelf order is
-  **shuffled once per page load** (not per render), so returning to it mid-session doesn't
-  re-scatter the tiles under your thumb. The home bar is a solid-purple app-bar lifted with a
-  soft drop shadow. All of the above honours `prefers-reduced-motion`.
-- **First-visit splash:** on the very first open (a localStorage flag, pre-checked in a tiny
-  `<head>` script so returning visitors never see a flash) the logo shows in a game-tile-style
-  card on a yellow field, then rolls up like a blind after ~0.5 s to reveal the shelf already
-  rendered behind it (`shell.runSplash`). A **CSS-only fail-safe** rolls the splash up after
-  ~1.6 s even if boot JS never runs, so it can never trap a first-time visitor.
+  (paired with a 7-step tilt set) assigned by **grid position** (`gc-*`/`gt-*` classes, `i % 9`
+  / `i % 7`). The colour sequence is ordered for max contrast, so on mobile's 2 columns no two
+  neighbours — horizontal or vertical — ever share a hue *or even a hue family* (no
+  green-beside-teal); 9 never divides the column count, so identical adjacency is impossible at
+  any width. The shelf order is **shuffled once per page load** (not per render), so returning
+  to it mid-session doesn't re-scatter the tiles under your thumb (colours are therefore stable
+  within a session, fresh each load). The home bar is a solid-purple app-bar lifted with a soft
+  drop shadow. All of the above honours `prefers-reduced-motion`.
+- **Intro splash:** on **every** open the logo shows in a game-tile-style card on a yellow
+  field, then rolls up like a blind after ~0.5 s to reveal the shelf already rendered behind it
+  (`shell.runSplash`). A **CSS-only fail-safe** rolls the splash up after ~1.6 s even if boot JS
+  never runs, so it can never trap the app behind it.
 
 ---
 

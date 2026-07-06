@@ -270,20 +270,23 @@ body::before {
 /* each card a different crayon colour; text is always white (legibility on the
    lighter cards comes from the text-shadow below). 9-colour palette — every hue
    is at least as dark as --yellow, so white + the dark halo stays readable.
-   The gc- and gt- classes are hashed from the game id in shelf.js, so a game
-   keeps its colour and tilt no matter where the session shuffle lands it. */
+   shelf.js stamps gc-0..8 by grid position (i % 9); no two neighbours ever share
+   a colour (9 never divides the 2–4 column count). The sequence is ordered for
+   MAX contrast: consecutive entries (horizontal neighbours) and entries two
+   apart (vertical neighbours on mobile's 2 columns) are always different hue
+   families — no green-next-to-teal or indigo-next-to-purple. */
 .game-card.gc-0 { background: var(--yellow); }
-.game-card.gc-1 { background: var(--green);  }
-.game-card.gc-2 { background: var(--teal);   }
-.game-card.gc-3 { background: var(--blue);   }
-.game-card.gc-4 { background: var(--indigo); }
-.game-card.gc-5 { background: var(--purple); }
-.game-card.gc-6 { background: var(--pink);   }
-.game-card.gc-7 { background: var(--red);    }
-.game-card.gc-8 { background: var(--orange); }
+.game-card.gc-1 { background: var(--blue);   }
+.game-card.gc-2 { background: var(--red);    }
+.game-card.gc-3 { background: var(--teal);   }
+.game-card.gc-4 { background: var(--purple); }
+.game-card.gc-5 { background: var(--orange); }
+.game-card.gc-6 { background: var(--green);  }
+.game-card.gc-7 { background: var(--indigo); }
+.game-card.gc-8 { background: var(--pink);   }
 
-/* Playful tilt + tiny vertical jitter — 7 variants, hashed independently of
-   the 9 colours so colour+angle combinations stay hand-scattered. */
+/* Playful tilt + tiny vertical jitter — 7 variants by grid position (i % 7),
+   coprime with the 9 colours so colour+angle combinations stay hand-scattered. */
 .game-card.gt-0 { transform: rotate(-1.5deg); }
 .game-card.gt-1 { transform: rotate(1deg)    translateY(2px); }
 .game-card.gt-2 { transform: rotate(-0.5deg); }
