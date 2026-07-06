@@ -59,6 +59,7 @@
         imposterCount: savedCount === "random" ? "random" : (parseInt(savedCount, 10) || 1),
         hints: context.store.get("imposterHints", false) === true,
         mode: context.store.get("imposterMode", "classic") === "timer" ? "timer" : "classic",
+        drinking: context.store.get("drinking", false) === true,
       };
       renderSetup();
     },
@@ -128,6 +129,8 @@
       countSection +
       categorySection +
       belowSection +
+      '  <label class="toggle im-drink-toggle"><input type="checkbox" id="im-drink"' +
+        (settings.drinking ? " checked" : "") + ' /><span>' + t("🍻 Drinking mode") + "</span></label>" +
       '  <button id="im-deal" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") +
       ">" + (timer ? t("Deal & buzz 🔔") : t("Deal roles 🂴")) + "</button>" +
       "</section>";
@@ -167,6 +170,11 @@
     if (hintsToggle) hintsToggle.addEventListener("change", function () {
       settings.hints = hintsToggle.checked;
       ctx.store.set("imposterHints", settings.hints);
+    });
+    var drinkToggle = els.querySelector("#im-drink");
+    if (drinkToggle) drinkToggle.addEventListener("change", function () {
+      settings.drinking = drinkToggle.checked;
+      ctx.store.set("drinking", settings.drinking);
     });
 
     var deal = els.querySelector("#im-deal");
@@ -415,6 +423,7 @@
     var ranked = results.slice().sort(function (a, b) { return a.d - b.d || a.name.localeCompare(b.name); });
     ranked.forEach(function (r, i) { r.rank = i; });
     var winner = ranked[0];
+    var loser = ranked[ranked.length - 1];
     var order = ranked.slice().reverse(); // reveal furthest first
 
     var pins = results.map(function (r) {
@@ -452,6 +461,9 @@
       '  <ol class="tz-board">' + rows + "</ol>" +
       '  <div class="stack tz-actions" id="tz-actions">' +
       '    <p class="result-sub tz-winline">👑 <strong>' + esc(winner.name) + "</strong> " + t("landed closest!") + "</p>" +
+      (settings.drinking && loser && loser !== winner
+        ? '    <p class="result-sub tz-loseline">🍻 <strong>' + esc(loser.name) + "</strong> " + t("was furthest off — drink!") + "</p>"
+        : "") +
       (impLine ? '    <p class="muted tz-impline">🤫 ' + impLine + "</p>" : "") +
       '    <button id="tz-again" class="btn btn-primary btn-block btn-xl">' + t("New round 🔁") + "</button>" +
       '    <button id="tz-settings" class="btn btn-block">' + t("Change settings") + "</button>" +
@@ -523,10 +535,16 @@
       "  </div>" +
       "</section>";
     els.querySelector("#im-caught").addEventListener("click", function () {
-      renderOutcome(t("🎯 Caught!"), t("The table wins — ") + joined + " " + t("got busted!"));
+      var line = settings.drinking
+        ? t("Busted —") + " " + joined + " " + t(plural ? "drink! 🍻" : "drinks! 🍻")
+        : t("The table wins — ") + joined + " " + t("got busted!");
+      renderOutcome(t("🎯 Caught!"), line);
     });
     els.querySelector("#im-fooled").addEventListener("click", function () {
-      renderOutcome(t("🤡 Fooled!"), joined + " " + t(plural ? "got away with it — imposters win!" : "got away with it — imposter wins!"));
+      var line = settings.drinking
+        ? t("Fooled — the whole table drinks! 🍻")
+        : joined + " " + t(plural ? "got away with it — imposters win!" : "got away with it — imposter wins!");
+      renderOutcome(t("🤡 Fooled!"), line);
     });
   }
 

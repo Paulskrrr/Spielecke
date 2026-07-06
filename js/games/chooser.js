@@ -5,7 +5,7 @@
  * no scoring — just "who's it?". The wheel is an SVG; spinning is a CSS rotate
  * transition on the wheel element, with a fixed pointer at the top.
  *
- * Uses the shared roster. Not a drinking game.
+ * Uses the shared roster. Optional 🍻 drinking mode — the chosen player drinks.
  */
 (function (global) {
   "use strict";
@@ -14,7 +14,7 @@
 
   var COLORS = ["#ff4d5e", "#ff8a3d", "#ffcf33", "#36d399", "#3aa0ff", "#a06bff", "#ff5fa2"];
 
-  var els = null, ctx = null;
+  var els = null, ctx = null, drinking = false;
   var totalRotation = 0, spinning = false, spinTimer = null;
 
   var module = {
@@ -29,6 +29,7 @@
     mount: function (container, context) {
       els = container; ctx = context;
       totalRotation = 0; spinning = false;
+      drinking = context.store.get("drinking", false) === true;
       render();
     },
     unmount: function () {
@@ -62,9 +63,16 @@
       "  </div>" +
       '  <div id="chooser-result" class="chooser-result">&nbsp;</div>' +
       '  <div id="chooser-hint" class="tap-hint">' + t("👆 Tap to spin") + "</div>" +
+      '  <label class="toggle chooser-drink"><input type="checkbox" id="chooser-drink"' +
+           (drinking ? " checked" : "") + ' /><span>' + t("🍻 Drinking mode") + "</span></label>" +
       "</section>";
 
     global.Spielecke.tappable(els.querySelector("#chooser-wheelwrap"), spin);
+    var drinkToggle = els.querySelector("#chooser-drink");
+    if (drinkToggle) drinkToggle.addEventListener("change", function () {
+      drinking = drinkToggle.checked;
+      ctx.store.set("drinking", drinking);
+    });
   }
 
   function wheelSvg(ns) {
@@ -123,7 +131,8 @@
       spinning = false;
       if (!els) return;
       var rEl = els.querySelector("#chooser-result");
-      if (rEl) rEl.innerHTML = '👉 <span class="chooser-name">' + esc(ns[idx]) + "</span>";
+      if (rEl) rEl.innerHTML = '👉 <span class="chooser-name">' + esc(ns[idx]) + "</span>" +
+        (drinking ? " " + t("drinks!") + " 🍻" : "");
       var hintEl = els.querySelector("#chooser-hint");
       if (hintEl) { hintEl.style.visibility = "visible"; hintEl.textContent = t("👆 Tap to spin again"); }
     }, 4400);

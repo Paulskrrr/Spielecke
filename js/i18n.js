@@ -157,6 +157,11 @@
     "got busted!": "wurde erwischt!",
     "got away with it — imposter wins!": "kam davon — Imposter gewinnt!",
     "got away with it — imposters win!": "kamen davon — Imposter gewinnen!",
+    "Busted —": "Erwischt —",
+    "drinks! 🍻": "trinkt! 🍻",
+    "drink! 🍻": "trinken! 🍻",
+    "Fooled — the whole table drinks! 🍻": "Reingelegt — der ganze Tisch trinkt! 🍻",
+    "was furthest off — drink!": "war am weitesten daneben — trink!",
     "Did the table catch them?": "Erwischt?",
     "Did the table catch them all?": "Alle erwischt?",
 

@@ -24,7 +24,7 @@ next.
 - ✅ **Most Likely To** — pointing deck *(drinking-capable)*
 - ✅ **Never Have I Ever** — confession deck *(drinking-capable)*
 - ✅ **Who Am I?** — Heads-Up / forehead guessing
-- ✅ **Imposter** — hidden-role secret word (+ optional hints & a 🔔 Buzzer seconds-guess mode)
+- ✅ **Imposter** — hidden-role secret word (+ optional hints & a 🔔 Buzzer seconds-guess mode) *(drinking-capable)*
 - ✅ **Wavelength** — spectrum/dial guessing
 - ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
 - ✅ **Princess Treatment** — King/Princess debate deck
@@ -32,7 +32,7 @@ next.
 - ✅ **Activity** — two-team board race (explain / draw / charade) *(drinking-capable)*
 - ✅ **Quiz Out** — turn-based knockout quiz *(drinking-capable)*
 - ✅ **Truth or Drink** — random-player truth deck *(drinking-capable)*
-- ✅ **Chooser** — spinning-wheel random person picker
+- ✅ **Chooser** — spinning-wheel random person picker *(drinking-capable)*
 - ✅ **Reaction Duel** — two-player split-screen reflex duel *(drinking-capable)*
 - ✅ **Rank It** — privately rank the same set; drift from the group's consensus loses *(drinking-capable)*
 - ✅ **Hochadel** — royal-court action-card game; cards command who must *dienen* *(drinking-capable)*
@@ -287,7 +287,7 @@ Heads-Up style. Two modes (toggle in setup):
   hold on the forehead — a digital sticky note for when you don't have paper ones. No timer,
   no score; "New character" to go again.
 
-### 3.5 Imposter 🕵️ (`imposter`, 2+) — plain gameplay
+### 3.5 Imposter 🕵️ (`imposter`, 2+) — drinking-capable
 
 Hidden roles on one device. Everyone gets the same secret word except one or more random
 **imposters**, who only see the category. Pass to reveal each role privately (shared roster
@@ -302,9 +302,9 @@ for order + names, randomised each deal), then discuss, vote, unmask.
   has passed. The reveal ranks everyone by how close they landed and pins them on a timeline.
 - **Outcome:** word hunt — all imposter(s) caught → the table wins; fooled → the imposter(s)
   win. Buzzer — closest to the target takes 👑; the imposter, guessing blind, usually drifts off.
-- **Drinking flag:** `meta.supportsDrinking` is `true` (so the shelf shows the 🍻 marker), but
-  the game does **not** implement an in-game drinking toggle yet — a meta/implementation drift
-  to reconcile (add the toggle or set the flag to `false`).
+- **🍻 Drinking mode** (toggle in setup, persisted) swaps the resolution to drinks: word hunt —
+  caught → the imposter(s) drink, fooled → the whole table drinks; Buzzer — the player furthest
+  from the target drinks.
 
 ### 3.6 Wavelength 📡 (`wavelength`, 2+) — plain
 
@@ -380,15 +380,14 @@ A random player (from the roster, no immediate repeat) gets a truth question.
 - **Config:** category pool, 🍻 drinking mode.
 - **Outcome:** plain — answer honestly. Drinking mode — answer, or drink to dodge.
 
-### 3.13 Chooser 🎡 (`chooser`, 2+) — plain
+### 3.13 Chooser 🎡 (`chooser`, 2+) — drinking-capable
 
 A spinning wheel that lands on a random person from the roster. SVG wheel (one coloured
 slice + name per player), CSS-rotate spin with a fixed pointer at the top. No content file —
 it just spins the roster. "Spin again" to re-roll. Handy as a picker for any other game.
 
-- **Drinking flag:** `meta.supportsDrinking` is `true` (the shelf marks it) even though there's
-  no in-game drinking toggle — the whole game already *is* "who's the victim." A meta/
-  implementation drift to reconcile (add a toggle or clear the flag).
+- **🍻 Drinking mode** (toggle on the wheel screen, persisted): when on, the wheel lands on its
+  victim and the result reads "*Name* drinks!" — otherwise it's just "who's it?".
 
 ### 3.14 Reaction Duel ⚡ (`reaction`, 2+) — drinking-capable
 
@@ -502,11 +501,9 @@ alarms and key handler are all torn down on unmount.
    content (see Part 0 visual identity).
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
-   penalties where they don't fit. Games with a real 🍻 toggle: Hot Potato, Most Likely To,
-   Never Have I Ever, Liar's Numbers, Quiz Out, Truth or Drink, Activity, Reaction Duel, Rank
-   It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race. ⚠ **Known drift:** Chooser and
-   Imposter also set `supportsDrinking: true` (so the shelf marks them) but ship no toggle yet —
-   reconcile by adding one or clearing the flag.
+   penalties where they don't fit. Games with a 🍻 toggle: Hot Potato, Most Likely To, Never
+   Have I Ever, Imposter, Liar's Numbers, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
+   Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race.
 3. **Hot Potato pass model** → pure physical pass (no turn tracking).
 4. **Hot Potato fuse** → always random 20–90s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
