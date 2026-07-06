@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **21 games**.
+**Shipped (on `main`):** the shell + **27 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -41,6 +41,12 @@ next.
 - ✅ **Fuck the Dealer** — guess-the-rank card game with dealer rotation *(drinking-capable)*
 - ✅ **Horse Race** — animated suit-betting card race *(drinking-capable)*
 - ✅ **Zeitzünder** — asymmetric co-op bomb defusal: one screen is the bomb, the others hold the manual *(plain)*
+- ✅ **Ballon** — push-your-luck pump-or-pass, hidden burst point scaled to the table *(drinking-capable)*
+- ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
+- ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
+- ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next *(drinking-capable)*
+- ✅ **Simon Says** (DE: *Der Chef sagt*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
+- ✅ **Geschmacklos** — a Cards Against Humanity mode: host shows the prompt, every phone deals itself a disjoint hand off one shared table code *(drinking-capable)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
 Players screen.
@@ -60,6 +66,11 @@ Players screen.
   this without breaking it: two *kinds* of screen (the bomb on the table, experts' manuals on
   their phones) that never talk to each other — each is an independent static instance, and the
   players bridge them by voice. Still no broker, still no sync; the asymmetry does the work.
+  **Geschmacklos** applies the same no-broker idea to dealing cards: a short shared **table
+  code** seeds an identical deterministic shuffle (`Spielecke.seededShuffle`, mulberry32 +
+  FNV-1a hash) on every phone, so each seat's hand is mathematically guaranteed disjoint from
+  every other seat's — no server ever hands out a card, every phone just computes the same
+  answer independently.
 - **Scales to ~10, flexible.** Player count is never load-bearing. Games work from ~3 up to
   ~12 without special-casing.
 - **Every game has a clean win/lose/score outcome.** Games are **plain by default** — not
@@ -97,7 +108,20 @@ Players screen.
 - **Logo:** "Pauls Spielecke" wordmark — chunky 3D gold "Spielecke" with a black outline
   and a red handwritten "Pauls" on top. Lives at `assets/logo.png` (transparent
   background), used in the header, page title, and favicon. Cropped tight from Paul's
-  uploaded artwork with the white background keyed out.
+  uploaded artwork with the white background keyed out. The header logo also has a
+  shapeless button-y press (the wordmark dips on tap — no box/outline).
+- **Micro-interactions:** every pressable shares one springy release curve (`--spring`) —
+  instant press-down, a small overshoot on release; a light `navigator.vibrate` tick fires
+  on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
+  on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
+  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon
+  cycle (coprime with the 7-step tilt cycle, so colour+angle only realign at 63 cards). The
+  home bar is a solid-purple app-bar lifted with a soft drop shadow. All of the above honours
+  `prefers-reduced-motion`.
+- **First-visit splash:** on the very first open (a localStorage flag, pre-checked in a tiny
+  `<head>` script so returning visitors never see a flash) the logo shows in a game-tile-style
+  card on a yellow field, then rolls up like a blind after ~0.5 s to reveal the shelf already
+  rendered behind it (`shell.runSplash`).
 
 ---
 
@@ -144,12 +168,18 @@ js/
     quiz.js                Quiz Out questions, an array of difficulty levels
     rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
     hochadel.js            Hochadel deck + ground rules + verses, tagged per edition
+    wettbuero.js           Wettbüro challenges, by category ({ label, challenges:[{text,timer?}] })
+    mindmeld.js            Mind Meld seed-word pools ({ label, words:[...] })
+    geheimauftrag.js       Geheimauftrag mission templates ({ solo:[...], coop:[...] }, {target}/{partner} tokens)
+    simon.js               Simon Says command pools ({ label, commands:[...] })
+    geschmacklos.js        Geschmacklos deck, one fixed set ({ prompts:[...], answers:[...] })
   games/                   one module per game (logic)
     hotpotato.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
     reactionduel.js  rankit.js  hochadel.js  maxchen.js  zeitzunder.js
+    ballon.js  wettbuero.js  mindmeld.js  geheimauftrag.js  simon.js  geschmacklos.js
     cards.js  busfahrt.js  fuckdealer.js  pferderennen.js   (card games; cards.js = shared deck)
-    (chooser, reactionduel, maxchen & zeitzunder have no content file)
+    (chooser, reactionduel, maxchen, zeitzunder & ballon have no content file)
 assets/logo.png            the "Pauls Spielecke" wordmark
 ```
 
@@ -160,9 +190,11 @@ add the two `<script>` tags to `index.html`, and append one entry in `registry.j
 
 Each game is a self-contained object on `window.Spielecke.Games.<id>` exposing:
 
-- `meta` — `{ id, name, tagline, icon, minPlayers, supportsDrinking }`. `supportsDrinking`
+- `meta` — `{ id, name, tagline, icon, minPlayers, supportsDrinking, beta? }`. `supportsDrinking`
   means the game offers an optional drinking-mode toggle — not that it's always a drinking
-  game. The registry builds its entry straight from this so the two never drift.
+  game. `beta` is optional and puts a **BETA** badge on the shelf card (used by Simon Says,
+  whose reliance on `speechSynthesis` varies by browser). The registry builds its entry
+  straight from this so meta and card never drift.
 - `mount(container, context)` — render into the given DOM node.
 - `unmount()` — tear down: clear **all** timers/intervals and close any audio. Critical.
 
@@ -235,6 +267,18 @@ Two shapes of content, by what the game needs:
     (`hochadel.js`).
   - The three card games share one honest **52-card deck + card-face** component (`cards.js`),
     not a content file.
+  - Wettbüro → *challenges*, optionally timed (`wettbuero.js`, `{ label, challenges:[{text, timer?}] }`);
+    `timer` is present only on inherently-timed challenges.
+  - Mind Meld → *seed words*, a flat list per pool (`mindmeld.js`, `{ label, words:[...] }`) —
+    the game draws 2–3 distinct words per team at random.
+  - Geheimauftrag → *mission templates* with `{target}`/`{partner}` tokens the game substitutes
+    at deal time (`geheimauftrag.js`, `{ solo:[...], coop:[...] }`) — no category pools; every
+    mission is bound to a specific other player, never a prop or a difficulty tag.
+  - Simon Says → *bare imperative commands* (`simon.js`, `{ label, commands:[...] }`); the
+    authority prefix ("Simon says" / German "Der Chef sagt") is added at runtime, not stored.
+  - Geschmacklos → *prompts + answers*, one **fixed set, no category pools** (`geschmacklos.js`,
+    `{ prompts:[...], answers:[...] }`) — a single shared deck keeps the seeded-deal math in
+    §0 simple (every phone shuffles the same list).
 
 **Bilingual content:** every content file is a `{ de, en }` bundle read via `Spielecke.L(...)`;
 proper-noun term pools (football, Marvel, …) keep one shared list. **Category pools are
@@ -455,9 +499,11 @@ rank-sorted "drawn" strip (counting help); the dealer passes left after the deck
 The four Aces are the horses (♠♥♦♣); the app flips the other 48 cards one at a time and the
 matching-suit horse advances. Six face-down **hurdles** flip as the field clears each level,
 rubber-banding that suit back a step. Players bet a suit (roster); first horse home → backers
-**verteilen** sips, the rest **trinken** (flat or "lengths behind", configurable). The race is
-animated and **paced** like a race call (configurable speed) with a commentator line; the
-single timer chain is cleared on unmount.
+**verteilen** sips, the rest **trinken**. The loss penalty is configurable: **flat** with a
+chosen sip count (a 1–5 chip row, default 3; the row dims out while "lengths behind" is on) or
+**"lengths behind"** (sips = how far your horse finished off the pace). The race is animated
+and **paced** like a race call (configurable speed) with a commentator line; the single timer
+chain is cleared on unmount.
 
 ### 3.21 Zeitzünder 🧨 (`zeitzunder`, 2+) — plain (co-op)
 
@@ -493,6 +539,108 @@ several experts later (forcing expert-to-expert talk), with more modules to foll
 sets the fuse (Rookie 6:00 / Standard 4:30 / Lethal 3:00). The countdown interval, Web-Audio
 alarms and key handler are all torn down on unmount.
 
+### 3.22 Ballon 🎈 (`ballon`, 2+) — drinking-capable
+
+Push-your-luck. The phone is a balloon passed round the table. On your turn you **Pump** as
+many times as you dare — every pump adds a sip to the visible **pot** and inflates the
+balloon on screen — then **Pass on**. A hidden burst point pops the balloon on some pump;
+whoever's pumping it then holds it when it blows.
+
+- **Burst point:** random each balloon, scaled to the table — `⌈2.5×players⌉` to
+  `⌈5×players⌉` cumulative pumps — so a balloon survives roughly one to one-and-a-half laps
+  regardless of group size. The pot is public; the threshold never is.
+- **Config:** sound on/off (rising pump pitch + a Web-Audio pop + haptics), 🍻 drinking mode.
+- **Outcome:** holder at pop **drinks the pot** (plain: loses the round, pot becomes points).
+
+### 3.23 Wettbüro 🎰 (`wettbuero`, 3+) — drinking-capable
+
+Bet on your friends. A candidate rotates through the roster and draws a challenge card
+(🧠 Kopf / 🎯 Geschick / 🎭 Mut / 🔞 18+); some run against a visible countdown. Before it
+starts, everyone else sets a bet on each other name — ✅ they'll nail it or ❌ they'll flop,
+1–3 sips — the candidate doesn't bet. The table judges success or failure; the app settles.
+
+- **Config:** challenge category pools, 🍻 drinking mode (swaps the unit from points to sips).
+- **Outcome:** right bettors **hand out** their stake, wrong bettors **drink** it; the
+  candidate hands out 3 on success or drinks 3 on failure.
+
+### 3.24 Mind Meld 🔗 (`mindmeld`, 4+) — drinking-capable
+
+Convergence, not competition against the clock. The roster splits into teams of two (an odd
+player joins the last team, making a trio); each teammate secretly gets their own seed word.
+On "go" the team says a **new** word together, simultaneously, again and again, trying to
+land on the exact same word — tap **+1** on every miss. **MELD!** locks that team's round
+count; the next team takes the phone.
+
+- **Config:** word pools (🎲 Allgemein, 🔞 18+), 🍻 drinking mode. 🔀 Reshuffle re-teams and
+  redraws words.
+- **Outcome:** fewest rounds to meld **wins**; most rounds **drinks** (drinking mode) or is
+  simply named slowest (plain). A tie across all teams is a draw — nobody drinks.
+
+### 3.25 Geheimauftrag 🕶️ (`geheimauftrag`, 4+) — drinking-capable
+
+A meta-layer, not a stand-alone round: dealt once, then it runs quietly **alongside**
+whatever else you play that evening. Every mission is bound to a specific other player via a
+`{target}` token (never a prop, never impossible) — "Bring **{target}** to say...", "Toast
+three times with **{target}**...". Re-open the tile any time for a private "peek" or to cash a
+mission in.
+
+- **No "caught" flow (by design):** there is deliberately no accuse/bust path. At the table it
+  collapsed into everyone denying every accusation ("you only say that because it's *your*
+  mission"), which drags — the fun is sneaking a mission past everyone, not policing it. The hub
+  is just **peek** and **cash in**.
+- **Persistence:** assignments live in `context.store` (survives navigating to other games —
+  only the DOM is torn down on `unmount()`), so the mission is still there when you come back.
+- **Co-op missions:** at 5+ players some missions pair two people on the same `{target}` —
+  either told who their partner is, or left to find each other from the shared wording alone
+  ("someone at the table shares this exact mission"). Both cash in together.
+- **Config:** none — plain by design (some missions are naturally harder, no difficulty tag).
+- **Outcome:** pulled off → **hands out 2** and draws a fresh mission.
+
+### 3.26 Simon Says 🗣️ (`simon`, 3+, beta) — drinking-capable
+
+*German name: "Der Chef sagt" — the English "Simon says" reads as a translation in German, so
+the DE build uses a native command-giver; the game id stays `simon`.*
+
+Voice-driven, not screen-driven. The phone is the announcer: it **reads commands aloud**
+(Web Speech `speechSynthesis`, falling back to a big on-screen phrase + beep if unsupported),
+randomly prefixing the authority phrase ("Simon says:" / "Der Chef sagt:") — obey only the
+prefixed ones. The calling cadence
+**accelerates** every command. The app can't see who reacted (no sync), so the table judges:
+tap ❌ to knock out whoever slipped.
+
+- **Config:** command category pools (🤸 Körper & Gesten, 🎉 Party, 🔞 18+), voice on/off,
+  🍻 drinking mode.
+- **Outcome:** last one standing **wins**; everyone eliminated along the way **drinks**.
+- **Why beta:** `speechSynthesis` voice/availability varies by browser — kept deliberately
+  small while it gets road-tested.
+
+### 3.27 Geschmacklos 🃏 (`geschmacklos`, 3+) — drinking-capable
+
+A Cards Against Humanity mode, asymmetric like Zeitzünder: on entry you pick **🎙️ Host** (one
+screen, the table) or **🃏 Spieler** (your own hand). The two never talk to each other.
+
+- **Host:** generates a short **table code** and shows it big, alongside the current black
+  prompt, the rotating **Card Czar**, and a live scoreboard (tap a name to award the point).
+  Prompts have **one or two blanks**; a two-blank prompt shows a **PICK 2** badge so the table
+  knows to play two cards.
+- **Player:** types the host's code and calls out a **free seat number** (1–12) so no two
+  players claim the same seat. Every phone then runs the *same* deterministic shuffle of the
+  fixed answer deck off that code (`Spielecke.seededShuffle`) and slices out its seat's
+  disjoint block — a fresh table code means fresh hands, but the same code always gives the
+  same deal (refresh-safe). A hand is **8 cards**; once **4** have been played the hand resets
+  to a fresh 8 (window steps by 8 through the seat's block, so a card is never re-dealt).
+- **Deck:** one fixed set per language (`content/geschmacklos.js`) — **~228 answer cards + 74
+  prompts** (14 of them two-blank). Answers are deliberately **short (1–2 words on average**,
+  longer full-phrase gags the exception) and run filthy/absurd/politically-incorrect; the
+  content boundary (no slurs / hate against protected groups, no minors, nothing illegal) is
+  fixed and non-negotiable.
+- **Play:** tap your best card to blow it up full-screen, then read prompt + card aloud round
+  the table (you can tell whose phone is whose) — no anonymity mechanic.
+- **Config:** none — one fixed deck (dropping category pools keeps the seat-block math
+  simple); 🍻 drinking mode implicit in the scoring flavour.
+- **Outcome:** Card Czar picks the round's best line (tracked on the host); no formal
+  end-of-game score cap — play until the room's done.
+
 ---
 
 ## Resolved decisions
@@ -503,7 +651,8 @@ alarms and key handler are all torn down on unmount.
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Games with a 🍻 toggle: Hot Potato, Most Likely To, Never
    Have I Ever, Imposter, Liar's Numbers, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
-   Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race.
+   Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race, Ballon, Wettbüro,
+   Mind Meld, Geheimauftrag, Simon Says, Geschmacklos.
 3. **Hot Potato pass model** → pure physical pass (no turn tracking).
 4. **Hot Potato fuse** → always random 20–90s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
@@ -521,6 +670,15 @@ alarms and key handler are all torn down on unmount.
     (all). Resolved at draw time (`pools.js`) so a stale/empty pick never starts a dry round.
 12. **Card games share one honest 52-card deck** → `cards.js` provides the deck, shuffle, and
     card-face component reused by Ride the Bus, Fuck the Dealer, and Horse Race.
+13. **Seeded RNG for cross-device dealing** → `Spielecke.seededShuffle` (`ui.js`, mulberry32 +
+    an FNV-1a string hash) turns a short shared code into an identical deterministic shuffle
+    on every phone. Introduced for Geschmacklos (disjoint per-seat hands, no backend); reusable
+    anywhere else a future game needs several devices to agree on "the same random" without
+    talking to each other.
+14. **Beta badge** → `meta.beta` on a game module puts a **BETA** marker on its shelf card
+    (`registry.js` passes it through, `shelf.js`/`main.css` render it). For games shipped
+    deliberately small while a risky browser API (e.g. Simon Says's `speechSynthesis`) gets
+    road-tested with the group before it's called done.
 
 ---
 
@@ -529,8 +687,17 @@ alarms and key handler are all torn down on unmount.
 Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / replace:
 
 - **Higher or Lower** — themed fact chain, group votes by shouting, wrong = out (or drink).
-- **Countdown Roulette** — random player picker assigns a themed task or drink.
 - **Odd-One-Out** — reflex flash-grid filler.
+- **Saboteur-style co-op** — the table solves small joint tasks (a chaos-count, a mind-meld-
+  style challenge, a rhythm pattern) while one player secretly tries to make them fail without
+  getting caught. Distinct from Geheimauftrag (which is solo/pair missions, not a joint task)
+  and from Zeitzünder (which has no traitor).
+- **NSFW knowledge round** — Quiz Out is deliberately family-friendly trivia; there's no adult
+  equivalent yet (a spicy true/false or estimate-the-number format would fit the gap without
+  cannibalising Liar's Numbers).
+- **Anonymous-writing game** — considered and shelved in favour of Geschmacklos (see history:
+  the earlier "Ghostwriter" pitch had no clear winner and made the after-round discussion
+  pointless); if revisited, needs a sharper resolution mechanic than "guess who wrote it."
 
 ### Open content TODO (Paul)
 

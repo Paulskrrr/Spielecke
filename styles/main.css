@@ -19,6 +19,8 @@
   --blue: #3aa0ff;
   --purple: #a06bff;
   --pink: #ff5fa2;
+  --teal: #14b8a6;
+  --indigo: #6c63ff;
 
   /* Paper & ink */
   --paper: #fff7e8;
@@ -36,11 +38,27 @@
   --gap: 16px;
   --maxw: 880px;
 
+  /* Springy release curve shared by every pressable element: the press-down is
+     near-instant (see the :active rules), the release overshoots past rest and
+     settles — that tiny bounce is what makes the toy blocks feel rubbery. */
+  --spring: cubic-bezier(0.2, 1.6, 0.4, 1);
+
   --font: "Baloo 2", "Comic Sans MS", "Chalkboard SE", "Comic Neue",
     "Trebuchet MS", system-ui, -apple-system, sans-serif;
 }
 
 * { box-sizing: border-box; }
+
+/* Every interactive control in the app is a <button>. Kill the grey Android
+   tap-flash and the 300ms double-tap zoom, and stop long-presses from
+   selecting a card's label text — the CSS press states + haptics are the
+   feedback, the browser chrome just gets in their way. */
+button {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
 /* Base colour behind everything = the page's paper cream. iOS Safari bleeds
    this html background into the edges the fixed image can't paint (the
    home-indicator strip, the overscroll rubber-band), so keeping it neutral
@@ -112,8 +130,15 @@ body::before {
   /* Extend the purple up through the top safe area (notch / status bar) so the
      bar reaches the very top of the screen — no background gap above it. */
   padding-top: calc(8px + env(safe-area-inset-top));
+  /* Clean solid purple — the animated gradient washed out on the small mobile
+     bar, so it's back to a punchy flat fill. */
   background: var(--purple);
   border-bottom: 4px solid var(--ink);
+  /* Lift the bar off the paper: a soft drop shadow so it reads as a raised
+     app-bar hovering over the scrolling content, instead of a flat seam. The
+     crisp ink border keeps the toy-block outline; the shadow adds the depth
+     that every card/button already has. */
+  box-shadow: 0 6px 16px rgba(36, 27, 77, 0.28);
 }
 
 .brand {
@@ -123,7 +148,11 @@ body::before {
   border: 0;
   cursor: pointer;
   padding: 2px;
+  /* button-y press: the wordmark itself dips on tap, no box/outline around it */
+  transition: transform 0.3s var(--spring);
 }
+.brand:active { transform: scale(0.9); transition-duration: 0.05s; }
+.brand:focus-visible { outline: none; }
 .brand__logo {
   height: 52px;
   width: auto;
@@ -145,8 +174,10 @@ body::before {
   font-weight: 800;
   cursor: pointer;
   box-shadow: var(--pop);
+  transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring);
 }
-.players-badge:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.players-badge:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); transition-duration: 0.05s; }
+.players-badge:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
 .players-badge__count { font-size: 1.2rem; }
 .players-badge__label { font-size: 0.8rem; }
 
@@ -182,6 +213,9 @@ body::before {
   grid-template-columns: repeat(auto-fill, minmax(152px, 1fr));
   gap: 18px;
 }
+/* The tiles animate in individually (see .game-card), so the shelf skips the
+   whole-screen pop — double-scaling the grid looks jittery. */
+.shelf-screen { animation: none; }
 /* Shown only when the registry came up empty (no game scripts loaded). */
 .shelf-warn {
   text-align: center;
@@ -211,7 +245,16 @@ body::before {
   color: #fff;
   cursor: pointer;
   box-shadow: var(--pop-lg);
-  transition: transform 0.16s cubic-bezier(0.2, 1.4, 0.4, 1), box-shadow 0.16s ease;
+  transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring);
+  /* Staggered entrance: shelf.js stamps each card's grid position as --i, so
+     the tiles cascade in top-to-bottom. Uses the independent scale/translate
+     properties (NOT transform) so the nth-child tilt below stays untouched;
+     the delay is capped so a big shelf never feels slow. */
+  animation: card-in 0.4s var(--spring) backwards;
+  animation-delay: calc(min(var(--i, 0), 13) * 26ms);
+}
+@keyframes card-in {
+  from { opacity: 0; scale: 0.82; translate: 0 16px; }
 }
 /* glossy highlight in the corner */
 .game-card::after {
@@ -225,17 +268,21 @@ body::before {
   pointer-events: none;
 }
 /* each card a different crayon colour; text is always white (legibility on the
-   lighter cards comes from the text-shadow below) */
-.game-card:nth-child(6n + 1) { background: var(--yellow); }
-.game-card:nth-child(6n + 2) { background: var(--green);  }
-.game-card:nth-child(6n + 3) { background: var(--blue);   }
-.game-card:nth-child(6n + 4) { background: var(--pink);   }
-.game-card:nth-child(6n + 5) { background: var(--orange); }
-.game-card:nth-child(6n + 6) { background: var(--purple); }
+   lighter cards comes from the text-shadow below). 9-colour cycle — every hue
+   is at least as dark as --yellow, so white + the dark halo stays readable. */
+.game-card:nth-child(9n + 1) { background: var(--yellow); }
+.game-card:nth-child(9n + 2) { background: var(--green);  }
+.game-card:nth-child(9n + 3) { background: var(--teal);   }
+.game-card:nth-child(9n + 4) { background: var(--blue);   }
+.game-card:nth-child(9n + 5) { background: var(--indigo); }
+.game-card:nth-child(9n + 6) { background: var(--purple); }
+.game-card:nth-child(9n + 7) { background: var(--pink);   }
+.game-card:nth-child(9n + 8) { background: var(--red);    }
+.game-card:nth-child(9n + 9) { background: var(--orange); }
 
 /* Playful tilt + tiny vertical jitter on a 7-step cycle. Keeping this on a
-   different (coprime) cycle than the 6-colour one means colour+angle don't
-   line up again until 42 cards, so the grid reads hand-scattered rather than
+   different (coprime) cycle than the 9-colour one means colour+angle don't
+   line up again until 63 cards, so the grid reads hand-scattered rather than
    uniformly slanted. */
 .game-card:nth-child(7n + 1) { transform: rotate(-1.5deg); }
 .game-card:nth-child(7n + 2) { transform: rotate(1deg)    translateY(2px); }
@@ -251,15 +298,19 @@ body::before {
   box-shadow: 0 13px 0 var(--ink);
   outline: none;
 }
-.game-card:active { transform: translateY(3px) scale(0.99); box-shadow: 0 2px 0 var(--ink); }
+/* keyboard focus gets a ring on top of the lift — white reads on every crayon */
+.game-card:focus-visible { outline: 4px solid #fff; outline-offset: 3px; }
+/* Press-down is instant (0s) — a tap on the shelf navigates away immediately, so
+   the reaction has to land on the very first frame; there is NO artificial delay
+   before the game mounts. The springy release only shows on cards you don't tap. */
+.game-card:active { transform: translateY(3px) scale(0.97); box-shadow: 0 2px 0 var(--ink); transition-duration: 0s; }
 
-/* "Coming soon" teaser — fills the trailing grid slot. Muted & dashed so it
-   reads as a placeholder, but it keeps the hover/press haptics of a real card
-   (it just doesn't navigate anywhere). */
+/* "Coming soon" teaser — fills the trailing grid slot. A quiet, desaturated
+   lavender (on-theme, clearly muted vs the vibrant tiles) with a dashed border
+   so it reads as a placeholder — no stark white stripes. Keeps the hover/press
+   haptics of a real card (it just doesn't navigate anywhere). */
 .game-card.game-card--soon {
-  background:
-    repeating-linear-gradient(45deg, rgba(36, 27, 77, 0.06) 0 14px, transparent 14px 28px),
-    var(--paper-2);
+  background: #c2b9e6;
   color: var(--ink-soft);
   border-style: dashed;
   box-shadow: 0 8px 0 rgba(36, 27, 77, 0.2);
@@ -306,6 +357,7 @@ body::before {
   color: var(--ink);
 }
 .badge-drink { background: var(--ink); color: var(--yellow); }
+.badge-beta { background: #a06bff; color: #fff; }
 
 /* ----- Roster ----------------------------------------------------------- */
 
@@ -320,8 +372,13 @@ body::before {
   background: #fff;
   border: 3px solid var(--ink);
   border-radius: 16px;
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
 }
-.text-input:focus { outline: none; box-shadow: var(--pop); }
+.text-input:focus {
+  outline: none;
+  border-color: var(--blue);
+  box-shadow: 0 0 0 4px rgba(58, 160, 255, 0.28), var(--pop);
+}
 
 .roster-warn {
   display: none;
@@ -364,9 +421,11 @@ body::before {
   border: 3px solid var(--ink);
   border-radius: 14px;
   cursor: pointer;
+  transition: transform 0.3s var(--spring);
 }
-.icon-btn:active { transform: translateY(2px); }
+.icon-btn:active { transform: translateY(2px) scale(0.94); transition-duration: 0.05s; }
 .icon-btn:disabled { opacity: 0.3; cursor: default; }
+.icon-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
 .icon-btn--danger { background: var(--red); color: #fff; }
 
 /* ----- Buttons (toy blocks) --------------------------------------------- */
@@ -383,12 +442,19 @@ body::before {
   border-radius: 18px;
   cursor: pointer;
   box-shadow: var(--pop);
-  transition: transform 0.08s ease, box-shadow 0.08s ease;
+  /* slow springy release, near-instant press (duration overridden in :active) */
+  transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring);
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
-.btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--ink); }
+.btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--ink); transition-duration: 0.05s; }
 .btn:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+.btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
+/* pointer devices get a small lift on hover — touch never sees this */
+@media (hover: hover) {
+  .btn:not(:disabled):not(.btn-ghost):hover { transform: translateY(-2px); box-shadow: 0 7px 0 var(--ink); }
+  .btn:not(:disabled):hover:active { transform: translateY(5px); box-shadow: 0 0 0 var(--ink); }
+}
 
 .btn-primary { background: var(--pink); color: #fff; }
 .btn-got { background: var(--green); color: var(--ink); }
@@ -415,12 +481,52 @@ body::before {
   border-radius: 999px;
   cursor: pointer;
   box-shadow: var(--pop);
+  transition: transform 0.3s var(--spring), box-shadow 0.3s var(--spring),
+    background-color 0.15s ease, color 0.15s ease;
 }
-.chip:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.chip:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); transition-duration: 0.05s, 0.05s, 0.15s, 0.15s; }
+.chip:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 .chip--active { background: var(--blue); color: #fff; }
 
 .toggle { display: flex; align-items: center; gap: 12px; margin: 22px 0; font-weight: 800; cursor: pointer; }
-.toggle input { width: 26px; height: 26px; accent-color: var(--pink); }
+/* The native checkbox restyled as a toy switch — same ink border + hard shadow
+   language as the buttons; the knob slides with the springy release curve.
+   Pure CSS on the existing <input type="checkbox">, so no game changes. */
+.toggle input {
+  appearance: none;
+  -webkit-appearance: none;
+  position: relative;
+  flex-shrink: 0;
+  width: 58px;
+  height: 34px;
+  margin: 0;
+  background: #e9e3f6;
+  border: 3px solid var(--ink);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: inset 0 2px 0 rgba(36, 27, 77, 0.14);
+  transition: background-color 0.2s ease;
+}
+.toggle input::before {
+  content: "";
+  position: absolute;
+  /* track inner box is 52×28 (58×34 minus the 3px border all round). A 24px knob
+     (18 core + 3 border each side) leaves a 2px margin top/bottom → centered. */
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border: 3px solid var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 2px 0 rgba(36, 27, 77, 0.35);
+  transition: transform 0.3s var(--spring);
+}
+.toggle input:checked { background: var(--green); }
+.toggle input:checked::before { transform: translateX(24px); }
+.toggle input:active::before { transform: scale(0.9); transition-duration: 0.05s; }
+.toggle input:checked:active::before { transform: translateX(24px) scale(0.9); }
+.toggle input:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 
 /* ----- The Bomb --------------------------------------------------------- */
 
@@ -1938,6 +2044,9 @@ body::before {
 .fd-history::-webkit-scrollbar-track { background: transparent; }
 
 /* ── Horse Race (pferderennen.js) ───────────────────────────────────────── */
+/* The "how many sips" row only matters for the flat penalty — dim + lock it
+   while "lengths behind" is chosen so it reads as not-applicable. */
+.hr-sipsrow.hr-dim { opacity: 0.4; pointer-events: none; }
 .hr-horses { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 6px 0 4px; }
 .hr-horsechip { font-size: 1.3rem; font-weight: 800; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 10px; padding: 4px 10px; }
 .hr-suit--red { color: #e0294e; }
@@ -2475,4 +2584,179 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .zz-cube { transition: none; }
   .zz-timer.is-danger, .zz-wire.is-bad, .zz-toast { animation: none; }
+}
+
+/* ======================================================================
+   New games (Ballon, Wettbüro, Mind Meld, Geheimauftrag, Simon, Geschmacklos)
+   ====================================================================== */
+
+/* ----- Ballon ----------------------------------------------------------- */
+.ballon-play { text-align: center; }
+.ballon-pot { display: inline-block; font-weight: 900; background: var(--yellow); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 999px; padding: 8px 18px; box-shadow: var(--pop); }
+.ballon-stage { height: 46vh; max-height: 340px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.ballon-body { font-size: 5rem; transition: transform 0.18s cubic-bezier(0.2,1.4,0.4,1); transform-origin: center bottom; }
+.ballon-body.is-tense { animation: wiggle 0.35s ease-in-out infinite; filter: saturate(1.4); }
+.ballon-pump { font-size: 1.5rem; }
+.ballon-pass { margin-top: 10px; }
+.ballon-boom { text-align: center; }
+.ballon-flash { font-size: 5rem; animation: pop-in 0.3s cubic-bezier(0.2,1.6,0.4,1); }
+
+/* ----- Wettbüro --------------------------------------------------------- */
+.wb-card { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 22px; margin: 12px 0;
+  box-shadow: var(--pop-lg); position: relative; }
+.wb-card-text { font-size: 1.4rem; font-weight: 800; }
+.wb-timerbadge { position: absolute; top: -12px; right: 14px; background: var(--blue); color: #fff;
+  border: 3px solid var(--ink); border-radius: 999px; padding: 2px 12px; font-weight: 800; }
+.wb-bets { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.wb-bet { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--paper-2);
+  border: 3px solid var(--ink); border-radius: var(--radius); padding: 12px 16px; box-shadow: var(--pop);
+  font-weight: 800; font: inherit; cursor: pointer; }
+.wb-bet:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.wb-bet-pill { min-width: 52px; text-align: center; background: var(--yellow); border: 2px solid var(--ink);
+  border-radius: 999px; padding: 4px 10px; }
+.wb-settle-list { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.wb-settle-list li { background: var(--paper-2); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 14px; }
+.wb-settle-cand { background: var(--yellow) !important; font-weight: 800; }
+.wb-run { text-align: center; }
+.wb-run .hud-time { display: inline-block; font-size: 1.6rem; margin: 10px 0; }
+
+/* ----- Mind Meld -------------------------------------------------------- */
+.mm-teams { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+.mm-team-card { display: flex; flex-direction: column; background: var(--paper-2); border: 3px solid var(--ink);
+  border-radius: var(--radius); padding: 10px 14px; box-shadow: var(--pop); }
+.mm-team-tag { font-size: 0.75rem; font-weight: 800; color: var(--ink-soft); }
+.mm-team-members { font-weight: 800; }
+.mm-meld { text-align: center; }
+.mm-words { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 14px 0; }
+.mm-word { display: flex; flex-direction: column; background: var(--blue); color: #fff; border: 3px solid var(--ink);
+  border-radius: var(--radius); padding: 12px 18px; box-shadow: var(--pop); }
+.mm-word-who { font-size: 0.75rem; opacity: 0.85; }
+.mm-word-text { font-size: 1.5rem; font-weight: 900; }
+.mm-seed-screen { text-align: center; }
+.mm-seed { display: inline-flex; margin: 22px auto; padding: 22px 28px; }
+.mm-seed .mm-word-text { font-size: 2.4rem; }
+.mm-counter { font-size: 5rem; font-weight: 900; color: var(--ink); background: var(--yellow);
+  width: 8rem; height: 8rem; margin: 8px auto; border: 4px solid var(--ink); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; box-shadow: var(--pop-lg); }
+.mm-ranking { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.mm-rank { display: flex; align-items: center; gap: 12px; background: var(--paper-2); border: 3px solid var(--ink);
+  border-radius: var(--radius); padding: 12px 16px; font-weight: 800; box-shadow: var(--pop); }
+.mm-rank--win { background: var(--green); }
+.mm-rank--lose { background: var(--red); color: #fff; }
+.mm-rank-n { margin-left: auto; }
+
+/* ----- Geheimauftrag ---------------------------------------------------- */
+.ga-mission { font-size: 1.5rem; font-weight: 800; background: var(--ink); color: #fff; border-radius: var(--radius);
+  padding: 24px; margin: 16px 0; box-shadow: var(--pop-lg); }
+.ga-coop { background: var(--purple); color: #fff; border: 3px solid var(--ink); border-radius: 14px;
+  padding: 10px 14px; font-weight: 800; }
+.ga-reveal, .ga-outcome, .ga-hub, .ga-pick-screen { text-align: center; }
+.ga-pick { text-align: center; }
+
+/* ----- Simon sagt ------------------------------------------------------- */
+.si-play { text-align: center; }
+.si-alive { display: inline-block; font-weight: 800; background: var(--paper-2); border: 3px solid var(--ink);
+  border-radius: 999px; padding: 6px 16px; box-shadow: var(--pop); }
+.si-phrase { font-size: clamp(1.8rem, 8vw, 3rem); font-weight: 900; min-height: 30vh; display: flex;
+  align-items: center; justify-content: center; padding: 12px; }
+.si-phrase--simon { color: var(--green); }
+.si-pulse { width: 20px; height: 20px; border-radius: 50%; background: var(--ink-soft); margin: 0 auto 14px; opacity: 0.4; }
+.si-pulse.is-beat { animation: pop-in 0.3s ease-out; background: var(--pink); opacity: 1; }
+.si-eliminate, .si-paused, .si-winner { text-align: center; }
+
+/* ----- Geschmacklos (CAH) ---------------------------------------------- */
+.gk-roles, .gk-host, .gk-join, .gk-empty, .gk-cardview { text-align: center; }
+.gk-role-cards { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+.gk-role-card { display: flex; flex-direction: column; gap: 4px; align-items: center; background: var(--paper-2);
+  border: 4px solid var(--ink); border-radius: var(--radius); padding: 22px; box-shadow: var(--pop-lg);
+  font: inherit; font-weight: 800; cursor: pointer; }
+.gk-role-card:active { transform: translateY(6px); box-shadow: var(--pop); }
+.gk-role-ic { font-size: 2.6rem; }
+.gk-role-t { font-size: 1.3rem; }
+.gk-codebar { font-weight: 800; color: var(--ink-soft); }
+.gk-code { font-size: 1.6rem; letter-spacing: 4px; font-weight: 900; color: var(--ink); background: var(--yellow);
+  border: 3px solid var(--ink); border-radius: 12px; padding: 2px 12px; margin-left: 6px; }
+.gk-czar { margin: 12px 0; font-weight: 800; }
+.gk-prompt { position: relative; background: var(--ink); color: #fff; border-radius: var(--radius); padding: 28px 22px; margin: 12px 0;
+  font-size: 1.6rem; font-weight: 800; min-height: 26vh; display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--pop-lg); }
+/* Pick-2 prompts get a little corner sticker so the table knows to play two cards. */
+.gk-prompt--pick2 { padding-top: 40px; }
+.gk-pick2 { position: absolute; top: 10px; right: 12px; font-size: 0.72rem; font-weight: 900; letter-spacing: 1px;
+  color: var(--ink); background: var(--yellow); border: 2px solid var(--ink); border-radius: 999px; padding: 3px 10px;
+  box-shadow: 0 2px 0 rgba(0,0,0,0.35); }
+.gk-progress { font-size: 0.85rem; font-weight: 800; color: var(--ink-soft); margin: 4px 0 2px; }
+.gk-scores { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
+.gk-score { display: flex; align-items: center; gap: 8px; background: var(--paper-2); border: 2px solid var(--ink);
+  border-radius: 999px; padding: 6px 14px; font: inherit; font-weight: 800; cursor: pointer; }
+.gk-score-n { background: var(--pink); color: #fff; border-radius: 999px; padding: 0 8px; min-width: 22px; }
+.gk-hand-bar { font-weight: 800; color: var(--ink-soft); }
+.gk-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 14px 0; }
+.gk-card { background: var(--paper-2); border: 3px solid var(--ink); border-radius: var(--radius); padding: 18px 14px;
+  min-height: 110px; font: inherit; font-weight: 800; font-size: 1.05rem; box-shadow: var(--pop); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; text-align: center; }
+.gk-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.gk-card--played { opacity: 0.35; }
+.gk-bigcard { background: var(--paper-2); border: 4px solid var(--ink); border-radius: var(--radius); padding: 40px 24px;
+  font-size: 1.8rem; font-weight: 900; min-height: 36vh; display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--pop-lg); margin-bottom: 8px; }
+@media (min-width: 720px) { .gk-cards { grid-template-columns: repeat(3, 1fr); } }
+
+/* ----- Motion accessibility (global) ------------------------------------ */
+/* Users who ask for less motion get instant screens and tiles and a plain
+   knob slide — the press states stay (they're feedback, not decoration) but
+   lose their bounce. Game-specific loops have their own scoped blocks above. */
+@media (prefers-reduced-motion: reduce) {
+  .screen, .game-card { animation: none; }
+  .btn, .chip, .icon-btn, .players-badge, .game-card,
+  .toggle input, .toggle input::before { transition-duration: 0.01s; }
+}
+
+/* ----- First-visit splash (logo tile, rolls up like a blind) ------------ */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: var(--yellow);
+  /* the roll-up: transition lives on the base element so adding .is-up animates
+     reliably. transform-origin top so it reads as a blind gathering upward. */
+  transform-origin: top center;
+  transition: transform 0.55s cubic-bezier(0.5, 0, 0.15, 1);
+  will-change: transform;
+}
+/* returning visitors (flag set in <head>) never see it */
+html.no-splash .splash { display: none; }
+.splash.is-up { transform: translateY(-100%); }
+
+.splash__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(78vw, 420px);
+  padding: clamp(26px, 7vw, 52px);
+  background: var(--purple);
+  border: 5px solid var(--ink);
+  border-radius: 28px;
+  box-shadow: var(--pop-lg);
+  animation: splash-pop 0.5s var(--spring) both;
+}
+.splash__logo {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25));
+}
+@keyframes splash-pop {
+  from { opacity: 0; transform: scale(0.55) rotate(-7deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash__tile { animation: none; }
+  .splash { transition: none; }
 }

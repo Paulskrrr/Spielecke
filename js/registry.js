@@ -28,6 +28,7 @@
     "liars", "princess", "doodle", "activity", "quiz", "truth", "chooser",
     "reaction", "rankit", "hochadel", "maxchen", "busfahrt", "fuckdealer",
     "pferderennen", "zeitzunder",
+    "ballon", "wettbuero", "mindmeld", "geheimauftrag", "simon", "geschmacklos",
   ];
 
   // Build a registry entry straight from a module's meta so they never drift.
@@ -39,6 +40,7 @@
       icon: module.meta.icon,
       minPlayers: module.meta.minPlayers,
       supportsDrinking: !!module.meta.supportsDrinking,
+      beta: !!module.meta.beta,
       module: module,
     };
   }

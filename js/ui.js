@@ -56,8 +56,67 @@
     return a;
   }
 
+  // --- Seeded RNG (deterministic, cross-device) ---------------------------
+  // No network/sync: instead every device derives the SAME shuffle from a short
+  // shared code. hashStr → 32-bit seed, mulberry32 → PRNG, seededShuffle → a
+  // pure Fisher-Yates driven by it. Same (arr, seedStr) → identical output on
+  // every phone, so disjoint per-player deals need no broker (see Geschmacklos).
+  function hashStr(s) {
+    var h = 2166136261 >>> 0;              // FNV-1a
+    s = String(s);
+    for (var i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function seededShuffle(arr, seedStr) {
+    var a = Array.isArray(arr) ? arr.slice() : [];
+    var rand = mulberry32(hashStr(seedStr));
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
+  // --- Haptics -------------------------------------------------------------
+  // One light tick the moment a finger lands on any interactive element, in
+  // sync with the CSS press-down — so every button feels like a physical key.
+  // Delegated once here instead of wired per game; navigator.vibrate is a
+  // no-op where unsupported (iOS Safari), so this degrades silently. Games
+  // with their own stronger patterns (pop, boom) just layer on top.
+  function haptic(pattern) {
+    try {
+      if (global.navigator && typeof global.navigator.vibrate === "function") {
+        global.navigator.vibrate(pattern || 10);
+      }
+    } catch (e) { /* ignore */ }
+  }
+  global.document.addEventListener(
+    "pointerdown",
+    function (e) {
+      if (e.pointerType === "mouse") return; // touch/pen only
+      var t = e.target;
+      var el = t && t.closest ? t.closest("button, .tappable, .toggle") : null;
+      if (el && !el.disabled) haptic(8);
+    },
+    { passive: true }
+  );
+
   S.tappable = tappable;
   S.esc = esc;
   S.attr = attr;
   S.shuffle = shuffle;
+  S.seededShuffle = seededShuffle;
+  S.haptic = haptic;
 })(window);

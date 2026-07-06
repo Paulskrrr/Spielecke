@@ -12,8 +12,26 @@
   <title>Pauls Spielecke</title>
   <link rel="icon" href="assets/logo.png" />
   <link rel="stylesheet" href="styles/main.css" />
+  <!-- Runs before <body> paints: if this browser has already seen the intro
+       splash, mark <html> so the splash below is display:none from the very
+       first frame — returning visitors never get a flash of it. -->
+  <script>
+    try {
+      if (localStorage.getItem("spielecke.splashSeen"))
+        document.documentElement.classList.add("no-splash");
+    } catch (e) {}
+  </script>
 </head>
 <body>
+  <!-- First-visit intro: the logo in a game-tile-style card on a yellow field.
+       shell.js rolls it up like a blind after ~0.5s, then removes it. Hidden
+       outright (CSS) once seen. -->
+  <div id="splash" class="splash" aria-hidden="true">
+    <div class="splash__tile">
+      <img class="splash__logo" src="assets/logo.png" alt="Pauls Spielecke" />
+    </div>
+  </div>
+
   <!-- Persistent app header: brand + roster badge + edit-players button -->
   <header id="app-header" class="app-header"></header>
 
@@ -44,6 +62,11 @@
   <script src="js/content/truth.js"></script>
   <script src="js/content/rankit.js"></script>
   <script src="js/content/hochadel.js"></script>
+  <script src="js/content/geschmacklos.js"></script>
+  <script src="js/content/wettbuero.js"></script>
+  <script src="js/content/simon.js"></script>
+  <script src="js/content/geheimauftrag.js"></script>
+  <script src="js/content/mindmeld.js"></script>
 
   <!-- Game modules -->
   <script src="js/games/hotpotato.js"></script>
@@ -64,6 +87,12 @@
   <script src="js/games/hochadel.js"></script>
   <script src="js/games/maxchen.js"></script>
   <script src="js/games/zeitzunder.js"></script>
+  <script src="js/games/ballon.js"></script>
+  <script src="js/games/wettbuero.js"></script>
+  <script src="js/games/mindmeld.js"></script>
+  <script src="js/games/geheimauftrag.js"></script>
+  <script src="js/games/simon.js"></script>
+  <script src="js/games/geschmacklos.js"></script>
 
   <!-- Kartenklassiker: shared 52-card deck/face, then the three card games -->
   <script src="js/games/cards.js"></script>
