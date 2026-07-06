@@ -11,7 +11,10 @@
   function t(k) { return global.Spielecke.t(k); }
 
   function render(container, ctx) {
-    var games = global.Spielecke.GAMES || [];
+    // Randomise the card order on EVERY render (fresh Math.random each time, so it
+    // never depends on cache or the registry's fixed ORDER). The "Coming soon"
+    // tile is appended after these cards below, so it always stays dead last.
+    var games = global.Spielecke.shuffle(global.Spielecke.GAMES || []);
 
     var cards = games
       .map(function (game) {
