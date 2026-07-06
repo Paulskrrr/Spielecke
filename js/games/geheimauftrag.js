@@ -58,7 +58,7 @@
   function newSolo(rec, r) {
     var target = randomOther(r, [rec.id]);
     rec.text = resolve(pick(content().solo), target.name, "");
-    rec.coop = false; rec.known = false; rec.partnerName = null; rec.partnerId = null; rec.groupId = null;
+    rec.coop = false; rec.known = false; rec.partnerName = null; rec.groupId = null;
     return rec;
   }
 
@@ -98,7 +98,7 @@
     for (; i < order.length; i++) {
       var p = order[i];
       var tg = randomOther(r, [p.id]);
-      records.push({ id: p.id, name: p.name, text: resolve(pick(data.solo), tg.name, ""), coop: false, done: false });
+      records.push({ id: p.id, name: p.name, text: resolve(pick(data.solo), tg.name, ""), coop: false });
     }
     save(records);
     renderHub();
@@ -110,17 +110,20 @@
       id: self.id, name: self.name,
       text: resolve(tmpl, target.name, partnerName),
       coop: true, known: known,
-      partnerName: known ? partner.name : null, partnerId: partner.id, groupId: gid, done: false,
+      partnerName: known ? partner.name : null, groupId: gid,
     };
   }
 
   // --- Hub -----------------------------------------------------------------
   function renderHub() {
     var recs = load();
+    var done = ctx.store.get("completed", 0);
+    var status = t("{n} secret missions in play.").replace("{n}", recs.length) +
+      (done > 0 ? " " + t("{n} pulled off already ✅").replace("{n}", done) : "");
     els.innerHTML =
       '<section class="screen ga-hub">' +
       '  <h2 class="screen-title pop">🕶️ ' + t("Geheimauftrag") + "</h2>" +
-      '  <p class="muted">' + t("{n} secret missions in play.").replace("{n}", recs.length) + "</p>" +
+      '  <p class="muted">' + status + "</p>" +
       '  <div class="stack">' +
       '    <button id="ga-view" class="btn btn-primary btn-block btn-xl">' + t("See my mission 🔍") + "</button>" +
       '    <button id="ga-done" class="btn btn-got btn-block btn-xl">' + t("I pulled it off ✅") + "</button>" +
@@ -129,7 +132,9 @@
       "</section>";
     els.querySelector("#ga-view").addEventListener("click", function () { pickPlayer("view"); });
     els.querySelector("#ga-done").addEventListener("click", function () { pickPlayer("done"); });
-    els.querySelector("#ga-redeal").addEventListener("click", function () { save([]); renderSetup(); });
+    els.querySelector("#ga-redeal").addEventListener("click", function () {
+      save([]); ctx.store.set("completed", 0); renderSetup();
+    });
   }
 
   // --- Pick a player, then run the chosen action ---------------------------
@@ -175,18 +180,27 @@
     els.querySelector("#ga-hide").addEventListener("click", renderHub);
   }
 
-  // Cash in: mark done, give a fresh mission; co-op completes both partners.
+  // Cash in: hand out sips, draw a fresh mission; co-op completes both partners.
   function completeMission(rec) {
     var recs = load(), r = roster();
+    // Re-resolve into THIS array — `rec` was parsed from an earlier load(), so
+    // mutating that copy would never reach the array we save below.
+    rec = byId(recs, rec.id) || rec;
     var affected = [rec.name];
-    newSolo(rec, r);
-    if (rec.coop && rec.groupId) {
-      var partner = recs.filter(function (x) { return x.groupId === rec.groupId && x.id !== rec.id; })[0];
+    // Snapshot the co-op link BEFORE newSolo() wipes coop/groupId on the record.
+    var gid = rec.coop ? rec.groupId : null;
+    if (gid) {
+      var partner = recs.filter(function (x) { return x.groupId === gid && x.id !== rec.id; })[0];
       if (partner) { affected.push(partner.name); newSolo(partner, r); }
     }
+    newSolo(rec, r);
     save(recs);
+    ctx.store.set("completed", ctx.store.get("completed", 0) + affected.length);
+    var names = affected.length > 1 ? affected.join(" & ") : affected[0];
     renderOutcome("✅ " + t("Mission complete!"),
-      t("{names} hand out 2 sips — and draw a fresh mission.").replace("{names}", esc(affected.join(" & "))));
+      (affected.length > 1
+        ? t("{names} hand out 2 sips each — and draw fresh missions.")
+        : t("{names} hand out 2 sips — and draw a fresh mission.")).replace("{names}", esc(names)));
   }
 
   function renderOutcome(title, line) {

@@ -12,7 +12,8 @@
  * punchy noun phrase. Longer full-phrase gags are the rare exception, not the
  * rule. This deck runs filthy: absurd, dark, crude, politically incorrect,
  * German-millennial. de is the primary voice, en mirrors it in count and spirit.
- * No slurs, no hate against protected groups, no minors, nothing illegal.
+ * No slurs, no hate against protected groups, no minors. Dark-noun humor about
+ * shady stuff is fair game — this is CAH, not a compliance seminar.
  */
 (function (global) {
   "use strict";
@@ -143,11 +144,11 @@
         "Selbstbefriedigung",
         "Ein Schamhaar im Bett",
         "Ein Aschenbecherkuss",
-        "Ein Nacktselfie",
+        "Ein Knutschfleck mit 40",
         "Ein Zungenpiercing",
         "Der Beckenboden",
         "Ein Sextape",
-        "Ein Fremdgehen",
+        "Ein Walk of Shame",
         // --- Scat / Ekel ---
         "Durchfall",
         "Ein Furz",
@@ -472,11 +473,11 @@
         "Masturbation",
         "A pube in the bed",
         "An ashtray kiss",
-        "A nude selfie",
+        "A hickey at 40",
         "A tongue piercing",
         "My pelvic floor",
         "A sex tape",
-        "Cheating",
+        "A walk of shame",
         // --- Scat / gross ---
         "Diarrhoea",
         "A fart",

@@ -546,9 +546,10 @@ many times as you dare — every pump adds a sip to the visible **pot** and infl
 balloon on screen — then **Pass on**. A hidden burst point pops the balloon on some pump;
 whoever's pumping it then holds it when it blows.
 
-- **Burst point:** random each balloon, scaled to the table — `⌈2.5×players⌉` to
-  `⌈5×players⌉` cumulative pumps — so a balloon survives roughly one to one-and-a-half laps
-  regardless of group size. The pot is public; the threshold never is.
+- **Burst point:** random each balloon, gently scaled to the table — roughly
+  `⌈2.5 + 0.65×players⌉` to `⌈5 + players⌉` cumulative pumps, hard-capped near 20 — so it
+  averages ~7 sips at 4 players and stays sane at big tables. The pot is public; the
+  threshold never is.
 - **Inflation:** the on-screen balloon scales with the **pot** (not the hidden threshold),
   so it only ever grows and never appears to deflate before it pops. Up to ~7 sips it fits the
   stage; past that it deliberately bloats over the top bounds — a fat pot looks tense and

@@ -191,7 +191,12 @@
     var r = roster();
     var cand = currentCandidate();
     var bettors = r.filter(function (p) { return p.id !== cand.id; });
-    var unit = settings.drinking ? t("sips") : t("points");
+    // 1-sip bets are common — don't print "1 Schlücke".
+    function unitFor(n) {
+      if (settings.drinking) return n === 1 ? t("sip") : t("sips");
+      return n === 1 ? t("point") : t("points");
+    }
+    var unit = unitFor(CANDIDATE_STAKE);
 
     var winners = [], losers = [];
     bettors.forEach(function (p) {
@@ -205,10 +210,10 @@
       ? t("🎉 {name} nailed it — hands out {n} {unit}.").replace("{name}", esc(cand.name)).replace("{n}", CANDIDATE_STAKE).replace("{unit}", unit)
       : t("💀 {name} flopped — drinks {n} {unit}.").replace("{name}", esc(cand.name)).replace("{n}", CANDIDATE_STAKE).replace("{unit}", unit)) + "</li>");
     winners.forEach(function (w) {
-      lines.push("<li>✅ <strong>" + esc(w.name) + "</strong> " + t("called it — hands out {n} {unit}.").replace("{n}", w.amount).replace("{unit}", unit) + "</li>");
+      lines.push("<li>✅ <strong>" + esc(w.name) + "</strong> " + t("called it — hands out {n} {unit}.").replace("{n}", w.amount).replace("{unit}", unitFor(w.amount)) + "</li>");
     });
     losers.forEach(function (l) {
-      lines.push("<li>❌ <strong>" + esc(l.name) + "</strong> " + t("was wrong — drinks {n} {unit}.").replace("{n}", l.amount).replace("{unit}", unit) + "</li>");
+      lines.push("<li>❌ <strong>" + esc(l.name) + "</strong> " + t("was wrong — drinks {n} {unit}.").replace("{n}", l.amount).replace("{unit}", unitFor(l.amount)) + "</li>");
     });
 
     els.innerHTML =

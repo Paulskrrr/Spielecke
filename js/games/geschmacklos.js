@@ -130,7 +130,11 @@
       renderHost();
     });
     els.querySelector("#gk-newcode").addEventListener("click", function () {
+      // A new code re-deals every player's hand, so the WHOLE table state turns
+      // over with it: fresh prompt, scores wiped, random czar seat.
       ctx.store.set("code", genCode());
+      ctx.store.set("prompt", drawPrompt());
+      ctx.store.set("scores", {});
       ctx.store.set("czar", randSeat());   // fresh game → don't always restart the czar at seat 1
       renderHost();
     });

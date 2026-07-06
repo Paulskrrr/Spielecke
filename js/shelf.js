@@ -10,11 +10,27 @@
 
   function t(k) { return global.Spielecke.t(k); }
 
+  // Shuffled once per page load, then stable: every visit lands a fresh layout,
+  // but returning to the shelf mid-session doesn't re-scatter the tiles under
+  // your thumb. (Re-shuffles defensively if the registry count ever changes.)
+  var sessionOrder = null;
+
+  // Tiny stable hash → colour/tilt stay glued to the game, not to its slot in
+  // the grid, so "the blue one" is the same game on every shelf you'll ever see.
+  function hashId(id) {
+    var h = 0;
+    for (var i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) | 0;
+    return Math.abs(h);
+  }
+
   function render(container, ctx) {
-    // Randomise the card order on EVERY render (fresh Math.random each time, so it
-    // never depends on cache or the registry's fixed ORDER). The "Coming soon"
-    // tile is appended after these cards below, so it always stays dead last.
-    var games = global.Spielecke.shuffle(global.Spielecke.GAMES || []);
+    // The "Coming soon" tile is appended after these cards below, so it always
+    // stays dead last.
+    var all = global.Spielecke.GAMES || [];
+    if (!sessionOrder || sessionOrder.length !== all.length) {
+      sessionOrder = global.Spielecke.shuffle(all);
+    }
+    var games = sessionOrder;
 
     var cards = games
       .map(function (game, i) {
@@ -24,9 +40,11 @@
         var betaBadge = game.beta
           ? '<span class="badge badge-beta">' + t("BETA") + "</span>"
           : "";
-        // --i drives the CSS entrance stagger (cards cascade in grid order)
+        // --i drives the CSS entrance stagger (cards cascade in grid order);
+        // gc-*/gt-* pin colour and tilt to the game id (see hashId above).
+        var look = " gc-" + (hashId(game.id) % 9) + " gt-" + (hashId(game.id) % 7);
         return (
-          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + '" style="--i:' + i + '" data-id="' + escapeAttr(game.id) + '">' +
+          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + look + '" style="--i:' + i + '" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +
           '  <span class="game-card__name">' + escapeHtml(t(game.name) || game.name) + "</span>" +
           '  <span class="game-card__tagline">' + escapeHtml(t(game.tagline || "") || game.tagline || "") + "</span>" +
@@ -46,7 +64,7 @@
     // Deliberately bare: just the icon box and a "Coming soon" title (kept in
     // English in both languages), nothing else.
     var soonTile =
-      '<button class="game-card game-card--soon" type="button" style="--i:' + games.length + '" aria-label="Coming soon">' +
+      '<button class="game-card game-card--soon gt-' + (games.length % 7) + '" type="button" style="--i:' + games.length + '" aria-label="Coming soon">' +
       '  <span class="game-card__icon">✨</span>' +
       '  <span class="game-card__name">Coming Soon...</span>' +
       "</button>";

@@ -102,8 +102,10 @@
       // The scale is baked into the initial markup so a passed-on balloon shows
       // its true (persisted) size on first paint — otherwise the fresh element
       // renders at 1x and the CSS transition animates it back up, making it look
-      // like it deflated even though nothing popped.
-      '  <div class="ballon-stage"><div class="ballon-body" id="ba-body" style="transform:scale(' + balloonScale().toFixed(3) + ')">🎈</div></div>' +
+      // like it deflated even though nothing popped. Uses the individual `scale:`
+      // property (not `transform`) so the is-tense wiggle animation — which
+      // animates `transform: rotate(...)` — can't override the size away.
+      '  <div class="ballon-stage"><div class="ballon-body" id="ba-body" style="scale:' + balloonScale().toFixed(3) + '">🎈</div></div>' +
       '  <button id="ba-pump" class="btn btn-pass ballon-pump">' + t("PUMP 🎈") + "</button>" +
       '  <button id="ba-pass" class="btn btn-block ballon-pass" disabled>' + t("Pass on ➡️") + "</button>" +
       '  <div class="tap-hint" id="ba-hint">' + t("Pump at least once, then pass.") + "</div>" +
@@ -136,6 +138,7 @@
   }
 
   function potLabel() {
+    if (pumps === 1) return t("Pot: 1 sip 🍺");
     return t("Pot: {n} sips 🍺").replace("{n}", pumps);
   }
 
@@ -150,7 +153,7 @@
   function sizeBalloon() {
     var body = els && els.querySelector("#ba-body");
     if (!body) return;
-    body.style.transform = "scale(" + balloonScale().toFixed(3) + ")";
+    body.style.scale = balloonScale().toFixed(3);
     body.classList.toggle("is-tense", pumps >= 6);
   }
 

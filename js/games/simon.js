@@ -56,6 +56,8 @@
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     stopCaller();
+    cancelSpeech();
+    teardownAudio(); // don't leave the AudioContext open while sitting in setup
     var r = roster();
     var enough = r.length >= module.meta.minPlayers;
     els.innerHTML =
@@ -84,7 +86,7 @@
       alive = roster().slice();
       setupAudio();
       renderPlay();
-      startCaller();
+      startCaller(true);
     });
   }
 
@@ -159,13 +161,16 @@
       "  </div>" +
       "</section>";
     els.querySelector("#si-again").addEventListener("click", function () {
-      alive = roster().slice(); renderPlay(); startCaller();
+      alive = roster().slice(); renderPlay(); startCaller(true);
     });
     els.querySelector("#si-settings").addEventListener("click", renderSetup);
   }
 
   // --- Caller loop (accelerating) ------------------------------------------
-  function startCaller() { running = true; callCount = 0; scheduleCall(600); }
+  // The built-up speed survives pauses and eliminations — only a genuinely new
+  // round (fresh=true) starts back at the slow cadence. Otherwise the game
+  // would reset to a crawl after every knockout and never actually get fast.
+  function startCaller(fresh) { running = true; if (fresh) callCount = 0; scheduleCall(600); }
   function stopCaller() { running = false; if (callTimer !== null) { global.clearTimeout(callTimer); callTimer = null; } }
   function scheduleCall(ms) { callTimer = global.setTimeout(doCall, ms); }
 

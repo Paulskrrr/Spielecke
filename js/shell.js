@@ -48,11 +48,16 @@
       if (splash.parentNode) splash.parentNode.removeChild(splash);
       document.documentElement.classList.add("no-splash");
     }
+    // Reduced-motion users get no roll-up (CSS kills the transition), so don't
+    // make them sit through the animation timers — clear after a short beat.
+    var reduced = false;
+    try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
+    if (reduced) { global.setTimeout(finish, 350); return; }
     global.setTimeout(function () {
       splash.addEventListener("transitionend", finish);
       splash.classList.add("is-up");
-      // fallback: fires if the transition is skipped (reduced motion) or its
-      // event is missed, so the splash never gets stuck on screen.
+      // fallback: fires if the transition's event is missed, so the splash
+      // never gets stuck on screen.
       global.setTimeout(finish, 900);
     }, 500);
   }
