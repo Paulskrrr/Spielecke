@@ -137,6 +137,11 @@ body::before {
   background-size: 260% 100%;
   animation: header-drift 22s ease-in-out infinite;
   border-bottom: 4px solid var(--ink);
+  /* Lift the bar off the paper: a soft drop shadow so it reads as a raised
+     app-bar hovering over the scrolling content, instead of a flat seam. The
+     crisp ink border keeps the toy-block outline; the shadow adds the depth
+     that every card/button already has. */
+  box-shadow: 0 6px 16px rgba(36, 27, 77, 0.28);
 }
 @keyframes header-drift {
   0%, 100% { background-position: 0% 50%; }
