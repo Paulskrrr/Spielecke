@@ -2727,7 +2727,7 @@ body::before {
   .ballon-body.is-tense, .ballon-flash, .si-pulse.is-beat { animation: none; }
 }
 
-/* ----- First-visit splash (logo tile, rolls up like a blind) ------------ */
+/* ----- Intro splash (logo tile, rolls up like a blind) ------------------ */
 .splash {
   position: fixed;
   inset: 0;
@@ -2738,10 +2738,10 @@ body::before {
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
   background: var(--yellow);
-  /* the roll-up: transition lives on the base element so adding .is-up animates
-     reliably. transform-origin top so it reads as a blind gathering upward. */
+  /* A thin dark rail along the bottom edge — the bottom bar of a roller blind,
+     so the sheet reads as tidy hardware as it travels up. */
+  border-bottom: 3px solid var(--ink);
   transform-origin: top center;
-  transition: transform 0.55s cubic-bezier(0.5, 0, 0.15, 1);
   will-change: transform;
   /* Fail-safe: if boot JS never runs (script error, bad deploy), the splash
      rolls itself up after ~1.6s and stays hidden (forwards) — it must never be
@@ -2749,8 +2749,28 @@ body::before {
      removing the node well before the delay elapses. */
   animation: splash-auto-up 0.55s cubic-bezier(0.5, 0, 0.15, 1) 1.6s forwards;
 }
+/* Extra yellow above the sheet so the little downward dip never exposes the
+   header behind it — the top stays seamlessly yellow during the tug. */
+.splash::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 25vh;
+  background: var(--yellow);
+}
 @keyframes splash-auto-up { to { transform: translateY(-100%); visibility: hidden; } }
-.splash.is-up { transform: translateY(-100%); }
+/* JS-triggered roll-up: a tiny dip DOWN first — like tugging a blind to release
+   the catch — then the pull up. The up phase (21%→100%) keeps the original curve
+   and covers ~101% of the height in ~0.55s, so its speed is unchanged; only a
+   ~0.15s tension-dip is prepended. */
+.splash.is-up { animation: splash-roll-up 0.7s both; }
+@keyframes splash-roll-up {
+  0%   { transform: translateY(0);     animation-timing-function: cubic-bezier(0.3, 0, 0.25, 1); }
+  21%  { transform: translateY(1.4%);  animation-timing-function: cubic-bezier(0.5, 0, 0.15, 1); }
+  100% { transform: translateY(-100%); visibility: hidden; }
+}
 
 .splash__tile {
   display: flex;
@@ -2776,6 +2796,6 @@ body::before {
 }
 @media (prefers-reduced-motion: reduce) {
   .splash__tile { animation: none; }
-  /* keep the fail-safe animation, just without the roll-up motion */
-  .splash { transition: none; animation-duration: 0.01s; animation-delay: 1.2s; }
+  /* keep the fail-safe animation, just make it near-instant */
+  .splash { animation-duration: 0.01s; animation-delay: 1.2s; }
 }

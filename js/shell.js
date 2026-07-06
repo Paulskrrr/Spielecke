@@ -47,11 +47,15 @@
     try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
     if (reduced) { global.setTimeout(finish, 350); return; }
     global.setTimeout(function () {
-      splash.addEventListener("transitionend", finish);
+      // Wait for the roll-up animation specifically — the tile's splash-pop
+      // animationend also bubbles up here, so guard on the animation name.
+      splash.addEventListener("animationend", function (e) {
+        if (e.animationName === "splash-roll-up") finish();
+      });
       splash.classList.add("is-up");
-      // fallback: fires if the transition's event is missed, so the splash
-      // never gets stuck on screen.
-      global.setTimeout(finish, 900);
+      // fallback: fires if the animation's event is missed, so the splash
+      // never gets stuck on screen (roll-up is ~0.7s).
+      global.setTimeout(finish, 1000);
     }, 500);
   }
 
