@@ -2652,7 +2652,7 @@ body::before {
   padding: 24px; margin: 16px 0; box-shadow: var(--pop-lg); }
 .ga-coop { background: var(--purple); color: #fff; border: 3px solid var(--ink); border-radius: 14px;
   padding: 10px 14px; font-weight: 800; }
-.ga-reveal, .ga-outcome, .ga-hub, .ga-pick-screen, .ga-accuse-screen { text-align: center; }
+.ga-reveal, .ga-outcome, .ga-hub, .ga-pick-screen { text-align: center; }
 .ga-pick { text-align: center; }
 
 /* ----- Simon sagt ------------------------------------------------------- */

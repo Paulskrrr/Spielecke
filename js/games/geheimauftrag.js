@@ -4,9 +4,10 @@
  * Deal each player a secret, PERSON-BOUND mission (a {target} is a specific other
  * player). Then play whatever else you like — the missions live in the store and
  * survive navigating away (store persists; only DOM is torn down). Re-open the tile
- * to view your mission privately, cash one in, or call someone out. Some missions
- * are CO-OP: two players share one target — either told who their partner is, or
- * left to find each other.
+ * to view your mission privately or cash one in. Some missions are CO-OP: two
+ * players share one target — either told who their partner is, or left to find
+ * each other. There's deliberately no "caught" flow: the fun is sneaking it in,
+ * not the table endlessly accusing each other.
  *
  * Content: js/content/geheimauftrag.js (Spielecke.Geheimauftrag) — { solo, coop }
  * with {target}/{partner} tokens. Contract: meta + mount + unmount().
@@ -24,7 +25,7 @@
     meta: {
       id: "geheimauftrag",
       name: "Geheimauftrag",
-      tagline: "A secret mission, all night long. Pull it off before you're caught.",
+      tagline: "A secret mission, all night long. Sneak it past everyone.",
       icon: "🕶️",
       minPlayers: MIN,
       supportsDrinking: true,
@@ -71,7 +72,7 @@
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       (enough ? "" : '<div class="roster-warn" style="display:block">' +
         t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN) + "</div>") +
-      '  <p class="muted small">' + t("Everyone gets a secret task tied to one specific person. Keep playing other games — sneak yours in. Come back here to peek, cash in, or accuse.") + "</p>" +
+      '  <p class="muted small">' + t("Everyone gets a secret task tied to one specific person. Keep playing other games — sneak yours in. Come back here to peek or cash in.") + "</p>" +
       '  <button id="ga-deal" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Deal secret missions 🕶️") + "</button>" +
       "</section>";
     if (enough) els.querySelector("#ga-deal").addEventListener("click", deal);
@@ -123,20 +124,18 @@
       '  <div class="stack">' +
       '    <button id="ga-view" class="btn btn-primary btn-block btn-xl">' + t("See my mission 🔍") + "</button>" +
       '    <button id="ga-done" class="btn btn-got btn-block btn-xl">' + t("I pulled it off ✅") + "</button>" +
-      '    <button id="ga-accuse" class="btn btn-skip btn-block btn-xl">' + t("Someone got caught ☝️") + "</button>" +
       '    <button id="ga-redeal" class="btn btn-block">' + t("Deal again 🔁") + "</button>" +
       "  </div>" +
       "</section>";
     els.querySelector("#ga-view").addEventListener("click", function () { pickPlayer("view"); });
     els.querySelector("#ga-done").addEventListener("click", function () { pickPlayer("done"); });
-    els.querySelector("#ga-accuse").addEventListener("click", function () { pickPlayer("accuse"); });
     els.querySelector("#ga-redeal").addEventListener("click", function () { save([]); renderSetup(); });
   }
 
   // --- Pick a player, then run the chosen action ---------------------------
   function pickPlayer(action) {
     var recs = load();
-    var title = action === "view" ? t("Who's peeking?") : action === "done" ? t("Who pulled it off?") : t("Who got caught?");
+    var title = action === "view" ? t("Who's peeking?") : t("Who pulled it off?");
     var buttons = recs.map(function (rec) {
       return '<button class="btn btn-block ga-pick" data-id="' + attr(rec.id) + '">' + esc(rec.name) + "</button>";
     }).join("");
@@ -151,8 +150,7 @@
         var rec = byId(load(), b.getAttribute("data-id"));
         if (!rec) return renderHub();
         if (action === "view") renderReveal(rec);
-        else if (action === "done") completeMission(rec);
-        else accuse(rec);
+        else completeMission(rec);
       });
     });
     els.querySelector("#ga-back").addEventListener("click", renderHub);
@@ -189,39 +187,6 @@
     save(recs);
     renderOutcome("✅ " + t("Mission complete!"),
       t("{names} hand out 2 sips — and draw a fresh mission.").replace("{names}", esc(affected.join(" & "))));
-  }
-
-  // Caught: they drink; co-op burns the partner too; both draw fresh missions.
-  function accuse(rec) {
-    els.innerHTML =
-      '<section class="screen ga-accuse-screen">' +
-      '  <h2 class="screen-title pop">☝️ ' + esc(rec.name) + "?</h2>" +
-      '  <p class="muted">' + t("Was {name} really caught in the act?").replace("{name}", esc(rec.name)) + "</p>" +
-      '  <div class="stack">' +
-      '    <button id="ga-caught" class="btn btn-skip btn-block btn-xl">' + t("Caught! They drink 🍺") + "</button>" +
-      '    <button id="ga-false" class="btn btn-block btn-xl">' + t("False alarm — accuser drinks") + "</button>" +
-      '    <button id="ga-back2" class="btn btn-ghost btn-block">' + t("← Back") + "</button>" +
-      "  </div>" +
-      "</section>";
-    els.querySelector("#ga-caught").addEventListener("click", function () {
-      var recs = load(), r = roster();
-      var live = byId(recs, rec.id) || rec;
-      var affected = [live.name];
-      newSolo(live, r);
-      if (live.coop && live.groupId) {
-        var partner = recs.filter(function (x) { return x.groupId === live.groupId && x.id !== live.id; })[0];
-        if (partner) { affected.push(partner.name); newSolo(partner, r); }
-      }
-      save(recs);
-      renderOutcome("🍺 " + t("Busted!"),
-        (affected.length > 1
-          ? t("{names} are burned — both drink and draw fresh missions.")
-          : t("{names} drinks and draws a fresh mission.")).replace("{names}", esc(affected.join(" & "))));
-    });
-    els.querySelector("#ga-false").addEventListener("click", function () {
-      renderOutcome("❌ " + t("False alarm"), t("The accuser drinks. Missions stay secret."));
-    });
-    els.querySelector("#ga-back2").addEventListener("click", renderHub);
   }
 
   function renderOutcome(title, line) {
