@@ -915,6 +915,9 @@
     "🐌 Slowest to meld this round.": "🐌 Am langsamsten gemeldet diese Runde.",
     "A perfect tie — nobody drinks.": "Perfektes Unentschieden — keiner trinkt.",
     "New teams 🔁": "Neue Teams 🔁",
+    "Your word": "Dein Wort",
+    "Everyone's seen theirs — meld! 🔗": "Alle haben ihres gesehen — meldet euch! 🔗",
+    "On 3, say your word at the same time. Then a new word each round until you match.": "Auf 3 sagt ihr gleichzeitig euer Wort. Dann jede Runde ein neues, bis ihr euch trefft.",
 
     // ── Geheimauftrag ──────────────────────────────────────────────────────
     "Geheimauftrag": "Geheimauftrag",

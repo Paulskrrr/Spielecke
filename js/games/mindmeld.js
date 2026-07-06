@@ -19,6 +19,7 @@
   var els = null, ctx = null, settings = null;
   var teams = [];      // [{ members:[name], words:[word], rounds:null }]
   var teamIdx = 0;
+  var seedIdx = 0;     // which teammate is privately viewing their seed word
   var count = 1;
 
   var module = {
@@ -116,19 +117,47 @@
       '  <h2 class="pass-name pop">' + esc(tm.members.join(" & ")) + "</h2>" +
       '  <button id="mm-go" class="btn btn-primary btn-block btn-xl">' + t("Show our words 🔗") + "</button>" +
       "</section>";
-    els.querySelector("#mm-go").addEventListener("click", function () { count = 1; renderMeld(); });
+    els.querySelector("#mm-go").addEventListener("click", function () { seedIdx = 0; renderSeed(); });
+  }
+
+  // Each teammate privately sees ONLY their own seed word first (Imposter-style
+  // pass-around) — nobody may know the other's word before the first say.
+  function renderSeed() {
+    var tm = teams[teamIdx];
+    var member = tm.members[seedIdx];
+    els.innerHTML =
+      '<section class="screen imposter-pass">' +
+      '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", seedIdx + 1).replace("{n}", tm.members.length) + "</div>" +
+      '  <div class="pass-emoji">🔗</div>' +
+      '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(member)) + "</h2>" +
+      '  <p class="muted">' + t("Only {name} should look. Everyone else: no peeking.").replace("{name}", esc(member)) + "</p>" +
+      '  <button id="mm-reveal" class="btn btn-primary btn-block btn-xl">' + t("I'm {name} — reveal").replace("{name}", esc(member)) + "</button>" +
+      "</section>";
+    els.querySelector("#mm-reveal").addEventListener("click", showSeed);
+  }
+
+  function showSeed() {
+    var tm = teams[teamIdx];
+    var member = tm.members[seedIdx];
+    var word = tm.words[seedIdx];
+    var last = seedIdx === tm.members.length - 1;
+    els.innerHTML =
+      '<section class="screen mm-seed-screen">' +
+      '  <p class="muted">' + t("Your word") + " — " + esc(member) + "</p>" +
+      '  <div class="mm-word mm-seed"><span class="mm-word-text">' + esc(word) + "</span></div>" +
+      '  <button id="mm-hide" class="btn btn-primary btn-block btn-xl">' +
+      (last ? t("Everyone's seen theirs — meld! 🔗") : t("Hide & pass on ➡️")) + "</button>" +
+      "</section>";
+    els.querySelector("#mm-hide").addEventListener("click", function () {
+      if (last) { count = 1; renderMeld(); }
+      else { seedIdx++; renderSeed(); }
+    });
   }
 
   function renderMeld() {
-    var tm = teams[teamIdx];
-    var wordChips = tm.words.map(function (word, i) {
-      return '<div class="mm-word"><span class="mm-word-who">' + esc(tm.members[i]) + "</span>" +
-        '<span class="mm-word-text">' + esc(word) + "</span></div>";
-    }).join("");
     els.innerHTML =
       '<section class="screen mm-meld">' +
-      '  <p class="muted small">' + t("Say a new word together each round. Tap +1 every time you miss.") + "</p>" +
-      '  <div class="mm-words">' + wordChips + "</div>" +
+      '  <p class="muted small">' + t("On 3, say your word at the same time. Then a new word each round until you match.") + "</p>" +
       '  <div class="mm-counter" id="mm-counter" role="button" tabindex="0">' + count + "</div>" +
       '  <div class="tap-hint">' + t("👆 Tap the number when you don\'t match") + "</div>" +
       '  <button id="mm-meld" class="btn btn-primary btn-block btn-xl">' + t("MELD! 🎉") + "</button>" +

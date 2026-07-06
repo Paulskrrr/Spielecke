@@ -79,7 +79,7 @@
   // ======================================================================
   function renderHost() {
     var code = ctx.store.get("code", "");
-    if (!code) { code = genCode(); ctx.store.set("code", code); ctx.store.set("czar", 0); ctx.store.set("scores", {}); }
+    if (!code) { code = genCode(); ctx.store.set("code", code); ctx.store.set("czar", randSeat()); ctx.store.set("scores", {}); }
     var prompt = ctx.store.get("prompt", "");
     if (!prompt) { prompt = drawPrompt(); ctx.store.set("prompt", prompt); }
 
@@ -121,9 +121,12 @@
     });
     els.querySelector("#gk-newcode").addEventListener("click", function () {
       ctx.store.set("code", genCode());
+      ctx.store.set("czar", randSeat());   // fresh game → don't always restart the czar at seat 1
       renderHost();
     });
   }
+
+  function randSeat() { var n = roster().length; return n ? Math.floor(Math.random() * n) : 0; }
 
   function drawPrompt() {
     var p = prompts();

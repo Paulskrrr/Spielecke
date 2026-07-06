@@ -82,8 +82,11 @@
   // --- New balloon ---------------------------------------------------------
   function newBalloon() {
     var p = Math.max(2, (ctx.players || []).length || 5);
-    // Hidden burst point scaled to the group so a balloon lives ~1–1.5 laps.
-    var lo = Math.ceil(2.5 * p), hi = Math.ceil(5 * p);
+    // Pot ≈ burst point. Tuned so it averages ~7 sips at 4 players and grows
+    // only gently, hard-capped near 20 even at big tables — NOT 2.5–5× the head
+    // count (which blew up to 35+ for large groups).
+    var hi = Math.min(Math.round(5 + p), 20);
+    var lo = Math.min(Math.round(2.5 + 0.65 * p), hi - 2);
     threshold = lo + Math.floor(Math.random() * (hi - lo + 1));
     pumps = 0; pumpedThisTurn = 0; popped = false;
     setupAudio();

@@ -23,6 +23,7 @@
 
   var els = null, ctx = null, settings = null;
   var candidateIdx = 0;
+  var candOrder = [];               // shuffled candidate order (spec §1.3), not roster order
   var challenge = null;
   var bets = {};                    // playerId -> state index (0..5), -1/undefined = unset
   var timer = null, remaining = 0;
@@ -55,6 +56,17 @@
   function catalogue() { return global.Spielecke.L(global.Spielecke.WettbueroChallenges) || {}; }
   function roster() { return (ctx.players || []).filter(function (p) { return p && p.name; }); }
 
+  // Candidate rotation follows a shuffled order, not the entered roster order, so
+  // seat 1 isn't always up first. Rebuilds if the order is empty or a player left.
+  function currentCandidate() {
+    var r = roster();
+    var stillHere = function (c) { return c && r.filter(function (p) { return p.id === c.id; }).length; };
+    if (!candOrder.length || !stillHere(candOrder[candidateIdx % candOrder.length])) {
+      candOrder = global.Spielecke.shuffle(r);
+    }
+    return candOrder.length ? candOrder[candidateIdx % candOrder.length] : r[0];
+  }
+
   // --- Setup ---------------------------------------------------------------
   function renderSetup() {
     stopTimer();
@@ -83,7 +95,9 @@
     els.querySelector("#wb-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
-    if (enough) els.querySelector("#wb-start").addEventListener("click", renderCandidate);
+    if (enough) els.querySelector("#wb-start").addEventListener("click", function () {
+      candOrder = global.Spielecke.shuffle(roster()); candidateIdx = 0; renderCandidate();
+    });
   }
 
   // --- Candidate -----------------------------------------------------------
@@ -91,7 +105,7 @@
     stopTimer();
     var r = roster();
     if (r.length < module.meta.minPlayers) return renderSetup();
-    var cand = r[candidateIdx % r.length];
+    var cand = currentCandidate();
     els.innerHTML =
       '<section class="screen wb-candidate">' +
       '  <div class="pass-emoji">🎤</div>' +
@@ -113,7 +127,7 @@
   // --- Betting -------------------------------------------------------------
   function renderBetting() {
     var r = roster();
-    var cand = r[candidateIdx % r.length];
+    var cand = currentCandidate();
     var bettors = r.filter(function (p) { return p.id !== cand.id; });
     var timerNote = challenge.timer ? '<span class="wb-timerbadge">⏱ ' + challenge.timer + "s</span>" : "";
 
@@ -175,7 +189,7 @@
 
   function settle(success) {
     var r = roster();
-    var cand = r[candidateIdx % r.length];
+    var cand = currentCandidate();
     var bettors = r.filter(function (p) { return p.id !== cand.id; });
     var unit = settings.drinking ? t("sips") : t("points");
 
@@ -207,7 +221,7 @@
       "  </div>" +
       "</section>";
     els.querySelector("#wb-next").addEventListener("click", function () {
-      candidateIdx = (candidateIdx + 1) % Math.max(1, roster().length);
+      candidateIdx = candidateIdx + 1;
       renderCandidate();
     });
     els.querySelector("#wb-settings").addEventListener("click", renderSetup);

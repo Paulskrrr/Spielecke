@@ -2525,6 +2525,9 @@ body::before {
   border-radius: var(--radius); padding: 12px 18px; box-shadow: var(--pop); }
 .mm-word-who { font-size: 0.75rem; opacity: 0.85; }
 .mm-word-text { font-size: 1.5rem; font-weight: 900; }
+.mm-seed-screen { text-align: center; }
+.mm-seed { display: inline-flex; margin: 22px auto; padding: 22px 28px; }
+.mm-seed .mm-word-text { font-size: 2.4rem; }
 .mm-counter { font-size: 5rem; font-weight: 900; color: var(--ink); background: var(--yellow);
   width: 8rem; height: 8rem; margin: 8px auto; border: 4px solid var(--ink); border-radius: 50%;
   display: flex; align-items: center; justify-content: center; box-shadow: var(--pop-lg); }
