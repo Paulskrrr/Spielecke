@@ -56,8 +56,42 @@
     return a;
   }
 
+  // --- Seeded RNG (deterministic, cross-device) ---------------------------
+  // No network/sync: instead every device derives the SAME shuffle from a short
+  // shared code. hashStr → 32-bit seed, mulberry32 → PRNG, seededShuffle → a
+  // pure Fisher-Yates driven by it. Same (arr, seedStr) → identical output on
+  // every phone, so disjoint per-player deals need no broker (see Geschmacklos).
+  function hashStr(s) {
+    var h = 2166136261 >>> 0;              // FNV-1a
+    s = String(s);
+    for (var i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+  function mulberry32(seed) {
+    var a = seed >>> 0;
+    return function () {
+      a |= 0; a = (a + 0x6D2B79F5) | 0;
+      var t = Math.imul(a ^ (a >>> 15), 1 | a);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function seededShuffle(arr, seedStr) {
+    var a = Array.isArray(arr) ? arr.slice() : [];
+    var rand = mulberry32(hashStr(seedStr));
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(rand() * (i + 1));
+      var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+    }
+    return a;
+  }
+
   S.tappable = tappable;
   S.esc = esc;
   S.attr = attr;
   S.shuffle = shuffle;
+  S.seededShuffle = seededShuffle;
 })(window);

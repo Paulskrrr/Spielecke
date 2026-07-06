@@ -18,14 +18,18 @@
         var drinkBadge = game.supportsDrinking
           ? '<span class="badge badge-drink">' + t("🍻 drink mode") + "</span>"
           : "";
+        var betaBadge = game.beta
+          ? '<span class="badge badge-beta">' + t("BETA") + "</span>"
+          : "";
         return (
-          '<button class="game-card" data-id="' + escapeAttr(game.id) + '">' +
+          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + '" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +
           '  <span class="game-card__name">' + escapeHtml(t(game.name) || game.name) + "</span>" +
           '  <span class="game-card__tagline">' + escapeHtml(t(game.tagline || "") || game.tagline || "") + "</span>" +
           '  <span class="game-card__meta">' +
           '    <span class="badge">👥 ' + escapeHtml(playerHint(game)) + "</span>" +
           drinkBadge +
+          betaBadge +
           "  </span>" +
           "</button>"
         );

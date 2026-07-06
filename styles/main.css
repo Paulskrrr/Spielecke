@@ -306,6 +306,7 @@ body::before {
   color: var(--ink);
 }
 .badge-drink { background: var(--ink); color: var(--yellow); }
+.badge-beta { background: #a06bff; color: #fff; }
 
 /* ----- Roster ----------------------------------------------------------- */
 
@@ -2476,3 +2477,111 @@ body::before {
   .zz-cube { transition: none; }
   .zz-timer.is-danger, .zz-wire.is-bad, .zz-toast { animation: none; }
 }
+
+/* ======================================================================
+   New games (Ballon, Wettbüro, Mind Meld, Geheimauftrag, Simon, Geschmacklos)
+   ====================================================================== */
+
+/* ----- Ballon ----------------------------------------------------------- */
+.ballon-play { text-align: center; }
+.ballon-pot { display: inline-block; font-weight: 900; background: var(--yellow); color: var(--ink);
+  border: 3px solid var(--ink); border-radius: 999px; padding: 8px 18px; box-shadow: var(--pop); }
+.ballon-stage { height: 46vh; max-height: 340px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.ballon-body { font-size: 5rem; transition: transform 0.18s cubic-bezier(0.2,1.4,0.4,1); transform-origin: center bottom; }
+.ballon-body.is-tense { animation: wiggle 0.35s ease-in-out infinite; filter: saturate(1.4); }
+.ballon-pump { font-size: 1.5rem; }
+.ballon-pass { margin-top: 10px; }
+.ballon-boom { text-align: center; }
+.ballon-flash { font-size: 5rem; animation: pop-in 0.3s cubic-bezier(0.2,1.6,0.4,1); }
+
+/* ----- Wettbüro --------------------------------------------------------- */
+.wb-card { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 22px; margin: 12px 0;
+  box-shadow: var(--pop-lg); position: relative; }
+.wb-card-text { font-size: 1.4rem; font-weight: 800; }
+.wb-timerbadge { position: absolute; top: -12px; right: 14px; background: var(--blue); color: #fff;
+  border: 3px solid var(--ink); border-radius: 999px; padding: 2px 12px; font-weight: 800; }
+.wb-bets { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+.wb-bet { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--paper-2);
+  border: 3px solid var(--ink); border-radius: var(--radius); padding: 12px 16px; box-shadow: var(--pop);
+  font-weight: 800; font: inherit; cursor: pointer; }
+.wb-bet:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.wb-bet-pill { min-width: 52px; text-align: center; background: var(--yellow); border: 2px solid var(--ink);
+  border-radius: 999px; padding: 4px 10px; }
+.wb-settle-list { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; text-align: left; }
+.wb-settle-list li { background: var(--paper-2); border: 2px solid var(--ink); border-radius: 14px; padding: 10px 14px; }
+.wb-settle-cand { background: var(--yellow) !important; font-weight: 800; }
+.wb-run { text-align: center; }
+.wb-run .hud-time { display: inline-block; font-size: 1.6rem; margin: 10px 0; }
+
+/* ----- Mind Meld -------------------------------------------------------- */
+.mm-teams { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+.mm-team-card { display: flex; flex-direction: column; background: var(--paper-2); border: 3px solid var(--ink);
+  border-radius: var(--radius); padding: 10px 14px; box-shadow: var(--pop); }
+.mm-team-tag { font-size: 0.75rem; font-weight: 800; color: var(--ink-soft); }
+.mm-team-members { font-weight: 800; }
+.mm-meld { text-align: center; }
+.mm-words { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin: 14px 0; }
+.mm-word { display: flex; flex-direction: column; background: var(--blue); color: #fff; border: 3px solid var(--ink);
+  border-radius: var(--radius); padding: 12px 18px; box-shadow: var(--pop); }
+.mm-word-who { font-size: 0.75rem; opacity: 0.85; }
+.mm-word-text { font-size: 1.5rem; font-weight: 900; }
+.mm-counter { font-size: 5rem; font-weight: 900; color: var(--ink); background: var(--yellow);
+  width: 8rem; height: 8rem; margin: 8px auto; border: 4px solid var(--ink); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; box-shadow: var(--pop-lg); }
+.mm-ranking { list-style: none; padding: 0; margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.mm-rank { display: flex; align-items: center; gap: 12px; background: var(--paper-2); border: 3px solid var(--ink);
+  border-radius: var(--radius); padding: 12px 16px; font-weight: 800; box-shadow: var(--pop); }
+.mm-rank--win { background: var(--green); }
+.mm-rank--lose { background: var(--red); color: #fff; }
+.mm-rank-n { margin-left: auto; }
+
+/* ----- Geheimauftrag ---------------------------------------------------- */
+.ga-mission { font-size: 1.5rem; font-weight: 800; background: var(--ink); color: #fff; border-radius: var(--radius);
+  padding: 24px; margin: 16px 0; box-shadow: var(--pop-lg); }
+.ga-coop { background: var(--purple); color: #fff; border: 3px solid var(--ink); border-radius: 14px;
+  padding: 10px 14px; font-weight: 800; }
+.ga-reveal, .ga-outcome, .ga-hub, .ga-pick-screen, .ga-accuse-screen { text-align: center; }
+.ga-pick { text-align: center; }
+
+/* ----- Simon sagt ------------------------------------------------------- */
+.si-play { text-align: center; }
+.si-alive { display: inline-block; font-weight: 800; background: var(--paper-2); border: 3px solid var(--ink);
+  border-radius: 999px; padding: 6px 16px; box-shadow: var(--pop); }
+.si-phrase { font-size: clamp(1.8rem, 8vw, 3rem); font-weight: 900; min-height: 30vh; display: flex;
+  align-items: center; justify-content: center; padding: 12px; }
+.si-phrase--simon { color: var(--green); }
+.si-pulse { width: 20px; height: 20px; border-radius: 50%; background: var(--ink-soft); margin: 0 auto 14px; opacity: 0.4; }
+.si-pulse.is-beat { animation: pop-in 0.3s ease-out; background: var(--pink); opacity: 1; }
+.si-eliminate, .si-paused, .si-winner { text-align: center; }
+
+/* ----- Geschmacklos (CAH) ---------------------------------------------- */
+.gk-roles, .gk-host, .gk-join, .gk-empty, .gk-cardview { text-align: center; }
+.gk-role-cards { display: flex; flex-direction: column; gap: 14px; margin-top: 18px; }
+.gk-role-card { display: flex; flex-direction: column; gap: 4px; align-items: center; background: var(--paper-2);
+  border: 4px solid var(--ink); border-radius: var(--radius); padding: 22px; box-shadow: var(--pop-lg);
+  font: inherit; font-weight: 800; cursor: pointer; }
+.gk-role-card:active { transform: translateY(6px); box-shadow: var(--pop); }
+.gk-role-ic { font-size: 2.6rem; }
+.gk-role-t { font-size: 1.3rem; }
+.gk-codebar { font-weight: 800; color: var(--ink-soft); }
+.gk-code { font-size: 1.6rem; letter-spacing: 4px; font-weight: 900; color: var(--ink); background: var(--yellow);
+  border: 3px solid var(--ink); border-radius: 12px; padding: 2px 12px; margin-left: 6px; }
+.gk-czar { margin: 12px 0; font-weight: 800; }
+.gk-prompt { background: var(--ink); color: #fff; border-radius: var(--radius); padding: 28px 22px; margin: 12px 0;
+  font-size: 1.6rem; font-weight: 800; min-height: 26vh; display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--pop-lg); }
+.gk-scores { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
+.gk-score { display: flex; align-items: center; gap: 8px; background: var(--paper-2); border: 2px solid var(--ink);
+  border-radius: 999px; padding: 6px 14px; font: inherit; font-weight: 800; cursor: pointer; }
+.gk-score-n { background: var(--pink); color: #fff; border-radius: 999px; padding: 0 8px; min-width: 22px; }
+.gk-hand-bar { font-weight: 800; color: var(--ink-soft); }
+.gk-cards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin: 14px 0; }
+.gk-card { background: var(--paper-2); border: 3px solid var(--ink); border-radius: var(--radius); padding: 18px 14px;
+  min-height: 110px; font: inherit; font-weight: 800; font-size: 1.05rem; box-shadow: var(--pop); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; text-align: center; }
+.gk-card:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.gk-card--played { opacity: 0.35; }
+.gk-bigcard { background: var(--paper-2); border: 4px solid var(--ink); border-radius: var(--radius); padding: 40px 24px;
+  font-size: 1.8rem; font-weight: 900; min-height: 36vh; display: flex; align-items: center; justify-content: center;
+  box-shadow: var(--pop-lg); margin-bottom: 8px; }
+@media (min-width: 720px) { .gk-cards { grid-template-columns: repeat(3, 1fr); } }
