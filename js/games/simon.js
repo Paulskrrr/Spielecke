@@ -25,7 +25,7 @@
   var module = {
     meta: {
       id: "simon",
-      name: "Simon sagt",
+      name: "Simon Says",
       tagline: "Do what Simon says — never what he doesn't. Slip up and you drink.",
       icon: "🗣️",
       minPlayers: 3,
@@ -60,7 +60,7 @@
     var enough = r.length >= module.meta.minPlayers;
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🗣️ ' + t("Simon sagt") + ' <span class="badge badge-beta">' + t("BETA") + "</span></h2>" +
+      '  <h2 class="screen-title pop">🗣️ ' + t("Simon Says") + ' <span class="badge badge-beta">' + t("BETA") + "</span></h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       (enough ? "" : '<div class="roster-warn" style="display:block">' +
         t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", module.meta.minPlayers) + "</div>") +

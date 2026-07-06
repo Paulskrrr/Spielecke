@@ -45,7 +45,7 @@ next.
 - ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
 - ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
 - ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next *(drinking-capable)*
-- ✅ **Simon sagt** *(beta)* — a speaking, accelerating Simon Says; the table judges who slipped *(drinking-capable)*
+- ✅ **Simon Says** (DE: *Der Chef sagt*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
 - ✅ **Geschmacklos** — a Cards Against Humanity mode: host shows the prompt, every phone deals itself a disjoint hand off one shared table code *(drinking-capable)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
@@ -158,7 +158,7 @@ js/
     wettbuero.js           Wettbüro challenges, by category ({ label, challenges:[{text,timer?}] })
     mindmeld.js            Mind Meld seed-word pools ({ label, words:[...] })
     geheimauftrag.js       Geheimauftrag mission templates ({ solo:[...], coop:[...] }, {target}/{partner} tokens)
-    simon.js               Simon sagt command pools ({ label, commands:[...] })
+    simon.js               Simon Says command pools ({ label, commands:[...] })
     geschmacklos.js        Geschmacklos deck, one fixed set ({ prompts:[...], answers:[...] })
   games/                   one module per game (logic)
     hotpotato.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
@@ -179,7 +179,7 @@ Each game is a self-contained object on `window.Spielecke.Games.<id>` exposing:
 
 - `meta` — `{ id, name, tagline, icon, minPlayers, supportsDrinking, beta? }`. `supportsDrinking`
   means the game offers an optional drinking-mode toggle — not that it's always a drinking
-  game. `beta` is optional and puts a **BETA** badge on the shelf card (used by Simon sagt,
+  game. `beta` is optional and puts a **BETA** badge on the shelf card (used by Simon Says,
   whose reliance on `speechSynthesis` varies by browser). The registry builds its entry
   straight from this so meta and card never drift.
 - `mount(container, context)` — render into the given DOM node.
@@ -261,8 +261,8 @@ Two shapes of content, by what the game needs:
   - Geheimauftrag → *mission templates* with `{target}`/`{partner}` tokens the game substitutes
     at deal time (`geheimauftrag.js`, `{ solo:[...], coop:[...] }`) — no category pools; every
     mission is bound to a specific other player, never a prop or a difficulty tag.
-  - Simon sagt → *bare imperative commands* (`simon.js`, `{ label, commands:[...] }`); the
-    "Simon sagt" prefix is added at runtime, not stored in the content.
+  - Simon Says → *bare imperative commands* (`simon.js`, `{ label, commands:[...] }`); the
+    authority prefix ("Simon says" / German "Der Chef sagt") is added at runtime, not stored.
   - Geschmacklos → *prompts + answers*, one **fixed set, no category pools** (`geschmacklos.js`,
     `{ prompts:[...], answers:[...] }`) — a single shared deck keeps the seeded-deal math in
     §0 simple (every phone shuffles the same list).
@@ -579,11 +579,15 @@ mission in, or to accuse someone who slipped.
 - **Outcome:** pulled off → **hands out 2**; caught → **drinks** and draws a fresh mission;
   false accusation → the accuser drinks.
 
-### 3.26 Simon sagt 🗣️ (`simon`, 3+, beta) — drinking-capable
+### 3.26 Simon Says 🗣️ (`simon`, 3+, beta) — drinking-capable
+
+*German name: "Der Chef sagt" — the English "Simon says" reads as a translation in German, so
+the DE build uses a native command-giver; the game id stays `simon`.*
 
 Voice-driven, not screen-driven. The phone is the announcer: it **reads commands aloud**
 (Web Speech `speechSynthesis`, falling back to a big on-screen phrase + beep if unsupported),
-randomly prefixing "Simon sagt:" — obey only the prefixed ones. The calling cadence
+randomly prefixing the authority phrase ("Simon says:" / "Der Chef sagt:") — obey only the
+prefixed ones. The calling cadence
 **accelerates** every command. The app can't see who reacted (no sync), so the table judges:
 tap ❌ to knock out whoever slipped.
 
@@ -624,7 +628,7 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
    penalties where they don't fit. Games with a 🍻 toggle: Hot Potato, Most Likely To, Never
    Have I Ever, Imposter, Liar's Numbers, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
    Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race, Ballon, Wettbüro,
-   Mind Meld, Geheimauftrag, Simon sagt, Geschmacklos.
+   Mind Meld, Geheimauftrag, Simon Says, Geschmacklos.
 3. **Hot Potato pass model** → pure physical pass (no turn tracking).
 4. **Hot Potato fuse** → always random 20–90s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
@@ -649,7 +653,7 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
     talking to each other.
 14. **Beta badge** → `meta.beta` on a game module puts a **BETA** marker on its shelf card
     (`registry.js` passes it through, `shelf.js`/`main.css` render it). For games shipped
-    deliberately small while a risky browser API (e.g. Simon sagt's `speechSynthesis`) gets
+    deliberately small while a risky browser API (e.g. Simon Says's `speechSynthesis`) gets
     road-tested with the group before it's called done.
 
 ---
