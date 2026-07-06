@@ -108,7 +108,20 @@ Players screen.
 - **Logo:** "Pauls Spielecke" wordmark — chunky 3D gold "Spielecke" with a black outline
   and a red handwritten "Pauls" on top. Lives at `assets/logo.png` (transparent
   background), used in the header, page title, and favicon. Cropped tight from Paul's
-  uploaded artwork with the white background keyed out.
+  uploaded artwork with the white background keyed out. The header logo also has a
+  shapeless button-y press (the wordmark dips on tap — no box/outline).
+- **Micro-interactions:** every pressable shares one springy release curve (`--spring`) —
+  instant press-down, a small overshoot on release; a light `navigator.vibrate` tick fires
+  on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
+  on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
+  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon
+  cycle (coprime with the 7-step tilt cycle, so colour+angle only realign at 63 cards). The
+  home bar is a solid-purple app-bar lifted with a soft drop shadow. All of the above honours
+  `prefers-reduced-motion`.
+- **First-visit splash:** on the very first open (a localStorage flag, pre-checked in a tiny
+  `<head>` script so returning visitors never see a flash) the logo shows in a game-tile-style
+  card on a yellow field, then rolls up like a blind after ~0.5 s to reveal the shelf already
+  rendered behind it (`shell.runSplash`).
 
 ---
 
@@ -486,9 +499,11 @@ rank-sorted "drawn" strip (counting help); the dealer passes left after the deck
 The four Aces are the horses (♠♥♦♣); the app flips the other 48 cards one at a time and the
 matching-suit horse advances. Six face-down **hurdles** flip as the field clears each level,
 rubber-banding that suit back a step. Players bet a suit (roster); first horse home → backers
-**verteilen** sips, the rest **trinken** (flat or "lengths behind", configurable). The race is
-animated and **paced** like a race call (configurable speed) with a commentator line; the
-single timer chain is cleared on unmount.
+**verteilen** sips, the rest **trinken**. The loss penalty is configurable: **flat** with a
+chosen sip count (a 1–5 chip row, default 3; the row dims out while "lengths behind" is on) or
+**"lengths behind"** (sips = how far your horse finished off the pace). The race is animated
+and **paced** like a race call (configurable speed) with a commentator line; the single timer
+chain is cleared on unmount.
 
 ### 3.21 Zeitzünder 🧨 (`zeitzunder`, 2+) — plain (co-op)
 
@@ -566,18 +581,20 @@ count; the next team takes the phone.
 A meta-layer, not a stand-alone round: dealt once, then it runs quietly **alongside**
 whatever else you play that evening. Every mission is bound to a specific other player via a
 `{target}` token (never a prop, never impossible) — "Bring **{target}** to say...", "Toast
-three times with **{target}**...". Re-open the tile any time for a private "peek", to cash a
-mission in, or to accuse someone who slipped.
+three times with **{target}**...". Re-open the tile any time for a private "peek" or to cash a
+mission in.
 
+- **No "caught" flow (by design):** there is deliberately no accuse/bust path. At the table it
+  collapsed into everyone denying every accusation ("you only say that because it's *your*
+  mission"), which drags — the fun is sneaking a mission past everyone, not policing it. The hub
+  is just **peek** and **cash in**.
 - **Persistence:** assignments live in `context.store` (survives navigating to other games —
   only the DOM is torn down on `unmount()`), so the mission is still there when you come back.
 - **Co-op missions:** at 5+ players some missions pair two people on the same `{target}` —
   either told who their partner is, or left to find each other from the shared wording alone
-  ("someone at the table shares this exact mission"). Both cash in together; if either is
-  caught, both are burned.
+  ("someone at the table shares this exact mission"). Both cash in together.
 - **Config:** none — plain by design (some missions are naturally harder, no difficulty tag).
-- **Outcome:** pulled off → **hands out 2**; caught → **drinks** and draws a fresh mission;
-  false accusation → the accuser drinks.
+- **Outcome:** pulled off → **hands out 2** and draws a fresh mission.
 
 ### 3.26 Simon Says 🗣️ (`simon`, 3+, beta) — drinking-capable
 
@@ -604,12 +621,19 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
 
 - **Host:** generates a short **table code** and shows it big, alongside the current black
   prompt, the rotating **Card Czar**, and a live scoreboard (tap a name to award the point).
+  Prompts have **one or two blanks**; a two-blank prompt shows a **PICK 2** badge so the table
+  knows to play two cards.
 - **Player:** types the host's code and calls out a **free seat number** (1–12) so no two
   players claim the same seat. Every phone then runs the *same* deterministic shuffle of the
   fixed answer deck off that code (`Spielecke.seededShuffle`) and slices out its seat's
   disjoint block — a fresh table code means fresh hands, but the same code always gives the
-  same deal (refresh-safe). Hands come 6 at a time; "Next 6" advances further into the block
-  once all 6 are played.
+  same deal (refresh-safe). A hand is **8 cards**; once **4** have been played the hand resets
+  to a fresh 8 (window steps by 8 through the seat's block, so a card is never re-dealt).
+- **Deck:** one fixed set per language (`content/geschmacklos.js`) — **~228 answer cards + 74
+  prompts** (14 of them two-blank). Answers are deliberately **short (1–2 words on average**,
+  longer full-phrase gags the exception) and run filthy/absurd/politically-incorrect; the
+  content boundary (no slurs / hate against protected groups, no minors, nothing illegal) is
+  fixed and non-negotiable.
 - **Play:** tap your best card to blow it up full-screen, then read prompt + card aloud round
   the table (you can tell whose phone is whose) — no anonymity mechanic.
 - **Config:** none — one fixed deck (dropping category pools keeps the seat-block math
