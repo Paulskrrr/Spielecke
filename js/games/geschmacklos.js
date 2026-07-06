@@ -5,7 +5,9 @@
  *   🎙️ Host   — one screen shows the black prompt, the Card Czar and the score,
  *               plus a short TISCHCODE (a seed).
  *   🃏 Spieler — every phone types that code + says a free seat number aloud, and
- *               deals ITSELF a hand of 6 white cards.
+ *               deals ITSELF a hand of 8 white cards. After 4 cards have been
+ *               played the hand resets to a fresh 8. Prompts may have one blank
+ *               or two (Pick 2 — a badge flags those, the player plays two cards).
  *
  * The trick that needs no backend: all phones run the SAME deterministic shuffle
  * of the answer deck from the shared code (Spielecke.seededShuffle), and seat s
@@ -22,7 +24,11 @@
   function t(k) { return global.Spielecke.t(k); }
   var seededShuffle = global.Spielecke.seededShuffle;
 
-  var HAND = 6, MAXSLOTS = 12;
+  // 8 cards dealt at a time; a hand is "spent" and refreshes once ROUND (4) of
+  // them have been played. Windows step by HAND across the seat's block (the
+  // unplayed 4 are discarded on reset) so a card is never dealt to the same
+  // seat twice. capacity() (block size) stays disjoint across seats regardless.
+  var HAND = 8, ROUND = 4, MAXSLOTS = 12;
   var CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 
   var els = null, ctx = null;
@@ -95,11 +101,15 @@
         '<p class="muted small">' + t("Tap a name to give them the point.") + "</p>"
       : '<p class="muted small">' + t("Add players from the header to track the score.") + "</p>";
 
+    var pick2 = blanks(prompt) >= 2
+      ? '<span class="gk-pick2">' + t("PICK 2") + "</span>"
+      : "";
+
     els.innerHTML =
       '<section class="screen gk-host">' +
       '  <div class="gk-codebar">' + t("Table code") + ' <span class="gk-code">' + esc(code) + "</span></div>" +
       '  <div class="gk-czar">🎙️ ' + t("Card Czar") + ": <strong>" + esc(czar) + "</strong></div>" +
-      '  <div class="gk-prompt">' + esc(prompt) + "</div>" +
+      '  <div class="gk-prompt' + (pick2 ? " gk-prompt--pick2" : "") + '">' + pick2 + esc(prompt) + "</div>" +
       board +
       '  <button id="gk-next" class="btn btn-primary btn-block btn-xl">' + t("Next prompt 🎤") + "</button>" +
       '  <button id="gk-newcode" class="btn btn-block">' + t("New table code 🔁") + "</button>" +
@@ -132,6 +142,7 @@
     var p = prompts();
     return p.length ? p[Math.floor(Math.random() * p.length)] : t("Fill in the blank: ___");
   }
+  function blanks(s) { return (String(s).match(/___/g) || []).length; }
 
   // ======================================================================
   // PLAYER
@@ -189,19 +200,27 @@
 
     if (!hand.length) return renderEmpty();
 
+    // A hand is spent once ROUND cards have been played (or, on a short final
+    // window, once they're all played). Then it refreshes to the next 8.
+    var need = Math.min(ROUND, hand.length);
+    var roundDone = played.length >= need;
+
     var tiles = hand.map(function (card, i) {
       var isPlayed = played.indexOf(i) !== -1;
-      return '<button class="gk-card' + (isPlayed ? " gk-card--played" : "") + '" data-i="' + i + '"' + (isPlayed ? " disabled" : "") + ">" + esc(card) + "</button>";
+      // once the round is done the remaining unplayed cards lock too — the whole
+      // hand resets, you don't cherry-pick past four.
+      var locked = isPlayed || roundDone;
+      return '<button class="gk-card' + (isPlayed ? " gk-card--played" : "") + '" data-i="' + i + '"' + (locked ? " disabled" : "") + ">" + esc(card) + "</button>";
     }).join("");
-    var allPlayed = played.length >= hand.length;
 
     els.innerHTML =
       '<section class="screen gk-hand">' +
       '  <div class="gk-hand-bar">' + t("Seat {s} · code {c}").replace("{s}", slot).replace("{c}", esc(code)) + "</div>" +
       '  <p class="muted small">' + t("Read the host's prompt, tap your best card, read it out.") + "</p>" +
       '  <div class="gk-cards">' + tiles + "</div>" +
-      (allPlayed
-        ? '  <button id="gk-nexthand" class="btn btn-primary btn-block btn-xl">' + t("Next 6 cards 🃏") + "</button>"
+      '  <div class="gk-progress">' + t("{n}/{m} played this hand").replace("{n}", played.length).replace("{m}", need) + "</div>" +
+      (roundDone
+        ? '  <button id="gk-nexthand" class="btn btn-primary btn-block btn-xl">' + t("Fresh hand 🃏") + "</button>"
         : "") +
       '  <button id="gk-leave" class="btn btn-ghost btn-block">' + t("New code / seat") + "</button>" +
       "</section>";
