@@ -148,7 +148,11 @@ body::before {
   border: 0;
   cursor: pointer;
   padding: 2px;
+  /* button-y press: the wordmark itself dips on tap, no box/outline around it */
+  transition: transform 0.3s var(--spring);
 }
+.brand:active { transform: scale(0.9); transition-duration: 0.05s; }
+.brand:focus-visible { outline: none; }
 .brand__logo {
   height: 52px;
   width: auto;
