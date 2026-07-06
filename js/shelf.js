@@ -48,7 +48,7 @@
     var soonTile =
       '<button class="game-card game-card--soon" type="button" style="--i:' + games.length + '" aria-label="Coming soon">' +
       '  <span class="game-card__icon">✨</span>' +
-      '  <span class="game-card__name">Coming soon</span>' +
+      '  <span class="game-card__name">Coming Soon...</span>' +
       "</button>";
 
     // If the registry came up empty, none of the game scripts loaded — surface
