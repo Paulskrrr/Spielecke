@@ -2713,3 +2713,51 @@ body::before {
   .btn, .chip, .icon-btn, .players-badge, .game-card,
   .toggle input, .toggle input::before { transition-duration: 0.01s; }
 }
+
+/* ----- First-visit splash (logo tile, rolls up like a blind) ------------ */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: var(--yellow);
+  /* the roll-up: transition lives on the base element so adding .is-up animates
+     reliably. transform-origin top so it reads as a blind gathering upward. */
+  transform-origin: top center;
+  transition: transform 0.55s cubic-bezier(0.5, 0, 0.15, 1);
+  will-change: transform;
+}
+/* returning visitors (flag set in <head>) never see it */
+html.no-splash .splash { display: none; }
+.splash.is-up { transform: translateY(-100%); }
+
+.splash__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(78vw, 420px);
+  padding: clamp(26px, 7vw, 52px);
+  background: var(--purple);
+  border: 5px solid var(--ink);
+  border-radius: 28px;
+  box-shadow: var(--pop-lg);
+  animation: splash-pop 0.5s var(--spring) both;
+}
+.splash__logo {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25));
+}
+@keyframes splash-pop {
+  from { opacity: 0; transform: scale(0.55) rotate(-7deg); }
+  to { opacity: 1; transform: scale(1) rotate(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .splash__tile { animation: none; }
+  .splash { transition: none; }
+}
