@@ -427,7 +427,7 @@
       body = '<div class="ha-hand">' + game.hofgesetze.map(function (r) {
         return (
           '<div class="ha-card-mini ha-card-mini--regel">' +
-          '  <span class="ha-card-mini__pip">📜</span>' +
+          '  <img class="ha-card-mini__crest" src="assets/ha-crest-regel.png" alt="" />' +
           (r.by ? '  <span class="ha-card-mini__holder">' + esc(r.by) + "</span>" : "") +
           '  <span class="ha-card-mini__title">' + esc(r.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>" +
@@ -447,7 +447,7 @@
       body = '<div class="ha-hand">' + game.active.map(function (a) {
         return (
           '<button class="ha-card-mini ha-card-mini--aktiv" data-trigger="' + esc(a.uid) + '">' +
-          '  <span class="ha-card-mini__pip">🪙</span>' +
+          '  <img class="ha-card-mini__crest" src="assets/ha-crest-aktiv.png" alt="" />' +
           '  <span class="ha-card-mini__holder">' + esc(a.holder) + "</span>" +
           '  <span class="ha-card-mini__title">' + esc(a.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(a.text) + "</span>" +
@@ -497,6 +497,7 @@
       '<section class="screen ha-screen ha-draw-screen">' +
       '  <div class="ha-draw-kicker"><strong>' + esc(cur ? cur.name : "—") + "</strong>" + t(" draws …") + "</div>" +
       '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + typeMeta.colour + '">' +
+      '    <img class="ha-bigcard__crest" src="assets/ha-crest-' + card.type + '.png" alt="" />' +
       '    <div class="ha-bigcard__tag">' + esc(t(typeMeta.label)) + "</div>" +
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
       '    <div class="ha-bigcard__text">' + esc(filledText) + "</div>" +
