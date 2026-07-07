@@ -478,9 +478,9 @@ resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz"
 stays on screen), **Aktiv** (gold — face-up with its holder, self-triggered later), **Minispiel**
 (violet — a table mini-game the host completes). Two standing ground rules are always on. The
 deck is data, tagged per edition (active: *Diener & Könige*; *Rapunzel* is a locked stub) and
-reshuffles endlessly. Game state persists; the Sanduhr (secret phone timer — the activation
-screen and card text call it "Handy-Timer" so it's clear the phone runs it) and the space-key
-shortcut are torn down on unmount.
+reshuffles endlessly. Game state persists; the Sanduhr (keeps its name; its card text says
+"Handy-Timer" so it's clear the phone runs the secret timer) and the space-key shortcut are
+torn down on unmount.
 
 ### 3.17 Mia (Mäxchen) 🎩 (`maxchen`, 2+) — drinking-capable
 

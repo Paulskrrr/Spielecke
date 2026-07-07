@@ -559,7 +559,7 @@
     }).join("");
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">' + t("⏳ Phone Timer") + "</h2>" +
+      '  <h2 class="screen-title pop">' + t("⏳ The Hourglass") + "</h2>" +
       '  <p class="muted">' + t("Secretly set a timer on this phone. When it runs out, whoever is speaking drinks. Don\'t let others watch.") + "</p>" +
       '  <div class="chip-row" id="ha-sec">' + chips + "</div>" +
       '  <label class="ha-custom">' + t("Custom time (sec.):") +
