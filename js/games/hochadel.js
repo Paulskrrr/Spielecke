@@ -105,10 +105,24 @@
   }
 
   function buildDeck(edition) {
-    var ids = data.deck
-      .filter(function (c) { return c.editions.indexOf(edition) !== -1; })
-      .map(function (c) { return c.id; });
-    return shuffle(ids);
+    var cards = data.deck.filter(function (c) { return c.editions.indexOf(edition) !== -1; });
+    var regel = [], rest = [];
+    cards.forEach(function (c) { (c.type === "regel" ? regel : rest).push(c.id); });
+
+    // Bias: a „regel" card ("the word ‚yes‘ is banished from now on") only bites
+    // if it lands early — one drawn in the last third barely gets to apply. So
+    // confine EVERY rule card to the first two-thirds of the deck: fill that
+    // front zone with all rule cards plus enough others (shuffled together), and
+    // let the back third be purely non-rule cards. Rule cards become Hofgesetze
+    // (never re-enter the draw pile), so biasing the initial build is enough.
+    var shuffledRest = shuffle(rest);
+    var total = regel.length + shuffledRest.length;
+    var frontSize = Math.floor((total * 2) / 3);
+    if (frontSize < regel.length) frontSize = regel.length; // tiny-deck guard
+    var fillCount = frontSize - regel.length;
+    var front = shuffle(regel.concat(shuffledRest.slice(0, fillCount)));
+    var back = shuffledRest.slice(fillCount);
+    return front.concat(back);
   }
 
   function rosterOrder() {
