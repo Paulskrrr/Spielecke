@@ -206,6 +206,25 @@
     return cardById[id] || null;
   }
 
+  // Full card count for an edition (respecting `copies`) — the denominator for
+  // the "how thick is the draw pile" cue on the deck.
+  function editionDeckSize(edition) {
+    var n = 0;
+    data.deck.forEach(function (c) {
+      if (c.editions.indexOf(edition) !== -1) n += (c.copies || 1);
+    });
+    return n;
+  }
+
+  // Map the remaining draw pile to one of four thickness tiers, so the fanned
+  // stack subtly thins out as the deck is used up (full → past ¼, ½, ¾ spent).
+  function deckFullnessClass() {
+    var total = editionDeckSize(game.edition) || 1;
+    var frac = game.draw.length / total;
+    var lvl = frac > 0.75 ? 4 : frac > 0.5 ? 3 : frac > 0.25 ? 2 : 1;
+    return "ha-deck--f" + lvl;
+  }
+
   // ---------------------------------------------------------------------------
   // Screen: edition select (spec §1, §4.1)
   // ---------------------------------------------------------------------------
@@ -418,7 +437,7 @@
       "  </div>" +
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
-      '      <button id="ha-draw" class="ha-deck" aria-label="' + t("Draw card") + '" data-primary>' +
+      '      <button id="ha-draw" class="ha-deck ' + deckFullnessClass() + '" aria-label="' + t("Draw card") + '" data-primary>' +
       '        <span class="ha-deck__crest">👑</span>' +
       '        <span class="ha-deck__label">' + t("Draw card") + "</span>" +
       "      </button>" +
