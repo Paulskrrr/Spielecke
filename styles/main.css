@@ -2778,16 +2778,18 @@ body::before {
   height: 3px;
   background: var(--ink);
 }
-@keyframes splash-auto-up { to { transform: translateY(-100%); visibility: hidden; } }
+@keyframes splash-auto-up { to { transform: translateY(-130%); visibility: hidden; } }
 /* JS-triggered roll-up: a small dip DOWN first — like tugging a blind to release
-   the catch — then the pull up. The up phase (21%→100%) keeps the original curve
-   and duration, so its speed is unchanged; only a ~0.15s tension-dip is
-   prepended. */
-.splash.is-up { animation: splash-roll-up 0.7s both; }
+   the catch — then the pull up and clean off the top. It travels to -130% (past
+   the top edge into nothing) rather than parking its bottom edge at the status
+   bar; because the same ease-out curve reaches the top well before its slow
+   tail, the visible exit whips off at speed while the deceleration happens
+   off-screen — no stop-and-fade at the notch. Up-phase pace is unchanged. */
+.splash.is-up { animation: splash-roll-up 0.85s both; }
 @keyframes splash-roll-up {
   0%   { transform: translateY(0);   animation-timing-function: cubic-bezier(0.3, 0, 0.25, 1); }
-  21%  { transform: translateY(2%);  animation-timing-function: cubic-bezier(0.5, 0, 0.15, 1); }
-  100% { transform: translateY(-100%); visibility: hidden; }
+  18%  { transform: translateY(2%);  animation-timing-function: cubic-bezier(0.5, 0, 0.15, 1); }
+  100% { transform: translateY(-130%); visibility: hidden; }
 }
 
 .splash__tile {
