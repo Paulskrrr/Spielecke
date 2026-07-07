@@ -1532,26 +1532,32 @@ body::before {
   border: 5px solid var(--ink); border-radius: 20px; box-shadow: var(--pop-lg);
   cursor: pointer;
 }
-/* The two cards "under" the top one. Their offset is driven by CSS variables so
-   the fanned stack can subtly thin as the draw pile is used up: full offsets
-   read as a thick deck, near-zero offsets as an almost-spent one. The under
-   cards are a touch darker than the face so they read as shaded depth. Defaults
-   below = the thickest (full-deck) look; the .ha-deck--fN classes taper it. */
+/* The draw pile is drawn as a stack of sheets extruded down-right via layered
+   hard shadows; each sheet sits deeper and darker for 3D shading. The DEPTH of
+   that side is the "how much is left" cue: four tiers thin the stack as it is
+   spent (full → past ¼, ½, ¾). Default below = f4 (full, deepest). */
 .ha-deck {
-  --deck-bx: 7px; --deck-by: 9px;   /* ::before (down-right) */
-  --deck-ax: -7px; --deck-ay: 6px;  /* ::after  (down-left)  */
+  box-shadow:
+    5px 7px 0 #5a2e86,
+    10px 14px 0 #4c2472,
+    15px 21px 0 #3e1c5e,
+    20px 28px 0 #2f1447;
 }
-.ha-deck::before, .ha-deck::after {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(160deg, #5c3089, #48226c);
-  border: 5px solid var(--ink); border-radius: 20px;
+.ha-deck--f3 {
+  box-shadow:
+    5px 7px 0 #5a2e86,
+    10px 14px 0 #4c2472,
+    15px 21px 0 #3e1c5e;
 }
-.ha-deck::before { transform: translate(var(--deck-bx), var(--deck-by)) rotate(3.5deg); }
-.ha-deck::after { transform: translate(var(--deck-ax), var(--deck-ay)) rotate(-3.5deg); }
-/* Thickness tiers: f4 = full (default offsets), thinning past ¼, ½, ¾ spent. */
-.ha-deck--f3 { --deck-bx: 5px; --deck-by: 7px; --deck-ax: -5px; --deck-ay: 5px; }
-.ha-deck--f2 { --deck-bx: 3px; --deck-by: 5px; --deck-ax: -3px; --deck-ay: 4px; }
-.ha-deck--f1 { --deck-bx: 1.5px; --deck-by: 3px; --deck-ax: -1.5px; --deck-ay: 2.5px; }
+.ha-deck--f2 {
+  box-shadow:
+    5px 7px 0 #5a2e86,
+    10px 14px 0 #4c2472;
+}
+.ha-deck--f1 {
+  box-shadow:
+    5px 7px 0 #5a2e86;
+}
 .ha-deck:active { transform: translateY(5px); box-shadow: var(--pop); }
 .ha-deck__crest {
   font-size: clamp(2.6rem, 13vw, 4rem); line-height: 1;

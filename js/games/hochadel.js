@@ -441,7 +441,6 @@
       '        <span class="ha-deck__crest">👑</span>' +
       '        <span class="ha-deck__label">' + t("Draw card") + "</span>" +
       "      </button>" +
-      '      <div class="ha-deck-count">' + game.draw.length + t(" in deck") + "</div>" +
       "    </div>" +
       '    <div class="ha-piles">' +
       activeHtml() +
