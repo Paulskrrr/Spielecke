@@ -2778,17 +2778,16 @@ body::before {
   height: 3px;
   background: var(--ink);
 }
-@keyframes splash-auto-up { to { transform: translateY(-115%); visibility: hidden; } }
+@keyframes splash-auto-up { to { transform: translateY(-100%); visibility: hidden; } }
 /* JS-triggered roll-up: a small dip DOWN first — like tugging a blind to release
-   the catch — then ONE steady glide straight up and off the top. The up phase
-   holds a near-constant velocity (not an ease-out that slows to a halt at the
-   notch, nor a big overshoot that whips), and travels just past the top (-115%)
-   so it clears into nothing while the tiny remaining decel happens off-screen. */
-.splash.is-up { animation: splash-roll-up 0.85s both; }
+   the catch — then the pull up. The up phase (21%→100%) keeps the original curve
+   and duration, so its speed is unchanged; only a ~0.15s tension-dip is
+   prepended. */
+.splash.is-up { animation: splash-roll-up 0.7s both; }
 @keyframes splash-roll-up {
-  0%   { transform: translateY(0);     animation-timing-function: cubic-bezier(0.3, 0, 0.3, 1); }
-  22%  { transform: translateY(2%);    animation-timing-function: cubic-bezier(0.25, 0.5, 0.6, 0.9); }
-  100% { transform: translateY(-115%); visibility: hidden; }
+  0%   { transform: translateY(0);   animation-timing-function: cubic-bezier(0.3, 0, 0.25, 1); }
+  21%  { transform: translateY(2%);  animation-timing-function: cubic-bezier(0.5, 0, 0.15, 1); }
+  100% { transform: translateY(-100%); visibility: hidden; }
 }
 
 .splash__tile {
