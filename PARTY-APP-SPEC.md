@@ -468,9 +468,10 @@ footrule). Closest to the group is the most in sync; furthest off loses.
 - **Config:** category pool, 🧑‍🤝‍🧑 **Mitspieler** (rank-the-players) mode, 🍻 drinking mode. Item
   count per set is flexible.
 - **Mitspieler mode:** the ranked items become the **current roster** (dynamic) instead of static
-  content; the chosen category only sets the flavour of the axis, drawn from that pool's `people`
-  list (Party → "Kotzt am ehesten → am spätesten", 18+ → "Steht am ehesten → am wenigsten auf
-  BDSM", …). Everyone ranks all players, themselves included.
+  content; you pick **exactly one** category (single-select, no Mixed — Start is gated until one is
+  chosen) and it only sets the flavour of the axis, drawn from that pool's `people` list (Party →
+  "Kotzt am ehesten → am spätesten", 18+ → "Steht am ehesten → am wenigsten auf BDSM", …).
+  Everyone ranks all players, themselves included.
 - **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }], people:[{ title }] }`).
 - **Outcome:** least drift **wins 👑**, most drift **loses 💀** (drinking mode: drinks). If the
   whole table ranks identically, it's a draw — nobody wins or loses.

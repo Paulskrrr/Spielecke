@@ -364,7 +364,7 @@
 
     // ── Rank It ────────────────────────────────────────────────────────────
     "🧑‍🤝‍🧑 Rank the players": "🧑‍🤝‍🧑 Mitspieler ranken",
-    "The category sets the spectrum — e.g. Party → who throws up first. Players are ranked instead of items.": "Die Kategorie bestimmt das Spektrum — z. B. Party → wer kotzt zuerst. Statt Begriffen werden die Mitspieler geordnet.",
+    "Pick one category — it sets the spectrum (e.g. Party → who throws up first). The players get ranked, not items.": "Wähle eine Kategorie — sie bestimmt das Spektrum (z. B. Party → wer kotzt zuerst). Geordnet werden die Mitspieler, nicht Begriffe.",
     "Most → least likely to cause chaos": "Sorgt am ehesten → am wenigsten für Chaos",
     "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
     "{name}'s ranking": "{name}s Ranking",

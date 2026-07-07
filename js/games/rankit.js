@@ -53,9 +53,11 @@
 
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var chips = Pools().chipsHtml(sets(), t);
-
     var enough = roster.length >= MIN_PLAYERS;
+    // Mitspieler mode picks EXACTLY ONE category (it defines the spectrum), so it
+    // uses single-select chips with no "Mixed"; normal mode keeps multi-select.
+    var chips = settings.rankPlayers ? catChipsHtml() : Pools().chipsHtml(sets(), t);
+    var startDisabled = !enough || (settings.rankPlayers && settings.pools.length !== 1);
     var note = enough
       ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
@@ -68,26 +70,67 @@
       '  <label class="toggle"><input type="checkbox" id="ri-people"' + (settings.rankPlayers ? " checked" : "") + " /><span>" + t("🧑‍🤝‍🧑 Rank the players") + "</span></label>" +
       '  <h3 class="sub">' + t("Category") + "</h3>" +
       (settings.rankPlayers
-        ? '  <p class="muted small" id="ri-people-hint">' + t("The category sets the spectrum — e.g. Party → who throws up first. Players are ranked instead of items.") + "</p>"
+        ? '  <p class="muted small" id="ri-people-hint">' + t("Pick one category — it sets the spectrum (e.g. Party → who throws up first). The players get ranked, not items.") + "</p>"
         : "") +
       '  <div class="chip-row" id="ri-pools">' + chips + "</div>" +
       '  <label class="toggle"><input type="checkbox" id="ri-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode") + "</span></label>" +
-      '  <button id="ri-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start round ▶️") + "</button>" +
+      '  <button id="ri-start" class="btn btn-primary btn-block btn-xl"' + (startDisabled ? " disabled" : "") + ">" + t("Start round ▶️") + "</button>" +
       "</section>";
 
-    Pools().bind(els.querySelector("#ri-pools"), sets(),
-      function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+    var start = els.querySelector("#ri-start");
+    function updateStart() {
+      startDisabled = !enough || (settings.rankPlayers && settings.pools.length !== 1);
+      start.disabled = startDisabled;
+    }
+    var poolsEl = els.querySelector("#ri-pools");
+    if (settings.rankPlayers) {
+      bindSingle(poolsEl, updateStart);
+    } else {
+      Pools().bind(poolsEl, sets(),
+        function () { return settings.pools; },
+        function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+    }
     els.querySelector("#ri-people").addEventListener("change", function (e) {
       settings.rankPlayers = e.target.checked;
       ctx.store.set("ri_people", settings.rankPlayers);
-      renderSetup(); // re-render so the spectrum hint shows/hides
+      // Player mode needs exactly one category — clear a 0-or-many selection so
+      // the chips start clean and Start stays gated until a single pick.
+      if (settings.rankPlayers && settings.pools.length !== 1) {
+        settings.pools = []; Pools().save(ctx.store, settings.pools);
+      }
+      renderSetup(); // re-render so the chip mode + hint switch
     });
     els.querySelector("#ri-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
-    var start = els.querySelector("#ri-start");
-    if (enough) start.addEventListener("click", function () { startRound(roster); });
+    if (enough) start.addEventListener("click", function () { if (!startDisabled) startRound(roster); });
+  }
+
+  // Category chips for Mitspieler mode: one per category, single-select, no Mixed.
+  function catChipsHtml() {
+    var av = sets();
+    return Object.keys(av).map(function (k) {
+      return '<button class="chip" data-pool="' + global.Spielecke.attr(k) + '">' + esc(av[k].label || k) + "</button>";
+    }).join("");
+  }
+  function bindSingle(container, onChange) {
+    function paint() {
+      container.querySelectorAll(".chip").forEach(function (c) {
+        var key = c.getAttribute("data-pool");
+        c.classList.toggle("chip--active", settings.pools.length === 1 && settings.pools[0] === key);
+      });
+    }
+    container.querySelectorAll(".chip").forEach(function (c) {
+      c.addEventListener("click", function () {
+        var key = c.getAttribute("data-pool");
+        var isSel = settings.pools.length === 1 && settings.pools[0] === key;
+        settings.pools = isSel ? [] : [key]; // tap the active one again to clear
+        Pools().save(ctx.store, settings.pools);
+        paint();
+        if (onChange) onChange();
+      });
+    });
+    paint();
   }
 
   function startRound(roster) {
