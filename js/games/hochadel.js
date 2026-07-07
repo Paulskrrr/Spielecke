@@ -159,6 +159,9 @@
       uidSeq: 1,
       draw: buildDeck(edition),
       discard: [],
+      lastCard: null,   // {title, text} of the last non-Echo card resolved — the
+                        // Echo card replays it, and digitally there is no physical
+                        // discard pile to look at, so we show it again.
     };
   }
 
@@ -172,6 +175,7 @@
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
     if (typeof saved.turnIndex !== "number" || saved.turnIndex >= saved.order.length) saved.turnIndex = 0;
     if (saved.draw.length === 0 && saved.discard.length === 0) saved.draw = buildDeck(saved.edition);
+    if (!saved.lastCard || typeof saved.lastCard !== "object") saved.lastCard = null;
     return saved;
   }
 
@@ -521,10 +525,27 @@
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
       '    <div class="ha-bigcard__text">' + esc(filledText) + "</div>" +
       "  </div>" +
+      echoPrevHtml(card) +
       '  <button id="ha-resolve" class="btn btn-primary btn-block btn-xl" data-primary>' + esc(actLabel) + "</button>" +
       "</section>";
 
     els.querySelector("#ha-resolve").addEventListener("click", function () { resolveCard(card, filledText); });
+  }
+
+  // The Echo card replays the previously played card — but there is no physical
+  // discard pile on a phone, so surface that card's title + text right here.
+  function echoPrevHtml(card) {
+    if (card.effect !== "echo") return "";
+    var last = game.lastCard;
+    if (!last) {
+      return '<div class="ha-echo-prev ha-echo-prev--empty">' +
+        '<div class="ha-echo-prev__text">' + t("No card has been played yet — the Echo fades.") + "</div></div>";
+    }
+    return '<div class="ha-echo-prev">' +
+      '<div class="ha-echo-prev__label">' + t("Repeat this card:") + "</div>" +
+      '<div class="ha-echo-prev__title">' + esc(last.title) + "</div>" +
+      '<div class="ha-echo-prev__text">' + esc(last.text) + "</div>" +
+      "</div>";
   }
 
   function resolveCard(card, filledText) {
@@ -549,6 +570,11 @@
         power: card.power || null,
         holder: cur ? cur.name : "—",
       });
+    }
+    // Remember this card so a later Echo can replay (and re-show) it. Echo itself
+    // does not overwrite the memory, so it always points at a real action.
+    if (card.effect !== "echo") {
+      game.lastCard = { title: card.title, text: filledText };
     }
     nextTurn();
     saveState();

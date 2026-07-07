@@ -464,6 +464,8 @@
     "Add as standing rule ✓": "Als Hofgesetz eintragen ✓",
     "Assign to {name} 👑": "An {name} vergeben 👑",
     "Loser drinks ✓": "Verlierer dient ✓",
+    "Repeat this card:": "Diese Karte wiederholen:",
+    "No card has been played yet — the Echo fades.": "Es wurde noch keine Karte gespielt — das Echo verhallt.",
     "Deck at Rest": "Das Deck ruht",
     "All cards are in play (Standing Rules & Trumps). Reset for a fresh round.": "Alle Karten sind im Spiel (Hofgesetze & Trümpfe). Zurücksetzen für eine frische Runde.",
     "Back to Table": "Zur Tafel",

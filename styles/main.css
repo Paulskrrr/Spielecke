@@ -1690,6 +1690,21 @@ body::before {
 .ha-card--aktiv { color: var(--ink); }
 .ha-card--aktiv .ha-bigcard__tag { background: rgba(36,27,77,0.14); border-color: rgba(36,27,77,0.35); }
 
+/* Echo: the card being replayed, shown as a smaller card tucked under the big
+   one (there is no physical discard pile to point at). */
+.ha-echo-prev {
+  margin: -6px 0 18px; padding: 14px 16px; text-align: center;
+  background: var(--paper-2); border: 4px dashed var(--ink); border-radius: 16px;
+  box-shadow: var(--pop);
+}
+.ha-echo-prev__label {
+  font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--ink-soft); margin-bottom: 6px;
+}
+.ha-echo-prev__title { font-size: 1.25rem; font-weight: 900; line-height: 1.1; color: var(--ink); }
+.ha-echo-prev__text { margin-top: 4px; font-size: 0.95rem; font-weight: 700; line-height: 1.3; color: var(--ink); }
+.ha-echo-prev--empty .ha-echo-prev__text { color: var(--ink-soft); font-weight: 700; }
+
 /* Sanduhr custom input */
 .ha-custom { display: flex; align-items: center; gap: 10px; font-weight: 800; margin: 16px 0; }
 .ha-custom .text-input { max-width: 140px; }
