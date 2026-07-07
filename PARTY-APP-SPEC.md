@@ -116,9 +116,12 @@ Players screen.
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
   cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
   each game has a **fixed colour** (Hochadel yellow, Doodle Drama blue, …) set in the registry
-  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). Colours
-  are hand-placed in `LAYOUT` so no two neighbours — horizontal or the 2-column vertical — ever
-  share a hue. The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The 27
+  colours are laid out as **three consecutive sweeps of the full 9-colour palette** — every run
+  of 9 tiles shows each hue exactly once — so no colour repeats before the whole palette has
+  appeared (yellow leads from tile 1), and within that no two neighbours (distance 1–3, i.e.
+  horizontal + the 2/3-column verticals) share a hue *or a close family* (teal/green,
+  indigo/purple, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
   same spot every visit. It stays **one continuous grid — no section headers** — but games are
   grouped by vibe so related ones cluster as you scroll (quick social → party guessing →
   longer sit-down & team → simple card/luck drinking games → reflex → co-op). The home bar is a

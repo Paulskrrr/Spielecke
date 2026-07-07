@@ -31,46 +31,51 @@
   //   quick social icebreakers → party guessing/deduction → longer sit-down &
   //   team games → simple card & luck drinking games → fast-twitch reflex → co-op.
   //
-  // COLOUR: hand-assigned per game (see the palette in styles/main.css). Two
-  // anchors are fixed by preference — Hochadel = yellow, Doodle Drama = blue —
-  // and the rest are laid out so no two neighbours (horizontal OR the 2-column
-  // vertical) ever share a hue. When you re-order a game, glance at its new
-  // neighbours' colours and pick one none of them use.
+  // COLOUR: two anchors are fixed by preference — Hochadel = yellow, Doodle
+  // Drama = blue. The rest sweep the full 9-colour palette THREE times: each
+  // run of 9 tiles shows every colour exactly once, so no hue repeats before
+  // the whole palette has appeared (no "random repeat" feeling), and yellow is
+  // there from the very first tile. Within that, no two neighbours (distance
+  // 1–3, i.e. horizontal + the 2/3-column verticals) share a hue OR a close
+  // family (teal/green, blue/indigo, red/pink, yellow/orange). Re-solve with
+  // scratch: keep each block of 9 a full permutation and you can't go wrong.
   // Colours available: yellow blue red teal purple orange green indigo pink.
   var LAYOUT = [
-    // — quick social icebreakers —
-    { id: "nhie",          color: "pink"   },
-    { id: "mostlikely",    color: "purple" },
-    { id: "hotpotato",     color: "orange" },
+    // — quick social icebreakers —   (block 1: full palette sweep)
+    { id: "nhie",          color: "yellow" },
+    { id: "mostlikely",    color: "red"    },
+    { id: "hotpotato",     color: "blue"   },
     { id: "whoami",        color: "teal"   },
-    { id: "truth",         color: "red"    },
-    { id: "princess",      color: "indigo" },
+    { id: "truth",         color: "purple" },
+    { id: "princess",      color: "pink"   },
     // — party guessing & deduction —
-    { id: "imposter",      color: "green"  },
-    { id: "wavelength",    color: "blue"   },
-    { id: "mindmeld",      color: "orange" },
-    { id: "geheimauftrag", color: "indigo" },
-    { id: "liars",         color: "teal"   },
-    { id: "rankit",        color: "yellow" },
+    { id: "imposter",      color: "orange" },
+    { id: "wavelength",    color: "green"  },
+    { id: "mindmeld",      color: "indigo" },
+    // — (block 2: full palette sweep) —
+    { id: "geheimauftrag", color: "red"    },
+    { id: "liars",         color: "orange" },
+    { id: "rankit",        color: "teal"   },
     // — longer sit-down & team games —
-    { id: "activity",      color: "pink"   },
-    { id: "quiz",          color: "purple" },
+    { id: "activity",      color: "purple" },
+    { id: "quiz",          color: "pink"   },
     { id: "doodle",        color: "blue"   },  // anchor
-    { id: "geschmacklos",  color: "red"    },
+    { id: "geschmacklos",  color: "green"  },
     { id: "hochadel",      color: "yellow" },  // anchor
     // — simple card & luck drinking games —
     { id: "maxchen",       color: "indigo" },
-    { id: "pferderennen",  color: "green"  },
-    { id: "chooser",       color: "pink"   },
-    { id: "fuckdealer",    color: "red"    },
-    { id: "busfahrt",      color: "orange" },
+    // — (block 3: full palette sweep) —
+    { id: "pferderennen",  color: "blue"   },
+    { id: "chooser",       color: "red"    },
+    { id: "fuckdealer",    color: "yellow" },
+    { id: "busfahrt",      color: "teal"   },
     { id: "wettbuero",     color: "purple" },
     // — fast-twitch reflex —
-    { id: "reaction",      color: "yellow" },
-    { id: "simon",         color: "blue"   },
-    { id: "ballon",        color: "pink"   },
+    { id: "reaction",      color: "pink"   },
+    { id: "simon",         color: "orange" },
+    { id: "ballon",        color: "green"  },
     // — co-op —
-    { id: "zeitzunder",    color: "red"    },
+    { id: "zeitzunder",    color: "indigo" },
   ];
 
   // Build a registry entry straight from a module's meta so they never drift.
