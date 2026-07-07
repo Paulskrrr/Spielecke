@@ -15,11 +15,14 @@
   function t(k) { return global.Spielecke.t(k); }
   function Pools() { return global.Spielecke.Pools; }
 
-  var START = 2800, MIN_INT = 1100, STEP = 90;
+  // Timing: the pause is measured AFTER the phrase finishes being spoken (not a
+  // fixed interval), so a long command is never cut off by the next one. The gap
+  // still shrinks as the round speeds up, but stays comfortably long.
+  var START_GAP = 1500, MIN_GAP = 850, STEP = 70;
 
   var els = null, ctx = null, settings = null;
   var alive = [];
-  var callTimer = null, callCount = 0, running = false;
+  var callTimer = null, speakTimer = null, callCount = 0, running = false;
   var audio = null;
 
   var module = {
@@ -171,7 +174,11 @@
   // round (fresh=true) starts back at the slow cadence. Otherwise the game
   // would reset to a crawl after every knockout and never actually get fast.
   function startCaller(fresh) { running = true; if (fresh) callCount = 0; scheduleCall(600); }
-  function stopCaller() { running = false; if (callTimer !== null) { global.clearTimeout(callTimer); callTimer = null; } }
+  function stopCaller() {
+    running = false;
+    if (callTimer !== null) { global.clearTimeout(callTimer); callTimer = null; }
+    if (speakTimer !== null) { global.clearTimeout(speakTimer); speakTimer = null; }
+  }
   function scheduleCall(ms) { callTimer = global.setTimeout(doCall, ms); }
 
   function doCall() {
@@ -186,26 +193,52 @@
     if (el) { el.textContent = phrase; el.classList.toggle("si-phrase--simon", simon); }
     var pulse = els.querySelector("#si-pulse");
     if (pulse) { pulse.classList.remove("is-beat"); void pulse.offsetWidth; pulse.classList.add("is-beat"); }
-    speak(phrase);
     blip(simon);
 
-    var interval = Math.max(MIN_INT, START - callCount * STEP);
-    scheduleCall(interval);
+    // Queue the next command only once THIS one has finished being spoken, then
+    // wait out the gap — so nothing is ever clipped mid-phrase.
+    var gap = Math.max(MIN_GAP, START_GAP - callCount * STEP);
+    speakThen(phrase, function () { if (running) scheduleCall(gap); });
   }
 
   // --- Voice + audio -------------------------------------------------------
-  function speak(text) {
-    if (!settings.voice) return;
-    try {
-      var synth = global.speechSynthesis;
-      if (!synth || typeof global.SpeechSynthesisUtterance !== "function") return;
-      synth.cancel();
-      var u = new global.SpeechSynthesisUtterance(text);
-      u.lang = (global.Spielecke.getLang && global.Spielecke.getLang() === "en") ? "en-US" : "de-DE";
-      u.rate = 1.05;
-      synth.speak(u);
-    } catch (e) { /* fall back silently to on-screen text */ }
+  // Speak `text`, then call `done` when it finishes. Falls back to a length-based
+  // timer when speech is off/unavailable, and always keeps a safety timer in case
+  // the engine never fires onend (common right after a cancel()), so the round
+  // can never stall waiting on a lost speech event.
+  function speakThen(text, done) {
+    var fired = false;
+    function finish() {
+      if (fired) return;
+      fired = true;
+      if (speakTimer !== null) { global.clearTimeout(speakTimer); speakTimer = null; }
+      done();
+    }
+    var estimate = estimateMs(text);
+    var spoke = false;
+    var synth = settings.voice ? global.speechSynthesis : null;
+    if (synth && typeof global.SpeechSynthesisUtterance === "function") {
+      try {
+        synth.cancel();
+        var u = new global.SpeechSynthesisUtterance(text);
+        u.lang = (global.Spielecke.getLang && global.Spielecke.getLang() === "en") ? "en-US" : "de-DE";
+        u.rate = 1.05;
+        u.onend = finish; u.onerror = finish;
+        synth.speak(u);
+        spoke = true;
+      } catch (e) { /* fall through to the timer below */ }
+    }
+    // Voice off → hold the phrase for its estimated read time. Voice on → a
+    // generous cap past the estimate as a safety net if onend is dropped.
+    speakTimer = global.setTimeout(finish, spoke ? estimate + 1600 : estimate);
   }
+
+  // Rough spoken length (ms) so the voice-off rhythm still tracks phrase length
+  // and the safety cap scales with it.
+  function estimateMs(text) {
+    return Math.min(4200, 550 + String(text).length * 60);
+  }
+
   function cancelSpeech() { try { if (global.speechSynthesis) global.speechSynthesis.cancel(); } catch (e) { /* ignore */ } }
 
   function setupAudio() {
