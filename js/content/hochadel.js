@@ -12,11 +12,13 @@
  * only the human-facing strings differ.
  *
  * Card shape:
- *   { id, type, title, text, editions:[...], mini? }
+ *   { id, type, title, text, editions:[...], mini?, copies? }
  *     type     "sofort" | "regel" | "aktiv" | "minispiel"  (drives colour + mechanic)
  *     editions which editions include the card, e.g. ["koenige","rapunzel"]
  *     mini     only for type "minispiel": "fingerschlacht" | "reim" | "trommelfeuer"
  *     power    only for type "aktiv": optional engine hook (e.g. "sanduhr")
+ *     copies   how many times the card is seeded into the deck (default 1). Set 2
+ *              on evergreen basics / mini-games so they can come up twice a night.
  *
  * The in-game word for "drink" is always **dienen** (DE) / **serve** (EN) —
  * never "trinken" / "drink".
@@ -84,11 +86,13 @@
     { id: "s_damen", type: "sofort", title: "Die Damen des Hofes",
       text: "Alle Frauen dienen.", editions: ["rapunzel"] },
     { id: "s_fingerzeig", type: "sofort", title: "Fingerzeig des Königs",
-      text: "Bestimme einen Untertan. Er dient doppelt.", editions: ["koenige", "rapunzel"] },
+      text: "Bestimme einen Untertan. Er dient doppelt.", editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "s_links", type: "sofort", title: "Der linke Nachbar",
       text: "Dein Nachbar zur Linken dient.", editions: ["koenige", "rapunzel"] },
+    { id: "s_rechts", type: "sofort", title: "Der rechte Nachbar",
+      text: "Dein Nachbar zur Rechten dient.", editions: ["koenige", "rapunzel"] },
     { id: "s_schmach", type: "sofort", title: "Eigene Schmach",
-      text: "Du selbst dienst. Wie unköniglich.", editions: ["koenige", "rapunzel"] },
+      text: "Du selbst dienst. Wie unköniglich.", editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "s_juengste", type: "sofort", title: "Der Jüngste im Reich",
       text: "Der Jüngste am Hofe dient.", editions: ["koenige", "rapunzel"] },
     { id: "s_greis", type: "sofort", title: "Der Greis",
@@ -100,7 +104,7 @@
       editions: ["koenige", "rapunzel"] },
     { id: "s_wasserfall", type: "sofort", title: "Der Wasserfall",
       text: "Du beginnst zu dienen; reihum darf erst enden, wer vor ihm endet. (Der König eröffnet, das Volk folgt.)",
-      editions: ["koenige", "rapunzel"] },
+      editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "s_gunst", type: "sofort", title: "Gunst des Königs",
       text: "Verteile zwei Dienste frei unter den Anwesenden.", editions: ["koenige", "rapunzel"] },
 
@@ -133,7 +137,7 @@
     // --- 5.4 Minispiele (Purpur) — laufen bis zum Verlierer --------------
     { id: "m_finger", type: "minispiel", mini: "fingerschlacht", title: "Die Fingerschlacht",
       text: "Alle legen die Faust zur Tafel und strecken heimlich den Daumen aus oder nicht. Reihum nennt einer eine Zahl; trifft sie die Anzahl gehobener Daumen, scheidet der Sprecher aus. Es geht weiter, bis nur noch zwei übrig sind — die letzten zwei dienen.",
-      editions: ["koenige", "rapunzel"] },
+      editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "m_reim", type: "minispiel", title: "Reim oder Schmach",
       text: "Der Vers lautet: „{VERS}“ — Reihum dichtet jeder in fünf Sekunden eine reimende Zeile darauf. Wer stockt, dient.",
       editions: ["koenige", "rapunzel"] },
@@ -263,7 +267,7 @@
       editions: ["koenige", "rapunzel"] },
     { id: "m_fingergericht", type: "minispiel", title: "Das Fingergericht",
       text: "Nach einem Countdown zeigt jeder auf einen Mitspieler. Wer die meisten Finger auf sich zieht, dient.",
-      editions: ["koenige", "rapunzel"] },
+      editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "m_369", type: "minispiel", title: "Drei-Sechs-Neun",
       text: "Zählt reihum. Bei jeder 3, 6 oder 9 wird statt der Zahl geklatscht — bei 33 oder 63 zweimal. Wer patzt, dient.",
       editions: ["koenige", "rapunzel"] },
@@ -321,11 +325,13 @@
     { id: "s_damen", type: "sofort", title: "The Ladies of the Court",
       text: "All women serve.", editions: ["rapunzel"] },
     { id: "s_fingerzeig", type: "sofort", title: "The King's Pointing Finger",
-      text: "Name a subject. He serves twice over.", editions: ["koenige", "rapunzel"] },
+      text: "Name a subject. He serves twice over.", editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "s_links", type: "sofort", title: "The Left-Hand Neighbour",
       text: "Your neighbour to the left serves.", editions: ["koenige", "rapunzel"] },
+    { id: "s_rechts", type: "sofort", title: "The Right-Hand Neighbour",
+      text: "Your neighbour to the right serves.", editions: ["koenige", "rapunzel"] },
     { id: "s_schmach", type: "sofort", title: "One's Own Disgrace",
-      text: "You yourself serve. How unkingly.", editions: ["koenige", "rapunzel"] },
+      text: "You yourself serve. How unkingly.", editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "s_juengste", type: "sofort", title: "The Youngest in the Realm",
       text: "The youngest at court serves.", editions: ["koenige", "rapunzel"] },
     { id: "s_greis", type: "sofort", title: "The Greybeard",
@@ -337,7 +343,7 @@
       editions: ["koenige", "rapunzel"] },
     { id: "s_wasserfall", type: "sofort", title: "The Waterfall",
       text: "You begin to serve; around the table none may stop before the one ahead of them stops. (The king opens, the people follow.)",
-      editions: ["koenige", "rapunzel"] },
+      editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "s_gunst", type: "sofort", title: "The King's Favour",
       text: "Hand out two services freely among those present.", editions: ["koenige", "rapunzel"] },
 
@@ -370,7 +376,7 @@
     // --- 5.4 Mini-games (Purple) — run until there's a loser --------------
     { id: "m_finger", type: "minispiel", mini: "fingerschlacht", title: "The Battle of Thumbs",
       text: "Everyone sets a fist on the table and secretly extends a thumb or not. In turn each names a number; if it matches the count of raised thumbs, that speaker is out. It goes on until only two remain — the last two serve.",
-      editions: ["koenige", "rapunzel"] },
+      editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "m_reim", type: "minispiel", title: "Rhyme or Shame",
       text: "The verse runs: „{VERS}“ — In turn each composes a rhyming line within five seconds. Whoever falters, serves.",
       editions: ["koenige", "rapunzel"] },
@@ -500,7 +506,7 @@
       editions: ["koenige", "rapunzel"] },
     { id: "m_fingergericht", type: "minispiel", title: "The Finger Verdict",
       text: "After a countdown each points at a fellow player. Whoever draws the most fingers upon themselves serves.",
-      editions: ["koenige", "rapunzel"] },
+      editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "m_369", type: "minispiel", title: "Three-Six-Nine",
       text: "Count off in turn. At every 3, 6 or 9 you clap instead of saying the number — at 33 or 63, clap twice. Whoever stumbles, serves.",
       editions: ["koenige", "rapunzel"] },

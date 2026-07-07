@@ -107,7 +107,12 @@
   function buildDeck(edition) {
     var cards = data.deck.filter(function (c) { return c.editions.indexOf(edition) !== -1; });
     var regel = [], rest = [];
-    cards.forEach(function (c) { (c.type === "regel" ? regel : rest).push(c.id); });
+    cards.forEach(function (c) {
+      // `copies` (default 1) seeds a card more than once — evergreen basics and
+      // mini-games are set to 2 so they can come up twice a night.
+      var bucket = c.type === "regel" ? regel : rest;
+      for (var k = 0; k < (c.copies || 1); k++) bucket.push(c.id);
+    });
 
     // Bias: a „regel" card ("the word ‚yes‘ is banished from now on") only bites
     // if it lands early — one drawn in the last third barely gets to apply. So
