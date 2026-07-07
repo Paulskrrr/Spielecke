@@ -38,6 +38,9 @@
       settings = {
         pools: Pools().load(context.store, sets()),
         drinking: context.store.get("drinking", false) === true,
+        // "Mitspieler" mode: rank the current roster instead of static items;
+        // the chosen category just sets the flavour of the axis.
+        rankPlayers: context.store.get("ri_people", false) === true,
       };
       renderSetup();
     },
@@ -50,9 +53,10 @@
 
   function renderSetup() {
     var roster = (ctx.players || []).filter(function (p) { return p && p.name; });
-    var chips = Pools().chipsHtml(sets(), t);
-
     var enough = roster.length >= MIN_PLAYERS;
+    // Both modes share the standard multi-select pool chips (Mixed = all). In
+    // Mitspieler mode the selected pools just decide the flavour of the axis.
+    var chips = Pools().chipsHtml(sets(), t);
     var note = enough
       ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
@@ -64,6 +68,12 @@
       note +
       '  <h3 class="sub">' + t("Category") + "</h3>" +
       '  <div class="chip-row" id="ri-pools">' + chips + "</div>" +
+      // The Mitspieler switch sits BELOW the categories: pick your pools, then
+      // flip whether the items are the players or the static content.
+      '  <label class="toggle"><input type="checkbox" id="ri-people"' + (settings.rankPlayers ? " checked" : "") + " /><span>" + t("🧑‍🤝‍🧑 Rank the players") + "</span></label>" +
+      (settings.rankPlayers
+        ? '  <p class="muted small" id="ri-people-hint">' + t("The categories set the spectrum — e.g. Party → who throws up first. The players get ranked, not items.") + "</p>"
+        : "") +
       '  <label class="toggle"><input type="checkbox" id="ri-drink"' + (settings.drinking ? " checked" : "") + " /><span>" + t("🍻 Drinking mode") + "</span></label>" +
       '  <button id="ri-start" class="btn btn-primary btn-block btn-xl"' + (enough ? "" : " disabled") + ">" + t("Start round ▶️") + "</button>" +
       "</section>";
@@ -71,6 +81,11 @@
     Pools().bind(els.querySelector("#ri-pools"), sets(),
       function () { return settings.pools; },
       function (v) { settings.pools = v; Pools().save(ctx.store, v); });
+    els.querySelector("#ri-people").addEventListener("change", function (e) {
+      settings.rankPlayers = e.target.checked;
+      ctx.store.set("ri_people", settings.rankPlayers);
+      renderSetup(); // re-render so the spectrum hint shows/hides
+    });
     els.querySelector("#ri-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -81,7 +96,7 @@
   function startRound(roster) {
     // Reshuffle the pass order each round so it isn't the same sequence every time.
     players = shuffle(roster.slice()).map(function (p) { return p.name; });
-    set = pickSet();
+    set = pickSet(roster);
     rankings = [];
     idx = 0;
     current = [];
@@ -130,7 +145,9 @@
       '<section class="screen ri-rank">' +
       '  <h3 class="sub">' + t("{name}'s ranking").replace("{name}", esc(name)) + "</h3>" +
       '  <div class="ri-title">' + esc(set.title) + "</div>" +
-      '  <p class="muted small">' + t("Drag the items into order — the top is your #1.") + "</p>" +
+      '  <p class="muted small">' + (set.people
+        ? t("Drag the players into order — the top is your #1.")
+        : t("Drag the items into order — the top is your #1.")) + "</p>" +
       '  <div class="ri-axis">' +
       '    <div class="ri-axis__rail">' +
       '      <span class="ri-axis__pole">⬆ ' + esc(topPole) + "</span>" +
@@ -362,7 +379,17 @@
     els.querySelector("#ri-cmp-back").addEventListener("click", renderReveal);
   }
 
-  function pickSet() {
+  function pickSet(roster) {
+    // "Mitspieler" mode: the items ARE the current roster; the selected
+    // category(ies) only decide the axis (drawn from each pool's `people` list).
+    if (settings.rankPlayers) {
+      var names = (roster || []).map(function (p) { return p.name; });
+      var axes = Pools().gather(settings.pools, sets(), "people");
+      var axis = axes.length
+        ? axes[Math.floor(Math.random() * axes.length)]
+        : { title: t("Most → least likely to cause chaos") };
+      return { title: axis.title, items: names, people: true };
+    }
     var list = Pools().gather(settings.pools, sets(), "sets");
     if (!list.length) return { title: "Rank these 1–5", items: ["One", "Two", "Three", "Four", "Five"] };
     return list[Math.floor(Math.random() * list.length)];
