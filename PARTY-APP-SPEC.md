@@ -114,15 +114,16 @@ Players screen.
   instant press-down, a small overshoot on release; a light `navigator.vibrate` tick fires
   on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
-  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set
-  (paired with a 7-step tilt set) assigned by **grid position** (`gc-*`/`gt-*` classes, `i % 9`
-  / `i % 7`). The colour sequence is ordered for max contrast, so on mobile's 2 columns no two
-  neighbours — horizontal or vertical — ever share a hue *or even a hue family* (no
-  green-beside-teal); 9 never divides the column count, so identical adjacency is impossible at
-  any width. The shelf order is **shuffled once per page load** (not per render), so returning
-  to it mid-session doesn't re-scatter the tiles under your thumb (colours are therefore stable
-  within a session, fresh each load). The home bar is a solid-purple app-bar lifted with a soft
-  drop shadow. All of the above honours `prefers-reduced-motion`.
+  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
+  each game has a **fixed colour** (Hochadel yellow, Doodle Drama blue, …) set in the registry
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). Colours
+  are hand-placed in `LAYOUT` so no two neighbours — horizontal or the 2-column vertical — ever
+  share a hue. The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
+  same spot every visit. It stays **one continuous grid — no section headers** — but games are
+  grouped by vibe so related ones cluster as you scroll (quick social → party guessing →
+  longer sit-down & team → simple card/luck drinking games → reflex → co-op). The home bar is a
+  solid-purple app-bar lifted with a soft drop shadow. All of the above honours
+  `prefers-reduced-motion`.
 - **Intro splash:** on **every** open the logo shows in a game-tile-style card on a yellow
   field, then rolls up like a blind after ~0.5 s to reveal the shelf already rendered behind it
   (`shell.runSplash`). A **CSS-only fail-safe** rolls the splash up after ~1.6 s even if boot JS
