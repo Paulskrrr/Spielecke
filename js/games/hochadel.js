@@ -559,8 +559,8 @@
     }).join("");
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">' + t("⌛ The Timer") + "</h2>" +
-      '  <p class="muted">' + t("Secretly set a time limit. When it runs out, whoever is speaking drinks. Don\'t let others watch.") + "</p>" +
+      '  <h2 class="screen-title pop">' + t("⏳ Phone Timer") + "</h2>" +
+      '  <p class="muted">' + t("Secretly set a timer on this phone. When it runs out, whoever is speaking drinks. Don\'t let others watch.") + "</p>" +
       '  <div class="chip-row" id="ha-sec">' + chips + "</div>" +
       '  <label class="ha-custom">' + t("Custom time (sec.):") +
       '    <input id="ha-sec-in" class="text-input" type="number" min="5" max="900" placeholder="' + t("e.g. 90") + '" /></label>' +
