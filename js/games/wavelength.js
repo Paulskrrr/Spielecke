@@ -333,10 +333,16 @@
     var slider = opts.slider
       ? '<input id="wl-slider" class="wl-slider" type="range" min="0" max="100" value="' + guess + '" />'
       : "";
+    // The dial is framed inside the brass "wavelength detector": the track drops
+    // into the device's readout slot and (on the guess screen) a transparent
+    // slider overlays that slot so you drag right on the gauge. The device is
+    // portrait, so this view stays vertical at every width.
+    var dial = '<div class="wl-dial">' + track(opts) + slider + "</div>";
+    var body = '<div class="wl-instrument"><div class="wl-instrument__slot">' + dial + "</div></div>";
     return (
-      '<div class="wl-spectrum">' +
+      '<div class="wl-spectrum wl-spectrum--instr">' +
       '  <span class="wl-pole wl-pole--left">' + esc(s.left) + "</span>" +
-      '  <div class="wl-dial">' + track(opts) + slider + "</div>" +
+      body +
       '  <span class="wl-pole wl-pole--right">' + esc(s.right) + "</span>" +
       "</div>"
     );

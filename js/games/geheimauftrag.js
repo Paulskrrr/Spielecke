@@ -173,7 +173,7 @@
     els.innerHTML =
       '<section class="screen ga-reveal">' +
       '  <p class="muted">' + t("For {name}'s eyes only").replace("{name}", esc(rec.name)) + "</p>" +
-      '  <div class="ga-mission">' + esc(rec.text) + "</div>" +
+      '  <div class="ga-mission"><span class="ga-mission__text">' + esc(rec.text) + "</span></div>" +
       coopBanner +
       '  <button id="ga-hide" class="btn btn-primary btn-block btn-xl">' + t("Hide 🙈") + "</button>" +
       "</section>";
