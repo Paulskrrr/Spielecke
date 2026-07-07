@@ -363,9 +363,13 @@
     "NOW? 👀": "JETZT? 👀",
 
     // ── Rank It ────────────────────────────────────────────────────────────
+    "🧑‍🤝‍🧑 Rank the players": "🧑‍🤝‍🧑 Mitspieler ranken",
+    "The category sets the spectrum — e.g. Party → who throws up first. Players are ranked instead of items.": "Die Kategorie bestimmt das Spektrum — z. B. Party → wer kotzt zuerst. Statt Begriffen werden die Mitspieler geordnet.",
+    "Most → least likely to cause chaos": "Sorgt am ehesten → am wenigsten für Chaos",
     "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
     "{name}'s ranking": "{name}s Ranking",
     "Drag the items into order — the top is your #1.": "Zieh die Dinge in deine Reihenfolge — ganz oben ist dein Platz 1.",
+    "Drag the players into order — the top is your #1.": "Zieh die Mitspieler in deine Reihenfolge — ganz oben ist dein Platz 1.",
     "🔀 Shuffle": "🔀 Mischen",
     "Top": "Oben",
     "Bottom": "Unten",

@@ -175,7 +175,7 @@ js/
     princess.js            Princess Treatment prompts (by category × gender)
     activity.js            Activity words, tiered by points (2/3/4)
     quiz.js                Quiz Out questions, an array of difficulty levels
-    rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
+    rankit.js              Rank It sets ({ label, sets:[{ title, items }], people:[{ title }] })
     hochadel.js            Hochadel deck + ground rules + verses, tagged per edition
     wettbuero.js           Wettbüro challenges, by category ({ label, challenges:[{text,timer?}] })
     mindmeld.js            Mind Meld seed-word pools ({ label, words:[...] })
@@ -465,8 +465,13 @@ and locks it. Reveal builds the **group's consensus** (items sorted by average p
 measures each player's **drift** from it (sum of per-item rank distance — the Spearman
 footrule). Closest to the group is the most in sync; furthest off loses.
 
-- **Config:** category pool, 🍻 drinking mode. Item count per set is flexible.
-- **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }] }`).
+- **Config:** category pool, 🧑‍🤝‍🧑 **Mitspieler** (rank-the-players) mode, 🍻 drinking mode. Item
+  count per set is flexible.
+- **Mitspieler mode:** the ranked items become the **current roster** (dynamic) instead of static
+  content; the chosen category only sets the flavour of the axis, drawn from that pool's `people`
+  list (Party → "Kotzt am ehesten → am spätesten", 18+ → "Steht am ehesten → am wenigsten auf
+  BDSM", …). Everyone ranks all players, themselves included.
+- **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }], people:[{ title }] }`).
 - **Outcome:** least drift **wins 👑**, most drift **loses 💀** (drinking mode: drinks). If the
   whole table ranks identically, it's a draw — nobody wins or loses.
 
