@@ -29,31 +29,33 @@
     runSplash();
   }
 
-  // First-visit intro: the app is already rendered behind the splash overlay, so
-  // after a short beat we roll the splash up like a blind to reveal it, then drop
-  // it from the DOM. The one-time flag was pre-checked in <head> (returning
-  // visitors get the splash display:none, so this just removes the leftover node).
+  // Intro: the app is already rendered behind the splash overlay, so after a
+  // short beat we roll the splash up like a blind to reveal it, then drop it
+  // from the DOM. Runs on every load — no "already seen" gate.
   function runSplash() {
     var splash = document.getElementById("splash");
     if (!splash) return;
-    if (document.documentElement.classList.contains("no-splash")) {
-      if (splash.parentNode) splash.parentNode.removeChild(splash);
-      return;
-    }
-    try { global.localStorage.setItem("spielecke.splashSeen", "1"); } catch (e) { /* ignore */ }
 
     var done = false;
     function finish() {
       if (done) return; done = true;
       if (splash.parentNode) splash.parentNode.removeChild(splash);
-      document.documentElement.classList.add("no-splash");
     }
+    // Reduced-motion users get no roll-up (CSS kills the transition), so don't
+    // make them sit through the animation timers — clear after a short beat.
+    var reduced = false;
+    try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
+    if (reduced) { global.setTimeout(finish, 350); return; }
     global.setTimeout(function () {
-      splash.addEventListener("transitionend", finish);
+      // Wait for the roll-up animation specifically — the tile's splash-pop
+      // animationend also bubbles up here, so guard on the animation name.
+      splash.addEventListener("animationend", function (e) {
+        if (e.animationName === "splash-roll-up") finish();
+      });
       splash.classList.add("is-up");
-      // fallback: fires if the transition is skipped (reduced motion) or its
-      // event is missed, so the splash never gets stuck on screen.
-      global.setTimeout(finish, 900);
+      // fallback: fires if the animation's event is missed, so the splash
+      // never gets stuck on screen (roll-up is ~0.7s).
+      global.setTimeout(finish, 1000);
     }, 500);
   }
 

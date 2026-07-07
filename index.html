@@ -12,20 +12,11 @@
   <title>Pauls Spielecke</title>
   <link rel="icon" href="assets/logo.png" />
   <link rel="stylesheet" href="styles/main.css" />
-  <!-- Runs before <body> paints: if this browser has already seen the intro
-       splash, mark <html> so the splash below is display:none from the very
-       first frame — returning visitors never get a flash of it. -->
-  <script>
-    try {
-      if (localStorage.getItem("spielecke.splashSeen"))
-        document.documentElement.classList.add("no-splash");
-    } catch (e) {}
-  </script>
 </head>
 <body>
-  <!-- First-visit intro: the logo in a game-tile-style card on a yellow field.
-       shell.js rolls it up like a blind after ~0.5s, then removes it. Hidden
-       outright (CSS) once seen. -->
+  <!-- Intro: the logo in a game-tile-style card on a yellow field. shell.js
+       rolls it up like a blind after ~0.5s, then removes it. Plays on every
+       load, not just the first visit. -->
   <div id="splash" class="splash" aria-hidden="true">
     <div class="splash__tile">
       <img class="splash__logo" src="assets/logo.png" alt="Pauls Spielecke" />

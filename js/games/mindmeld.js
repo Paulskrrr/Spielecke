@@ -78,7 +78,9 @@
 
     Pools().bind(els.querySelector("#mm-pools"), catalogue(),
       function () { return settings.pools; },
-      function (v) { settings.pools = v; Pools().save(ctx.store, v); if (teams.length) buildTeams(); });
+      // Pool change re-deals only the seed WORDS — re-pairing the teams here
+      // would silently desync the team cards already on screen.
+      function (v) { settings.pools = v; Pools().save(ctx.store, v); if (teams.length) reseedWords(); });
     els.querySelector("#mm-drink").addEventListener("change", function (e) {
       settings.drinking = e.target.checked; ctx.store.set("drinking", settings.drinking);
     });
@@ -95,15 +97,18 @@
     if (grouped.length > 1 && grouped[grouped.length - 1].length === 1) {
       grouped[grouped.length - 2].push(grouped.pop()[0]);
     }
-    var need = names.length;
+    teams = grouped.map(function (members) {
+      return { members: members, words: [], rounds: null };
+    });
+    reseedWords();
+  }
+
+  // Deal fresh seed words to the existing teams (pairings untouched).
+  function reseedWords() {
     var words = global.Spielecke.shuffle(Pools().gather(settings.pools, catalogue(), "words"));
     var w = 0;
-    teams = grouped.map(function (members) {
-      return {
-        members: members,
-        words: members.map(function () { return words.length ? words[w++ % words.length] : "…"; }),
-        rounds: null,
-      };
+    teams.forEach(function (tm) {
+      tm.words = tm.members.map(function () { return words.length ? words[w++ % words.length] : "…"; });
     });
   }
 

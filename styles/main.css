@@ -268,29 +268,32 @@ body::before {
   pointer-events: none;
 }
 /* each card a different crayon colour; text is always white (legibility on the
-   lighter cards comes from the text-shadow below). 9-colour cycle — every hue
-   is at least as dark as --yellow, so white + the dark halo stays readable. */
-.game-card:nth-child(9n + 1) { background: var(--yellow); }
-.game-card:nth-child(9n + 2) { background: var(--green);  }
-.game-card:nth-child(9n + 3) { background: var(--teal);   }
-.game-card:nth-child(9n + 4) { background: var(--blue);   }
-.game-card:nth-child(9n + 5) { background: var(--indigo); }
-.game-card:nth-child(9n + 6) { background: var(--purple); }
-.game-card:nth-child(9n + 7) { background: var(--pink);   }
-.game-card:nth-child(9n + 8) { background: var(--red);    }
-.game-card:nth-child(9n + 9) { background: var(--orange); }
+   lighter cards comes from the text-shadow below). 9-colour palette — every hue
+   is at least as dark as --yellow, so white + the dark halo stays readable.
+   shelf.js stamps gc-0..8 by grid position (i % 9); no two neighbours ever share
+   a colour (9 never divides the 2–4 column count). The sequence is ordered for
+   MAX contrast: consecutive entries (horizontal neighbours) and entries two
+   apart (vertical neighbours on mobile's 2 columns) are always different hue
+   families — no green-next-to-teal or indigo-next-to-purple. */
+.game-card.gc-0 { background: var(--yellow); }
+.game-card.gc-1 { background: var(--blue);   }
+.game-card.gc-2 { background: var(--red);    }
+.game-card.gc-3 { background: var(--teal);   }
+.game-card.gc-4 { background: var(--purple); }
+.game-card.gc-5 { background: var(--orange); }
+.game-card.gc-6 { background: var(--green);  }
+.game-card.gc-7 { background: var(--indigo); }
+.game-card.gc-8 { background: var(--pink);   }
 
-/* Playful tilt + tiny vertical jitter on a 7-step cycle. Keeping this on a
-   different (coprime) cycle than the 9-colour one means colour+angle don't
-   line up again until 63 cards, so the grid reads hand-scattered rather than
-   uniformly slanted. */
-.game-card:nth-child(7n + 1) { transform: rotate(-1.5deg); }
-.game-card:nth-child(7n + 2) { transform: rotate(1deg)    translateY(2px); }
-.game-card:nth-child(7n + 3) { transform: rotate(-0.5deg); }
-.game-card:nth-child(7n + 4) { transform: rotate(2deg)    translateY(-2px); }
-.game-card:nth-child(7n + 5) { transform: rotate(-2deg)   translateY(1px); }
-.game-card:nth-child(7n + 6) { transform: rotate(0.7deg); }
-.game-card:nth-child(7n + 7) { transform: rotate(-1deg)   translateY(-1px); }
+/* Playful tilt + tiny vertical jitter — 7 variants by grid position (i % 7),
+   coprime with the 9 colours so colour+angle combinations stay hand-scattered. */
+.game-card.gt-0 { transform: rotate(-1.5deg); }
+.game-card.gt-1 { transform: rotate(1deg)    translateY(2px); }
+.game-card.gt-2 { transform: rotate(-0.5deg); }
+.game-card.gt-3 { transform: rotate(2deg)    translateY(-2px); }
+.game-card.gt-4 { transform: rotate(-2deg)   translateY(1px); }
+.game-card.gt-5 { transform: rotate(0.7deg); }
+.game-card.gt-6 { transform: rotate(-1deg)   translateY(-1px); }
 
 .game-card:hover,
 .game-card:focus-visible {
@@ -500,7 +503,8 @@ body::before {
   width: 58px;
   height: 34px;
   margin: 0;
-  background: #e9e3f6;
+  /* off-track a solid step darker than the white knob, so off reads at a glance */
+  background: #cfc7e6;
   border: 3px solid var(--ink);
   border-radius: 999px;
   cursor: pointer;
@@ -2591,14 +2595,21 @@ body::before {
    ====================================================================== */
 
 /* ----- Ballon ----------------------------------------------------------- */
-.ballon-play { text-align: center; }
-.ballon-pot { display: inline-block; font-weight: 900; background: var(--yellow); color: var(--ink);
+.ballon-play { text-align: center; overflow-x: clip; }
+.ballon-pot { position: relative; z-index: 3; display: inline-block; font-weight: 900; background: var(--yellow); color: var(--ink);
   border: 3px solid var(--ink); border-radius: 999px; padding: 8px 18px; box-shadow: var(--pop); }
-.ballon-stage { height: 46vh; max-height: 340px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.ballon-body { font-size: 5rem; transition: transform 0.18s cubic-bezier(0.2,1.4,0.4,1); transform-origin: center bottom; }
+/* overflow is intentionally NOT hidden: a fat pot inflates the balloon past the
+   stage bounds — up over the pot, sideways over the buttons — for drama. */
+.ballon-stage { position: relative; height: 46vh; max-height: 340px; display: flex; align-items: center; justify-content: center; overflow: visible; }
+/* Size lives on the individual `scale:` property so the is-tense wiggle
+   (animation on `transform`) can never clobber the inflation. */
+.ballon-body { position: relative; z-index: 1; font-size: 5rem; pointer-events: none; will-change: scale;
+  transition: scale 0.18s cubic-bezier(0.2,1.4,0.4,1); transform-origin: center bottom; }
 .ballon-body.is-tense { animation: wiggle 0.35s ease-in-out infinite; filter: saturate(1.4); }
-.ballon-pump { font-size: 1.5rem; }
-.ballon-pass { margin-top: 10px; }
+/* Buttons sit above the balloon so an over-sized balloon can spill behind them
+   and you can keep pumping. */
+.ballon-pump { position: relative; z-index: 3; font-size: 1.5rem; }
+.ballon-pass { position: relative; z-index: 3; margin-top: 10px; }
 .ballon-boom { text-align: center; }
 .ballon-flash { font-size: 5rem; animation: pop-in 0.3s cubic-bezier(0.2,1.6,0.4,1); }
 
@@ -2711,12 +2722,23 @@ body::before {
   .screen, .game-card { animation: none; }
   .btn, .chip, .icon-btn, .players-badge, .game-card,
   .toggle input, .toggle input::before { transition-duration: 0.01s; }
+  /* New-game loops/flashes: the balloon keeps its saturate filter as the static
+     tense cue; Simon's beat dot and the pop flash just hold still. */
+  .ballon-body.is-tense, .ballon-flash, .si-pulse.is-beat { animation: none; }
 }
 
-/* ----- First-visit splash (logo tile, rolls up like a blind) ------------ */
+/* ----- Intro splash (logo tile, rolls up like a blind) ------------------ */
 .splash {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  /* Match the *visible* viewport (dvh, toolbar-aware) so the sheet's bottom edge
+     sits exactly at the bottom of the screen — otherwise, on mobile, a fixed
+     inset:0 sheet can fall short and its rail shows mid-screen, splitting the
+     uniform yellow. */
+  height: 100vh;
+  height: 100dvh;
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -2724,15 +2746,49 @@ body::before {
   padding: env(safe-area-inset-top) env(safe-area-inset-right)
     env(safe-area-inset-bottom) env(safe-area-inset-left);
   background: var(--yellow);
-  /* the roll-up: transition lives on the base element so adding .is-up animates
-     reliably. transform-origin top so it reads as a blind gathering upward. */
   transform-origin: top center;
-  transition: transform 0.55s cubic-bezier(0.5, 0, 0.15, 1);
   will-change: transform;
+  /* Fail-safe: if boot JS never runs (script error, bad deploy), the splash
+     rolls itself up after ~1.6s and stays hidden (forwards) — it must never be
+     able to trap the app behind it. shell.js normally pre-empts this by
+     removing the node well before the delay elapses. */
+  animation: splash-auto-up 0.55s cubic-bezier(0.5, 0, 0.15, 1) 1.6s forwards;
 }
-/* returning visitors (flag set in <head>) never see it */
-html.no-splash .splash { display: none; }
-.splash.is-up { transform: translateY(-100%); }
+/* Extra yellow above the sheet so the little downward dip never exposes the
+   header behind it — the top stays seamlessly yellow during the tug. */
+.splash::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  height: 25vh;
+  background: var(--yellow);
+}
+/* The blind's bottom rail: parked just BELOW the sheet's bottom edge, so at rest
+   (sheet = full viewport) it's off-screen and the yellow reads uniform. It only
+   sweeps into view as the sheet pulls up, giving a crisp edge against the game
+   menu revealed behind. */
+.splash::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  height: 3px;
+  background: var(--ink);
+}
+@keyframes splash-auto-up { to { transform: translateY(-100%); visibility: hidden; } }
+/* JS-triggered roll-up: a small dip DOWN first — like tugging a blind to release
+   the catch — then the pull up. The up phase (21%→100%) keeps the original curve
+   and duration, so its speed is unchanged; only a ~0.15s tension-dip is
+   prepended. */
+.splash.is-up { animation: splash-roll-up 0.7s both; }
+@keyframes splash-roll-up {
+  0%   { transform: translateY(0);   animation-timing-function: cubic-bezier(0.3, 0, 0.25, 1); }
+  21%  { transform: translateY(2%);  animation-timing-function: cubic-bezier(0.5, 0, 0.15, 1); }
+  100% { transform: translateY(-100%); visibility: hidden; }
+}
 
 .splash__tile {
   display: flex;
@@ -2744,7 +2800,7 @@ html.no-splash .splash { display: none; }
   border: 5px solid var(--ink);
   border-radius: 28px;
   box-shadow: var(--pop-lg);
-  animation: splash-pop 0.5s var(--spring) both;
+  animation: splash-pop 0.62s var(--spring) both;
 }
 .splash__logo {
   width: 100%;
@@ -2753,10 +2809,11 @@ html.no-splash .splash { display: none; }
   filter: drop-shadow(0 3px 3px rgba(0, 0, 0, 0.25));
 }
 @keyframes splash-pop {
-  from { opacity: 0; transform: scale(0.55) rotate(-7deg); }
+  from { opacity: 0; transform: scale(0.35) rotate(-12deg); }
   to { opacity: 1; transform: scale(1) rotate(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .splash__tile { animation: none; }
-  .splash { transition: none; }
+  /* keep the fail-safe animation, just make it near-instant */
+  .splash { animation-duration: 0.01s; animation-delay: 1.2s; }
 }

@@ -10,11 +10,19 @@
 
   function t(k) { return global.Spielecke.t(k); }
 
+  // Shuffled once per page load, then stable: every visit lands a fresh layout,
+  // but returning to the shelf mid-session doesn't re-scatter the tiles under
+  // your thumb. (Re-shuffles defensively if the registry count ever changes.)
+  var sessionOrder = null;
+
   function render(container, ctx) {
-    // Randomise the card order on EVERY render (fresh Math.random each time, so it
-    // never depends on cache or the registry's fixed ORDER). The "Coming soon"
-    // tile is appended after these cards below, so it always stays dead last.
-    var games = global.Spielecke.shuffle(global.Spielecke.GAMES || []);
+    // The "Coming soon" tile is appended after these cards below, so it always
+    // stays dead last.
+    var all = global.Spielecke.GAMES || [];
+    if (!sessionOrder || sessionOrder.length !== all.length) {
+      sessionOrder = global.Spielecke.shuffle(all);
+    }
+    var games = sessionOrder;
 
     var cards = games
       .map(function (game, i) {
@@ -24,9 +32,15 @@
         var betaBadge = game.beta
           ? '<span class="badge badge-beta">' + t("BETA") + "</span>"
           : "";
-        // --i drives the CSS entrance stagger (cards cascade in grid order)
+        // --i drives the CSS entrance stagger (cards cascade in grid order).
+        // Colour + tilt are assigned by grid POSITION: a 9-colour and 7-tilt
+        // sequence (coprime, so combos don't realign for 63 cards). Because 9 is
+        // coprime with any 2–4 column count, no two neighbours ever share a
+        // colour — keying off the game id instead clustered same hues together
+        // (27 games into 9 colours stacked three pinks in a row).
+        var look = " gc-" + (i % 9) + " gt-" + (i % 7);
         return (
-          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + '" style="--i:' + i + '" data-id="' + escapeAttr(game.id) + '">' +
+          '<button class="game-card' + (game.beta ? " game-card--beta" : "") + look + '" style="--i:' + i + '" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +
           '  <span class="game-card__name">' + escapeHtml(t(game.name) || game.name) + "</span>" +
           '  <span class="game-card__tagline">' + escapeHtml(t(game.tagline || "") || game.tagline || "") + "</span>" +
@@ -46,7 +60,7 @@
     // Deliberately bare: just the icon box and a "Coming soon" title (kept in
     // English in both languages), nothing else.
     var soonTile =
-      '<button class="game-card game-card--soon" type="button" style="--i:' + games.length + '" aria-label="Coming soon">' +
+      '<button class="game-card game-card--soon gt-' + (games.length % 7) + '" type="button" style="--i:' + games.length + '" aria-label="Coming soon">' +
       '  <span class="game-card__icon">✨</span>' +
       '  <span class="game-card__name">Coming Soon...</span>' +
       "</button>";
