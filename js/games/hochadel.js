@@ -533,6 +533,10 @@
       game.discard.push(card.id);
     } else if (card.type === "regel") {
       var curL = currentPlayer();
+      // Doubled rule cards (copies: 2 — Inquisitor, Spitzname, …) supersede:
+      // drawing the second copy hands the role to the new target, so the old
+      // Hofgesetz entry of the SAME card is replaced instead of stacking.
+      game.hofgesetze = game.hofgesetze.filter(function (g) { return g.id !== card.id; });
       game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—" });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
