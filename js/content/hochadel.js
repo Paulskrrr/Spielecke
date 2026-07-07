@@ -261,6 +261,15 @@
     { id: "r_schwachehand", type: "regel", title: "Die schwache Hand",
       text: "Fortan wird nur mit der schwachen Hand gedient. Verstoß = dienen.",
       editions: ["koenige", "rapunzel"] },
+    { id: "r_etikette", type: "regel", title: "Höfische Etikette",
+      text: "Keine Ellenbogen auf der Tafel. Verstoß = dienen.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "r_austritt", type: "regel", title: "Das Austrittsgesuch",
+      text: "Wer die Tafel verlassen will, bittet zuvor förmlich um Erlaubnis der Runde. Sonst dienen.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "r_tableau", type: "regel", title: "Das lebende Bild",
+      text: "{P} darf jederzeit zum lebenden Bild erstarren. Alle müssen es dem Hofe gleichtun — wer als Letztes erstarrt, dient. Bis Spielende.",
+      editions: ["koenige", "rapunzel"] },
 
     // --- Aktive Karten (Gold) — face-up, self-triggered ----------------
     { id: "a_dieb", type: "aktiv", title: "Der Dieb",
@@ -285,6 +294,12 @@
       editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "m_369", type: "minispiel", title: "Drei-Sechs-Neun",
       text: "Zählt reihum. Bei jeder 3, 6 oder 9 wird statt der Zahl geklatscht — bei 33 oder 63 zweimal. Wer patzt, dient.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "m_basilisk", type: "minispiel", title: "Der Basilisk",
+      text: "Alle senken den Blick zur Tafel. Auf drei blickt jeder einen Mitspieler an. Treffen sich zwei Blicke, dienen beide.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "m_tafel", type: "minispiel", title: "Die königliche Tafel",
+      text: "„Ich lade an die königliche Tafel …“ — reihum wiederholt jeder die Gästeliste und fügt einen Gast hinzu. Wer patzt, dient.",
       editions: ["koenige", "rapunzel"] },
   ];
 
@@ -515,6 +530,15 @@
     { id: "r_schwachehand", type: "regel", title: "The Weak Hand",
       text: "Henceforth one serves only with the weak hand. Breach = serve.",
       editions: ["koenige", "rapunzel"] },
+    { id: "r_etikette", type: "regel", title: "Courtly Etiquette",
+      text: "No elbows on the table. Breach = serve.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "r_austritt", type: "regel", title: "The Leave of Absence",
+      text: "Whoever wishes to leave the table must first formally ask the court's leave. Otherwise serve.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "r_tableau", type: "regel", title: "The Living Picture",
+      text: "{P} may freeze into a living picture at any time. All must do likewise for the court — whoever freezes last serves. Until game's end.",
+      editions: ["koenige", "rapunzel"] },
 
     // --- Active Cards (Gold) — face-up, self-triggered -----------------
     { id: "a_dieb", type: "aktiv", title: "The Thief",
@@ -539,6 +563,12 @@
       editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "m_369", type: "minispiel", title: "Three-Six-Nine",
       text: "Count off in turn. At every 3, 6 or 9 you clap instead of saying the number — at 33 or 63, clap twice. Whoever stumbles, serves.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "m_basilisk", type: "minispiel", title: "The Basilisk",
+      text: "Everyone lowers their gaze to the table. On three, each looks at a fellow player. If two gazes meet, both serve.",
+      editions: ["koenige", "rapunzel"] },
+    { id: "m_tafel", type: "minispiel", title: "The Royal Table",
+      text: "„I set at the royal table …“ — in turn each repeats the guest list and adds a guest. Whoever stumbles, serves.",
       editions: ["koenige", "rapunzel"] },
   ];
 
