@@ -1524,11 +1524,12 @@ body::before {
   position: relative;
   width: min(62vw, 240px);
   aspect-ratio: 3 / 4;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  padding-bottom: 16px;
   font-family: var(--font); font-weight: 900; color: #fff;
-  background:
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 12px, rgba(255,255,255,0) 12px 24px),
-    linear-gradient(160deg, #6d3aa0, #5B2A86);
+  /* Royal card-back artwork; purple fill is the fallback (and matches the
+     artwork field) so a failed image never shows a blank white deck. */
+  background: #5B2A86 url("../assets/hochadel-back.jpg") center / cover no-repeat;
   border: 5px solid var(--ink); border-radius: 20px; box-shadow: var(--pop-lg);
   cursor: pointer;
 }
@@ -1559,12 +1560,13 @@ body::before {
     5px 7px 0 #5a2e86;
 }
 .ha-deck:active { transform: translateY(5px); box-shadow: var(--pop); }
-.ha-deck__crest {
-  font-size: clamp(2.6rem, 13vw, 4rem); line-height: 1;
-  width: 1.7em; height: 1.7em; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.12); border: 3px solid rgba(255,255,255,0.5); border-radius: 50%;
+/* The crown lives in the artwork now; the label is a legible pill over it. */
+.ha-deck__label {
+  font-size: clamp(1rem, 4.2vw, 1.3rem); letter-spacing: 0.3px;
+  padding: 7px 16px; border-radius: 999px;
+  background: rgba(36, 27, 77, 0.74); border: 2px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(2px);
 }
-.ha-deck__label { font-size: clamp(1.1rem, 4.5vw, 1.4rem); letter-spacing: 0.3px; }
 .ha-deck-count { margin-top: 12px; font-weight: 800; font-size: 0.82rem; color: var(--ink-soft); }
 
 /* Piles of face-up cards (active gold + saphir laws) */

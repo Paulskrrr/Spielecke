@@ -438,7 +438,6 @@
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
       '      <button id="ha-draw" class="ha-deck ' + deckFullnessClass() + '" aria-label="' + t("Draw card") + '" data-primary>' +
-      '        <span class="ha-deck__crest">👑</span>' +
       '        <span class="ha-deck__label">' + t("Draw card") + "</span>" +
       "      </button>" +
       "    </div>" +
