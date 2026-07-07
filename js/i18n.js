@@ -952,9 +952,9 @@
     "your secret partner": "dein geheimer Partner",
 
     // ── Simon sagt (Beta) ──────────────────────────────────────────────────
-    "Simon Says": "Der Chef sagt",
+    "Simon Says": "Kommando",
     "BETA": "BETA",
-    "Do what Simon says — never what he doesn't. Slip up and you drink.": "Tu, was der Chef sagt — nie, was er nicht sagt. Patzer? Trinken.",
+    "Do what Simon says — never what he doesn't. Slip up and you drink.": "Führ jedes Kommando aus — aber nichts, was ohne „Kommando“ kommt. Patzer? Trinken.",
     "Command categories": "Kommando-Kategorien",
     "🔊 Read commands aloud": "🔊 Kommandos vorlesen",
     "Start 🗣️": "Los 🗣️",
@@ -966,8 +966,8 @@
     "They drink and drop out.": "Er/Sie trinkt und scheidet aus.",
     "They drop out.": "Er/Sie scheidet aus.",
     "← Nobody, resume": "← Niemand, weiter",
-    "Last one standing — Simon's favourite!": "Als Letzter übrig — der Liebling vom Chef!",
-    "Simon says:": "Der Chef sagt:",
+    "Last one standing — Simon's favourite!": "Als Letzter übrig — Kommando standhaft befolgt!",
+    "Simon says:": "Kommando:",
     "take a sip": "nimm einen Schluck",
     "nobody": "niemand",
 
