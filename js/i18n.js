@@ -733,6 +733,7 @@
     "Flip right": "Nach rechts kippen",
     "Flip down": "Nach unten kippen",
     "Rotate 90° clockwise": "90° im Uhrzeigersinn drehen",
+    "Rotate 90° clockwise (Spacebar)": "90° im Uhrzeigersinn drehen (Leertaste)",
 
     // ── Zeitzünder v4 — expanded manual (annexes + filler) ─────────────────
     "Annex I — Foreword & Legal Notice": "Anhang I — Vorwort & Rechtliche Hinweise",

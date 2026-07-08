@@ -42,8 +42,8 @@ A **real 3D cube of grey industrial panels** — screws in the corners, bevelled
 digital readout for the timer/strikes. Six faces, one job each. You **physically flip the
 cube** to reach them: drag to grab-and-turn, arrow keys, or four sleek directional arrows laid
 out around the cube (browser-friendly), with a 3D flip animation. A top-left **↻ roll button**
-turns the whole cube 90° clockwise about the viewing axis, for when it's handed over sideways or
-upside down. There is **no face menu / shortcut nav** — none of these name a face, so they don't
+(also the **Spacebar**) turns the whole cube 90° clockwise about the viewing axis, for when it's
+handed over sideways or upside down. On the expert's side, **← / →** page through the manual. There is **no face menu / shortcut nav** — none of these name a face, so they don't
 orient you; you're still meant to be lost.
 
 - **Random arrangement every game.** The six logical faces are dealt to the six physical sides

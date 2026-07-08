@@ -322,7 +322,7 @@
       '<section class="screen zz-bomb">' +
       hudHtml() +
       '  <div class="zz-stage">' +
-      '    <button class="zz-flip zz-roll" data-flip="roll" aria-label="' + t("Rotate 90° clockwise") + '">↻</button>' +
+      '    <button class="zz-flip zz-roll" data-flip="roll" title="' + t("Rotate 90° clockwise (Spacebar)") + '" aria-label="' + t("Rotate 90° clockwise (Spacebar)") + '">↻</button>' +
       '    <button class="zz-flip zz-flip--up" data-flip="up" aria-label="' + t("Flip up") + '">▲</button>' +
       '    <button class="zz-flip zz-flip--left" data-flip="left" aria-label="' + t("Flip left") + '">◀</button>' +
       '    <div class="zz-rig" id="zz-rig"><div class="zz-cube" id="zz-cube">' + facesHtml + "</div></div>" +
@@ -549,9 +549,11 @@
   function attachKeys() {
     detachKeys();
     keyHandler = function (e) {
-      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
+      var space = e.key === " " || e.code === "Space";
+      if (!space && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
       e.preventDefault();
-      if (e.key === "ArrowRight") rotate(RY(-1));
+      if (space) rotate(RZ(1));                    // spacebar = the ↻ roll (90° clockwise about the view)
+      else if (e.key === "ArrowRight") rotate(RY(-1));
       else if (e.key === "ArrowLeft") rotate(RY(1));
       else if (e.key === "ArrowUp") rotate(RX(1));
       else rotate(RX(-1));
