@@ -10,19 +10,11 @@
 
   function t(k) { return global.Spielecke.t(k); }
 
-  // Shuffled once per page load, then stable: every visit lands a fresh layout,
-  // but returning to the shelf mid-session doesn't re-scatter the tiles under
-  // your thumb. (Re-shuffles defensively if the registry count ever changes.)
-  var sessionOrder = null;
-
   function render(container, ctx) {
     // The "Coming soon" tile is appended after these cards below, so it always
-    // stays dead last.
-    var all = global.Spielecke.GAMES || [];
-    if (!sessionOrder || sessionOrder.length !== all.length) {
-      sessionOrder = global.Spielecke.shuffle(all);
-    }
-    var games = sessionOrder;
+    // stays dead last. Order is FIXED — the registry's LAYOUT is the grid order,
+    // so tiles land in the same spot every visit (no shuffle).
+    var games = global.Spielecke.GAMES || [];
 
     var cards = games
       .map(function (game, i) {
@@ -33,12 +25,10 @@
           ? '<span class="badge badge-beta">' + t("BETA") + "</span>"
           : "";
         // --i drives the CSS entrance stagger (cards cascade in grid order).
-        // Colour + tilt are assigned by grid POSITION: a 9-colour and 7-tilt
-        // sequence (coprime, so combos don't realign for 63 cards). Because 9 is
-        // coprime with any 2–4 column count, no two neighbours ever share a
-        // colour — keying off the game id instead clustered same hues together
-        // (27 games into 9 colours stacked three pinks in a row).
-        var look = " gc-" + (i % 9) + " gt-" + (i % 7);
+        // Colour is FIXED per game (registry LAYOUT) — Hochadel always yellow,
+        // Doodle always blue, etc. Tilt stays a 7-step sequence by position so
+        // neighbours never share the exact same angle.
+        var look = " gc-" + (game.color || "yellow") + " gt-" + (i % 7);
         return (
           '<button class="game-card' + (game.beta ? " game-card--beta" : "") + look + '" style="--i:' + i + '" data-id="' + escapeAttr(game.id) + '">' +
           '  <span class="game-card__icon">' + escapeHtml(game.icon || "🎲") + "</span>" +

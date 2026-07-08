@@ -270,20 +270,18 @@ body::before {
 /* each card a different crayon colour; text is always white (legibility on the
    lighter cards comes from the text-shadow below). 9-colour palette — every hue
    is at least as dark as --yellow, so white + the dark halo stays readable.
-   shelf.js stamps gc-0..8 by grid position (i % 9); no two neighbours ever share
-   a colour (9 never divides the 2–4 column count). The sequence is ordered for
-   MAX contrast: consecutive entries (horizontal neighbours) and entries two
-   apart (vertical neighbours on mobile's 2 columns) are always different hue
-   families — no green-next-to-teal or indigo-next-to-purple. */
-.game-card.gc-0 { background: var(--yellow); }
-.game-card.gc-1 { background: var(--blue);   }
-.game-card.gc-2 { background: var(--red);    }
-.game-card.gc-3 { background: var(--teal);   }
-.game-card.gc-4 { background: var(--purple); }
-.game-card.gc-5 { background: var(--orange); }
-.game-card.gc-6 { background: var(--green);  }
-.game-card.gc-7 { background: var(--indigo); }
-.game-card.gc-8 { background: var(--pink);   }
+   shelf.js stamps gc-<colour> from each game's FIXED colour (registry LAYOUT),
+   so a game keeps its hue everywhere. The LAYOUT hand-places colours so no two
+   neighbours (horizontal, or the 2-column vertical) ever share one. */
+.game-card.gc-yellow { background: var(--yellow); }
+.game-card.gc-blue   { background: var(--blue);   }
+.game-card.gc-red    { background: var(--red);    }
+.game-card.gc-teal   { background: var(--teal);   }
+.game-card.gc-purple { background: var(--purple); }
+.game-card.gc-orange { background: var(--orange); }
+.game-card.gc-green  { background: var(--green);  }
+.game-card.gc-indigo { background: var(--indigo); }
+.game-card.gc-pink   { background: var(--pink);   }
 
 /* Playful tilt + tiny vertical jitter — 7 variants by grid position (i % 7),
    coprime with the 9 colours so colour+angle combinations stay hand-scattered. */
@@ -1526,29 +1524,49 @@ body::before {
   position: relative;
   width: min(62vw, 240px);
   aspect-ratio: 3 / 4;
-  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  padding-bottom: 16px;
   font-family: var(--font); font-weight: 900; color: #fff;
-  background:
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.06) 0 12px, rgba(255,255,255,0) 12px 24px),
-    linear-gradient(160deg, #6d3aa0, #5B2A86);
+  /* Royal card-back artwork; purple fill is the fallback (and matches the
+     artwork field) so a failed image never shows a blank white deck. */
+  background: #5B2A86 url("../assets/hochadel-back.jpg") center / cover no-repeat;
   border: 5px solid var(--ink); border-radius: 20px; box-shadow: var(--pop-lg);
   cursor: pointer;
 }
-/* the two cards "under" the top one */
-.ha-deck::before, .ha-deck::after {
-  content: ""; position: absolute; inset: 0; z-index: -1;
-  background: linear-gradient(160deg, #6d3aa0, #5B2A86);
-  border: 5px solid var(--ink); border-radius: 20px;
+/* The draw pile is drawn as a stack of sheets extruded down-right via layered
+   hard shadows; each sheet sits deeper and darker for 3D shading. The DEPTH of
+   that side is the "how much is left" cue: four tiers thin the stack as it is
+   spent (full → past ¼, ½, ¾). Default below = f4 (full, deepest). */
+.ha-deck {
+  box-shadow:
+    5px 7px 0 #5a2e86,
+    10px 14px 0 #4c2472,
+    15px 21px 0 #3e1c5e,
+    20px 28px 0 #2f1447;
 }
-.ha-deck::before { transform: translate(7px, 9px) rotate(3.5deg); }
-.ha-deck::after { transform: translate(-7px, 6px) rotate(-3.5deg); }
+.ha-deck--f3 {
+  box-shadow:
+    5px 7px 0 #5a2e86,
+    10px 14px 0 #4c2472,
+    15px 21px 0 #3e1c5e;
+}
+.ha-deck--f2 {
+  box-shadow:
+    5px 7px 0 #5a2e86,
+    10px 14px 0 #4c2472;
+}
+.ha-deck--f1 {
+  box-shadow:
+    5px 7px 0 #5a2e86;
+}
 .ha-deck:active { transform: translateY(5px); box-shadow: var(--pop); }
-.ha-deck__crest {
-  font-size: clamp(2.6rem, 13vw, 4rem); line-height: 1;
-  width: 1.7em; height: 1.7em; display: flex; align-items: center; justify-content: center;
-  background: rgba(255,255,255,0.12); border: 3px solid rgba(255,255,255,0.5); border-radius: 50%;
+/* The crown lives in the artwork now; the label is a legible pill over it. */
+.ha-deck__label {
+  font-size: clamp(1rem, 4.2vw, 1.3rem); letter-spacing: 0.3px;
+  padding: 7px 16px; border-radius: 999px;
+  background: rgba(36, 27, 77, 0.74); border: 2px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(2px);
 }
-.ha-deck__label { font-size: clamp(1.1rem, 4.5vw, 1.4rem); letter-spacing: 0.3px; }
 .ha-deck-count { margin-top: 12px; font-weight: 800; font-size: 0.82rem; color: var(--ink-soft); }
 
 /* Piles of face-up cards (active gold + saphir laws) */
@@ -1567,6 +1585,10 @@ body::before {
 .ha-card-mini--aktiv:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
 .ha-card-mini--regel { background: linear-gradient(165deg, #2f558f, #1B3A6B); color: #fff; }
 .ha-card-mini__pip { position: absolute; top: 9px; right: 11px; font-size: 1.15rem; }
+/* Heraldic crest badge in the corner (replaces the emoji pip). */
+.ha-card-mini__crest { position: absolute; top: 6px; right: 8px; width: 38px; height: auto; }
+.ha-card-mini--aktiv .ha-card-mini__title,
+.ha-card-mini--regel .ha-card-mini__title { padding-right: 40px; }
 .ha-card-mini__holder {
   align-self: flex-start; font-size: 0.64rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
   color: #fff; background: var(--ink); padding: 3px 9px; border-radius: 999px;
@@ -1595,6 +1617,14 @@ body::before {
   background: var(--ha-c, var(--purple)); border: 5px solid var(--ink); border-radius: var(--radius);
   box-shadow: var(--pop-lg);
 }
+/* The type crest crowns the drawn card — the shield shares the card's colour
+   family, so the navy outline and metallic charge read as an embossed seal. */
+.ha-bigcard__crest {
+  display: block; align-self: center;
+  width: clamp(94px, 30vw, 150px); height: auto;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 3px 0 rgba(36, 27, 77, 0.22));
+}
 .ha-bigcard__tag {
   align-self: center; font-size: 0.74rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
   padding: 5px 14px; border-radius: 999px; background: rgba(255,255,255,0.22); border: 2px solid rgba(255,255,255,0.5);
@@ -1604,6 +1634,21 @@ body::before {
 /* gold card needs dark ink for contrast */
 .ha-card--aktiv { color: var(--ink); }
 .ha-card--aktiv .ha-bigcard__tag { background: rgba(36,27,77,0.14); border-color: rgba(36,27,77,0.35); }
+
+/* Echo: the card being replayed, shown as a smaller card tucked under the big
+   one (there is no physical discard pile to point at). */
+.ha-echo-prev {
+  margin: -6px 0 18px; padding: 14px 16px; text-align: center;
+  background: var(--paper-2); border: 4px dashed var(--ink); border-radius: 16px;
+  box-shadow: var(--pop);
+}
+.ha-echo-prev__label {
+  font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--ink-soft); margin-bottom: 6px;
+}
+.ha-echo-prev__title { font-size: 1.25rem; font-weight: 900; line-height: 1.1; color: var(--ink); }
+.ha-echo-prev__text { margin-top: 4px; font-size: 0.95rem; font-weight: 700; line-height: 1.3; color: var(--ink); }
+.ha-echo-prev--empty .ha-echo-prev__text { color: var(--ink-soft); font-weight: 700; }
 
 /* Sanduhr custom input */
 .ha-custom { display: flex; align-items: center; gap: 10px; font-weight: 800; margin: 16px 0; }
@@ -1947,10 +1992,13 @@ body::before {
 .pkcard__corner--tl { top: 5px; left: 6px; }
 .pkcard__corner--br { bottom: 5px; right: 6px; transform: rotate(180deg); }
 .pkcard--back {
-  background:
-    repeating-linear-gradient(45deg, var(--purple) 0 8px, #8a52ef 8px 16px);
+  /* Red fill is the fallback (and matches the artwork's field) so a failed
+     image request still shows an on-theme card, never a blank white one. */
+  background: #ff4d5e url("../assets/card-back-monkey.jpg") center / cover no-repeat;
   color: #fff;
 }
+/* The text crest is the pre-artwork fallback; the monkey back replaces it. */
+.pkcard--back .pkcard__crest { display: none; }
 .pkcard__crest { font-size: 1.2rem; text-align: center; opacity: 0.9; line-height: 1; }
 .pkcard--sm .pkcard__crest { font-size: 0.85rem; }
 
@@ -2658,8 +2706,30 @@ body::before {
 .mm-rank-n { margin-left: auto; }
 
 /* ----- Geheimauftrag ---------------------------------------------------- */
-.ga-mission { font-size: 1.5rem; font-weight: 800; background: var(--ink); color: #fff; border-radius: var(--radius);
-  padding: 24px; margin: 16px 0; box-shadow: var(--pop-lg); }
+/* The mission sits on a worn "TOP SECRET" dossier. The sheet is square and the
+   art keeps its centre clear, so the typed mission is centred there with room
+   to dodge the corner stamp and the clipped-on photo. Ink fill is the fallback
+   if the image fails. */
+.ga-mission {
+  position: relative;
+  aspect-ratio: 1 / 1;
+  display: flex; align-items: center; justify-content: center;
+  margin: 16px 0;
+  padding: 22% 18% 24%;
+  background: var(--ink) url("../assets/dossier.jpg") center / cover no-repeat;
+  border: 4px solid var(--ink);
+  border-radius: var(--radius);
+  box-shadow: var(--pop-lg);
+  overflow: hidden;
+}
+.ga-mission__text {
+  font-family: "Courier New", "Courier", monospace;
+  font-size: clamp(1rem, 4.6vw, 1.35rem);
+  font-weight: 700;
+  line-height: 1.35;
+  color: #1c150c;
+  text-align: center;
+}
 .ga-coop { background: var(--purple); color: #fff; border: 3px solid var(--ink); border-radius: 14px;
   padding: 10px 14px; font-weight: 800; }
 .ga-reveal, .ga-outcome, .ga-hub, .ga-pick-screen { text-align: center; }

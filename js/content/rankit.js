@@ -8,6 +8,12 @@
  * `items` list (aim for 5) that everyone privately puts in order. Drift from the
  * group's consensus and you lose. Item count is flexible — the game adapts.
  *
+ * Each pool ALSO carries a `people` list: axis titles (title only, no items) used
+ * by Rank It's "Mitspieler" mode, where the items are the current roster instead
+ * of static content. The chosen category just decides the flavour of the axis
+ * (Party → "Kotzt am ehesten → am spätesten", 18+ → "Steht am ehesten → am
+ * wenigsten auf BDSM", …). Same `people` phrasing rules as `sets` titles.
+ *
  * The title MUST contain a "→": the game splits on it to label the top/bottom
  * poles of the rail. Keep the DE and EN pool keys
  * (general/party/videogames/leisure/history/nsfw) in sync so the category chips line
@@ -20,6 +26,16 @@
     de: {
       general: {
         label: "🎲 Allgemein",
+        people: [
+          { title: "Wird am ehesten → am spätesten berühmt" },
+          { title: "Überlebt am längsten → am kürzesten in der Wildnis" },
+          { title: "Käme am ehesten → am wenigsten ins Gefängnis" },
+          { title: "Hat den vollsten → leersten Kühlschrank" },
+          { title: "Überlebt am ehesten → am wenigsten die Zombie-Apokalypse" },
+          { title: "Ist am ehesten → am wenigsten heimlich ein Genie" },
+          { title: "Kommt am ehesten → am seltensten zu spät" },
+          { title: "Würde am ehesten → am wenigsten für 1 Mio. € einen Finger opfern" },
+        ],
         sets: [
           { title: "Beste → schlechteste Superkraft", items: ["Unsichtbarkeit", "Fliegen", "Zeitreise", "Gedankenlesen", "Teleportation"] },
           { title: "Bester → schlechtester Pizzabelag", items: ["Ananas", "Salami", "Pilze", "Extra Käse", "Sardellen"] },
@@ -46,6 +62,16 @@
       },
       party: {
         label: "🎉 Party",
+        people: [
+          { title: "Kotzt am ehesten → am spätesten" },
+          { title: "Verträgt am meisten → am wenigsten" },
+          { title: "Tanzt am wildesten → am steifsten" },
+          { title: "Schreibt besoffen am ehesten → nie dem Ex" },
+          { title: "Wird als Erstes → als Letztes rausgeworfen" },
+          { title: "Pennt am ehesten → am spätesten weg" },
+          { title: "Zettelt am ehesten → am wenigsten eine Schlägerei an" },
+          { title: "Ist am ehesten → am wenigsten der/die Letzte auf der Tanzfläche" },
+        ],
         sets: [
           { title: "Akzeptabelstes → schlimmstes Besoffen-Verhalten", items: ["Aufm Klo heulen", "Dem Ex schreiben", "Streit anzetteln", "Wegpennen", "Yappen"] },
           { title: "Stilvollster → peinlichster Drink", items: ["Champagner", "Craft Beer", "Tequila-Shots", "Tetrapack-Wein", "Jägerbombs"] },
@@ -69,6 +95,16 @@
       },
       videogames: {
         label: "🎮 Videospiele",
+        people: [
+          { title: "Ragequittet am ehesten → nie" },
+          { title: "Ist der/die beste → schlechteste Gamer:in" },
+          { title: "Spammt am meisten → am wenigsten das Mic" },
+          { title: "Schiebt die Schuld am ehesten → nie aufs Team" },
+          { title: "Zockt am längsten → am kürzesten am Stück" },
+          { title: "Gibt am meisten → am wenigsten Geld für Skins aus" },
+          { title: "Campt am ehesten → pusht am ehesten" },
+          { title: "Wirft am ehesten → nie den Controller" },
+        ],
         sets: [
           // ── Allgemein ──
           { title: "Nervigster → harmlosester Gamer-Typ", items: ["Der Rage-Quitter", "Der Mic-Spammer", "Der Smurf", "Der Try-Hard", "Der AFK-Farmer"] },
@@ -99,6 +135,16 @@
       },
       leisure: {
         label: "🏖️ Freizeit & Urlaub",
+        people: [
+          { title: "Packt den größten → kleinsten Koffer" },
+          { title: "Verpasst am ehesten → nie den Flug" },
+          { title: "Wird am schnellsten braun → verbrennt zuerst" },
+          { title: "Plant den Urlaub am meisten → am wenigsten" },
+          { title: "Beschwert sich im Urlaub am meisten → am wenigsten" },
+          { title: "Ist am ehesten → am wenigsten der/die spontane Abenteurer:in" },
+          { title: "Verliert am ehesten → nie den Koffer" },
+          { title: "Gibt im Urlaub am meisten → am wenigsten Geld aus" },
+        ],
         sets: [
           { title: "Bester → schlechtester Urlaubstyp", items: ["Strandresort", "Backpacking", "Städtetrip", "Kreuzfahrt", "All-Inclusive-Pauschal"] },
           { title: "Entspannendste → stressigste Urlaubsaktivität", items: ["Am Pool liegen", "Stadtführung", "Wandern", "Souvenirshopping", "Flughafen-Transfer"] },
@@ -110,6 +156,16 @@
       },
       history: {
         label: "🏛️ Politik & Geschichte",
+        people: [
+          { title: "Würde am besten → am schlechtesten regieren" },
+          { title: "Hat am meisten → am wenigsten Geld aufm Konto" },
+          { title: "Überlebt am längsten → am kürzesten im Mittelalter" },
+          { title: "Zettelt am ehesten → am wenigsten eine Revolution an" },
+          { title: "Glaubt am ehesten → am wenigsten an Verschwörungstheorien" },
+          { title: "Wird am ehesten → am wenigsten Millionär:in" },
+          { title: "Wäre der/die beste → schlechteste Diktator:in" },
+          { title: "Hat am meisten → am wenigsten Macht in dieser Gruppe" },
+        ],
         sets: [
           { title: "Wichtigste → überschätzteste Erfindung der Geschichte", items: ["Buchdruck", "Internet", "Das Rad", "Penicillin", "Selfie-Stick"] },
           { title: "Beste → unnötigste Eigenschaft eines Politikers", items: ["Ehrlichkeit", "Rückgrat", "Charisma", "Gutes Gedächtnis", "Schöne Reden"] },
@@ -121,6 +177,16 @@
       },
       nsfw: {
         label: "🔞 18+",
+        people: [
+          { title: "Steht am ehesten → am wenigsten auf BDSM" },
+          { title: "Hatte die meisten → wenigsten Partner:innen" },
+          { title: "Ist am lautesten → am leisesten im Bett" },
+          { title: "Schickt am ehesten → nie Nudes" },
+          { title: "Ist am kinkiesten → am vanilligsten" },
+          { title: "Hatte an den meisten → wenigsten Orten Sex" },
+          { title: "Redet am dreckigsten → am unschuldigsten" },
+          { title: "Würde am ehesten → am wenigsten einen Dreier machen" },
+        ],
         sets: [
           // ── Soft entry ──
           { title: "Größter → verzeihlichster Ick", items: ["Schlechter Küsser", "Schreibt viel zu viel", "Wohnt noch bei den Eltern", "Null Ehrgeiz", "Quatscht im Kino"] },
@@ -149,6 +215,16 @@
     en: {
       general: {
         label: "🎲 General",
+        people: [
+          { title: "Most → least likely to get famous" },
+          { title: "Survives longest → shortest in the wild" },
+          { title: "Most → least likely to end up in jail" },
+          { title: "Has the fullest → emptiest fridge" },
+          { title: "Most → least likely to survive the zombie apocalypse" },
+          { title: "Most → least likely to secretly be a genius" },
+          { title: "Most → least likely to show up late" },
+          { title: "Most → least likely to sacrifice a finger for €1M" },
+        ],
         sets: [
           { title: "Best → worst superpower", items: ["Invisibility", "Flying", "Time travel", "Reading minds", "Teleportation"] },
           { title: "Best → worst pizza topping", items: ["Pineapple", "Pepperoni", "Mushroom", "Extra cheese", "Anchovies"] },
@@ -175,6 +251,16 @@
       },
       party: {
         label: "🎉 Party",
+        people: [
+          { title: "First → last to throw up" },
+          { title: "Can handle the most → least booze" },
+          { title: "Dances the wildest → stiffest" },
+          { title: "Most → least likely to drunk-text the ex" },
+          { title: "First → last to get kicked out" },
+          { title: "First → last to pass out" },
+          { title: "Most → least likely to start a fight" },
+          { title: "Most → least likely to be last on the dance floor" },
+        ],
         sets: [
           { title: "Most → least acceptable drunk behaviour", items: ["Crying in the toilets", "Texting your ex", "Starting beef", "Passing out", "Yapping"] },
           { title: "Most → least classy drink", items: ["Champagne", "Craft beer", "Tequila shots", "Boxed wine", "Jägerbombs"] },
@@ -198,6 +284,16 @@
       },
       videogames: {
         label: "🎮 Video Games",
+        people: [
+          { title: "Most → least likely to rage-quit" },
+          { title: "The best → worst gamer" },
+          { title: "Spams the mic the most → least" },
+          { title: "Most → least likely to blame the team" },
+          { title: "Games the longest → shortest in one sitting" },
+          { title: "Spends the most → least on skins" },
+          { title: "Camps the most → pushes the most" },
+          { title: "Most → least likely to throw the controller" },
+        ],
         sets: [
           // ── General ──
           { title: "Most → least annoying gamer type", items: ["The rage-quitter", "The mic spammer", "The smurf", "The try-hard", "The AFK farmer"] },
@@ -228,6 +324,16 @@
       },
       leisure: {
         label: "🏖️ Leisure & Travel",
+        people: [
+          { title: "Packs the biggest → smallest suitcase" },
+          { title: "Most → least likely to miss the flight" },
+          { title: "Tans the fastest → burns first" },
+          { title: "Plans the holiday the most → least" },
+          { title: "Complains the most → least on holiday" },
+          { title: "Most → least likely to be the spontaneous adventurer" },
+          { title: "Most → least likely to lose their luggage" },
+          { title: "Spends the most → least on holiday" },
+        ],
         sets: [
           { title: "Best → worst holiday type", items: ["Beach resort", "Backpacking", "City trip", "Cruise", "All-inclusive package"] },
           { title: "Most relaxing → most stressful holiday activity", items: ["Lying by the pool", "Guided city tour", "Hiking", "Souvenir shopping", "Airport transfer"] },
@@ -239,6 +345,16 @@
       },
       history: {
         label: "🏛️ Politics & History",
+        people: [
+          { title: "Would rule the best → worst" },
+          { title: "Has the most → least money in the bank" },
+          { title: "Survives longest → shortest in the Middle Ages" },
+          { title: "Most → least likely to start a revolution" },
+          { title: "Most → least likely to believe conspiracy theories" },
+          { title: "Most → least likely to become a millionaire" },
+          { title: "Would be the best → worst dictator" },
+          { title: "Has the most → least power in this group" },
+        ],
         sets: [
           { title: "Most important → most overrated invention in history", items: ["The printing press", "The internet", "The wheel", "Penicillin", "The selfie stick"] },
           { title: "Best → most pointless trait in a politician", items: ["Honesty", "A spine", "Charisma", "A good memory", "Pretty speeches"] },
@@ -250,6 +366,16 @@
       },
       nsfw: {
         label: "🔞 18+",
+        people: [
+          { title: "Most → least into BDSM" },
+          { title: "Has had the most → fewest partners" },
+          { title: "Loudest → quietest in bed" },
+          { title: "Most → least likely to send nudes" },
+          { title: "The kinkiest → most vanilla" },
+          { title: "Has had sex in the most → fewest places" },
+          { title: "Talks the dirtiest → most innocent" },
+          { title: "Most → least likely to have a threesome" },
+        ],
         sets: [
           // ── Soft entry ──
           { title: "Biggest → most forgivable ick", items: ["Bad kisser", "Texts way too much", "Still lives with parents", "Zero ambition", "Talks during the film"] },

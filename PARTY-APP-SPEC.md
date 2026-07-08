@@ -114,15 +114,19 @@ Players screen.
   instant press-down, a small overshoot on release; a light `navigator.vibrate` tick fires
   on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
-  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set
-  (paired with a 7-step tilt set) assigned by **grid position** (`gc-*`/`gt-*` classes, `i % 9`
-  / `i % 7`). The colour sequence is ordered for max contrast, so on mobile's 2 columns no two
-  neighbours — horizontal or vertical — ever share a hue *or even a hue family* (no
-  green-beside-teal); 9 never divides the column count, so identical adjacency is impossible at
-  any width. The shelf order is **shuffled once per page load** (not per render), so returning
-  to it mid-session doesn't re-scatter the tiles under your thumb (colours are therefore stable
-  within a session, fresh each load). The home bar is a solid-purple app-bar lifted with a soft
-  drop shadow. All of the above honours `prefers-reduced-motion`.
+  cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
+  each game has a **fixed colour** (Hochadel yellow, Doodle Drama blue, …) set in the registry
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The 27
+  colours are laid out as **three consecutive sweeps of the full 9-colour palette** — every run
+  of 9 tiles shows each hue exactly once — so no colour repeats before the whole palette has
+  appeared (yellow leads from tile 1), and within that no two neighbours (distance 1–3, i.e.
+  horizontal + the 2/3-column verticals) share a hue *or a close family* (teal/green,
+  indigo/purple, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
+  same spot every visit. It stays **one continuous grid — no section headers** — but games are
+  grouped by vibe so related ones cluster as you scroll (quick social → party guessing →
+  longer sit-down & team → simple card/luck drinking games → reflex → co-op). The home bar is a
+  solid-purple app-bar lifted with a soft drop shadow. All of the above honours
+  `prefers-reduced-motion`.
 - **Intro splash:** on **every** open the logo shows in a game-tile-style card on a yellow
   field, then rolls up like a blind after ~0.5 s to reveal the shelf already rendered behind it
   (`shell.runSplash`). A **CSS-only fail-safe** rolls the splash up after ~1.6 s even if boot JS
@@ -171,7 +175,7 @@ js/
     princess.js            Princess Treatment prompts (by category × gender)
     activity.js            Activity words, tiered by points (2/3/4)
     quiz.js                Quiz Out questions, an array of difficulty levels
-    rankit.js              Rank It sets ({ label, sets:[{ title, items }] })
+    rankit.js              Rank It sets ({ label, sets:[{ title, items }], people:[{ title }] })
     hochadel.js            Hochadel deck + ground rules + verses, tagged per edition
     wettbuero.js           Wettbüro challenges, by category ({ label, challenges:[{text,timer?}] })
     mindmeld.js            Mind Meld seed-word pools ({ label, words:[...] })
@@ -461,8 +465,14 @@ and locks it. Reveal builds the **group's consensus** (items sorted by average p
 measures each player's **drift** from it (sum of per-item rank distance — the Spearman
 footrule). Closest to the group is the most in sync; furthest off loses.
 
-- **Config:** category pool, 🍻 drinking mode. Item count per set is flexible.
-- **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }] }`).
+- **Config:** category pool, 🧑‍🤝‍🧑 **Mitspieler** (rank-the-players) mode, 🍻 drinking mode. Item
+  count per set is flexible.
+- **Mitspieler mode:** a toggle **below** the category chips. The ranked items become the
+  **current roster** (dynamic) instead of static content; the selected pools (standard
+  multi-select, Mixed = all) only set the flavour of the axis, drawn from each pool's `people` list
+  (Party → "Kotzt am ehesten → am spätesten", 18+ → "Steht am ehesten → am wenigsten auf BDSM", …).
+  Everyone ranks all players, themselves included.
+- **Content:** `content/rankit.js` (`{ label, sets:[{ title, items:[…] }], people:[{ title }] }`).
 - **Outcome:** least drift **wins 👑**, most drift **loses 💀** (drinking mode: drinks). If the
   whole table ranks identically, it's a draw — nobody wins or loses.
 
@@ -474,8 +484,9 @@ resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz"
 stays on screen), **Aktiv** (gold — face-up with its holder, self-triggered later), **Minispiel**
 (violet — a table mini-game the host completes). Two standing ground rules are always on. The
 deck is data, tagged per edition (active: *Diener & Könige*; *Rapunzel* is a locked stub) and
-reshuffles endlessly. Game state persists; the Sanduhr (secret timer) and the space-key
-shortcut are torn down on unmount.
+reshuffles endlessly. Game state persists; the Sanduhr (keeps its name; its card text says
+"Handy-Timer" so it's clear the phone runs the secret timer) and the space-key shortcut are
+torn down on unmount.
 
 ### 3.17 Mia (Mäxchen) 🎩 (`maxchen`, 2+) — drinking-capable
 

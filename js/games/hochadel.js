@@ -105,10 +105,29 @@
   }
 
   function buildDeck(edition) {
-    var ids = data.deck
-      .filter(function (c) { return c.editions.indexOf(edition) !== -1; })
-      .map(function (c) { return c.id; });
-    return shuffle(ids);
+    var cards = data.deck.filter(function (c) { return c.editions.indexOf(edition) !== -1; });
+    var regel = [], rest = [];
+    cards.forEach(function (c) {
+      // `copies` (default 1) seeds a card more than once — evergreen basics and
+      // mini-games are set to 2 so they can come up twice a night.
+      var bucket = c.type === "regel" ? regel : rest;
+      for (var k = 0; k < (c.copies || 1); k++) bucket.push(c.id);
+    });
+
+    // Bias: a „regel" card ("the word ‚yes‘ is banished from now on") only bites
+    // if it lands early — one drawn in the last third barely gets to apply. So
+    // confine EVERY rule card to the first two-thirds of the deck: fill that
+    // front zone with all rule cards plus enough others (shuffled together), and
+    // let the back third be purely non-rule cards. Rule cards become Hofgesetze
+    // (never re-enter the draw pile), so biasing the initial build is enough.
+    var shuffledRest = shuffle(rest);
+    var total = regel.length + shuffledRest.length;
+    var frontSize = Math.floor((total * 2) / 3);
+    if (frontSize < regel.length) frontSize = regel.length; // tiny-deck guard
+    var fillCount = frontSize - regel.length;
+    var front = shuffle(regel.concat(shuffledRest.slice(0, fillCount)));
+    var back = shuffledRest.slice(fillCount);
+    return front.concat(back);
   }
 
   function rosterOrder() {
@@ -140,6 +159,9 @@
       uidSeq: 1,
       draw: buildDeck(edition),
       discard: [],
+      lastCard: null,   // {title, text} of the last non-Echo card resolved — the
+                        // Echo card replays it, and digitally there is no physical
+                        // discard pile to look at, so we show it again.
     };
   }
 
@@ -153,6 +175,7 @@
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
     if (typeof saved.turnIndex !== "number" || saved.turnIndex >= saved.order.length) saved.turnIndex = 0;
     if (saved.draw.length === 0 && saved.discard.length === 0) saved.draw = buildDeck(saved.edition);
+    if (!saved.lastCard || typeof saved.lastCard !== "object") saved.lastCard = null;
     return saved;
   }
 
@@ -181,6 +204,25 @@
     if (game.draw.length === 0) return null; // every card is in play
     var id = game.draw.shift();
     return cardById[id] || null;
+  }
+
+  // Full card count for an edition (respecting `copies`) — the denominator for
+  // the "how thick is the draw pile" cue on the deck.
+  function editionDeckSize(edition) {
+    var n = 0;
+    data.deck.forEach(function (c) {
+      if (c.editions.indexOf(edition) !== -1) n += (c.copies || 1);
+    });
+    return n;
+  }
+
+  // Map the remaining draw pile to one of four thickness tiers, so the fanned
+  // stack subtly thins out as the deck is used up (full → past ¼, ½, ¾ spent).
+  function deckFullnessClass() {
+    var total = editionDeckSize(game.edition) || 1;
+    var frac = game.draw.length / total;
+    var lvl = frac > 0.75 ? 4 : frac > 0.5 ? 3 : frac > 0.25 ? 2 : 1;
+    return "ha-deck--f" + lvl;
   }
 
   // ---------------------------------------------------------------------------
@@ -395,11 +437,9 @@
       "  </div>" +
       '  <div class="ha-table-main">' +
       '    <div class="ha-deck-zone">' +
-      '      <button id="ha-draw" class="ha-deck" aria-label="' + t("Draw card") + '" data-primary>' +
-      '        <span class="ha-deck__crest">👑</span>' +
+      '      <button id="ha-draw" class="ha-deck ' + deckFullnessClass() + '" aria-label="' + t("Draw card") + '" data-primary>' +
       '        <span class="ha-deck__label">' + t("Draw card") + "</span>" +
       "      </button>" +
-      '      <div class="ha-deck-count">' + game.draw.length + t(" in deck") + "</div>" +
       "    </div>" +
       '    <div class="ha-piles">' +
       activeHtml() +
@@ -427,7 +467,7 @@
       body = '<div class="ha-hand">' + game.hofgesetze.map(function (r) {
         return (
           '<div class="ha-card-mini ha-card-mini--regel">' +
-          '  <span class="ha-card-mini__pip">📜</span>' +
+          '  <img class="ha-card-mini__crest" src="assets/ha-crest-regel.png" alt="" />' +
           (r.by ? '  <span class="ha-card-mini__holder">' + esc(r.by) + "</span>" : "") +
           '  <span class="ha-card-mini__title">' + esc(r.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>" +
@@ -447,7 +487,7 @@
       body = '<div class="ha-hand">' + game.active.map(function (a) {
         return (
           '<button class="ha-card-mini ha-card-mini--aktiv" data-trigger="' + esc(a.uid) + '">' +
-          '  <span class="ha-card-mini__pip">🪙</span>' +
+          '  <img class="ha-card-mini__crest" src="assets/ha-crest-aktiv.png" alt="" />' +
           '  <span class="ha-card-mini__holder">' + esc(a.holder) + "</span>" +
           '  <span class="ha-card-mini__title">' + esc(a.title) + "</span>" +
           '  <span class="ha-card-mini__text">' + esc(a.text) + "</span>" +
@@ -497,14 +537,32 @@
       '<section class="screen ha-screen ha-draw-screen">' +
       '  <div class="ha-draw-kicker"><strong>' + esc(cur ? cur.name : "—") + "</strong>" + t(" draws …") + "</div>" +
       '  <div class="ha-bigcard ha-card--' + card.type + '" style="--ha-c:' + typeMeta.colour + '">' +
+      '    <img class="ha-bigcard__crest" src="assets/ha-crest-' + card.type + '.png" alt="" />' +
       '    <div class="ha-bigcard__tag">' + esc(t(typeMeta.label)) + "</div>" +
       '    <div class="ha-bigcard__title">' + esc(card.title) + "</div>" +
       '    <div class="ha-bigcard__text">' + esc(filledText) + "</div>" +
       "  </div>" +
+      echoPrevHtml(card) +
       '  <button id="ha-resolve" class="btn btn-primary btn-block btn-xl" data-primary>' + esc(actLabel) + "</button>" +
       "</section>";
 
     els.querySelector("#ha-resolve").addEventListener("click", function () { resolveCard(card, filledText); });
+  }
+
+  // The Echo card replays the previously played card — but there is no physical
+  // discard pile on a phone, so surface that card's title + text right here.
+  function echoPrevHtml(card) {
+    if (card.effect !== "echo") return "";
+    var last = game.lastCard;
+    if (!last) {
+      return '<div class="ha-echo-prev ha-echo-prev--empty">' +
+        '<div class="ha-echo-prev__text">' + t("No card has been played yet — the Echo fades.") + "</div></div>";
+    }
+    return '<div class="ha-echo-prev">' +
+      '<div class="ha-echo-prev__label">' + t("Repeat this card:") + "</div>" +
+      '<div class="ha-echo-prev__title">' + esc(last.title) + "</div>" +
+      '<div class="ha-echo-prev__text">' + esc(last.text) + "</div>" +
+      "</div>";
   }
 
   function resolveCard(card, filledText) {
@@ -514,6 +572,10 @@
       game.discard.push(card.id);
     } else if (card.type === "regel") {
       var curL = currentPlayer();
+      // Doubled rule cards (copies: 2 — Inquisitor, Spitzname, …) supersede:
+      // drawing the second copy hands the role to the new target, so the old
+      // Hofgesetz entry of the SAME card is replaced instead of stacking.
+      game.hofgesetze = game.hofgesetze.filter(function (g) { return g.id !== card.id; });
       game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—" });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
@@ -525,6 +587,11 @@
         power: card.power || null,
         holder: cur ? cur.name : "—",
       });
+    }
+    // Remember this card so a later Echo can replay (and re-show) it. Echo itself
+    // does not overwrite the memory, so it always points at a real action.
+    if (card.effect !== "echo") {
+      game.lastCard = { title: card.title, text: filledText };
     }
     nextTurn();
     saveState();
@@ -559,8 +626,8 @@
     }).join("");
     els.innerHTML =
       '<section class="screen ha-screen">' +
-      '  <h2 class="screen-title pop">' + t("⌛ The Timer") + "</h2>" +
-      '  <p class="muted">' + t("Secretly set a time limit. When it runs out, whoever is speaking drinks. Don\'t let others watch.") + "</p>" +
+      '  <h2 class="screen-title pop">' + t("⏳ The Hourglass") + "</h2>" +
+      '  <p class="muted">' + t("Secretly set a timer on this phone. When it runs out, whoever is speaking drinks. Don\'t let others watch.") + "</p>" +
       '  <div class="chip-row" id="ha-sec">' + chips + "</div>" +
       '  <label class="ha-custom">' + t("Custom time (sec.):") +
       '    <input id="ha-sec-in" class="text-input" type="number" min="5" max="900" placeholder="' + t("e.g. 90") + '" /></label>' +
