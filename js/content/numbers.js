@@ -69,6 +69,8 @@
         { q: "How many member countries are in the G7?", a: 7 },
         { q: "Minimum age to become US President?", a: 35 },
         { q: "Standard VAT rate in Germany, in percent?", a: 19 },
+        { q: "How many different euro banknote denominations are there?", a: 7 },
+        { q: "How many member states does the UN have?", a: 193 },
       ],
     },
     sport: {
@@ -80,6 +82,8 @@
         { q: "How many tennis Grand Slam tournaments per year?", a: 4 },
         { q: "Minutes in a football match, excluding stoppage?", a: 90 },
         { q: "Maximum score in a game of ten-pin bowling?", a: 300 },
+        { q: "How many holes in a full round of golf?", a: 18 },
+        { q: "How many points is a touchdown, without the extra kick?", a: 6 },
       ],
     },
     chronicle: {
@@ -91,6 +95,22 @@
         { q: "What year did the French Revolution begin?", a: 1789 },
         { q: "How many US presidents have there been? (through 2024)", a: 46 },
         { q: "What year did the western Roman Empire fall?", a: 476 },
+        { q: "What year did World War 2 end?", a: 1945 },
+        { q: "How many years did the Berlin Wall stand?", a: 28 },
+      ],
+    },
+    party: {
+      label: "🍺 Party",
+      questions: [
+        { q: "Legal blood-alcohol limit for driving in Germany, in per mille?", a: 0.5 },
+        { q: "How many litres of beer does the average German drink per year?", a: 88 },
+        { q: "How many million litres of beer were poured at Oktoberfest 2023 (roughly)?", a: 6.5 },
+        { q: "How many calories are in half a litre of beer (roughly)?", a: 210 },
+        { q: "How many bottles are in a German beer crate?", a: 20 },
+        { q: "How much alcohol is in Jägermeister, in percent?", a: 35 },
+        { q: "What year is the German Beer Purity Law from?", a: 1516 },
+        { q: "How many ingredients does the Beer Purity Law allow?", a: 4 },
+        { q: "How many 2 cl shots fit in a 0.7 litre bottle?", a: 35 },
       ],
     },
   };
@@ -151,6 +171,8 @@
         { q: "Wie viele Mitgliedsländer hat die G7?", a: 7 },
         { q: "Mindestalter, um US-Präsident zu werden?", a: 35 },
         { q: "Regulärer Mehrwertsteuersatz in Deutschland, in Prozent?", a: 19 },
+        { q: "Wie viele verschiedene Euro-Schein-Größen gibt es?", a: 7 },
+        { q: "Wie viele Mitgliedsstaaten hat die UNO?", a: 193 },
       ],
     },
     sport: {
@@ -162,6 +184,8 @@
         { q: "Wie viele Tennis-Grand-Slam-Turniere gibt es pro Jahr?", a: 4 },
         { q: "Minuten eines Fußballspiels ohne Nachspielzeit?", a: 90 },
         { q: "Höchstmögliche Punktzahl beim Bowling?", a: 300 },
+        { q: "Wie viele Löcher hat eine volle Runde Golf?", a: 18 },
+        { q: "Wie viele Punkte bringt ein Touchdown, ohne Zusatzkick?", a: 6 },
       ],
     },
     chronicle: {
@@ -173,6 +197,22 @@
         { q: "In welchem Jahr begann die Französische Revolution?", a: 1789 },
         { q: "Wie viele US-Präsidenten gab es bisher? (bis 2024)", a: 46 },
         { q: "In welchem Jahr fiel das Weströmische Reich?", a: 476 },
+        { q: "In welchem Jahr endete der Zweite Weltkrieg?", a: 1945 },
+        { q: "Wie viele Jahre stand die Berliner Mauer?", a: 28 },
+      ],
+    },
+    party: {
+      label: "🍺 Party",
+      questions: [
+        { q: "Promillegrenze am Steuer in Deutschland?", a: 0.5 },
+        { q: "Wie viele Liter Bier trinkt ein Deutscher im Schnitt pro Jahr?", a: 88 },
+        { q: "Wie viele Millionen Liter Bier wurden auf dem Oktoberfest 2023 ausgeschenkt (ungefähr)?", a: 6.5 },
+        { q: "Wie viele Kalorien hat ein halber Liter Bier (ungefähr)?", a: 210 },
+        { q: "Wie viele Flaschen sind in einem Kasten Bier?", a: 20 },
+        { q: "Wie viel Prozent Alkohol hat Jägermeister?", a: 35 },
+        { q: "Aus welchem Jahr stammt das deutsche Reinheitsgebot?", a: 1516 },
+        { q: "Wie viele Zutaten erlaubt das Reinheitsgebot?", a: 4 },
+        { q: "Wie viele 2-cl-Shots passen in eine 0,7-Liter-Flasche?", a: 35 },
       ],
     },
   };
