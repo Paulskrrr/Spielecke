@@ -256,6 +256,7 @@
     "Clear 🧹": "Löschen 🧹",
     "Done ✅": "Fertig ✅",
     "What is this?": "Was ist das?",
+    "👆 Tap the drawing to replay it": "👆 Tipp aufs Bild, um den Zeitraffer nochmal zu sehen",
     "Your guess…": "Dein Tipp…",
     "Lock guess 🔒": "Tipp abschicken 🔒",
     "⚠ Needs at least {n} players. Add them from the header (👥).": "⚠ Mindestens {n} Spieler nötig. Oben (👥) hinzufügen.",
