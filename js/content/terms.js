@@ -77,6 +77,28 @@
         ],
       },
 
+      minecraft: {
+        label: "⛏️ Minecraft",
+        // Proper nouns — identical to de. Mobs, items, blocks & places, all of
+        // them describable, drawable AND hint-able, so it fits every game.
+        terms: [
+          // Mobs
+          "Creeper", "Enderman", "Zombie", "Skeleton", "Spider", "Ghast", "Blaze",
+          "Wither", "Ender Dragon", "Warden", "Piglin", "Villager", "Iron Golem", "Slime",
+          // Items & tools
+          "Diamond Pickaxe", "Netherite", "Redstone", "TNT", "Obsidian", "Elytra",
+          "Totem of Undying", "Enchanting Table", "Beacon", "Shulker Box", "Ender Pearl",
+          "Golden Apple", "Trident",
+          // Blocks
+          "Grass Block", "Cobblestone", "Bedrock", "Crafting Table",
+          // Places & concepts
+          "Nether Portal", "The Nether", "The End", "Village", "Ancient City",
+          "Woodland Mansion", "Creative Mode", "Speedrun",
+          // Faces
+          "Steve", "Alex", "Herobrine", "Notch",
+        ],
+      },
+
       general: {
         label: "🌍 General",
         terms: [
@@ -380,6 +402,27 @@
           "Agent 47",
           // Clash of Clans
           "Electro Dragon", "Town Hall",
+        ],
+      },
+
+      minecraft: {
+        label: "⛏️ Minecraft",
+        // Proper nouns — identical to en.
+        terms: [
+          // Mobs
+          "Creeper", "Enderman", "Zombie", "Skeleton", "Spider", "Ghast", "Blaze",
+          "Wither", "Ender Dragon", "Warden", "Piglin", "Villager", "Iron Golem", "Slime",
+          // Items & tools
+          "Diamond Pickaxe", "Netherite", "Redstone", "TNT", "Obsidian", "Elytra",
+          "Totem of Undying", "Enchanting Table", "Beacon", "Shulker Box", "Ender Pearl",
+          "Golden Apple", "Trident",
+          // Blocks
+          "Grass Block", "Cobblestone", "Bedrock", "Crafting Table",
+          // Places & concepts
+          "Nether Portal", "The Nether", "The End", "Village", "Ancient City",
+          "Woodland Mansion", "Creative Mode", "Speedrun",
+          // Faces
+          "Steve", "Alex", "Herobrine", "Notch",
         ],
       },
 

@@ -134,6 +134,21 @@
           { left: "Star-Wars-Frau: absolut nicht", right: "Star-Wars-Frau: brandheiß" },
         ],
       },
+      minecraft: {
+        label: "⛏️ Minecraft",
+        pairs: [
+          { left: "Harmloser Mob", right: "Albtraum-Mob" },
+          { left: "Nutzloses Item", right: "Game-Changer" },
+          { left: "Anfänger-Move", right: "Pro-Gamer-Move" },
+          { left: "Peinlicher Tod", right: "Ehrenvoller Tod" },
+          { left: "Reine Zeitverschwendung", right: "Jeden Klick wert" },
+          { left: "Dirt House", right: "Architektonisches Meisterwerk" },
+          { left: "Kriegt jeder Anfänger hin", right: "Endgame-Flex" },
+          { left: "Völlig sicher", right: "Lebensgefährlich" },
+          { left: "Nur zur Deko", right: "Überlebenswichtig" },
+          { left: "Langweiliges Biom", right: "Bestes Spawn-Biom" },
+        ],
+      },
     },
     en: {
       general: {
@@ -254,6 +269,21 @@
           { left: "Barely Force-sensitive", right: "Master of the Force" },
           { left: "Butchered sequel mess", right: "Perfectly told" },
           { left: "Star Wars woman: absolutely not", right: "Star Wars woman: red hot" },
+        ],
+      },
+      minecraft: {
+        label: "⛏️ Minecraft",
+        pairs: [
+          { left: "Harmless mob", right: "Nightmare mob" },
+          { left: "Useless item", right: "Game-changer" },
+          { left: "Noob move", right: "Pro-gamer move" },
+          { left: "Embarrassing death", right: "Honourable death" },
+          { left: "Pure waste of time", right: "Worth every click" },
+          { left: "Dirt house", right: "Architectural masterpiece" },
+          { left: "Any noob can do it", right: "Endgame flex" },
+          { left: "Totally safe", right: "Deadly" },
+          { left: "Just for decoration", right: "Essential for survival" },
+          { left: "Boring biome", right: "Best biome to spawn in" },
         ],
       },
     },
