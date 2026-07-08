@@ -2576,6 +2576,15 @@ body::before {
 .zz-maze-grid {
   display: grid; grid-template-columns: repeat(6, 1fr); gap: 3px; width: 150px;
   padding: 6px; background: #0d0f12; border-radius: 8px; box-shadow: inset 0 0 0 2px rgba(0,0,0,0.45);
+  position: relative;
+}
+/* Keyed corner: one corner is marked so the operator and the manual diagrams can
+   always agree on "up", however the bomb has been turned. Same mark sits at the
+   top-left of every maze diagram (mazeSvg). Sits on the frame, clear of cells. */
+.zz-maze-grid::before {
+  content: ""; position: absolute; top: 0; left: 0; width: 13px; height: 13px;
+  background: #f4bd3f; clip-path: polygon(0 0, 100% 0, 0 100%);
+  border-top-left-radius: 8px; z-index: 2; pointer-events: none;
 }
 .zz-mshake { animation: zz-shake 0.4s; }
 .zz-mcell { aspect-ratio: 1; background: #2a2d33; border-radius: 2px; position: relative; box-shadow: inset 0 0 0 1px rgba(0,0,0,0.4); }

@@ -894,7 +894,8 @@
     ];
   }
   function manualArming() {
-    return "<p class='zz-fine'>" + t("The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.") + "</p>" +
+    return "<p>" + t("The detonator's safety only lifts for a single clock-tick each cycle — a deliberately narrow window, so a panicking operator can't just mash the button. Bleed the charge on the Dials, authorise it on the Keypad, then release on the tick.") + "</p>" +
+      "<p class='zz-fine'>" + t("The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("Work out the ARMING DIGIT: count the LIT indicators, ADD the number of batteries, and keep only the last digit.") + "</li>" +
       "<li>" + t("Have the operator hold the arming control and RELEASE it the moment the timer's last digit equals the arming digit.") + "</li>" +
@@ -911,16 +912,20 @@
       if ((v & MAZE_BIT.down) && r < MAZE_N - 1) seg += '<line x1="' + (c * S) + '" y1="' + ((r + 1) * S) + '" x2="' + ((c + 1) * S) + '" y2="' + ((r + 1) * S) + '"/>';
     }
     var rings = def.markers.map(function (m) { return '<circle cx="' + (m[1] * S + S / 2) + '" cy="' + (m[0] * S + S / 2) + '" r="3.1" fill="none" stroke="#c0392b" stroke-width="1.3"/>'; }).join("");
-    return '<svg class="zz-mzimg" viewBox="-1 -1 ' + (MAZE_N * S + 2) + " " + (MAZE_N * S + 2) + '" aria-hidden="true">' +
+    // Keyed corner in the top-left margin (outside the grid), matching the bomb's
+    // amber corner mark so the operator can orient the device to the diagram.
+    var key = '<polygon points="-5,-5 3,-5 -5,3" fill="#f4bd3f" stroke="#241b4d" stroke-width="1"/>';
+    return '<svg class="zz-mzimg" viewBox="-6 -6 ' + (MAZE_N * S + 8) + " " + (MAZE_N * S + 8) + '" aria-hidden="true">' +
       '<rect x="0" y="0" width="' + (MAZE_N * S) + '" height="' + (MAZE_N * S) + '" fill="#f3ecd8" stroke="#241b4d" stroke-width="1.6"/>' +
-      '<g stroke="#241b4d" stroke-width="1.4" stroke-linecap="round">' + seg + "</g>" + rings + "</svg>";
+      '<g stroke="#241b4d" stroke-width="1.4" stroke-linecap="round">' + seg + "</g>" + rings + key + "</svg>";
   }
   function manualMaze() {
     var pics = MAZES.map(function (m) { return '<div class="zz-mzcard">' + mazeSvg(m) + "<span>" + t("Maze") + " " + m.id + "</span></div>"; }).join("");
     return "<p class='zz-fine'>" + t("The grid is etched with channels the operator's probe must follow; the channel walls are not visible on the operator's side.") + "</p>" +
       "<p>" + t("One face is a 6×6 grid with a lit cell that moves, a red target cell and two ringed marker cells.") + "</p>" +
       "<ul class='zz-rules'>" +
-      "<li>" + t("Have the operator read out the two ringed marker cells. Find the diagram below with rings in the SAME two cells — that is the active maze.") + "</li>" +
+      "<li>" + t("One corner of the grid is clipped — a factory alignment key. Have the operator turn the bomb until that amber corner sits TOP-LEFT, so their grid matches the diagrams below (which carry the same mark).") + "</li>" +
+      "<li>" + t("Now have them read out the two ringed cells and find the diagram with rings in the SAME two cells — that is the active maze.") + "</li>" +
       "<li>" + t("Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.") + "</li>" +
       "<li class='zz-warn'>" + t("Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.") + "</li>" +
       "</ul>" +
@@ -987,7 +992,7 @@
   }
   function manualOrder() {
     var rows = Object.keys(FIRING_SIGILS).map(function (s) { return "<tr><td class='zz-sig'>" + s + "</td><td>" + t(stageLabel(FIRING_SIGILS[s])) + "</td></tr>"; }).join("");
-    return "<p class='zz-fine'>" + t("The firing sequence is fixed at manufacture and cannot be reordered in the field.") + "</p>" +
+    return "<p>" + t("The four modules are interlocked in series at the factory: each stage physically unlocks the next, so the device cannot be undone by luck or in the wrong order. Force a stage out of sequence and the interlock jams — that is a strike. The order is set at manufacture and cannot be changed in the field.") + "</p>" +
       "<p>" + t("One face shows a row of symbols. Each symbol maps in the table below to a module; read them left to right for the order.") + "</p>" +
       "<table class='zz-table'><thead><tr><th>" + t("Sigil") + "</th><th>" + t("Job") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
       "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
@@ -996,7 +1001,8 @@
   function manualDials() {
     var cells = "";
     for (var i = 0; i < 26; i++) { var L = String.fromCharCode(65 + i); cells += "<span class='zz-bankcell'><b>" + L + "</b>" + LETTER_BANK[L] + "</span>"; }
-    return "<p class='zz-fine'>" + t("Each dial is a single-digit rotary encoder (0–9) with a detent at every position.") + "</p>" +
+    return "<p>" + t("The Dials do not fire anything — they only route the device's charge into a channel. Firing is centralised at the arming control, since a module that could arm itself would be a gift to anyone with a screwdriver.") + "</p>" +
+      "<p class='zz-fine'>" + t("Each dial is a single-digit rotary encoder (0–9) with a detent at every position.") + "</p>" +
       "<p>" + t("Two dials, A and B (0–9 each).") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("<b>Dial A</b> = the serial's LAST TWO digits added together, then keep only the last digit (e.g. 7+8=15 → 5).") + "</li>" +
@@ -1009,12 +1015,12 @@
   // The wire-cutting reference (the only wires chapter). Complete rules,
   // including the leftmost tie-break, so it stands on its own.
   function manualWiresRuined() {
-    return "<p>" + t("Five wires, each with a colour and a printed number. Which one to cut is decided by a value called the CHANNEL.") + "</p>" +
-      "<p>" + t("The CHANNEL comes from the Dials — it's simply <b>Dial A + Dial B</b>. Set both dials to their targets first (see Dials), then add them: dials on 4 and 5 make a channel of 9.") + "</p>" +
+    return "<p>" + t("Every wire is live. Sever one whose charge has nowhere to go and the device fires — a conductor is only safe to cut once you have opened it a path. That path is the CHANNEL, and you steer it with the Dials.") + "</p>" +
+      "<p>" + t("The CHANNEL is where the Dials send the charge: <b>Dial A + Dial B</b>. Set both dials to their targets first (see Dials), then add them — dials on 4 and 5 open channel 9. The wire carrying that channel is now the safe one.") + "</p>" +
       "<ol class='zz-steps'>" +
-      "<li>" + t("Cut the wire whose printed number equals the channel. If several match, cut the leftmost.") + "</li>" +
-      "<li>" + t("If no wire's number matches the channel, switch to colour: cut the highest-ranked colour on the Decoder's priority list (1 = highest). Ties go to the leftmost.") + "</li>" +
-      "<li>" + t("Check the cut against the firing order before you sever the wire (see Firing order).") + "</li>" +
+      "<li>" + t("Cut the wire whose printed number equals the channel. If several carry it, only the leftmost is truly discharged — cut that one.") + "</li>" +
+      "<li>" + t("If no wire's number matches the channel, the charge overflows onto the colour bus: cut the highest-ranked colour on the Decoder's priority list (1 = highest). Ties go to the leftmost.") + "</li>" +
+      "<li>" + t("Check the firing order before you cut — a wire severed out of sequence jams the interlock (a strike). See Firing order.") + "</li>" +
       "</ol>" +
       "<p class='zz-fine'>" + t("The cut reads the dials live, so leave them on their targets even when Wires comes first in the order.") + "</p>";
   }
