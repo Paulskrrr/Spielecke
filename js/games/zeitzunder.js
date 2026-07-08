@@ -880,10 +880,10 @@
       { icon: "📜", title: "Annex III — Data Protection (GDPR)", spam: true, postit: true, html: manualGdpr() },
       { icon: "🎛️", title: "Ch. 3 — Dials", html: manualDials() },
       { icon: "🧴", title: "Annex IV — Maintenance & Care", spam: true, html: manualMaintenance() },
-      { icon: "🔌", title: "Ch. 6 — Wires", html: manualWiresRuined() },
-      { icon: "🔡", title: "Ch. 4 — Keypad", html: manualKeypad() },
+      { icon: "🔌", title: "Ch. 4 — Wires", html: manualWiresRuined() },
+      { icon: "🔡", title: "Ch. 5 — Keypad", html: manualKeypad() },
       { icon: "🧾", title: "Annex V — Warranty & Liability", spam: true, html: manualWarranty() },
-      { icon: "🔎", title: "Ch. 5 — Reading the bomb", html: manualRef() },
+      { icon: "🔎", title: "Ch. 6 — Reading the bomb", html: manualRef() },
       { icon: "🛠️", title: "Annex VI — Troubleshooting", spam: true, html: manualTroubleshoot() },
       { icon: "🧭", title: "Ch. 7 — Wiring Maze", html: manualMaze() },
       { icon: "🔴", title: "Ch. 8 — Arming the detonator", html: manualArming() },
@@ -921,7 +921,7 @@
   }
   function manualMaze() {
     var pics = MAZES.map(function (m) { return '<div class="zz-mzcard">' + mazeSvg(m) + "<span>" + t("Maze") + " " + m.id + "</span></div>"; }).join("");
-    return "<p class='zz-fine'>" + t("The grid is etched with channels the operator's probe must follow; the channel walls are not visible on the operator's side.") + "</p>" +
+    return "<p class='zz-fine'>" + t("The grid is etched with guide grooves the probe must follow; their walls are invisible from outside the casing.") + "</p>" +
       "<p>" + t("One face is a 6×6 grid with a lit cell that moves, a red target cell and two ringed marker cells.") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("One corner of the grid is clipped — a factory alignment key. Have the operator turn the bomb until that amber corner sits TOP-LEFT, so their grid matches the diagrams below (which carry the same mark).") + "</li>" +
@@ -995,8 +995,7 @@
     return "<p>" + t("The four modules are interlocked in series at the factory: each stage physically unlocks the next, so the device cannot be undone by luck or in the wrong order. Force a stage out of sequence and the interlock jams — that is a strike. The order is set at manufacture and cannot be changed in the field.") + "</p>" +
       "<p>" + t("One face shows a row of symbols. Each symbol maps in the table below to a module; read them left to right for the order.") + "</p>" +
       "<table class='zz-table'><thead><tr><th>" + t("Sigil") + "</th><th>" + t("Job") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
-      "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
-      "<p class='zz-fine'>" + t("Note: committing a stage out of sequence is logged as a fault and cannot be undone.") + "</p>";
+      "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>";
   }
   function manualDials() {
     var cells = "";
@@ -1127,7 +1126,7 @@
   }
   function manualFaq() {
     var data = [
-      ["Which wire do I cut?", "The correct one. See Chapter 6, if there is time."],
+      ["Which wire do I cut?", "The correct one. See Chapter 4, if there is time."],
       ["How much time do I have?", "Less than is being spent reading this page."],
       ["Is it supposed to make that noise?", "Yes. Right up until it isn't."],
       ["Can I undo a mistake?", "You may learn from it, briefly."],
