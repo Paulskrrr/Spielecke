@@ -36,15 +36,20 @@
   // its speechSynthesis path is road-tested with the group.
   //
   // COLOUR: three anchors are fixed by preference — Hochadel = yellow, Doodle
-  // Drama = blue, Imposter = red. The rest sweep the full 9-colour palette
-  // THREE times: each run of 9 tiles shows every colour exactly once, so no hue
-  // repeats before the whole palette has appeared (no "random repeat" feeling).
-  // The first tile carries no colour requirement. Within that, no two
-  // neighbours (distance
-  // 1–3, i.e. horizontal + the 2/3-column verticals) share a hue OR a close
-  // family (teal/green, blue/indigo, red/pink, yellow/orange). Re-solve with
-  // scratch: keep each block of 9 a full permutation and you can't go wrong.
+  // Drama = blue, Imposter = red. The rest sweep the full 9-colour palette so no
+  // hue repeats before the whole palette has appeared (no "random repeat"
+  // feeling). The first tile carries no colour requirement. Within that, no two
+  // neighbours (distance 1–3, i.e. horizontal + the 2/3-column verticals) share
+  // a hue OR a close family (teal/green, blue/indigo, red/pink, yellow/orange).
+  // Re-solve with scratch: keep each block of 9 a full permutation and you can't
+  // go wrong. With 26 tiles the blocks run 9/9/8, so the final block shows 8 of
+  // the 9 colours (still no repeat inside it).
   // Colours available: yellow blue red teal purple orange green indigo pink.
+  //
+  // NOT on the shelf: Geheimauftrag. It's an all-evening meta-layer you deal
+  // once at the start of a real games night, not something you dip into for a
+  // quick round — so it lives as a discreet 🕶️ button on the Players screen
+  // (see roster.js) instead of taking a tile here.
   var LAYOUT = [
     // — quick social icebreakers —   (block 1: full palette sweep)
     { id: "nhie",          color: "yellow" },
@@ -57,20 +62,18 @@
     { id: "imposter",      color: "red"    },  // anchor
     { id: "wavelength",    color: "green"  },
     { id: "mindmeld",      color: "indigo" },
-    // — (block 2: full palette sweep) —
-    { id: "geheimauftrag", color: "yellow" },
-    { id: "liars",         color: "red"    },
-    { id: "rankit",        color: "teal"   },
-    // — simple card & luck drinking games —
-    { id: "maxchen",       color: "blue"   },
+    // — simple card & luck drinking games —   (block 2: full palette sweep)
+    { id: "liars",         color: "yellow" },
+    { id: "rankit",        color: "red"    },
+    { id: "maxchen",       color: "teal"   },
     { id: "pferderennen",  color: "purple" },
-    { id: "chooser",       color: "orange" },
-    { id: "fuckdealer",    color: "green"  },
-    { id: "busfahrt",      color: "indigo" },
+    { id: "chooser",       color: "blue"   },
+    { id: "fuckdealer",    color: "orange" },
+    { id: "busfahrt",      color: "green"  },
     { id: "wettbuero",     color: "pink"   },
-    // — fast-twitch reflex —   (block 3: full palette sweep)
-    { id: "reaction",      color: "purple" },
-    { id: "ballon",        color: "teal"   },
+    // — fast-twitch reflex —
+    { id: "reaction",      color: "indigo" },
+    { id: "ballon",        color: "purple" },  // block 3 starts here: 8-colour sweep
     // — longer sit-down & team games —
     { id: "activity",      color: "orange" },
     { id: "quiz",          color: "red"    },

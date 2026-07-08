@@ -362,6 +362,33 @@ body::before {
 
 /* ----- Roster ----------------------------------------------------------- */
 
+/* Title row carries a discreet square 🕶️ launcher for Geheimauftrag (the one
+   game that isn't on the shelf — see registry.js / roster.js). Kept muted so it
+   reads as a quiet extra, not a primary action. */
+.roster-head { display: flex; align-items: center; gap: 10px; }
+.roster-head .screen-title { flex: 1; margin-bottom: 0; }
+.secret-btn {
+  flex: 0 0 auto;
+  width: var(--tap);
+  height: var(--tap);
+  aspect-ratio: 1 / 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: var(--ink);
+  background: var(--paper-2);
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  cursor: pointer;
+  opacity: 0.65;
+  transition: transform 0.3s var(--spring), opacity 0.2s ease;
+}
+.secret-btn:hover { opacity: 1; }
+.secret-btn:active { transform: translateY(2px) scale(0.94); transition-duration: 0.05s; }
+.secret-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; opacity: 1; }
+
 .roster-add { display: flex; gap: 10px; margin: 14px 0; }
 .text-input {
   flex: 1;

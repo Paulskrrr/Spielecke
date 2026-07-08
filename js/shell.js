@@ -130,9 +130,18 @@
       },
       goHome: showShelf,
       refreshHeader: renderHeader,
+      launchGame: mountGameById,
     });
     renderHeader();
     scrollTop();
+  }
+
+  // Launch a game that isn't on the shelf (e.g. Geheimauftrag, which lives as a
+  // button on the Players screen). The module registers itself on S.Games even
+  // though it carries no LAYOUT row, so we mount it straight from there.
+  function mountGameById(id) {
+    var module = S.Games && S.Games[id];
+    if (module && module.meta) mountGame({ id: module.meta.id, module: module });
   }
 
   function mountGame(meta) {
