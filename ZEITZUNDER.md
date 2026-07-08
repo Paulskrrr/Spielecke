@@ -101,7 +101,8 @@ Dials, the Firing order **and** the Keypad, so the defuser keeps having to read 
 the "ask → relay the serial → read back the step" loop the room runs on. The wire-cut reads the
 dials **live**, so the dials must be set correctly even when Wires comes first.
 
-**Fail:** 3 strikes (wrong action or out-of-order; each also burns 15s) or the clock → 💥.
+**Fail:** 3 strikes (wrong action or out-of-order) or the clock → 💥. Strikes cost no time — the
+running clock is pressure enough, and a time penalty on top just punished the losing team twice.
 **Win:** all three lamps green → defused. Fuse length is the difficulty — two tiers only,
 **Normal 10:00** (the default) and **Lethal 5:00**. Tuned from playtesting: even a solo player
 holding both screens barely cleared the first module inside the old ~6 min, so a separated team

@@ -600,7 +600,6 @@
     if (kind !== "seq") toast(t("✕ Wrong — strike!"));
     strikeSound();
     if (strikes >= MAX_STRIKES) { boom(); return; }
-    timeLeft = Math.max(1, timeLeft - 15); updateTimer();
   }
   function toast(msg) {
     var old = els.querySelector(".zz-toast"); if (old) old.parentNode.removeChild(old);
