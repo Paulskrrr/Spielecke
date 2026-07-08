@@ -25,6 +25,7 @@
       '            aria-label="' + t("Geheimauftrag") + '" title="' + t("Geheimauftrag") + '">🕶️</button>' +
       "  </div>" +
       '  <p class="muted">' + t("Entered once, used by every game.") + "</p>" +
+      '  <p class="muted small secret-hint">' + t("🕶️ Geheimauftrag: deal each player a secret mission that runs quietly all evening — tap the shades to start.") + "</p>" +
       '  <form id="roster-add" class="roster-add" autocomplete="off">' +
       '    <input id="roster-input" class="text-input" type="text" ' +
       '           inputmode="text" placeholder="' + t("Add a player…") + '" ' +

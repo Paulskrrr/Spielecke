@@ -27,6 +27,7 @@
     // ── Roster ─────────────────────────────────────────────────────────────
     "Players": "Spieler",
     "Entered once, used by every game.": "Einmal eingeben, für alle Spiele.",
+    "🕶️ Geheimauftrag: deal each player a secret mission that runs quietly all evening — tap the shades to start.": "🕶️ Geheimauftrag: verteilt an jeden eine geheime Mission, die den ganzen Abend nebenbei läuft — tipp die Sonnenbrille zum Starten.",
     "Add a player…": "Spieler hinzufügen…",
     "Add": "Hinzufügen",
     "Move up": "Nach oben",

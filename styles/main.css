@@ -382,12 +382,13 @@ body::before {
   border: 3px solid var(--ink);
   border-radius: 14px;
   cursor: pointer;
-  opacity: 0.65;
-  transition: transform 0.3s var(--spring), opacity 0.2s ease;
+  box-shadow: var(--pop);
+  transition: transform 0.3s var(--spring);
 }
-.secret-btn:hover { opacity: 1; }
 .secret-btn:active { transform: translateY(2px) scale(0.94); transition-duration: 0.05s; }
-.secret-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; opacity: 1; }
+.secret-btn:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+/* One-line primer on what the 🕶️ button does, tucked under the intro. */
+.secret-hint { margin-top: 2px; }
 
 .roster-add { display: flex; gap: 10px; margin: 14px 0; }
 .text-input {
