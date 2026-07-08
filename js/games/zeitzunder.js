@@ -239,6 +239,12 @@
   var entry = [], solved = {}, solvedCount = 0, strikes = 0, timeLeft = 0;
   var manualPages = [], manualIdx = 0;
   var timer = null, audio = null, keyHandler = null, busy = false, justDragged = false;
+  // Cube rotation is serialised: only one 90° step animates at a time, and the
+  // most recent input during that step is queued (1-deep). Interrupting a
+  // matrix3d transition mid-flight makes the browser interpolate along a
+  // nonsensical axis (the cube looks like its faces twist apart), so we never
+  // reassign the transform while one is still animating.
+  var rotAnimating = false, rotQueued = null, rotTimer = null;
 
   var module = {
     meta: {
@@ -255,7 +261,7 @@
       role = null; renderRolePicker();
     },
     unmount: function () {
-      stopTimer(); stopFx(); teardownAudio(); detachKeys();
+      stopTimer(); stopFx(); resetRotation(); teardownAudio(); detachKeys();
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; bomb = null; role = null;
       solved = {}; solvedCount = 0; strikes = 0; entry = []; busy = false; exploding = false; M = ID;
@@ -307,7 +313,7 @@
     assignment = {}; SLOTS.forEach(function (s, i) { assignment[s] = faces[i]; });
     M = ID; activeFace = assignment.F;
     dials = { a: 0, b: 0 }; dialAngle = { a: 0, b: 0 }; entry = []; mazePos = [bomb.maze.sr, bomb.maze.sc]; solved = {}; solvedCount = 0; strikes = 0;
-    timeLeft = settings.seconds; busy = false;
+    timeLeft = settings.seconds; busy = false; resetRotation();
     renderBomb();
   }
 
@@ -544,7 +550,34 @@
     activeFace = assignment[fs];
     els.querySelectorAll(".zz-face").forEach(function (f) { f.classList.toggle("is-front", f.getAttribute("data-slot") === fs); });
   }
-  function rotate(rmat) { M = matMul(rmat, M); applyCube(true); clack(); }
+  // How long one cube step animates — read from the live CSS so it stays in
+  // sync (0 under prefers-reduced-motion, where steps are instant anyway).
+  function rotMs() {
+    var cube = els && els.querySelector("#zz-cube");
+    if (!cube) return 500;
+    var d = parseFloat(global.getComputedStyle(cube).transitionDuration);
+    return (isFinite(d) && d > 0) ? d * 1000 : 0;
+  }
+  function doRotate(rmat) {
+    M = matMul(rmat, M); applyCube(true); clack();
+    rotAnimating = true;
+    if (rotTimer) global.clearTimeout(rotTimer);
+    rotTimer = global.setTimeout(function () {
+      rotTimer = null; rotAnimating = false;
+      if (rotQueued) { var q = rotQueued; rotQueued = null; doRotate(q); }
+    }, rotMs() + 30);
+  }
+  // Public entry: apply now if idle, else remember the latest step for when the
+  // current one lands. Spamming becomes a clean step-by-step tumble, not a
+  // transition-interrupting scramble.
+  function rotate(rmat) {
+    if (rotAnimating) { rotQueued = rmat; return; }
+    doRotate(rmat);
+  }
+  function resetRotation() {
+    if (rotTimer) { global.clearTimeout(rotTimer); rotTimer = null; }
+    rotAnimating = false; rotQueued = null;
+  }
 
   function attachKeys() {
     detachKeys();
