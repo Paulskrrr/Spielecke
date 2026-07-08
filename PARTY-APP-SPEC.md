@@ -44,8 +44,8 @@ next.
 - ✅ **Ballon** — push-your-luck pump-or-pass, hidden burst point scaled to the table *(drinking-capable)*
 - ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
 - ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
-- ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next *(drinking-capable)*
-- ✅ **Simon Says** (DE: *Der Chef sagt*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
+- ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next; dealt from a 🕶️ button on the Players screen, not a shelf tile *(drinking-capable)*
+- ✅ **Simon Says** (DE: *Kommando*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
 - ✅ **Geschmacklos** — a Cards Against Humanity mode: host shows the prompt, every phone deals itself a disjoint hand off one shared table code *(drinking-capable)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
@@ -115,16 +115,18 @@ Players screen.
   on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
   cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
-  each game has a **fixed colour** (Hochadel yellow, Doodle Drama blue, …) set in the registry
-  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The 27
-  colours are laid out as **three consecutive sweeps of the full 9-colour palette** — every run
-  of 9 tiles shows each hue exactly once — so no colour repeats before the whole palette has
-  appeared (yellow leads from tile 1), and within that no two neighbours (distance 1–3, i.e.
+  each game has a **fixed colour** — three pinned by preference (Hochadel yellow, Doodle Drama
+  blue, Imposter red) — set in the registry
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The **26 shelf tiles**
+  (Geheimauftrag isn't on the shelf — see §3.25) sweep the full 9-colour palette in blocks of
+  **9 / 9 / 8**, each block showing every hue at most once, so no colour repeats before the
+  whole palette has appeared; within that no two neighbours (distance 1–3, i.e.
   horizontal + the 2/3-column verticals) share a hue *or a close family* (teal/green,
-  indigo/purple, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
+  blue/indigo, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
   same spot every visit. It stays **one continuous grid — no section headers** — but games are
-  grouped by vibe so related ones cluster as you scroll (quick social → party guessing →
-  longer sit-down & team → simple card/luck drinking games → reflex → co-op). The home bar is a
+  grouped by vibe, with the boozier/active games first so a drinking night finds them up top
+  (quick social → party guessing → simple card/luck drinking → reflex → longer sit-down &
+  team → co-op); **BETA games sink to the bottom** (Kommando is the last tile). The home bar is a
   solid-purple app-bar lifted with a soft drop shadow. All of the above honours
   `prefers-reduced-motion`.
 - **Intro splash:** on **every** open the logo shows in a game-tile-style card on a yellow
@@ -145,7 +147,9 @@ game module implements.
    tagline, player-count hint, drinking-game marker). Tap a card → that game.
 2. **Players / Roster (app-level, shared by all games)** — add / remove / reorder (up/down
    buttons) players by name. Persists to localStorage, reused by every game. Soft
-   minimum-count warning (warn, don't block). The single most important shared piece.
+   minimum-count warning (warn, don't block). The single most important shared piece. Also
+   hosts the DE/EN language toggle and a discreet 🕶️ launcher for **Geheimauftrag** (§3.25),
+   the one game that isn't on the shelf.
 3. **Game screens** — owned by each game module (see contract).
 4. **Settings** — not built yet (language toggle, reset stats). Stub later.
 
@@ -284,7 +288,7 @@ Two shapes of content, by what the game needs:
     at deal time (`geheimauftrag.js`, `{ solo:[...], coop:[...] }`) — no category pools; every
     mission is bound to a specific other player, never a prop or a difficulty tag.
   - Simon Says → *bare imperative commands* (`simon.js`, `{ label, commands:[...] }`); the
-    authority prefix ("Simon says" / German "Der Chef sagt") is added at runtime, not stored.
+    authority prefix ("Simon says" / German "Kommando") is added at runtime, not stored.
   - Geschmacklos → *prompts + answers*, one **fixed set, no category pools** (`geschmacklos.js`,
     `{ prompts:[...], answers:[...] }`) — a single shared deck keeps the seeded-deal math in
     §0 simple (every phone shuffles the same list).
@@ -398,6 +402,11 @@ the whole chain at the end.
 - **Draw timer:** each draw step is capped at **60s** (counts down from the moment the draw
   screen opens, turns red under 10s); at zero the drawing auto-submits. Cleared on every
   screen change / unmount.
+- **Timelapse reveal:** every stroke — and each *Clear* — is recorded as a compact op list
+  alongside the final PNG, so when a drawing is shown (to the next guesser, and again on each
+  drawing beat of the chain reveal) a canvas **replays it over ~5s**, ending on the finished
+  picture. Cleared false starts replay too — that's half the drama. Tap the drawing to replay;
+  falls back to the still PNG when there's no recording or `prefers-reduced-motion` is set.
 - **Config:** word pool.
 - **Outcome:** none — reveal the carnage for laughs.
 
@@ -603,11 +612,13 @@ count; the next team takes the phone.
 
 ### 3.25 Geheimauftrag 🕶️ (`geheimauftrag`, 4+) — drinking-capable
 
-A meta-layer, not a stand-alone round: dealt once, then it runs quietly **alongside**
-whatever else you play that evening. Every mission is bound to a specific other player via a
-`{target}` token (never a prop, never impossible) — "Bring **{target}** to say...", "Toast
-three times with **{target}**...". Re-open the tile any time for a private "peek" or to cash a
-mission in.
+A meta-layer, not a stand-alone round — so it **isn't on the shelf**. You deal it from a
+discreet 🕶️ button on the **Players screen** (with a one-line primer next to it); it then runs
+quietly **alongside** whatever else you play that evening. Every mission is bound to a specific
+other player via a `{target}` token (never a prop, never impossible) — "Bring **{target}** to
+say...", "Toast three times with **{target}**...". Re-open it any time for a private "peek" or
+to cash a mission in. The mission pool is deliberately hand-curated (quality over quantity)
+rather than padded out.
 
 - **No "caught" flow (by design):** there is deliberately no accuse/bust path. At the table it
   collapsed into everyone denying every accusation ("you only say that because it's *your*
@@ -626,12 +637,12 @@ mission in.
 
 ### 3.26 Simon Says 🗣️ (`simon`, 3+, beta) — drinking-capable
 
-*German name: "Der Chef sagt" — the English "Simon says" reads as a translation in German, so
-the DE build uses a native command-giver; the game id stays `simon`.*
+*German name: "Kommando" — the English "Simon says" has no natural German equivalent, so the
+DE build uses a native command-giver; the game id stays `simon`.*
 
 Voice-driven, not screen-driven. The phone is the announcer: it **reads commands aloud**
 (Web Speech `speechSynthesis`, falling back to a big on-screen phrase + beep if unsupported),
-randomly prefixing the authority phrase ("Simon says:" / "Der Chef sagt:") — obey only the
+randomly prefixing the authority phrase ("Simon says:" / "Kommando:") — obey only the
 prefixed ones. The calling cadence **accelerates** every command, and the built-up speed
 **carries across knockouts and pauses** — only a genuinely new round restarts at the slow
 cadence, so the last two players are getting rapid-fire calls. The app can't see who reacted
