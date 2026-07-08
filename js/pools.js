@@ -61,13 +61,34 @@
   }
   function save(store, selected) { store.set("pools", selected); }
 
-  // The chip row: a Mixed/All chip first, then one toggle per pool.
+  // The chip row: a Mixed/All chip first, then one toggle per pool. Pools that
+  // share a `group` string collapse into ONE expandable group chip (a header
+  // with a ▾ arrow) whose members live behind the fold — keeps near-duplicate
+  // pairs (e.g. "Star Wars – Easy/Hard") from cluttering the row. The group is
+  // rendered at the position of its first member; the rest fold in.
   function chipsHtml(available, t) {
     var label = typeof t === "function" ? t("🎯 Mixed") : "🎯 Mixed";
     var out = '<button class="chip" data-pool="' + ALL + '">' + label + "</button>";
-    out += Object.keys(available).map(function (k) {
-      return '<button class="chip" data-pool="' + attr(k) + '">' + esc(available[k].label || k) + "</button>";
-    }).join("");
+    var doneGroups = {};
+    Object.keys(available).forEach(function (k) {
+      var pool = available[k];
+      var grp = pool.group;
+      if (grp) {
+        if (doneGroups[grp]) return;
+        doneGroups[grp] = true;
+        var members = Object.keys(available).filter(function (mk) { return available[mk].group === grp; });
+        var body = members.map(function (mk) {
+          return '<button class="chip" data-pool="' + attr(mk) + '">' + esc(available[mk].label || mk) + "</button>";
+        }).join("");
+        out += '<div class="chip-group" data-group="' + attr(grp) + '">' +
+          '<button type="button" class="chip chip-group__head">' + esc(grp) +
+          ' <span class="chip-group__arrow" aria-hidden="true">▾</span></button>' +
+          '<div class="chip-group__body" hidden>' + body + "</div>" +
+          "</div>";
+      } else {
+        out += '<button class="chip" data-pool="' + attr(k) + '">' + esc(pool.label || k) + "</button>";
+      }
+    });
     return out;
   }
 
@@ -79,12 +100,23 @@
       var sel = get();
       var allOn = !sel.length;
       container.querySelectorAll(".chip").forEach(function (c) {
+        if (c.classList.contains("chip-group__head")) return; // a group header, not a pool
         var key = c.getAttribute("data-pool");
         var on = key === ALL ? allOn : (!allOn && sel.indexOf(key) !== -1);
         c.classList.toggle("chip--active", on);
       });
+      // A collapsed group still needs to show it has an active member, so mark
+      // the header when any of its pools is selected.
+      container.querySelectorAll(".chip-group").forEach(function (group) {
+        var head = group.querySelector(".chip-group__head");
+        var any = Array.prototype.some.call(group.querySelectorAll(".chip[data-pool]"), function (c) {
+          return !allOn && sel.indexOf(c.getAttribute("data-pool")) !== -1;
+        });
+        if (head) head.classList.toggle("chip-group__head--has", any);
+      });
     }
     container.querySelectorAll(".chip").forEach(function (c) {
+      if (c.classList.contains("chip-group__head")) return; // wired separately below
       c.addEventListener("click", function () {
         var key = c.getAttribute("data-pool");
         var sel = get().slice();
@@ -101,6 +133,21 @@
         paint();
         if (onChange) onChange();
       });
+    });
+    // Expand / collapse each group; start open if one of its pools is already on.
+    container.querySelectorAll(".chip-group__head").forEach(function (head) {
+      var group = head.closest(".chip-group");
+      var body = group.querySelector(".chip-group__body");
+      function setOpen(open) {
+        if (open) body.removeAttribute("hidden"); else body.setAttribute("hidden", "");
+        head.classList.toggle("chip-group__head--open", open);
+      }
+      head.addEventListener("click", function () { setOpen(body.hasAttribute("hidden")); });
+      var sel = get();
+      var hasActive = !!sel.length && Array.prototype.some.call(group.querySelectorAll(".chip[data-pool]"), function (c) {
+        return sel.indexOf(c.getAttribute("data-pool")) !== -1;
+      });
+      if (hasActive) setOpen(true);
     });
     paint();
   }

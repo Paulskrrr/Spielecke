@@ -239,7 +239,8 @@
       },
 
       starwars_easy: {
-        label: "⭐ Star Wars – Easy",
+        label: "Easy",
+        group: "⭐ Star Wars",
         terms: [
           // Films
           "Darth Vader", "Luke Skywalker", "Yoda", "Princess Leia", "Han Solo",
@@ -259,7 +260,8 @@
         // Scoped to the films + The Clone Wars (animated): hard but iconic. No
         // Rebels / newer live-action / game-only deep cuts — those are a different
         // angle and easy to miss if you haven't watched those shows.
-        label: "⭐ Star Wars – Hard",
+        label: "Hard",
+        group: "⭐ Star Wars",
         terms: [
           // Prequel & Original trilogy characters (deep cuts)
           "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
@@ -535,7 +537,8 @@
       },
 
       starwars_easy: {
-        label: "⭐ Star Wars – Leicht",
+        label: "Leicht",
+        group: "⭐ Star Wars",
         // Proper nouns — identical to en.
         terms: [
           // Films
@@ -553,7 +556,8 @@
       },
 
       starwars_hard: {
-        label: "⭐ Star Wars – Schwer",
+        label: "Schwer",
+        group: "⭐ Star Wars",
         // Proper nouns — identical to en.
         terms: [
           // Prequel & Original trilogy characters (deep cuts)
