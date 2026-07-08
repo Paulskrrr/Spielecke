@@ -703,7 +703,9 @@
     stopTimer();
     timer = global.setInterval(function () {
       timeLeft--; updateTimer();
-      if (timeLeft <= 10 && timeLeft > 0) tick();
+      // Tick the whole way down like a real clock (tick-tock alternating pitch);
+      // the final ten seconds switch to the sharper, urgent tick.
+      if (timeLeft > 0) { if (timeLeft <= 10) tick(); else (timeLeft % 2 ? tick : tock)(); }
       if (timeLeft <= 0) boom();
     }, 1000);
   }
@@ -1154,16 +1156,27 @@
     if (!settings || !settings.sound) return;
     var AC = global.AudioContext || global.webkitAudioContext; if (!AC) return;
     try { audio = { ctx: new AC() }; } catch (e) { audio = null; }
+    resumeAudio();
+  }
+  // Browsers hand back a suspended AudioContext until a user gesture unlocks it.
+  // The bomb is always reached by a tap, so nudge it awake on setup and again on
+  // the first beep — otherwise every tick/blip is silently swallowed.
+  function resumeAudio() {
+    if (audio && audio.ctx && audio.ctx.state === "suspended") {
+      try { audio.ctx.resume(); } catch (e) { /* ignore */ }
+    }
   }
   function teardownAudio() { if (audio && audio.ctx) { try { audio.ctx.close(); } catch (e) { /* ignore */ } } audio = null; }
   function beep(freq, dur, gain, type) {
     if (!audio || !audio.ctx) return;
+    resumeAudio();
     var ac = audio.ctx, now = ac.currentTime, osc = ac.createOscillator(), g = ac.createGain();
     osc.type = type || "square"; osc.frequency.value = freq;
     g.gain.setValueAtTime(gain, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
     osc.connect(g).connect(ac.destination); osc.start(now); osc.stop(now + dur + 0.02);
   }
   function tick() { beep(1500, 0.04, 0.12, "square"); }
+  function tock() { beep(1120, 0.04, 0.08, "square"); }
   function blip(f) { beep(f || 800, 0.04, 0.06, "triangle"); }
   function clack() { beep(280, 0.05, 0.08, "square"); }
   function chime() { beep(700, 0.12, 0.12, "sine"); setTimeout(function () { beep(1050, 0.16, 0.12, "sine"); }, 110); }
