@@ -102,7 +102,10 @@ the "ask → relay the serial → read back the step" loop the room runs on. The
 dials **live**, so the dials must be set correctly even when Wires comes first.
 
 **Fail:** 3 strikes (wrong action or out-of-order; each also burns 15s) or the clock → 💥.
-**Win:** all three lamps green → defused. Fuse length is the difficulty (Rookie/Standard/Lethal).
+**Win:** all three lamps green → defused. Fuse length is the difficulty — two tiers only,
+**Normal 10:00** (the default) and **Lethal 5:00**. Tuned from playtesting: even a solo player
+holding both screens barely cleared the first module inside the old ~6 min, so a separated team
+needs far more air.
 
 ## 5. Rule tables = single source of truth
 

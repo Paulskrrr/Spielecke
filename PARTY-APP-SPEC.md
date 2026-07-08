@@ -564,7 +564,7 @@ generated bombs: order always four stages, every maze reachable, arming digit in
 solvable; the timed arming commit driven end-to-end through the real UI headlessly). Currently a
 single bomb solvable by one expert; designed so the manual's pages can be *dealt out* across
 several experts later (forcing expert-to-expert talk), with more modules to follow. Difficulty
-sets the fuse (Rookie 6:00 / Standard 4:30 / Lethal 3:00). The countdown interval, Web-Audio
+sets the fuse (Normal 10:00 / Lethal 5:00). The countdown interval, Web-Audio
 alarms and key handler are all torn down on unmount.
 
 ### 3.22 Ballon 🎈 (`ballon`, 2+) — drinking-capable

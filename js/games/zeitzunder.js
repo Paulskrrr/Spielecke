@@ -219,11 +219,10 @@
   // ========================================================================
   // Module state
   // ========================================================================
-  var DEFAULTS = { seconds: 270, sound: true };
+  var DEFAULTS = { seconds: 600, sound: true };
   var DIFFICULTIES = [
-    { id: "chill", label: "🌿 Rookie", seconds: 360 },
-    { id: "standard", label: "💣 Standard", seconds: 270 },
-    { id: "lethal", label: "💀 Lethal", seconds: 180 }
+    { id: "normal", label: "💣 Normal", seconds: 600 },
+    { id: "lethal", label: "💀 Lethal", seconds: 300 }
   ];
   var MAX_STRIKES = 3;
   // Multi-expert variation point: today a single expert holds the whole book.
@@ -249,7 +248,7 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        seconds: parseInt(context.store.get("seconds", DEFAULTS.seconds), 10) || DEFAULTS.seconds,
+        seconds: validSeconds(parseInt(context.store.get("seconds", DEFAULTS.seconds), 10)),
         sound: context.store.get("sound", DEFAULTS.sound) !== false
       };
       role = null; renderRolePicker();
@@ -293,7 +292,9 @@
     els.querySelector("#zz-be-bomb").addEventListener("click", function () { role = "host"; newBomb(); });
     els.querySelector("#zz-be-expert").addEventListener("click", function () { role = "expert"; renderManual(); });
   }
-  function diffIdForSeconds(s) { for (var i = 0; i < DIFFICULTIES.length; i++) if (DIFFICULTIES[i].seconds === s) return DIFFICULTIES[i].id; return "standard"; }
+  function diffIdForSeconds(s) { for (var i = 0; i < DIFFICULTIES.length; i++) if (DIFFICULTIES[i].seconds === s) return DIFFICULTIES[i].id; return DIFFICULTIES[0].id; }
+  // A stored fuse length from an older build (or a bad parse) snaps back to the default.
+  function validSeconds(s) { for (var i = 0; i < DIFFICULTIES.length; i++) if (DIFFICULTIES[i].seconds === s) return s; return DEFAULTS.seconds; }
 
   // ========================================================================
   // HOST: build a fresh bomb and render the cube
