@@ -240,11 +240,11 @@
     // ── Princess ───────────────────────────────────────────────────────────
     "For the girls": "Für die Mädels",
     "For the guys": "Für die Jungs",
-    "Princess treatment, or bare minimum?": "Prinzessinnen-Behandlung oder Minimum?",
-    "King treatment, or bare minimum?": "König-Behandlung oder Minimum?",
-    "👑 Princess treatment": "👑 Prinzessinnen-Behandlung",
-    "🤴 King treatment": "🤴 König-Behandlung",
-    "😐 Bare minimum": "😐 Minimum",
+    "Princess treatment, or bare minimum?": "Princess Treatment oder Bare Minimum?",
+    "King treatment, or bare minimum?": "King Treatment oder Bare Minimum?",
+    "👑 Princess treatment": "👑 Princess Treatment",
+    "🤴 King treatment": "🤴 King Treatment",
+    "😐 Bare minimum": "😐 Bare Minimum",
 
     // ── Doodle Drama ───────────────────────────────────────────────────────
     "Chain order ({n}): {names}": "Kettenreihenfolge ({n}): {names}",
