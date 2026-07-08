@@ -740,6 +740,74 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
 - **Anonymous-writing game** — considered and shelved in favour of Geschmacklos (see history:
   the earlier "Ghostwriter" pitch had no clear winner and made the after-round discussion
   pointless); if revisited, needs a sharper resolution mechanic than "guess who wrote it."
+- **Password / Captcha builder** — a party-ified *Password Game*. Full design exploration
+  parked below (§Design note); to be revisited.
+
+### Design note — "Password / Captcha" party game (not built yet)
+
+A group/drinking translation of **The Password Game** (the solo browser game where you build one
+password against an ever-growing pile of absurd, self-contradicting rules). Paul's steer: it must
+**not be a separate mini-thing bolted on** — the captcha/password idea should *be* the game, run
+at the table. This note captures the shared understanding so we can pick it straight back up.
+
+**What carries from the original (keep):**
+- **Escalation** — rules stack, absurdity grows.
+- **Rule maintenance** — new rules break old ones; the password becomes a monster you must keep
+  feeding.
+- **The checklist moment** — the ✓/✗ list re-cascades after every edit; that's the visible drama
+  beat.
+- **Attachment comedy** — "Paul the chicken 🐔" (the original's egg 🥚 you're forbidden to delete).
+
+**What to replace (doesn't survive contact with a drunk group):**
+- Knowledge rules (Wordle answer, chess move, sponsors) → swap for **group- and room-referential**
+  rules the table can supply.
+- Solo typing with no audience → needs **relay structure + spectator beats**.
+
+**Core structure — "One password, everyone suffers" (relay):** one shared password; the phone
+passes around the table. Each turn reveals **one new rule**; the holder must edit the password so
+**all** rules are ✓ again, under a shrinking timer (~45s, less later). After the turn, a big
+**checklist reveal** for the table. Timer blown or give-up → drink + lose a life (Quiz-Out-style,
+last survivor wins). The hook: your predecessor hands you a wreck, and your fix inevitably
+sabotages the next player.
+
+**Building blocks (pick-list, numbered so we can reference them later):**
+- **B1 — Roster rules:** the app knows the players → "must contain your left neighbour's name",
+  "…everyone's initials", "…{name} backwards". Makes it *your* group's password.
+- **B2 — Table rules (the table is the regex):** rules the app can't check but the table can —
+  "must contain something currently on the table", "…a word the table unanimously declares filthy".
+  A **"table says ✓" button**, same as Mäxchen/Kommando handing the verdict to the room. This is the
+  single biggest lever that turns a regex puzzle into a *party* game.
+- **B3 — Captcha speed-bumps:** before each submit, prove you're not a robot — tap all the 🍺 in a
+  3×3 emoji grid, retype a distorted word, a slider puzzle. Fast, flustered, and **the others watch
+  you fumble**. Captcha fail = "robot detected" = drink. This is how the captcha lives *inside* the
+  game instead of being a separate screen (per Paul's ask).
+- **B4 — Physical verification:** some captchas leave the screen — "Verification: make two people at
+  the table laugh — the table confirms." Use sparingly (2–3), else it drifts into Activity.
+- **B5 — Paul the chicken 🐔:** an emoji pet moves into the password early and **must survive** (and
+  occasionally be fed: insert a 🐛 next to it). Deleting Paul = double drink. Perfect running gag for
+  "Pauls Spielecke".
+- **B6 — Sabotage choice:** instead of a random rule, the **previous player secretly picks** which of
+  3 rule cards hits you. Malice with agency — Wettbüro energy; the table howls at the reveal.
+- **B7 — Memory rules:** a rule shows for ~5s, then **hides** — it still applies and is still checked,
+  but is no longer on screen. Punishes exactly the state you play this in. Drinking-game gold.
+- **B8 — Fire events:** a character randomly catches 🔥 (replaced by junk every few seconds); the
+  holder must put it out before doing their actual rule. Panic comedy, straight from the original.
+- **B9 — Pot economy instead of lives:** softer alternative to knockout — each rule you hand over
+  broken = 1 sip into the pot; whoever fully fails drinks it (Ballon mechanic). Nobody sits out.
+
+**Round-feel sketch:** R1 "at least 5 characters" (easy, laughs still relaxed) → R4 "must contain a
+prime number" → R6 🐔 Paul moves in → R8 *(table rule)* "a drink someone's currently holding" →
+captcha: retype "xX_bIeRkÖn1g_Xx" distorted → R11 *(secretly chosen by grinning Ben)* → 🔥 FIRE →
+timer → 💀.
+
+**Recommended build:** relay skeleton + **B1, B2, B3, B5, B7** as the core; **B6** and **B8** as a
+second stage; **B4** sparingly.
+
+**Open design questions (Paul to decide before build):**
+1. **Knockout** (lives, last standing wins) or **Pot** (B9, nobody's eliminated)?
+2. How **NSFW** should the rules themselves get (e.g. "include a body part" vs. tame)?
+3. Naming/theme: **bureaucratic satire** ("Amt für Passwortsicherheit" — fits the Zeitzünder GDPR
+   humour) or **bouncer/club** framing?
 
 ### Open content TODO (Paul)
 
