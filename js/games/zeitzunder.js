@@ -234,6 +234,7 @@
   var M = ID;                // cube orientation
   var activeFace = "core";   // logical face currently at front
   var dials = { a: 0, b: 0 };
+  var dialAngle = { a: 0, b: 0 };  // continuous cap rotation (deg) so knobs spin forward, never snap back
   var mazePos = [0, 0];
   var entry = [], solved = {}, solvedCount = 0, strikes = 0, timeLeft = 0;
   var manualPages = [], manualIdx = 0;
@@ -305,7 +306,7 @@
     var faces = shuffle(["core", "wires", "keypad", "dials", "guts", "maze"]);
     assignment = {}; SLOTS.forEach(function (s, i) { assignment[s] = faces[i]; });
     M = ID; activeFace = assignment.F;
-    dials = { a: 0, b: 0 }; entry = []; mazePos = [bomb.maze.sr, bomb.maze.sc]; solved = {}; solvedCount = 0; strikes = 0;
+    dials = { a: 0, b: 0 }; dialAngle = { a: 0, b: 0 }; entry = []; mazePos = [bomb.maze.sr, bomb.maze.sc]; solved = {}; solvedCount = 0; strikes = 0;
     timeLeft = settings.seconds; busy = false;
     renderBomb();
   }
@@ -430,11 +431,75 @@
   function dialsFace() {
     return '<div class="zz-dialface"><div class="zz-dials">' + dialHtml("a") + dialHtml("b") + "</div></div>";
   }
+  // A real rotary encoder: a knurled cap that turns, a gold pointer, an engraved
+  // 0–9 scale with a detent at each number, and a small digital repeat so the
+  // set value stays readable (the defuser reads THAT out loud).
   function dialHtml(which) {
-    return '<div class="zz-dial"><button class="zz-dial__btn" data-dial="' + which + '" data-dir="1">▲</button>' +
-      '<div class="zz-dial__val" id="zz-dial-' + which + '">' + dials[which] + "</div>" +
-      '<button class="zz-dial__btn" data-dial="' + which + '" data-dir="-1">▼</button>' +
-      '<div class="zz-dial__lbl">' + (which === "a" ? "A" : "B") + "</div></div>";
+    var v = dials[which], lbl = which === "a" ? "A" : "B", ticks = "";
+    for (var i = 0; i < 10; i++) {
+      var ang = i * 36;
+      ticks += '<span class="zz-knob__tick' + (i === v ? " is-active" : "") + '" data-n="' + i +
+        '" style="transform:rotate(' + ang + 'deg)"><i></i>' +
+        '<em style="transform:translateX(-50%) rotate(' + (-ang) + 'deg)">' + i + "</em></span>";
+    }
+    return '<div class="zz-dial" data-dial="' + which + '">' +
+      '<div class="zz-knob" data-dial="' + which + '" role="slider" aria-label="Dial ' + lbl +
+        '" aria-valuemin="0" aria-valuemax="9" aria-valuenow="' + v + '" aria-valuetext="' + v + '">' +
+        '<div class="zz-knob__face">' + ticks + "</div>" +
+        '<div class="zz-knob__cap" id="zz-knob-' + which + '" style="transform:rotate(' + (v * 36) + 'deg)">' +
+          '<span class="zz-knob__grip"></span><span class="zz-knob__pointer"></span></div>' +
+      "</div>" +
+      '<div class="zz-dial__read"><span class="zz-dial__val" id="zz-dial-' + which + '">' + v + "</span></div>" +
+      '<div class="zz-dial__lbl">' + lbl + "</div></div>";
+  }
+  // Update a dial's value everywhere (state, digital readout, active tick, aria).
+  function setDial(which, val) {
+    val = ((val % 10) + 10) % 10;
+    dials[which] = val;
+    var read = els.querySelector("#zz-dial-" + which); if (read) read.textContent = val;
+    var knob = els.querySelector('.zz-knob[data-dial="' + which + '"]');
+    if (knob) {
+      knob.setAttribute("aria-valuenow", val); knob.setAttribute("aria-valuetext", val);
+      knob.querySelectorAll(".zz-knob__tick").forEach(function (tk) {
+        tk.classList.toggle("is-active", parseInt(tk.getAttribute("data-n"), 10) === val);
+      });
+    }
+  }
+  // Rotate the cap to an absolute angle; animate the settle/tap, jump instantly while dragging.
+  function spinCap(which, deg, animate) {
+    var cap = els.querySelector("#zz-knob-" + which); if (!cap) return;
+    if (!animate) { cap.style.transition = "none"; cap.style.transform = "rotate(" + deg + "deg)"; void cap.offsetWidth; cap.style.transition = ""; }
+    else { cap.style.transform = "rotate(" + deg + "deg)"; }
+  }
+  // Drive one knob: drag to turn (detent clacks), or a plain tap nudges it forward one step.
+  function attachKnob(knob) {
+    var which = knob.getAttribute("data-dial");
+    var dragging = false, moved = false, grabOff = 0, sx = 0, sy = 0;
+    function angleAt(e) {
+      var r = knob.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      return Math.atan2(e.clientX - cx, cy - e.clientY) * 180 / Math.PI; // 0 at 12 o'clock, clockwise +
+    }
+    function valFor(deg) { return ((Math.round(deg / 36) % 10) + 10) % 10; }
+    function onMove(e) {
+      if (!dragging) return;
+      if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) < 4) return;
+      moved = true; e.preventDefault();
+      var raw = angleAt(e) - grabOff; dialAngle[which] = raw; spinCap(which, raw, false);
+      var val = valFor(raw); if (val !== dials[which]) { setDial(which, val); clack(); }
+    }
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      global.removeEventListener("pointermove", onMove); global.removeEventListener("pointerup", onUp);
+      if (!moved) { dialAngle[which] += 36; setDial(which, valFor(dialAngle[which])); spinCap(which, dialAngle[which], true); clack(); }
+      else { var snap = Math.round(dialAngle[which] / 36) * 36; dialAngle[which] = snap; spinCap(which, snap, true); }
+    }
+    knob.addEventListener("pointerdown", function (e) {
+      if (solved.DIALS) return;
+      e.preventDefault(); e.stopPropagation();
+      dragging = true; moved = false; sx = e.clientX; sy = e.clientY; grabOff = angleAt(e) - dialAngle[which];
+      global.addEventListener("pointermove", onMove); global.addEventListener("pointerup", onUp);
+    });
   }
   // Reference hub ("guts"): everything the interactive modules read off — the
   // decoder letter, the colour-priority list, the indicators and the batteries.
@@ -454,15 +519,7 @@
     els.querySelectorAll("#zz-wires .zz-wire").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) attemptCut(parseInt(b.getAttribute("data-i"), 10)); }); });
     els.querySelectorAll("#zz-keys .zz-key").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) keypadPress(b.getAttribute("data-glyph")); }); });
     var kc = els.querySelector("#zz-key-clear"); if (kc) kc.addEventListener("click", function () { if (justDragged) return; entry = []; updateEntry(); });
-    els.querySelectorAll(".zz-dial__btn").forEach(function (b) {
-      b.addEventListener("click", function () {
-        if (justDragged || solved.DIALS) return;
-        var which = b.getAttribute("data-dial"), dir = parseInt(b.getAttribute("data-dir"), 10);
-        dials[which] = (dials[which] + dir + 10) % 10;
-        var v = els.querySelector("#zz-dial-" + which); if (v) v.textContent = dials[which];
-        blip(620);
-      });
-    });
+    els.querySelectorAll(".zz-knob").forEach(function (k) { attachKnob(k); });
     els.querySelectorAll(".zz-mpad").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) mazeMove(b.getAttribute("data-mdir")); }); });
     attachCommit(els.querySelector("#zz-commit"));
     els.querySelector("#zz-quit").addEventListener("click", renderRolePicker);
@@ -579,7 +636,7 @@
   function disableFace(name) {
     if (name === "WIRES") els.querySelectorAll("#zz-wires .zz-wire").forEach(function (b) { b.disabled = true; });
     else if (name === "KEYPAD") { els.querySelectorAll("#zz-keys .zz-key").forEach(function (b) { b.disabled = true; }); var s = els.querySelector("#zz-key-submit"), c = els.querySelector("#zz-key-clear"); if (s) s.disabled = true; if (c) c.disabled = true; }
-    else if (name === "DIALS") { els.querySelectorAll(".zz-dial__btn").forEach(function (b) { b.disabled = true; }); var d = els.querySelector("#zz-dial-confirm"); if (d) d.disabled = true; }
+    else if (name === "DIALS") { var df = els.querySelector(".zz-dialface"); if (df) df.classList.add("is-locked"); }
     else if (name === "MAZE") els.querySelectorAll(".zz-mpad").forEach(function (b) { b.disabled = true; });
   }
   function flashFace(name) {

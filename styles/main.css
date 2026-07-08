@@ -2475,12 +2475,66 @@ body::before {
 
 /* ---- Dials face ------------------------------------------------------ */
 .zz-dialface { display: flex; flex-direction: column; gap: 12px; align-items: center; }
-.zz-dials { display: flex; gap: 26px; }
-.zz-dial { display: flex; flex-direction: column; align-items: center; gap: 5px; }
-.zz-dial__btn { width: 60px; height: 32px; font-size: 1.05rem; cursor: pointer; color: #f4f4f4; background: #33373d; border: 2px solid #14161a; border-radius: 8px; }
-.zz-dial__btn:disabled { opacity: 0.4; cursor: default; }
-.zz-dial__val { width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-family: ui-monospace, Menlo, monospace; font-size: 2.2rem; font-weight: 800; color: #ffd84d; background: #14161a; border-radius: 10px; box-shadow: inset 0 0 8px rgba(0,0,0,0.8); }
-.zz-dial__lbl { font-weight: 900; font-size: 1rem; color: #14161a; }
+.zz-dials { display: flex; gap: 24px; }
+.zz-dial { display: flex; flex-direction: column; align-items: center; gap: 7px; }
+
+/* ---- Rotary dials: machined encoder knobs you actually turn -------------- */
+/* The seated bezel: a dark recess milled into the plate, with a lit outer collar. */
+.zz-knob {
+  position: relative; width: 100px; height: 100px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 40%, #23262c 0%, #1a1d22 60%, #101216 100%);
+  box-shadow:
+    inset 0 2px 5px rgba(0,0,0,0.9), inset 0 -2px 3px rgba(255,255,255,0.05),
+    0 1px 0 rgba(255,255,255,0.14), 0 3px 7px rgba(0,0,0,0.4);
+  cursor: grab; touch-action: none; -webkit-user-select: none; user-select: none;
+}
+.zz-knob::before { /* brushed metal collar ringing the recess */
+  content: ""; position: absolute; inset: -4px; border-radius: 50%; z-index: -1;
+  background: conic-gradient(#5b606a, #2c3037, #565b64, #2a2e35, #5b606a, #2c3037, #565b64, #2a2e35, #5b606a);
+  box-shadow: 0 2px 5px rgba(0,0,0,0.45);
+}
+.zz-knob:active { cursor: grabbing; }
+.zz-knob__face { position: absolute; inset: 0; }
+
+/* The engraved 0–9 scale + rim graduations, radiating from the centre. */
+.zz-knob__tick { position: absolute; left: 50%; top: 0; width: 0; height: 50%; transform-origin: bottom center; }
+.zz-knob__tick i { position: absolute; left: -1px; top: 0; width: 2px; height: 5px; background: #6b7079; border-radius: 1px; }
+.zz-knob__tick.is-active i { background: #ffd84d; height: 7px; box-shadow: 0 0 6px rgba(255,216,77,0.9); }
+.zz-knob__tick em { position: absolute; left: 50%; top: 6px; font-style: normal; font-weight: 800; font-size: 0.62rem; color: #c6cbd3; }
+.zz-knob__tick.is-active em { color: #ffd84d; text-shadow: 0 0 7px rgba(255,216,77,0.75); }
+
+/* The knurled aluminium cap that rotates to the set value. */
+.zz-knob__cap {
+  position: absolute; left: 50%; top: 50%; width: 56px; height: 56px; margin: -28px 0 0 -28px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 34%, #868c95 0%, #62676f 52%, #40444b 100%);
+  box-shadow: 0 3px 7px rgba(0,0,0,0.55), inset 0 2px 2px rgba(255,255,255,0.4), inset 0 -5px 9px rgba(0,0,0,0.5);
+  transition: transform 0.16s cubic-bezier(0.3, 0.9, 0.3, 1);
+}
+.zz-knob__cap::after { /* centre hub screw */
+  content: ""; position: absolute; left: 50%; top: 50%; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #767b84, #383c43);
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.35), 0 1px 2px rgba(0,0,0,0.55);
+}
+.zz-knob__grip { /* knurling: fine radial grooves around the cap's rim */
+  position: absolute; inset: 0; border-radius: 50%; opacity: 0.55;
+  background: repeating-conic-gradient(rgba(0,0,0,0.34) 0deg 3deg, rgba(255,255,255,0.14) 3deg 6deg);
+  -webkit-mask: radial-gradient(circle, transparent 66%, #000 68%, #000 100%);
+          mask: radial-gradient(circle, transparent 66%, #000 68%, #000 100%);
+}
+.zz-knob__pointer { /* the gold indicator that aims at the live number */
+  position: absolute; left: 50%; top: 4px; width: 4px; height: 16px; margin-left: -2px; border-radius: 2px;
+  background: linear-gradient(#fff4bf, #ffd23c); box-shadow: 0 0 7px rgba(255,216,77,0.9);
+}
+
+/* Digital repeat of the set value — this is what the defuser reads aloud. */
+.zz-dial__read {
+  min-width: 46px; padding: 3px 10px; display: flex; align-items: center; justify-content: center;
+  background: #101216; border: 2px solid #05060a; border-radius: 7px; box-shadow: inset 0 0 8px rgba(0,0,0,0.85);
+}
+.zz-dial__val { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 1.5rem; font-weight: 800; color: #ffd84d; text-shadow: 0 0 8px rgba(255,216,77,0.55); line-height: 1; }
+.zz-dial__lbl { font-weight: 900; font-size: 1rem; color: #14161a; letter-spacing: 1px; }
+.zz-dialface.is-locked .zz-knob { pointer-events: none; cursor: default; }
+.zz-dialface.is-locked { filter: brightness(0.96) saturate(0.92); }
 
 /* ---- Guts face ------------------------------------------------------- */
 .zz-gutsface { display: flex; flex-direction: column; gap: 24px; align-items: center; }
@@ -2681,8 +2735,15 @@ body::before {
   .zz-key { width: 84px; height: 84px; font-size: 2.3rem; }
   .zz-entry { max-width: 300px; font-size: 1.9rem; }
   .zz-mini { width: 80px; height: 54px; font-size: 1.5rem; }
-  .zz-dial__val { width: 96px; height: 96px; font-size: 3.4rem; }
-  .zz-dial__btn { width: 96px; height: 52px; font-size: 1.5rem; }
+  .zz-dials { gap: 30px; }
+  .zz-knob { width: 124px; height: 124px; }
+  .zz-knob__cap { width: 70px; height: 70px; margin: -35px 0 0 -35px; }
+  .zz-knob__pointer { top: 6px; height: 20px; }
+  .zz-knob__cap::after { width: 20px; height: 20px; margin: -10px 0 0 -10px; }
+  .zz-knob__tick i { height: 6px; }
+  .zz-knob__tick.is-active i { height: 8px; }
+  .zz-knob__tick em { top: 7px; font-size: 0.74rem; }
+  .zz-dial__val { font-size: 2rem; }
   .zz-batt { width: 54px; height: 30px; }
   .zz-ind { font-size: 1.25rem; padding: 12px 20px; }
   .zz-readout__val { font-size: 4.2rem; }
