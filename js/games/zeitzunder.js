@@ -1034,15 +1034,18 @@
   }
   function manualKeypad() {
     var rows = DECODER_LETTERS.map(function (L) { return "<tr><td><b>" + L + "</b></td><td class='zz-glyphs'>" + SYMBOL_TABLE[L].map(function (g) { return "<span>" + g + "</span>"; }).join("") + "</td></tr>"; }).join("");
-    return "<p class='zz-fine'>" + t("The keypad uses a non-standard glyph set for tamper resistance; positions are randomised per unit. Identify glyphs by shape, not location.") + "</p>" +
-      "<p>" + t("Nine glyphs, scrambled. Press the sequence, then fire it from the arming control (see Arming).") + "</p>" +
-      "<ul class='zz-rules'>" +
-      "<li>" + t("Read the Decoder LETTER. Find its row in the Sequence table → press those glyphs in order.") + "</li>" +
-      "<li class='zz-warn'>⚠ " + t("If indicator SIG is lit, press them in REVERSE order.") + "</li>" +
-      "<li class='zz-warn'>⚠ " + t("Then read the serial's LAST DIGIT and press ONE final glyph by its grid position (table below).") + "</li>" +
-      "</ul>" +
-      "<table class='zz-table'><thead><tr><th>" + t("Last digit") + "</th><th>" + t("Final key") + "</th></tr></thead><tbody>" + keypadSuffixRows() + "</tbody></table>" +
-      "<table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
+    return "<p>" + t("The keypad stages a code but never fires it — that is left to the arming control, so no thief who reaches the keys alone can arm the device. Its nine glyphs are shuffled into a fresh layout on every unit, which means a memorised position is worthless: read each glyph by its shape, never by where it sits.") + "</p>" +
+      "<p class='zz-fine'>" + t("Build the code in four steps, then hand it to the arming control.") + "</p>" +
+      "<ol class='zz-steps'>" +
+      "<li>" + t("Read the Decoder LETTER and find its row in the Sequence table below. Press those glyphs in order.") + "</li>" +
+      "<li>" + t("If indicator SIG is lit, press that same sequence in REVERSE order instead.") + "</li>" +
+      "<li>" + t("Read the LAST DIGIT of the serial and press ONE more glyph, chosen by its position in the grid (Final key table below).") + "</li>" +
+      "<li>" + t("Fire the finished code from the arming control (see Arming).") + "</li>" +
+      "</ol>" +
+      "<p class='zz-fine'>" + t("Sequence — the glyphs each Decoder letter calls for:") + "</p>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
+      "<p class='zz-fine'>" + t("Final key — the grid position the last serial digit adds:") + "</p>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Last digit") + "</th><th>" + t("Final key") + "</th></tr></thead><tbody>" + keypadSuffixRows() + "</tbody></table>";
   }
   // Build the serial-suffix table straight from KEYPAD_SUFFIX so the manual can
   // never drift from the solver: group consecutive last-digits with the same key.
