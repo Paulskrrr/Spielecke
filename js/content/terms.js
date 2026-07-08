@@ -177,6 +177,30 @@
           "MrBeast", "Kim Kardashian", "Barack Obama",
         ],
       },
+      kampfsport: {
+        label: "🥊 Combat Sports",
+        // Fighters, promoters & pundits (proper nouns, identical to de).
+        // Weighted ~UFC / boxing / around-the-sport figures. Works as a forehead
+        // guess, an Imposter word or a drawing, so it's offered everywhere.
+        terms: [
+          // UFC
+          "Conor McGregor", "Khabib Nurmagomedov", "Jon Jones", "Israel Adesanya",
+          "Alex Pereira", "Islam Makhachev", "Charles Oliveira", "Dustin Poirier",
+          "Justin Gaethje", "Max Holloway", "Sean O'Malley", "Ilia Topuria",
+          "Kamaru Usman", "Leon Edwards", "Nate Diaz", "Jorge Masvidal",
+          "Amanda Nunes", "Valentina Shevchenko", "Zhang Weili", "Francis Ngannou",
+          "Stipe Miocic", "Georges St-Pierre", "Anderson Silva", "Tom Aspinall",
+          "Dricus du Plessis", "Merab Dvalishvili", "Paddy Pimblett",
+          // Boxen
+          "Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Manny Pacquiao",
+          "Canelo Álvarez", "Tyson Fury", "Anthony Joshua", "Deontay Wilder",
+          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Gervonta Davis",
+          "Wladimir Klitschko", "Evander Holyfield",
+          // Rund um den Sport
+          "Dana White", "Joe Rogan", "Ariel Helwani", "Bruce Buffer",
+          "Michael Buffer", "Don King", "Eddie Hearn", "Jake Paul", "Logan Paul",
+        ],
+      },
       nsfw: {
         label: "🔞 18+",
         terms: [
@@ -447,6 +471,30 @@
           "Elon Musk", "Jeff Bezos", "Mark Zuckerberg", "Steve Jobs", "Bill Gates",
           // Internet & world stage
           "MrBeast", "Kim Kardashian", "Barack Obama",
+        ],
+      },
+      kampfsport: {
+        label: "🥊 Kampfsport",
+        // Kämpfer, Promoter & Kommentatoren (Eigennamen, identisch zu en).
+        // Gewichtet ~UFC / Boxen / Figuren rund um den Sport. Taugt als Stirn-
+        // Rateperson, Imposter-Wort oder Zeichnung — daher überall verfügbar.
+        terms: [
+          // UFC
+          "Conor McGregor", "Khabib Nurmagomedov", "Jon Jones", "Israel Adesanya",
+          "Alex Pereira", "Islam Makhachev", "Charles Oliveira", "Dustin Poirier",
+          "Justin Gaethje", "Max Holloway", "Sean O'Malley", "Ilia Topuria",
+          "Kamaru Usman", "Leon Edwards", "Nate Diaz", "Jorge Masvidal",
+          "Amanda Nunes", "Valentina Shevchenko", "Zhang Weili", "Francis Ngannou",
+          "Stipe Miocic", "Georges St-Pierre", "Anderson Silva", "Tom Aspinall",
+          "Dricus du Plessis", "Merab Dvalishvili", "Paddy Pimblett",
+          // Boxen
+          "Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Manny Pacquiao",
+          "Canelo Álvarez", "Tyson Fury", "Anthony Joshua", "Deontay Wilder",
+          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Gervonta Davis",
+          "Wladimir Klitschko", "Evander Holyfield",
+          // Rund um den Sport
+          "Dana White", "Joe Rogan", "Ariel Helwani", "Bruce Buffer",
+          "Michael Buffer", "Don King", "Eddie Hearn", "Jake Paul", "Logan Paul",
         ],
       },
       nsfw: {
