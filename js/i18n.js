@@ -340,6 +340,13 @@
     "SPIN 🎯": "DREHEN 🎯",
     "SPIN AGAIN 🎯": "NOCHMAL DREHEN 🎯",
     "⚠ Add some players from the header (👥) to spin.": "⚠ Füge oben Spieler hinzu (👥).",
+    "🎯 Elimination": "🎯 Rauswurf-Modus",
+    "Last one standing:": "Wer übrig bleibt:",
+    "🏆 wins": "🏆 gewinnt",
+    "💀 loses": "💀 verliert",
+    "{name} is out!": "{name} ist raus!",
+    "{name} survives — winner!": "{name} bleibt übrig — gewonnen!",
+    "{name} is the last one left!": "{name} bleibt übrig — verloren!",
 
     // ── Reaction Duel ──────────────────────────────────────────────────────
     "Match length": "Spiel bis",
