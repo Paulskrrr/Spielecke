@@ -26,7 +26,7 @@ next.
 - ✅ **Who Am I?** — Heads-Up / forehead guessing
 - ✅ **Imposter** — hidden-role secret word (+ optional hints & a 🔔 Buzzer seconds-guess mode) *(drinking-capable)*
 - ✅ **Wavelength** — spectrum/dial guessing
-- ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
+- ✅ **Ballpark** (DE: *Pi mal Daumen*) — numeric estimation; closest guess wins *(drinking-capable)*
 - ✅ **Princess Treatment** — King/Princess debate deck
 - ✅ **Doodle Drama** — drawing telephone (canvas)
 - ✅ **Activity** — two-team board race (explain / draw / charade) *(drinking-capable)*
@@ -171,7 +171,7 @@ js/
     hotpotato-prompts.js   Hot Potato's category prompts
     wavelength.js          Wavelength's opposite pairs
     nhie.js / most-likely.js / truth.js   sentence-predicate decks
-    numbers.js             Liar's Numbers question/answer bank
+    numbers.js             Ballpark (Pi mal Daumen) question/answer bank
     princess.js            Princess Treatment prompts (by category × gender)
     activity.js            Activity words, tiered by points (2/3/4)
     quiz.js                Quiz Out questions, an array of difficulty levels
@@ -226,7 +226,7 @@ Rules:
   (future Paul, half-drunk).
 - **Turn order:** the roster on `context.players` keeps the order players were *entered* (it's
   the canonical list). Games where play follows a fixed sequence of turns/roles down the roster
-  (Doodle, Quiz, Wavelength, Liar's Numbers, Imposter, Rank It) **must randomise that order when
+  (Doodle, Quiz, Wavelength, Ballpark, Imposter, Rank It) **must randomise that order when
   a round starts** — call `Spielecke.shuffle(arr)` (pure Fisher-Yates, returns a new array) so
   the same five players don't get the identical sequence every round. Games that already pick at
   random (Truth, Chooser, Reaction Duel) or let the host choose the seat (Busfahrt, Fuck the
@@ -266,7 +266,7 @@ Two shapes of content, by what the game needs:
   - Wavelength → *opposite pairs* (`wavelength.js`, `{ label, pairs:[{left,right}] }`).
   - Never Have I Ever / Most Likely To → *sentence predicates* (`nhie.js`, `most-likely.js`,
     `{ label, prompts }`) — separate because the grammar differs from each other.
-  - Liar's Numbers → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
+  - Ballpark → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
   - Princess Treatment → *gendered prompts* (`princess.js`, `{ label, princess:[], king:[] }`).
   - Activity → *point-tiered words* (`activity.js`, `{ 2:{label,words}, 3:…, 4:… }`),
     type-agnostic — the field decides how you perform, the points decide difficulty.
@@ -367,9 +367,12 @@ target band and gives a clue; the rest slide a dial to guess.
 - **Config:** spectrum pool.
 - **Outcome:** closeness **score** (0–100). Bullseye ±10, miss beyond ±30.
 
-### 3.7 Liar's Numbers 🔢 (`liars`, 2+) — drinking-capable
+### 3.7 Ballpark 🔢 (`liars`, 2+) — drinking-capable
 
-Numeric guessing on one device. A question with a number answer shows; the phone passes
+*(DE: Pi mal Daumen. Internal id stays `liars`; the old name "Liar's Numbers" over-promised
+a bluff mechanic — the game is pure closest-estimate.)*
+
+Numeric estimation on one device. A question with a number answer shows; the phone passes
 round and each player privately locks a guess; reveal sorts by distance. Uses the roster.
 
 - **Config:** question pool, 🍻 drinking mode.
@@ -678,7 +681,7 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Games with a 🍻 toggle: Hot Potato, Most Likely To, Never
-   Have I Ever, Imposter, Liar's Numbers, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
+   Have I Ever, Imposter, Ballpark, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
    Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race, Ballon, Wettbüro,
    Mind Meld, Geheimauftrag, Simon Says, Geschmacklos.
 3. **Hot Potato pass model** → pure physical pass (no turn tracking).
@@ -722,7 +725,7 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
   and from Zeitzünder (which has no traitor).
 - **NSFW knowledge round** — Quiz Out is deliberately family-friendly trivia; there's no adult
   equivalent yet (a spicy true/false or estimate-the-number format would fit the gap without
-  cannibalising Liar's Numbers).
+  cannibalising Ballpark).
 - **Anonymous-writing game** — considered and shelved in favour of Geschmacklos (see history:
   the earlier "Ghostwriter" pitch had no clear winner and made the after-round discussion
   pointless); if revisited, needs a sharper resolution mechanic than "guess who wrote it."

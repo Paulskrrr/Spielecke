@@ -53,8 +53,12 @@
     "Owning up is the easy part. The stories aren't.": "Das Zugeben ist das Einfachste. Die Geschichten nicht.",
     "Most Likely To": "Most Likely To",
     "Point on three. No takebacks.": "Auf drei zeigen. Kein Zurück.",
-    // Liar's Numbers: name + tagline intentionally have NO German entry, so t()
-    // falls back to the English key — this game always shows as "Liar's Numbers".
+    // Ballpark (formerly "Liar's Numbers"): EN keeps the "in the ballpark" idiom,
+    // DE uses the equivalent "Pi mal Daumen". Both say "rough estimate" — which
+    // is the actual mechanic (closest guess wins), not the bluff the old name
+    // implied.
+    "Ballpark": "Pi mal Daumen",
+    "Everyone estimates a number. Closest wins, furthest drinks.": "Jeder schätzt eine Zahl. Am nächsten dran gewinnt, am weitesten weg säuft.",
     "Princess Treatment": "Princess Treatment",
     "Going above and beyond, or just the bare minimum? Discuss.": "Mehr als nötig oder nur das Minimum? Diskutiert.",
     "Doodle Drama": "Doodle Drama",
@@ -228,7 +232,7 @@
     "Most fingers drinks 🍺": "Die meisten Finger trinken 🍺",
     "Most fingers takes the crown 👑": "Die meisten Finger gewinnen die Krone 👑",
 
-    // ── Liars Numbers ──────────────────────────────────────────────────────
+    // ── Ballpark (formerly Liar's Numbers) ───────────────────────────────────
     "Question pool": "Fragen-Kategorie",
     "Start round ▶️": "Runde starten ▶️",
     "Your number": "Deine Zahl",
@@ -413,7 +417,7 @@
     "Make one up!": "Denk dir was aus!",
     "👑 PRINCESS": "👑 PRINZESSIN",
     "🤴 KING": "🤴 KÖNIG",
-    // Liar's Numbers
+    // Ballpark
     "Lock your guess in private — don't let the others copy.": "Tippe deine Zahl heimlich ein — keiner darf abschauen.",
     "{name}'s guess": "{name}s Tipp",
     "(off {n})": "({n} daneben)",
