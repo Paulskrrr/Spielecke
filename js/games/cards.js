@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/cards.js — shared 52-card deck + card-face component (the three card games)
  *

@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/princess.js — content for Princess Treatment (NSFW-ish, adults)
  *

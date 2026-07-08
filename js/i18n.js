@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * i18n.js — language switcher (DE / EN)
  *

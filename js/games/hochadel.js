@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/hochadel.js — „Hochadel" (royal-court drinking card game; see PARTY-APP-SPEC.md §3)
  *

@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/doodle.js — Doodle Drama (drawing telephone)
  *

@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/wavelength.js — content for Wavelength (NSFW, adults only)
  *

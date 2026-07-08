@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/maxchen.js — „Mäxchen" (a.k.a. Mia / Lügenmax / Meiern)
  *

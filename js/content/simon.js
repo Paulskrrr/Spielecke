@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/simon.js — content for "Simon sagt" (Simon Says, voice-driven)
  *
