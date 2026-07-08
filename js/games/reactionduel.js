@@ -115,7 +115,6 @@
       '<section class="screen game-setup">' +
       '  <h2 class="screen-title pop">⚡ ' + t("Reaction Duel") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
-      '  <p class="muted small">' + t("Lay the phone flat between two players. Each owns one half of the screen.") + "</p>" +
       pickers +
       '  <h3 class="sub">' + t("Match length") + "</h3>" +
       '  <div class="chip-row" id="rd-targets">' + targetChips + "</div>" +

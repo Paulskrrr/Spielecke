@@ -81,9 +81,7 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var rosterNote = enough
-      ? '<p class="muted small">' + t("Players ({n}): {names}")
-          .replace("{n}", roster.length)
-          .replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      ? ""
       : '<div class="roster-warn" style="display:block">' +
         t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 

@@ -84,7 +84,7 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      ? ""
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
@@ -165,7 +165,7 @@
       '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", gi + 1).replace("{n}", guessers.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
-      '  <p class="muted">' + t("Read the clue, then place your line where you think the target is.") + "</p>" +
+      '  <p class="muted">' + t("Place your line where you'd put the clue on the spectrum.") + "</p>" +
       '  <button id="wl-go" class="btn btn-primary btn-block btn-xl">' + t("I'm {name} — go").replace("{name}", esc(name)) + "</button>" +
       "</section>";
     els.querySelector("#wl-go").addEventListener("click", renderGuesserGuess);

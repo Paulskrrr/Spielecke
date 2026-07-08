@@ -48,7 +48,6 @@
       '<section class="screen game-setup">' +
       '  <h2 class="screen-title pop">👑 ' + t("Princess Treatment") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
-      '  <p class="muted small">' + t("Each round flips between 👑 Princess (for the girls) and 🤴 King (for the guys). Read the prompt, then the table calls it.") + "</p>" +
       '  <h3 class="sub">' + t("Category") + "</h3>" +
       '  <div class="chip-row" id="pr-pools">' + chips + "</div>" +
       '  <button id="pr-start" class="btn btn-primary btn-block btn-xl">' + t("Start ▶️") + "</button>" +

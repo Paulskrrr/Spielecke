@@ -279,7 +279,6 @@
       '  <h3 class="sub">' + t("Fuse length") + "</h3>" +
       '  <div class="chip-row" id="zz-diffs">' + diffChips + "</div>" +
       '  <label class="toggle"><input type="checkbox" id="zz-sound"' + (settings.sound ? " checked" : "") + " /><span>" + t("🔊 Ticking & alarms") + "</span></label>" +
-      '  <p class="muted small">' + t("Tip: works best with 2 players to learn it, then add experts and split the manual between them.") + "</p>" +
       "</section>";
     highlight("#zz-diffs", diffIdForSeconds(settings.seconds), "data-diff");
     els.querySelectorAll("#zz-diffs .chip").forEach(function (c) {
