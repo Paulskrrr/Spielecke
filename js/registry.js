@@ -27,9 +27,13 @@
   // its own fixed `color`. This is the one place to tweak both.
   //
   // ORDERING: the shelf is one continuous grid — no visible section headers —
-  // but games are grouped by vibe so related ones sit together as you scroll:
-  //   quick social icebreakers → party guessing/deduction → longer sit-down &
-  //   team games → simple card & luck drinking games → fast-twitch reflex → co-op.
+  // but games are grouped by vibe so related ones sit together as you scroll.
+  // The active/drinking games sit ABOVE the slower sit-down games, so a night
+  // that leans boozy finds its games first:
+  //   quick social icebreakers → party guessing/deduction → simple card & luck
+  //   drinking games → fast-twitch reflex → longer sit-down & team games → co-op.
+  // BETA games sink to the very bottom: Kommando (simon) is the last tile while
+  // its speechSynthesis path is road-tested with the group.
   //
   // COLOUR: two anchors are fixed by preference — Hochadel = yellow, Doodle
   // Drama = blue. The rest sweep the full 9-colour palette THREE times: each
@@ -43,39 +47,39 @@
   var LAYOUT = [
     // — quick social icebreakers —   (block 1: full palette sweep)
     { id: "nhie",          color: "yellow" },
-    { id: "mostlikely",    color: "red"    },
-    { id: "hotpotato",     color: "blue"   },
+    { id: "mostlikely",    color: "blue"   },
+    { id: "hotpotato",     color: "red"    },
     { id: "whoami",        color: "teal"   },
     { id: "truth",         color: "purple" },
-    { id: "princess",      color: "pink"   },
+    { id: "princess",      color: "orange" },
     // — party guessing & deduction —
-    { id: "imposter",      color: "orange" },
+    { id: "imposter",      color: "indigo" },
     { id: "wavelength",    color: "green"  },
-    { id: "mindmeld",      color: "indigo" },
+    { id: "mindmeld",      color: "pink"   },
     // — (block 2: full palette sweep) —
-    { id: "geheimauftrag", color: "red"    },
-    { id: "liars",         color: "orange" },
+    { id: "geheimauftrag", color: "yellow" },
+    { id: "liars",         color: "blue"   },
     { id: "rankit",        color: "teal"   },
+    // — simple card & luck drinking games —
+    { id: "maxchen",       color: "red"    },
+    { id: "pferderennen",  color: "purple" },
+    { id: "chooser",       color: "orange" },
+    { id: "fuckdealer",    color: "green"  },
+    { id: "busfahrt",      color: "indigo" },
+    { id: "wettbuero",     color: "pink"   },
+    // — fast-twitch reflex —   (block 3: full palette sweep)
+    { id: "reaction",      color: "purple" },
+    { id: "ballon",        color: "teal"   },
     // — longer sit-down & team games —
-    { id: "activity",      color: "purple" },
-    { id: "quiz",          color: "pink"   },
+    { id: "activity",      color: "orange" },
+    { id: "quiz",          color: "red"    },
     { id: "doodle",        color: "blue"   },  // anchor
     { id: "geschmacklos",  color: "green"  },
     { id: "hochadel",      color: "yellow" },  // anchor
-    // — simple card & luck drinking games —
-    { id: "maxchen",       color: "indigo" },
-    // — (block 3: full palette sweep) —
-    { id: "pferderennen",  color: "blue"   },
-    { id: "chooser",       color: "red"    },
-    { id: "fuckdealer",    color: "yellow" },
-    { id: "busfahrt",      color: "teal"   },
-    { id: "wettbuero",     color: "purple" },
-    // — fast-twitch reflex —
-    { id: "reaction",      color: "pink"   },
-    { id: "simon",         color: "orange" },
-    { id: "ballon",        color: "green"  },
     // — co-op —
-    { id: "zeitzunder",    color: "indigo" },
+    { id: "zeitzunder",    color: "pink"   },
+    // — BETA sinks to the bottom —
+    { id: "simon",         color: "indigo" },
   ];
 
   // Build a registry entry straight from a module's meta so they never drift.
