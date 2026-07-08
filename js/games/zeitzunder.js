@@ -1009,14 +1009,14 @@
   // The wire-cutting reference (the only wires chapter). Complete rules,
   // including the leftmost tie-break, so it stands on its own.
   function manualWiresRuined() {
-    return "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
+    return "<p>" + t("Five wires, each with a colour and a printed number. Which one to cut is decided by a value called the CHANNEL.") + "</p>" +
+      "<p>" + t("The CHANNEL comes from the Dials — it's simply <b>Dial A + Dial B</b>. Set both dials to their targets first (see Dials), then add them: dials on 4 and 5 make a channel of 9.") + "</p>" +
       "<ol class='zz-steps'>" +
-      "<li>" + t("Set both dials to their target values and add them together to read the channel.") + "</li>" +
-      "<li>" + t("If a wire's printed number equals the channel, cut it — if several match, the leftmost.") + "</li>" +
-      "<li>" + t("If no number matches, use the colour-priority order: cut the highest-ranked colour present; ties go to the leftmost.") + "</li>" +
-      "<li>" + t("Confirm the cut against the firing order before severing the wire.") + "</li>" +
+      "<li>" + t("Cut the wire whose printed number equals the channel. If several match, cut the leftmost.") + "</li>" +
+      "<li>" + t("If no wire's number matches the channel, switch to colour: cut the highest-ranked colour on the Decoder's priority list (1 = highest). Ties go to the leftmost.") + "</li>" +
+      "<li>" + t("Check the cut against the firing order before you sever the wire (see Firing order).") + "</li>" +
       "</ol>" +
-      "<p class='zz-fine'>" + t("The cut reads the dials LIVE, so the dials must be set even if Wires comes first in the order.") + "</p>";
+      "<p class='zz-fine'>" + t("The cut reads the dials live, so leave them on their targets even when Wires comes first in the order.") + "</p>";
   }
   function manualWarranty() {
     return "<p class='zz-fine'>" + t("This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.") + "</p>" +

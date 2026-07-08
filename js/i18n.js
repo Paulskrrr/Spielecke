@@ -877,6 +877,13 @@
 
     // ── Zeitzünder v11 — single wires chapter (full-procedure page removed) ─
     "Ch. 6 — Wires": "Kapitel 6 — Drähte",
+    // v12 — wires page rewritten to define "channel" before using it
+    "Five wires, each with a colour and a printed number. Which one to cut is decided by a value called the CHANNEL.": "Fünf Drähte, jeder mit Farbe und aufgedruckter Zahl. Welchen du durchtrennst, entscheidet ein Wert namens KANAL.",
+    "The CHANNEL comes from the Dials — it's simply <b>Dial A + Dial B</b>. Set both dials to their targets first (see Dials), then add them: dials on 4 and 5 make a channel of 9.": "Der KANAL kommt von den Reglern — er ist einfach <b>Regler A + Regler B</b>. Stell beide Regler zuerst auf ihre Zielwerte (siehe Regler) und addiere sie: Regler auf 4 und 5 ergeben Kanal 9.",
+    "Cut the wire whose printed number equals the channel. If several match, cut the leftmost.": "Durchtrenne den Draht, dessen aufgedruckte Zahl dem Kanal entspricht. Bei mehreren Treffern den am weitesten links.",
+    "If no wire's number matches the channel, switch to colour: cut the highest-ranked colour on the Decoder's priority list (1 = highest). Ties go to the leftmost.": "Passt keine Zahl zum Kanal, entscheidet die Farbe: durchtrenne die höchstplatzierte Farbe aus der Prioritätsliste des Decoders (1 = höchste). Bei Gleichstand den am weitesten links.",
+    "Check the cut against the firing order before you sever the wire (see Firing order).": "Gleiche den Schnitt vor dem Durchtrennen mit der Zünd-Reihenfolge ab (siehe Zünd-Reihenfolge).",
+    "The cut reads the dials live, so leave them on their targets even when Wires comes first in the order.": "Der Schnitt liest die Regler in Echtzeit; lass sie auf ihren Zielwerten, auch wenn die Drähte in der Reihenfolge zuerst dran sind.",
     "If a wire's printed number equals the channel, cut it — if several match, the leftmost.": "Trägt ein Draht die Zahl des Kanals, ist er zu durchtrennen — bei mehreren Treffern der am weitesten links liegende.",
     "If no number matches, use the colour-priority order: cut the highest-ranked colour present; ties go to the leftmost.": "Passt keine Zahl, gilt die Farb-Priorität: zu durchtrennen ist die höchstplatzierte vorhandene Farbe; bei Gleichstand die am weitesten links liegende.",
     "The cut reads the dials LIVE, so the dials must be set even if Wires comes first in the order.": "Der Schnitt liest die Regler in Echtzeit; sie müssen daher eingestellt sein, auch wenn die Drähte in der Reihenfolge zuerst dran sind.",
