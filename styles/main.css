@@ -2753,9 +2753,143 @@ body::before {
   .zz-ckey__rank { font-size: 1.1rem; }
 }
 @media (min-width: 1100px) { .zz-bomb { --zz-size: 460px; } }
+
+/* ----- Zeitzünder: detonation choreography ------------------------------- */
+/* Toy-cartoon, no gore: the cube shudders and glows, then the casing bursts
+   apart to one side while a flat crayon fireball (ink-outlined rings) fills the
+   screen, bolts & painted casing chips scatter, a BOOM! sticker slams in and
+   smoke drifts up. JS times the beats (zeitzunder.js playExplosionFx). */
+
+/* beat 1 — priming: violent shudder + plates pulse red */
+.zz-priming .zz-rig { animation: zz-prime-shake 0.5s linear; }
+.zz-priming .zz-plate { animation: zz-prime-glow 0.25s ease-in-out 2; }
+@keyframes zz-prime-shake {
+  0% { transform: translate(0, 0) rotate(0); }
+  12% { transform: translate(-3px, 2px) rotate(-0.6deg); }
+  25% { transform: translate(4px, -2px) rotate(0.8deg); }
+  38% { transform: translate(-5px, -3px) rotate(-1.1deg); }
+  50% { transform: translate(6px, 3px) rotate(1.3deg); }
+  63% { transform: translate(-7px, 2px) rotate(-1.6deg); }
+  75% { transform: translate(8px, -4px) rotate(1.9deg); }
+  88% { transform: translate(-9px, 3px) rotate(-2.2deg); }
+  100% { transform: translate(10px, -3px) rotate(2.5deg); }
+}
+@keyframes zz-prime-glow {
+  0%, 100% { box-shadow: inset 0 0 0 2px rgba(255,255,255,0.18), inset 0 -10px 22px rgba(0,0,0,0.32); }
+  50% { box-shadow: inset 0 0 0 6px var(--red), inset 0 -10px 22px rgba(0,0,0,0.32); }
+}
+
+/* beat 2 — burst: the whole rig flings up-left while the face plates pop off
+   in their own directions (their parents are 3D-rotated, so identical local
+   translations scatter them like casing panels). */
+.zz-bursting .zz-rig { animation: zz-rig-fling 0.9s cubic-bezier(0.25, 0.6, 0.4, 1) forwards; }
+/* the rest of the bomb screen (HUD, pads, buttons) vanishes under the fireball
+   so nothing of the "intact" device is left standing when the fire dies down */
+.zz-bursting { animation: zz-bomb-gone 0.4s ease-out 0.3s forwards; }
+@keyframes zz-bomb-gone { to { opacity: 0; } }
+@keyframes zz-rig-fling {
+  0% { transform: translate(0, 0) rotate(0) scale(1); opacity: 1; }
+  30% { transform: translate(-14vw, -8vh) rotate(-14deg) scale(1.12); opacity: 1; }
+  100% { transform: translate(-68vw, -34vh) rotate(-42deg) scale(1.2); opacity: 0; }
+}
+.zz-bursting .zz-face .zz-plate { animation: zz-plate-pop 0.8s cubic-bezier(0.2, 0.7, 0.4, 1) forwards; }
+.zz-bursting .zz-face:nth-of-type(odd) .zz-plate { animation-name: zz-plate-pop-alt; }
+@keyframes zz-plate-pop {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(46px, -64px) rotate(38deg); opacity: 0; }
+}
+@keyframes zz-plate-pop-alt {
+  0% { transform: translate(0, 0) rotate(0); opacity: 1; }
+  100% { transform: translate(-58px, 42px) rotate(-46deg); opacity: 0; }
+}
+
+/* the full-screen overlay */
+.zz-explosion {
+  position: fixed; inset: 0; z-index: 60;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden; pointer-events: none;
+}
+.zz-x-flash {
+  position: absolute; inset: 0; background: #fff;
+  animation: zz-x-flash 0.3s ease-out forwards;
+}
+@keyframes zz-x-flash { 0% { opacity: 1; } 100% { opacity: 0; } }
+
+/* the fireball: flat crayon rings with fat ink outlines, biggest at the back */
+.zz-x-fire { position: absolute; inset: 0; display: grid; place-items: center; animation: zz-x-fade 0.45s ease-in 1.25s forwards; }
+.zz-x-ring {
+  grid-area: 1 / 1; display: block; border-radius: 50%;
+  border: 6px solid var(--ink);
+  width: 24vmin; height: 24vmin;
+  transform: scale(0);
+  animation: zz-x-grow 0.9s cubic-bezier(0.2, 0.8, 0.3, 1) forwards;
+}
+.zz-x-r4 { background: var(--red); animation-delay: 0ms; --zz-x-s: 7.5; }
+.zz-x-r3 { background: var(--orange); animation-delay: 60ms; --zz-x-s: 5.4; }
+.zz-x-r2 { background: var(--yellow); animation-delay: 120ms; --zz-x-s: 3.5; }
+.zz-x-r1 { background: #fff8e6; animation-delay: 180ms; --zz-x-s: 1.8; }
+@keyframes zz-x-grow {
+  0% { transform: scale(0); }
+  70% { transform: scale(calc(var(--zz-x-s) * 1.06)); }
+  100% { transform: scale(var(--zz-x-s)); }
+}
+@keyframes zz-x-fade { to { opacity: 0; } }
+
+/* shrapnel: bolts/gears plus painted casing chips, flung on per-piece vectors */
+.zz-shrap {
+  position: absolute; left: 50%; top: 50%;
+  font-size: clamp(1.5rem, 6vw, 2.6rem); line-height: 1;
+  transform: translate(-50%, -50%) scale(0.4);
+  animation: zz-shrap-fly 1.35s cubic-bezier(0.15, 0.75, 0.4, 1) forwards;
+}
+.zz-shrap--chip { width: clamp(14px, 4vw, 22px); height: clamp(14px, 4vw, 22px);
+  border: 3px solid var(--ink); border-radius: 4px; }
+.zz-chip0 { background: var(--red); }
+.zz-chip1 { background: var(--yellow); }
+.zz-chip2 { background: var(--blue); }
+@keyframes zz-shrap-fly {
+  0% { transform: translate(-50%, -50%) scale(0.4) rotate(0); opacity: 0; }
+  10% { opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(1) rotate(var(--rot)); opacity: 0; }
+}
+
+/* the BOOM! sticker: white comic word with a fat ink outline, slams in tilted */
+.zz-x-word {
+  position: relative; z-index: 2;
+  font-size: clamp(4rem, 24vw, 10rem); font-weight: 900; color: #fff;
+  -webkit-text-stroke: 3px var(--ink);
+  text-shadow: 5px 6px 0 var(--ink);
+  transform: scale(0) rotate(-10deg);
+  animation: zz-x-word 0.55s cubic-bezier(0.2, 1.4, 0.4, 1) 0.28s forwards;
+}
+@keyframes zz-x-word {
+  0% { transform: scale(0) rotate(-10deg); }
+  70% { transform: scale(1.15) rotate(-7deg); }
+  100% { transform: scale(1) rotate(-8deg); }
+}
+
+/* smoke puffs drifting up as the fire dies down */
+.zz-x-smoke { position: absolute; inset: 0; z-index: 3; display: flex; align-items: center; justify-content: center; gap: 8vmin; }
+.zz-x-smoke span {
+  font-size: clamp(2.6rem, 12vw, 5rem); opacity: 0;
+  animation: zz-x-smoke 1s ease-out 0.95s forwards;
+}
+.zz-x-smoke span:nth-child(2) { animation-delay: 1.1s; }
+.zz-x-smoke span:nth-child(3) { animation-delay: 1.05s; }
+@keyframes zz-x-smoke {
+  0% { opacity: 0; transform: translateY(4vmin) scale(0.7); }
+  35% { opacity: 0.9; }
+  100% { opacity: 0; transform: translateY(-16vmin) scale(1.25); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .zz-cube { transition: none; }
   .zz-timer.is-danger, .zz-wire.is-bad, .zz-toast { animation: none; }
+  /* JS skips the whole detonation sequence under reduced motion; this is a
+     belt-and-braces stop for anything that still lands in the DOM. */
+  .zz-explosion *, .zz-priming .zz-rig, .zz-priming .zz-plate,
+  .zz-bursting .zz-rig, .zz-bursting .zz-face .zz-plate { animation: none !important; }
 }
 
 /* ======================================================================

@@ -255,10 +255,10 @@
       role = null; renderRolePicker();
     },
     unmount: function () {
-      stopTimer(); teardownAudio(); detachKeys();
+      stopTimer(); stopFx(); teardownAudio(); detachKeys();
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; bomb = null; role = null;
-      solved = {}; solvedCount = 0; strikes = 0; entry = []; busy = false; M = ID;
+      solved = {}; solvedCount = 0; strikes = 0; entry = []; busy = false; exploding = false; M = ID;
     }
   };
 
@@ -677,14 +677,79 @@
   function stopTimer() { if (timer) { global.clearInterval(timer); timer = null; } }
   function updateTimer() { var el = els && els.querySelector("#zz-timer"); if (!el) return; el.textContent = fmt(Math.max(0, timeLeft)); el.classList.toggle("is-danger", timeLeft <= 30); }
 
+  var exploding = false; // re-entry guard: a stray tap mid-sequence must not re-trigger
   function boom() {
+    if (exploding) return;
+    exploding = true;
     stopTimer(); boomSound(); buzz([120, 60, 200]);
+    // The detonation deserves a show: shudder → the casing bursts apart to one
+    // side → a cartoon fireball fills the screen → the end card. Skipped for
+    // reduced-motion users and when there's no cube on screen to blow up.
+    var reduced = false;
+    try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
+    if (reduced || !els.querySelector("#zz-rig")) { renderBoomScreen(); return; }
+    playExplosionFx(renderBoomScreen);
+  }
+
+  function renderBoomScreen() {
+    stopFx();
+    exploding = false;
     els.innerHTML =
       '<section class="screen zz-end zz-boom"><div class="boom-flash">💥</div><h2 class="boom-title">' + t("BOOM!") + "</h2>" +
       '<p class="boom-sub">' + (timeLeft <= 0 ? t("⏱️ Time ran out.") : t("💥 Three strikes. The wire was wrong.")) + "</p>" +
       '<div class="boom-actions"><button id="zz-retry" class="btn btn-primary btn-block btn-xl">' + t("New bomb 🔁") + '</button><button id="zz-setup" class="btn btn-block">' + t("Change settings") + "</button></div></section>";
     els.querySelector("#zz-retry").addEventListener("click", newBomb);
     els.querySelector("#zz-setup").addEventListener("click", renderRolePicker);
+  }
+
+  // --- Detonation choreography (bomb screen only) ---------------------------
+  // Pure CSS-driven, toy-cartoon style (flat crayon rings + ink outlines, bolt
+  // shrapnel, a BOOM! sticker, smoke puffs) — no gore, ~2.2s end to end. The
+  // overlay lives inside `els`, so the end-card innerHTML swap cleans it up.
+  var fxTimers = [];
+  function fx(fn, ms) { fxTimers.push(global.setTimeout(fn, ms)); }
+  function stopFx() { fxTimers.forEach(function (id) { global.clearTimeout(id); }); fxTimers = []; }
+
+  function playExplosionFx(done) {
+    var bombEl = els.querySelector(".zz-bomb");
+    if (!bombEl) { done(); return; }
+    busy = true; // block further input while the fireworks run
+    bombEl.classList.add("zz-priming");
+
+    fx(function () {
+      if (!els) return;
+      bombEl.classList.add("zz-bursting");
+
+      var icons = ["🔩", "⚙️", "🔧", "🧷", "📎", "🔌"];
+      var bits = "";
+      for (var i = 0; i < 14; i++) {
+        var ang = (i / 14) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
+        var dist = 40 + Math.random() * 38;
+        var dx = (Math.cos(ang) * dist).toFixed(0);
+        var dy = (Math.sin(ang) * dist * 0.85).toFixed(0);
+        var rot = ((Math.random() * 2 - 1) * 560).toFixed(0);
+        var delay = (Math.random() * 90) | 0;
+        var chip = i % 3 === 0; // every third piece is a painted casing chip
+        bits += '<span class="zz-shrap' + (chip ? " zz-shrap--chip zz-chip" + ((i / 3) % 3 | 0) : "") + '"' +
+          ' style="--dx:' + dx + "vmin;--dy:" + dy + "vmin;--rot:" + rot + "deg;animation-delay:" + delay + 'ms">' +
+          (chip ? "" : icons[i % icons.length]) + "</span>";
+      }
+
+      var ov = document.createElement("div");
+      ov.className = "zz-explosion";
+      ov.innerHTML =
+        '<div class="zz-x-flash"></div>' +
+        '<div class="zz-x-fire">' +
+        '  <i class="zz-x-ring zz-x-r4"></i><i class="zz-x-ring zz-x-r3"></i>' +
+        '  <i class="zz-x-ring zz-x-r2"></i><i class="zz-x-ring zz-x-r1"></i>' +
+        "</div>" +
+        bits +
+        '<div class="zz-x-word">' + t("BOOM!") + "</div>" +
+        '<div class="zz-x-smoke"><span>💨</span><span>💨</span><span>💨</span></div>';
+      els.appendChild(ov);
+
+      fx(done, 1750);
+    }, 500);
   }
   function defused() {
     stopTimer(); defuseSound();
