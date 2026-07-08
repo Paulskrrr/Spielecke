@@ -190,15 +190,15 @@
           "Kamaru Usman", "Leon Edwards", "Nate Diaz", "Jorge Masvidal",
           "Amanda Nunes", "Valentina Shevchenko", "Zhang Weili", "Francis Ngannou",
           "Stipe Miocic", "Georges St-Pierre", "Anderson Silva", "Tom Aspinall",
-          "Dricus du Plessis", "Merab Dvalishvili", "Paddy Pimblett",
+          "Merab Dvalishvili", "Paddy Pimblett",
           // Boxen
           "Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Manny Pacquiao",
           "Canelo Álvarez", "Tyson Fury", "Anthony Joshua", "Deontay Wilder",
-          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Gervonta Davis",
+          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Conor Benn",
           "Wladimir Klitschko", "Evander Holyfield",
           // Rund um den Sport
           "Dana White", "Joe Rogan", "Ariel Helwani", "Bruce Buffer",
-          "Michael Buffer", "Don King", "Eddie Hearn", "Jake Paul", "Logan Paul",
+          "Michael Buffer", "Don King", "Eddie Hearn",
         ],
       },
       nsfw: {
@@ -486,15 +486,15 @@
           "Kamaru Usman", "Leon Edwards", "Nate Diaz", "Jorge Masvidal",
           "Amanda Nunes", "Valentina Shevchenko", "Zhang Weili", "Francis Ngannou",
           "Stipe Miocic", "Georges St-Pierre", "Anderson Silva", "Tom Aspinall",
-          "Dricus du Plessis", "Merab Dvalishvili", "Paddy Pimblett",
+          "Merab Dvalishvili", "Paddy Pimblett",
           // Boxen
           "Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Manny Pacquiao",
           "Canelo Álvarez", "Tyson Fury", "Anthony Joshua", "Deontay Wilder",
-          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Gervonta Davis",
+          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Conor Benn",
           "Wladimir Klitschko", "Evander Holyfield",
           // Rund um den Sport
           "Dana White", "Joe Rogan", "Ariel Helwani", "Bruce Buffer",
-          "Michael Buffer", "Don King", "Eddie Hearn", "Jake Paul", "Logan Paul",
+          "Michael Buffer", "Don King", "Eddie Hearn",
         ],
       },
       nsfw: {
