@@ -1725,6 +1725,11 @@ body::before {
 .ha-card-mini--aktiv { background: linear-gradient(165deg, #f6dd86, #C9A227); color: var(--ink); cursor: pointer; }
 .ha-card-mini--aktiv:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
 .ha-card-mini--regel { background: linear-gradient(165deg, #2f558f, #1B3A6B); color: #fff; }
+/* Temporary rules are clickable to clear. A dashed rim + hint marks them as
+   fleeting so they read differently from the permanent standing laws. */
+.ha-card-mini--temp { cursor: pointer; border-style: dashed; }
+.ha-card-mini--temp:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); }
+.ha-card-mini--temp .ha-card-mini__hint { color: var(--yellow); opacity: 1; }
 .ha-card-mini__pip { position: absolute; top: 9px; right: 11px; font-size: 1.15rem; }
 /* Heraldic crest badge in the corner (replaces the emoji pip). */
 .ha-card-mini__crest { position: absolute; top: 6px; right: 8px; width: 38px; height: auto; }

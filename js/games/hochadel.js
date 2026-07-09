@@ -170,7 +170,12 @@
   function reconcile(saved) {
     saved.draw = (saved.draw || []).filter(function (id) { return cardById[id]; });
     saved.discard = (saved.discard || []).filter(function (id) { return cardById[id]; });
-    saved.hofgesetze = saved.hofgesetze || [];
+    saved.hofgesetze = (saved.hofgesetze || []).map(function (g) {
+      // Backfill the `temp` flag on games saved before temporary rules existed,
+      // so a resumed court gets the tap-to-clear affordance too.
+      if (g && cardById[g.id] && typeof g.temp === "undefined") g.temp = !!cardById[g.id].temp;
+      return g;
+    });
     saved.active = saved.active || [];
     if (saved.dir !== 1 && saved.dir !== -1) saved.dir = 1;
     if (!saved.uidSeq) saved.uidSeq = saved.active.length + 1;
@@ -457,23 +462,48 @@
     els.querySelectorAll("[data-trigger]").forEach(function (b) {
       b.addEventListener("click", function () { onTrigger(b.getAttribute("data-trigger")); });
     });
+    els.querySelectorAll("[data-dismiss]").forEach(function (b) {
+      b.addEventListener("click", function () { onDismissRule(b.getAttribute("data-dismiss")); });
+    });
   }
 
-  // Saphir laws shown as face-up cards (passive — not clickable).
+  // Clear a spent temporary rule off the board. Rules are unique by id in
+  // hofgesetze (same-id draws supersede), so removing by id is exact; the card
+  // returns to the discard so it can come round again later.
+  function onDismissRule(id) {
+    var keep = [];
+    for (var i = 0; i < game.hofgesetze.length; i++) {
+      if (game.hofgesetze[i].id === id) game.discard.push(game.hofgesetze[i].id);
+      else keep.push(game.hofgesetze[i]);
+    }
+    game.hofgesetze = keep;
+    saveState();
+    renderTable();
+  }
+
+  // Saphir laws shown as face-up cards. Permanent rules are passive (a static
+  // card). Temporary rules (fixed-duration effects like „In Zeitlupe") get a
+  // tap-to-clear affordance so they don't clutter the board once they're spent.
   function lawsHtml() {
     var body;
     if (!game.hofgesetze.length) {
       body = '<p class="ha-empty muted small">' + t("No standing rules yet.") + "</p>";
     } else {
       body = '<div class="ha-hand">' + game.hofgesetze.map(function (r) {
-        return (
-          '<div class="ha-card-mini ha-card-mini--regel">' +
+        var inner =
           '  <img class="ha-card-mini__crest" src="assets/ha-crest-regel.png" alt="" />' +
           (r.by ? '  <span class="ha-card-mini__holder">' + esc(r.by) + "</span>" : "") +
           '  <span class="ha-card-mini__title">' + esc(r.title) + "</span>" +
-          '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>" +
-          "</div>"
-        );
+          '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>";
+        if (r.temp) {
+          return (
+            '<button class="ha-card-mini ha-card-mini--regel ha-card-mini--temp" data-dismiss="' + esc(r.id) + '">' +
+            inner +
+            '  <span class="ha-card-mini__hint">' + t("Over? Tap to clear ✕") + "</span>" +
+            "</button>"
+          );
+        }
+        return '<div class="ha-card-mini ha-card-mini--regel">' + inner + "</div>";
       }).join("") + "</div>";
     }
     return '<div class="ha-pile"><h3 class="sub">' + t("📜 Standing Rules") + "</h3>" + body + "</div>";
@@ -577,7 +607,7 @@
       // drawing the second copy hands the role to the new target, so the old
       // Hofgesetz entry of the SAME card is replaced instead of stacking.
       game.hofgesetze = game.hofgesetze.filter(function (g) { return g.id !== card.id; });
-      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—" });
+      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—", temp: !!card.temp });
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
       game.active.push({

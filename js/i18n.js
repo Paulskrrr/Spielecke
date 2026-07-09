@@ -470,6 +470,7 @@
     "No standing rules yet.": "Noch keine Hofgesetze.",
     "No Trumps yet. Gold cards stay face-up with their holder.": "Noch keine Trümpfe. Gold-Karten liegen offen vor ihrem Halter.",
     "Tap to activate ⚡": "Tippen zum Auslösen ⚡",
+    "Over? Tap to clear ✕": "Vorbei? Antippen zum Entfernen ✕",
     "↺ Reset game": "↺ Spiel zurücksetzen",
     "Instant Action": "Sofort-Aktion",
     "Passive / Rule": "Passiv / Regel",
