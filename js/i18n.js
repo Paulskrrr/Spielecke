@@ -198,6 +198,12 @@
     // ── Wavelength ─────────────────────────────────────────────────────────
     "Spectrum pool": "Spektrum-Kategorie",
     "Start round 🎯": "Runde starten 🎯",
+    "Who sets the wavelength?": "Wer gibt die Wavelength vor?",
+    "Spinning for a clue-giver…": "Es wird ausgelost…",
+    "Picking…": "Wird ausgelost…",
+    "Tap any name to pick the clue-giver yourself.": "Tippe einen Namen an, um selbst zu bestimmen, wer vorgibt.",
+    "Tap a name to pick someone else.": "Tippe einen Namen an, um jemand anderen zu wählen.",
+    "{name} sets it — continue 📡": "{name} gibt vor — weiter 📡",
     "Clue-giver only": "Nur für den Tipp-Geber",
     "Show me the target 🎯": "Zeig mir das Ziel 🎯",
     "{name} sets the wavelength": "{name} gibt die Wavelength vor",

@@ -843,7 +843,55 @@ body::before {
 
 /* ----- Wavelength ------------------------------------------------------- */
 
-.wl-handover, .wl-reveal, .wl-guess { text-align: center; }
+.wl-handover, .wl-reveal, .wl-guess, .wl-pick { text-align: center; }
+
+/* Clue-giver spinner: a highlight sweeps the names, slows and lands on one. */
+.wl-pick { padding-top: 3vh; }
+.wl-pick-sub { margin-bottom: 4px; }
+.wl-pick-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 18px auto;
+  max-width: 520px;
+}
+.wl-pick-name {
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  padding: 12px 18px;
+  min-height: var(--tap);
+  border: 4px solid var(--ink);
+  border-radius: 999px;
+  background: var(--paper-2);
+  color: var(--ink);
+  box-shadow: var(--pop);
+  /* Snappy so the sweep reads crisply; the transform lifts on highlight. */
+  transition: transform 0.09s ease, background 0.09s ease, color 0.09s ease, box-shadow 0.09s ease;
+}
+.wl-pick-name.is-hot {
+  background: var(--yellow);
+  transform: translateY(-3px) scale(1.08);
+  box-shadow: var(--pop-lg);
+  z-index: 1;
+}
+.wl-pick-name.is-chosen {
+  background: var(--purple);
+  color: #fff;
+  transform: translateY(-3px) scale(1.12);
+  box-shadow: var(--pop-lg);
+  animation: wl-pick-land 0.4s var(--spring);
+}
+@keyframes wl-pick-land {
+  0% { transform: translateY(-3px) scale(1.28); }
+  100% { transform: translateY(-3px) scale(1.12); }
+}
+.wl-pick-hint { margin-top: 6px; }
+@media (prefers-reduced-motion: reduce) {
+  .wl-pick-name { transition: none; }
+  .wl-pick-name.is-chosen { animation: none; }
+}
 
 /* Mobile-first: the spectrum runs VERTICALLY (blue at top → red at bottom),
    with each end-label stacked directly above/below the dial so they read as the
