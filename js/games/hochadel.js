@@ -68,6 +68,7 @@
       if (saved && saved.edition && saved.order && saved.order.length >= 2
           && rosterMatchesSaved(saved.order)) {
         game = reconcile(saved);
+        expireTempRules(); // clear any temp rule whose window already elapsed
         renderGroundRules(renderTable);
       } else {
         // No saved game, or it belongs to a different roster — start fresh so
@@ -158,6 +159,8 @@
       hofgesetze: [],   // [{ id, title, text }]
       active: [],       // [{ uid, cardId, title, text, power, holder }]
       uidSeq: 1,
+      turnCount: 0,     // monotonic turn counter; drives the round-based expiry of
+                        // temporary rules (one round = order.length turns).
       draw: buildDeck(edition),
       discard: [],
       lastCard: null,   // {title, text} of the last non-Echo card resolved — the
@@ -170,10 +173,15 @@
   function reconcile(saved) {
     saved.draw = (saved.draw || []).filter(function (id) { return cardById[id]; });
     saved.discard = (saved.discard || []).filter(function (id) { return cardById[id]; });
+    if (typeof saved.turnCount !== "number") saved.turnCount = 0;
     saved.hofgesetze = (saved.hofgesetze || []).map(function (g) {
-      // Backfill the `temp` flag on games saved before temporary rules existed,
-      // so a resumed court gets the tap-to-clear affordance too.
+      // Backfill the `temp` flag on games saved before temporary rules existed.
       if (g && cardById[g.id] && typeof g.temp === "undefined") g.temp = !!cardById[g.id].temp;
+      // Backfill an expiry for temp rules from before round-tracking: let them run
+      // out at the end of the current round rather than lingering forever.
+      if (g && g.temp && typeof g.expiresAt !== "number") {
+        g.expiresAt = saved.turnCount + Math.max(1, (saved.order || []).length);
+      }
       return g;
     });
     saved.active = saved.active || [];
@@ -191,6 +199,25 @@
   function nextTurn() {
     var n = game.order.length;
     game.turnIndex = (game.turnIndex + game.dir + n) % n;
+    game.turnCount = (game.turnCount || 0) + 1;
+    expireTempRules();
+  }
+  // Drop any temporary rule whose round window has elapsed. A temp rule played on
+  // turn T lasts one full round — it expires once the turn counter comes back
+  // around to its holder (T + number of players). Cleared cards go to the discard
+  // so they can come round again later.
+  function expireTempRules() {
+    if (!game.hofgesetze.length) return;
+    var keep = [];
+    for (var i = 0; i < game.hofgesetze.length; i++) {
+      var g = game.hofgesetze[i];
+      if (g.temp && typeof g.expiresAt === "number" && game.turnCount >= g.expiresAt) {
+        game.discard.push(g.id);
+      } else {
+        keep.push(g);
+      }
+    }
+    game.hofgesetze = keep;
   }
   function names() { return game.order.map(function (o) { return o.name; }); }
   // Fill card tokens: {P} -> the drawer's name, {VERS} -> a random opening verse.
@@ -462,28 +489,12 @@
     els.querySelectorAll("[data-trigger]").forEach(function (b) {
       b.addEventListener("click", function () { onTrigger(b.getAttribute("data-trigger")); });
     });
-    els.querySelectorAll("[data-dismiss]").forEach(function (b) {
-      b.addEventListener("click", function () { onDismissRule(b.getAttribute("data-dismiss")); });
-    });
   }
 
-  // Clear a spent temporary rule off the board. Rules are unique by id in
-  // hofgesetze (same-id draws supersede), so removing by id is exact; the card
-  // returns to the discard so it can come round again later.
-  function onDismissRule(id) {
-    var keep = [];
-    for (var i = 0; i < game.hofgesetze.length; i++) {
-      if (game.hofgesetze[i].id === id) game.discard.push(game.hofgesetze[i].id);
-      else keep.push(game.hofgesetze[i]);
-    }
-    game.hofgesetze = keep;
-    saveState();
-    renderTable();
-  }
-
-  // Saphir laws shown as face-up cards. Permanent rules are passive (a static
-  // card). Temporary rules (fixed-duration effects like „In Zeitlupe") get a
-  // tap-to-clear affordance so they don't clutter the board once they're spent.
+  // Saphir laws shown as face-up cards. Permanent rules stand until the game is
+  // reset; temporary rules (fixed-duration effects like „In Zeitlupe") carry a
+  // round countdown and are cleared automatically by expireTempRules() once the
+  // turn comes back around to their holder.
   function lawsHtml() {
     var body;
     if (!game.hofgesetze.length) {
@@ -497,16 +508,23 @@
           '  <span class="ha-card-mini__text">' + esc(r.text) + "</span>";
         if (r.temp) {
           return (
-            '<button class="ha-card-mini ha-card-mini--regel ha-card-mini--temp" data-dismiss="' + esc(r.id) + '">' +
+            '<div class="ha-card-mini ha-card-mini--regel ha-card-mini--temp">' +
             inner +
-            '  <span class="ha-card-mini__hint">' + t("Over? Tap to clear ✕") + "</span>" +
-            "</button>"
+            '  <span class="ha-card-mini__hint">' + tempRuleHint(r) + "</span>" +
+            "</div>"
           );
         }
         return '<div class="ha-card-mini ha-card-mini--regel">' + inner + "</div>";
       }).join("") + "</div>";
     }
     return '<div class="ha-pile"><h3 class="sub">' + t("📜 Standing Rules") + "</h3>" + body + "</div>";
+  }
+
+  // Countdown label for a temporary rule: turns left until it auto-clears.
+  function tempRuleHint(r) {
+    var left = (typeof r.expiresAt === "number") ? r.expiresAt - game.turnCount : game.order.length;
+    if (left <= 1) return "⏳ " + t("ends this turn");
+    return "⏳ " + t("{n} turns left").replace("{n}", left);
   }
 
   // Gold active cards shown face-up; tapping the whole card resolves it.
@@ -607,7 +625,12 @@
       // drawing the second copy hands the role to the new target, so the old
       // Hofgesetz entry of the SAME card is replaced instead of stacking.
       game.hofgesetze = game.hofgesetze.filter(function (g) { return g.id !== card.id; });
-      game.hofgesetze.push({ id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—", temp: !!card.temp });
+      var law = { id: card.id, title: card.title, text: filledText, by: curL ? curL.name : "—", temp: !!card.temp };
+      // Temp rules expire after their round window. Played on this turn, one round
+      // = order.length turns from now, i.e. it lasts until the turn comes back
+      // around to the drawer. (`rounds` allows a longer window; defaults to 1.)
+      if (card.temp) law.expiresAt = game.turnCount + game.order.length * (card.rounds || 1);
+      game.hofgesetze.push(law);
     } else if (card.type === "aktiv") {
       var cur = currentPlayer();
       game.active.push({
