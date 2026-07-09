@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/hotpotato-prompts.js — content for Hot Potato (spec §2.3)
  *

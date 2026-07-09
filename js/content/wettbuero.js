@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/wettbuero.js — challenge deck for "Wettbüro" (adults only, 18+)
  *

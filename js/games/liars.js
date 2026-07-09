@@ -1,10 +1,15 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
- * games/liars.js — Liar's Numbers
+ * games/liars.js — Ballpark (DE: Pi mal Daumen)
  *
- * A numeric-guess game on one device. A question with a number answer shows;
- * the phone passes round and each player privately locks a guess. Reveal the
- * answer and sort by distance: closest wins, furthest loses (drinking mode:
+ * A numeric-estimation game on one device. A question with a number answer
+ * shows; the phone passes round and each player privately locks a guess. Reveal
+ * the answer and sort by distance: closest wins, furthest loses (drinking mode:
  * furthest drinks). All-number, so it dodges any language "tell".
+ *
+ * The internal id stays `liars` (and the content file numbers.js) so saved
+ * settings and script wiring keep working; only the display name changed — the
+ * old "Liar's Numbers" title over-promised a bluff mechanic this game never had.
  *
  * Uses the shared roster for the pass order + names.
  * Content: content/numbers.js (Spielecke.NumberQuestions). Drinking-capable.
@@ -24,8 +29,8 @@
   var module = {
     meta: {
       id: "liars",
-      name: "Liar's Numbers",
-      tagline: "Everyone guesses a number. Closest wins, furthest eats it.",
+      name: "Ballpark",
+      tagline: "Everyone estimates a number. Closest wins, furthest drinks.",
       icon: "🔢",
       minPlayers: MIN_PLAYERS,
       supportsDrinking: true,
@@ -50,12 +55,12 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      ? ""
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🔢 ' + t("Liar\'s Numbers") + "</h2>" +
+      '  <h2 class="screen-title pop">🔢 ' + t("Ballpark") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       note +
       '  <h3 class="sub">' + t("Question pool") + "</h3>" +
@@ -90,7 +95,7 @@
       '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", idx + 1).replace("{n}", players.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
-      '  <p class="muted">' + t("Lock your guess in private — don't let the others copy.") + "</p>" +
+      '  <p class="muted">' + t("Lock your guess in private.") + "</p>" +
       '  <button id="ln-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — reveal").replace("{name}", esc(name)) + "</button>" +
       "</section>";
     els.querySelector("#ln-go").addEventListener("click", renderEntry);

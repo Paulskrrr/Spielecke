@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/zeitzunder.js — Zeitzünder (asymmetric co-op bomb defusal)
  *
@@ -218,11 +219,10 @@
   // ========================================================================
   // Module state
   // ========================================================================
-  var DEFAULTS = { seconds: 270, sound: true };
+  var DEFAULTS = { seconds: 600, sound: true };
   var DIFFICULTIES = [
-    { id: "chill", label: "🌿 Rookie", seconds: 360 },
-    { id: "standard", label: "💣 Standard", seconds: 270 },
-    { id: "lethal", label: "💀 Lethal", seconds: 180 }
+    { id: "normal", label: "💣 Normal", seconds: 600 },
+    { id: "lethal", label: "💀 Lethal", seconds: 300 }
   ];
   var MAX_STRIKES = 3;
   // Multi-expert variation point: today a single expert holds the whole book.
@@ -234,10 +234,17 @@
   var M = ID;                // cube orientation
   var activeFace = "core";   // logical face currently at front
   var dials = { a: 0, b: 0 };
+  var dialAngle = { a: 0, b: 0 };  // continuous cap rotation (deg) so knobs spin forward, never snap back
   var mazePos = [0, 0];
   var entry = [], solved = {}, solvedCount = 0, strikes = 0, timeLeft = 0;
   var manualPages = [], manualIdx = 0;
   var timer = null, audio = null, keyHandler = null, busy = false, justDragged = false;
+  // Cube rotation is serialised: only one 90° step animates at a time, and the
+  // most recent input during that step is queued (1-deep). Interrupting a
+  // matrix3d transition mid-flight makes the browser interpolate along a
+  // nonsensical axis (the cube looks like its faces twist apart), so we never
+  // reassign the transform while one is still animating.
+  var rotAnimating = false, rotQueued = null, rotTimer = null;
 
   var module = {
     meta: {
@@ -248,16 +255,16 @@
     mount: function (container, context) {
       els = container; ctx = context;
       settings = {
-        seconds: parseInt(context.store.get("seconds", DEFAULTS.seconds), 10) || DEFAULTS.seconds,
+        seconds: validSeconds(parseInt(context.store.get("seconds", DEFAULTS.seconds), 10)),
         sound: context.store.get("sound", DEFAULTS.sound) !== false
       };
       role = null; renderRolePicker();
     },
     unmount: function () {
-      stopTimer(); teardownAudio(); detachKeys();
+      stopTimer(); stopFx(); resetRotation(); teardownAudio(); detachKeys();
       if (els) { els.innerHTML = ""; els = null; }
       ctx = null; settings = null; bomb = null; role = null;
-      solved = {}; solvedCount = 0; strikes = 0; entry = []; busy = false; M = ID;
+      solved = {}; solvedCount = 0; strikes = 0; entry = []; busy = false; exploding = false; M = ID;
     }
   };
 
@@ -279,7 +286,6 @@
       '  <h3 class="sub">' + t("Fuse length") + "</h3>" +
       '  <div class="chip-row" id="zz-diffs">' + diffChips + "</div>" +
       '  <label class="toggle"><input type="checkbox" id="zz-sound"' + (settings.sound ? " checked" : "") + " /><span>" + t("🔊 Ticking & alarms") + "</span></label>" +
-      '  <p class="muted small">' + t("Tip: works best with 2 players to learn it, then add experts and split the manual between them.") + "</p>" +
       "</section>";
     highlight("#zz-diffs", diffIdForSeconds(settings.seconds), "data-diff");
     els.querySelectorAll("#zz-diffs .chip").forEach(function (c) {
@@ -293,7 +299,9 @@
     els.querySelector("#zz-be-bomb").addEventListener("click", function () { role = "host"; newBomb(); });
     els.querySelector("#zz-be-expert").addEventListener("click", function () { role = "expert"; renderManual(); });
   }
-  function diffIdForSeconds(s) { for (var i = 0; i < DIFFICULTIES.length; i++) if (DIFFICULTIES[i].seconds === s) return DIFFICULTIES[i].id; return "standard"; }
+  function diffIdForSeconds(s) { for (var i = 0; i < DIFFICULTIES.length; i++) if (DIFFICULTIES[i].seconds === s) return DIFFICULTIES[i].id; return DIFFICULTIES[0].id; }
+  // A stored fuse length from an older build (or a bad parse) snaps back to the default.
+  function validSeconds(s) { for (var i = 0; i < DIFFICULTIES.length; i++) if (DIFFICULTIES[i].seconds === s) return s; return DEFAULTS.seconds; }
 
   // ========================================================================
   // HOST: build a fresh bomb and render the cube
@@ -304,8 +312,8 @@
     var faces = shuffle(["core", "wires", "keypad", "dials", "guts", "maze"]);
     assignment = {}; SLOTS.forEach(function (s, i) { assignment[s] = faces[i]; });
     M = ID; activeFace = assignment.F;
-    dials = { a: 0, b: 0 }; entry = []; mazePos = [bomb.maze.sr, bomb.maze.sc]; solved = {}; solvedCount = 0; strikes = 0;
-    timeLeft = settings.seconds; busy = false;
+    dials = { a: 0, b: 0 }; dialAngle = { a: 0, b: 0 }; entry = []; mazePos = [bomb.maze.sr, bomb.maze.sc]; solved = {}; solvedCount = 0; strikes = 0;
+    timeLeft = settings.seconds; busy = false; resetRotation();
     renderBomb();
   }
 
@@ -320,7 +328,7 @@
       '<section class="screen zz-bomb">' +
       hudHtml() +
       '  <div class="zz-stage">' +
-      '    <button class="zz-flip zz-roll" data-flip="roll" aria-label="' + t("Rotate 90° clockwise") + '">↻</button>' +
+      '    <button class="zz-flip zz-roll" data-flip="roll" title="' + t("Rotate 90° clockwise (Spacebar)") + '" aria-label="' + t("Rotate 90° clockwise (Spacebar)") + '">↻</button>' +
       '    <button class="zz-flip zz-flip--up" data-flip="up" aria-label="' + t("Flip up") + '">▲</button>' +
       '    <button class="zz-flip zz-flip--left" data-flip="left" aria-label="' + t("Flip left") + '">◀</button>' +
       '    <div class="zz-rig" id="zz-rig"><div class="zz-cube" id="zz-cube">' + facesHtml + "</div></div>" +
@@ -429,11 +437,75 @@
   function dialsFace() {
     return '<div class="zz-dialface"><div class="zz-dials">' + dialHtml("a") + dialHtml("b") + "</div></div>";
   }
+  // A real rotary encoder: a knurled cap that turns, a gold pointer, an engraved
+  // 0–9 scale with a detent at each number, and a small digital repeat so the
+  // set value stays readable (the defuser reads THAT out loud).
   function dialHtml(which) {
-    return '<div class="zz-dial"><button class="zz-dial__btn" data-dial="' + which + '" data-dir="1">▲</button>' +
-      '<div class="zz-dial__val" id="zz-dial-' + which + '">' + dials[which] + "</div>" +
-      '<button class="zz-dial__btn" data-dial="' + which + '" data-dir="-1">▼</button>' +
-      '<div class="zz-dial__lbl">' + (which === "a" ? "A" : "B") + "</div></div>";
+    var v = dials[which], lbl = which === "a" ? "A" : "B", ticks = "";
+    for (var i = 0; i < 10; i++) {
+      var ang = i * 36;
+      ticks += '<span class="zz-knob__tick' + (i === v ? " is-active" : "") + '" data-n="' + i +
+        '" style="transform:rotate(' + ang + 'deg)"><i></i>' +
+        '<em style="transform:translateX(-50%) rotate(' + (-ang) + 'deg)">' + i + "</em></span>";
+    }
+    return '<div class="zz-dial" data-dial="' + which + '">' +
+      '<div class="zz-knob" data-dial="' + which + '" role="slider" aria-label="Dial ' + lbl +
+        '" aria-valuemin="0" aria-valuemax="9" aria-valuenow="' + v + '" aria-valuetext="' + v + '">' +
+        '<div class="zz-knob__face">' + ticks + "</div>" +
+        '<div class="zz-knob__cap" id="zz-knob-' + which + '" style="transform:rotate(' + (v * 36) + 'deg)">' +
+          '<span class="zz-knob__grip"></span><span class="zz-knob__pointer"></span></div>' +
+      "</div>" +
+      '<div class="zz-dial__read"><span class="zz-dial__val" id="zz-dial-' + which + '">' + v + "</span></div>" +
+      '<div class="zz-dial__lbl">' + lbl + "</div></div>";
+  }
+  // Update a dial's value everywhere (state, digital readout, active tick, aria).
+  function setDial(which, val) {
+    val = ((val % 10) + 10) % 10;
+    dials[which] = val;
+    var read = els.querySelector("#zz-dial-" + which); if (read) read.textContent = val;
+    var knob = els.querySelector('.zz-knob[data-dial="' + which + '"]');
+    if (knob) {
+      knob.setAttribute("aria-valuenow", val); knob.setAttribute("aria-valuetext", val);
+      knob.querySelectorAll(".zz-knob__tick").forEach(function (tk) {
+        tk.classList.toggle("is-active", parseInt(tk.getAttribute("data-n"), 10) === val);
+      });
+    }
+  }
+  // Rotate the cap to an absolute angle; animate the settle/tap, jump instantly while dragging.
+  function spinCap(which, deg, animate) {
+    var cap = els.querySelector("#zz-knob-" + which); if (!cap) return;
+    if (!animate) { cap.style.transition = "none"; cap.style.transform = "rotate(" + deg + "deg)"; void cap.offsetWidth; cap.style.transition = ""; }
+    else { cap.style.transform = "rotate(" + deg + "deg)"; }
+  }
+  // Drive one knob: drag to turn (detent clacks), or a plain tap nudges it forward one step.
+  function attachKnob(knob) {
+    var which = knob.getAttribute("data-dial");
+    var dragging = false, moved = false, grabOff = 0, sx = 0, sy = 0;
+    function angleAt(e) {
+      var r = knob.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+      return Math.atan2(e.clientX - cx, cy - e.clientY) * 180 / Math.PI; // 0 at 12 o'clock, clockwise +
+    }
+    function valFor(deg) { return ((Math.round(deg / 36) % 10) + 10) % 10; }
+    function onMove(e) {
+      if (!dragging) return;
+      if (!moved && Math.hypot(e.clientX - sx, e.clientY - sy) < 4) return;
+      moved = true; e.preventDefault();
+      var raw = angleAt(e) - grabOff; dialAngle[which] = raw; spinCap(which, raw, false);
+      var val = valFor(raw); if (val !== dials[which]) { setDial(which, val); clack(); }
+    }
+    function onUp() {
+      if (!dragging) return;
+      dragging = false;
+      global.removeEventListener("pointermove", onMove); global.removeEventListener("pointerup", onUp);
+      if (!moved) { dialAngle[which] += 36; setDial(which, valFor(dialAngle[which])); spinCap(which, dialAngle[which], true); clack(); }
+      else { var snap = Math.round(dialAngle[which] / 36) * 36; dialAngle[which] = snap; spinCap(which, snap, true); }
+    }
+    knob.addEventListener("pointerdown", function (e) {
+      if (solved.DIALS) return;
+      e.preventDefault(); e.stopPropagation();
+      dragging = true; moved = false; sx = e.clientX; sy = e.clientY; grabOff = angleAt(e) - dialAngle[which];
+      global.addEventListener("pointermove", onMove); global.addEventListener("pointerup", onUp);
+    });
   }
   // Reference hub ("guts"): everything the interactive modules read off — the
   // decoder letter, the colour-priority list, the indicators and the batteries.
@@ -453,15 +525,7 @@
     els.querySelectorAll("#zz-wires .zz-wire").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) attemptCut(parseInt(b.getAttribute("data-i"), 10)); }); });
     els.querySelectorAll("#zz-keys .zz-key").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) keypadPress(b.getAttribute("data-glyph")); }); });
     var kc = els.querySelector("#zz-key-clear"); if (kc) kc.addEventListener("click", function () { if (justDragged) return; entry = []; updateEntry(); });
-    els.querySelectorAll(".zz-dial__btn").forEach(function (b) {
-      b.addEventListener("click", function () {
-        if (justDragged || solved.DIALS) return;
-        var which = b.getAttribute("data-dial"), dir = parseInt(b.getAttribute("data-dir"), 10);
-        dials[which] = (dials[which] + dir + 10) % 10;
-        var v = els.querySelector("#zz-dial-" + which); if (v) v.textContent = dials[which];
-        blip(620);
-      });
-    });
+    els.querySelectorAll(".zz-knob").forEach(function (k) { attachKnob(k); });
     els.querySelectorAll(".zz-mpad").forEach(function (b) { b.addEventListener("click", function () { if (!justDragged) mazeMove(b.getAttribute("data-mdir")); }); });
     attachCommit(els.querySelector("#zz-commit"));
     els.querySelector("#zz-quit").addEventListener("click", renderRolePicker);
@@ -486,14 +550,43 @@
     activeFace = assignment[fs];
     els.querySelectorAll(".zz-face").forEach(function (f) { f.classList.toggle("is-front", f.getAttribute("data-slot") === fs); });
   }
-  function rotate(rmat) { M = matMul(rmat, M); applyCube(true); clack(); }
+  // How long one cube step animates — read from the live CSS so it stays in
+  // sync (0 under prefers-reduced-motion, where steps are instant anyway).
+  function rotMs() {
+    var cube = els && els.querySelector("#zz-cube");
+    if (!cube) return 500;
+    var d = parseFloat(global.getComputedStyle(cube).transitionDuration);
+    return (isFinite(d) && d > 0) ? d * 1000 : 0;
+  }
+  function doRotate(rmat) {
+    M = matMul(rmat, M); applyCube(true); clack();
+    rotAnimating = true;
+    if (rotTimer) global.clearTimeout(rotTimer);
+    rotTimer = global.setTimeout(function () {
+      rotTimer = null; rotAnimating = false;
+      if (rotQueued) { var q = rotQueued; rotQueued = null; doRotate(q); }
+    }, rotMs() + 30);
+  }
+  // Public entry: apply now if idle, else remember the latest step for when the
+  // current one lands. Spamming becomes a clean step-by-step tumble, not a
+  // transition-interrupting scramble.
+  function rotate(rmat) {
+    if (rotAnimating) { rotQueued = rmat; return; }
+    doRotate(rmat);
+  }
+  function resetRotation() {
+    if (rotTimer) { global.clearTimeout(rotTimer); rotTimer = null; }
+    rotAnimating = false; rotQueued = null;
+  }
 
   function attachKeys() {
     detachKeys();
     keyHandler = function (e) {
-      if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
+      var space = e.key === " " || e.code === "Space";
+      if (!space && ["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"].indexOf(e.key) < 0) return;
       e.preventDefault();
-      if (e.key === "ArrowRight") rotate(RY(-1));
+      if (space) rotate(RZ(1));                    // spacebar = the ↻ roll (90° clockwise about the view)
+      else if (e.key === "ArrowRight") rotate(RY(-1));
       else if (e.key === "ArrowLeft") rotate(RY(1));
       else if (e.key === "ArrowUp") rotate(RX(1));
       else rotate(RX(-1));
@@ -578,7 +671,7 @@
   function disableFace(name) {
     if (name === "WIRES") els.querySelectorAll("#zz-wires .zz-wire").forEach(function (b) { b.disabled = true; });
     else if (name === "KEYPAD") { els.querySelectorAll("#zz-keys .zz-key").forEach(function (b) { b.disabled = true; }); var s = els.querySelector("#zz-key-submit"), c = els.querySelector("#zz-key-clear"); if (s) s.disabled = true; if (c) c.disabled = true; }
-    else if (name === "DIALS") { els.querySelectorAll(".zz-dial__btn").forEach(function (b) { b.disabled = true; }); var d = els.querySelector("#zz-dial-confirm"); if (d) d.disabled = true; }
+    else if (name === "DIALS") { var df = els.querySelector(".zz-dialface"); if (df) df.classList.add("is-locked"); }
     else if (name === "MAZE") els.querySelectorAll(".zz-mpad").forEach(function (b) { b.disabled = true; });
   }
   function flashFace(name) {
@@ -599,7 +692,6 @@
     if (kind !== "seq") toast(t("✕ Wrong — strike!"));
     strikeSound();
     if (strikes >= MAX_STRIKES) { boom(); return; }
-    timeLeft = Math.max(1, timeLeft - 15); updateTimer();
   }
   function toast(msg) {
     var old = els.querySelector(".zz-toast"); if (old) old.parentNode.removeChild(old);
@@ -611,21 +703,88 @@
     stopTimer();
     timer = global.setInterval(function () {
       timeLeft--; updateTimer();
-      if (timeLeft <= 10 && timeLeft > 0) tick();
+      // Tick the whole way down like a real clock (tick-tock alternating pitch);
+      // the final ten seconds switch to the sharper, urgent tick.
+      if (timeLeft > 0) { if (timeLeft <= 10) tick(); else (timeLeft % 2 ? tick : tock)(); }
       if (timeLeft <= 0) boom();
     }, 1000);
   }
   function stopTimer() { if (timer) { global.clearInterval(timer); timer = null; } }
   function updateTimer() { var el = els && els.querySelector("#zz-timer"); if (!el) return; el.textContent = fmt(Math.max(0, timeLeft)); el.classList.toggle("is-danger", timeLeft <= 30); }
 
+  var exploding = false; // re-entry guard: a stray tap mid-sequence must not re-trigger
   function boom() {
+    if (exploding) return;
+    exploding = true;
     stopTimer(); boomSound(); buzz([120, 60, 200]);
+    // The detonation deserves a show: shudder → the casing bursts apart to one
+    // side → a cartoon fireball fills the screen → the end card. Skipped for
+    // reduced-motion users and when there's no cube on screen to blow up.
+    var reduced = false;
+    try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
+    if (reduced || !els.querySelector("#zz-rig")) { renderBoomScreen(); return; }
+    playExplosionFx(renderBoomScreen);
+  }
+
+  function renderBoomScreen() {
+    stopFx();
+    exploding = false;
     els.innerHTML =
       '<section class="screen zz-end zz-boom"><div class="boom-flash">💥</div><h2 class="boom-title">' + t("BOOM!") + "</h2>" +
       '<p class="boom-sub">' + (timeLeft <= 0 ? t("⏱️ Time ran out.") : t("💥 Three strikes. The wire was wrong.")) + "</p>" +
       '<div class="boom-actions"><button id="zz-retry" class="btn btn-primary btn-block btn-xl">' + t("New bomb 🔁") + '</button><button id="zz-setup" class="btn btn-block">' + t("Change settings") + "</button></div></section>";
     els.querySelector("#zz-retry").addEventListener("click", newBomb);
     els.querySelector("#zz-setup").addEventListener("click", renderRolePicker);
+  }
+
+  // --- Detonation choreography (bomb screen only) ---------------------------
+  // Pure CSS-driven, toy-cartoon style (flat crayon rings + ink outlines, bolt
+  // shrapnel, a BOOM! sticker, smoke puffs) — no gore, ~2.2s end to end. The
+  // overlay lives inside `els`, so the end-card innerHTML swap cleans it up.
+  var fxTimers = [];
+  function fx(fn, ms) { fxTimers.push(global.setTimeout(fn, ms)); }
+  function stopFx() { fxTimers.forEach(function (id) { global.clearTimeout(id); }); fxTimers = []; }
+
+  function playExplosionFx(done) {
+    var bombEl = els.querySelector(".zz-bomb");
+    if (!bombEl) { done(); return; }
+    busy = true; // block further input while the fireworks run
+    bombEl.classList.add("zz-priming");
+
+    fx(function () {
+      if (!els) return;
+      bombEl.classList.add("zz-bursting");
+
+      var icons = ["🔩", "⚙️", "🔧", "🧷", "📎", "🔌"];
+      var bits = "";
+      for (var i = 0; i < 14; i++) {
+        var ang = (i / 14) * Math.PI * 2 + (Math.random() - 0.5) * 0.6;
+        var dist = 40 + Math.random() * 38;
+        var dx = (Math.cos(ang) * dist).toFixed(0);
+        var dy = (Math.sin(ang) * dist * 0.85).toFixed(0);
+        var rot = ((Math.random() * 2 - 1) * 560).toFixed(0);
+        var delay = (Math.random() * 90) | 0;
+        var chip = i % 3 === 0; // every third piece is a painted casing chip
+        bits += '<span class="zz-shrap' + (chip ? " zz-shrap--chip zz-chip" + ((i / 3) % 3 | 0) : "") + '"' +
+          ' style="--dx:' + dx + "vmin;--dy:" + dy + "vmin;--rot:" + rot + "deg;animation-delay:" + delay + 'ms">' +
+          (chip ? "" : icons[i % icons.length]) + "</span>";
+      }
+
+      var ov = document.createElement("div");
+      ov.className = "zz-explosion";
+      ov.innerHTML =
+        '<div class="zz-x-flash"></div>' +
+        '<div class="zz-x-fire">' +
+        '  <i class="zz-x-ring zz-x-r4"></i><i class="zz-x-ring zz-x-r3"></i>' +
+        '  <i class="zz-x-ring zz-x-r2"></i><i class="zz-x-ring zz-x-r1"></i>' +
+        "</div>" +
+        bits +
+        '<div class="zz-x-word">' + t("BOOM!") + "</div>" +
+        '<div class="zz-x-smoke"><span>💨</span><span>💨</span><span>💨</span></div>';
+      els.appendChild(ov);
+
+      fx(done, 1750);
+    }, 500);
   }
   function defused() {
     stopTimer(); defuseSound();
@@ -723,10 +882,10 @@
       { icon: "📜", title: "Annex III — Data Protection (GDPR)", spam: true, postit: true, html: manualGdpr() },
       { icon: "🎛️", title: "Ch. 3 — Dials", html: manualDials() },
       { icon: "🧴", title: "Annex IV — Maintenance & Care", spam: true, html: manualMaintenance() },
-      { icon: "🔌", title: "Ch. 6 — Wires", html: manualWiresRuined() },
-      { icon: "🔡", title: "Ch. 4 — Keypad", html: manualKeypad() },
+      { icon: "🔌", title: "Ch. 4 — Wires", html: manualWiresRuined() },
+      { icon: "🔡", title: "Ch. 5 — Keypad", html: manualKeypad() },
       { icon: "🧾", title: "Annex V — Warranty & Liability", spam: true, html: manualWarranty() },
-      { icon: "🔎", title: "Ch. 5 — Reading the bomb", html: manualRef() },
+      { icon: "🔎", title: "Ch. 6 — Reading the bomb", html: manualRef() },
       { icon: "🛠️", title: "Annex VI — Troubleshooting", spam: true, html: manualTroubleshoot() },
       { icon: "🧭", title: "Ch. 7 — Wiring Maze", html: manualMaze() },
       { icon: "🔴", title: "Ch. 8 — Arming the detonator", html: manualArming() },
@@ -737,7 +896,8 @@
     ];
   }
   function manualArming() {
-    return "<p class='zz-fine'>" + t("The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.") + "</p>" +
+    return "<p>" + t("The detonator's safety only lifts for a single clock-tick each cycle — a deliberately narrow window, so a panicking operator can't just mash the button. Bleed the charge on the Dials, authorise it on the Keypad, then release on the tick.") + "</p>" +
+      "<p class='zz-fine'>" + t("The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("Work out the ARMING DIGIT: count the LIT indicators, ADD the number of batteries, and keep only the last digit.") + "</li>" +
       "<li>" + t("Have the operator hold the arming control and RELEASE it the moment the timer's last digit equals the arming digit.") + "</li>" +
@@ -754,16 +914,20 @@
       if ((v & MAZE_BIT.down) && r < MAZE_N - 1) seg += '<line x1="' + (c * S) + '" y1="' + ((r + 1) * S) + '" x2="' + ((c + 1) * S) + '" y2="' + ((r + 1) * S) + '"/>';
     }
     var rings = def.markers.map(function (m) { return '<circle cx="' + (m[1] * S + S / 2) + '" cy="' + (m[0] * S + S / 2) + '" r="3.1" fill="none" stroke="#c0392b" stroke-width="1.3"/>'; }).join("");
-    return '<svg class="zz-mzimg" viewBox="-1 -1 ' + (MAZE_N * S + 2) + " " + (MAZE_N * S + 2) + '" aria-hidden="true">' +
+    // Keyed corner in the top-left margin (outside the grid), matching the bomb's
+    // amber corner mark so the operator can orient the device to the diagram.
+    var key = '<polygon points="-5,-5 3,-5 -5,3" fill="#f4bd3f" stroke="#241b4d" stroke-width="1"/>';
+    return '<svg class="zz-mzimg" viewBox="-6 -6 ' + (MAZE_N * S + 8) + " " + (MAZE_N * S + 8) + '" aria-hidden="true">' +
       '<rect x="0" y="0" width="' + (MAZE_N * S) + '" height="' + (MAZE_N * S) + '" fill="#f3ecd8" stroke="#241b4d" stroke-width="1.6"/>' +
-      '<g stroke="#241b4d" stroke-width="1.4" stroke-linecap="round">' + seg + "</g>" + rings + "</svg>";
+      '<g stroke="#241b4d" stroke-width="1.4" stroke-linecap="round">' + seg + "</g>" + rings + key + "</svg>";
   }
   function manualMaze() {
     var pics = MAZES.map(function (m) { return '<div class="zz-mzcard">' + mazeSvg(m) + "<span>" + t("Maze") + " " + m.id + "</span></div>"; }).join("");
-    return "<p class='zz-fine'>" + t("The grid is etched with channels the operator's probe must follow; the channel walls are not visible on the operator's side.") + "</p>" +
+    return "<p class='zz-fine'>" + t("The grid is etched with guide grooves the probe must follow; their walls are invisible from outside the casing.") + "</p>" +
       "<p>" + t("One face is a 6×6 grid with a lit cell that moves, a red target cell and two ringed marker cells.") + "</p>" +
       "<ul class='zz-rules'>" +
-      "<li>" + t("Have the operator read out the two ringed marker cells. Find the diagram below with rings in the SAME two cells — that is the active maze.") + "</li>" +
+      "<li>" + t("One corner of the grid is clipped — a factory alignment key. Have the operator turn the bomb until that amber corner sits TOP-LEFT, so their grid matches the diagrams below (which carry the same mark).") + "</li>" +
+      "<li>" + t("Now have them read out the two ringed cells and find the diagram with rings in the SAME two cells — that is the active maze.") + "</li>" +
       "<li>" + t("Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.") + "</li>" +
       "<li class='zz-warn'>" + t("Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.") + "</li>" +
       "</ul>" +
@@ -830,16 +994,16 @@
   }
   function manualOrder() {
     var rows = Object.keys(FIRING_SIGILS).map(function (s) { return "<tr><td class='zz-sig'>" + s + "</td><td>" + t(stageLabel(FIRING_SIGILS[s])) + "</td></tr>"; }).join("");
-    return "<p class='zz-fine'>" + t("The firing sequence is fixed at manufacture and cannot be reordered in the field.") + "</p>" +
+    return "<p>" + t("The four modules are interlocked in series at the factory: each stage physically unlocks the next, so the device cannot be undone by luck or in the wrong order. Force a stage out of sequence and the interlock jams — that is a strike. The order is set at manufacture and cannot be changed in the field.") + "</p>" +
       "<p>" + t("One face shows a row of symbols. Each symbol maps in the table below to a module; read them left to right for the order.") + "</p>" +
       "<table class='zz-table'><thead><tr><th>" + t("Sigil") + "</th><th>" + t("Job") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
-      "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>" +
-      "<p class='zz-fine'>" + t("Note: committing a stage out of sequence is logged as a fault and cannot be undone.") + "</p>";
+      "<p>" + t("If the LAST digit of the serial is EVEN, reverse the order (read the sigils right to left).") + "</p>";
   }
   function manualDials() {
     var cells = "";
     for (var i = 0; i < 26; i++) { var L = String.fromCharCode(65 + i); cells += "<span class='zz-bankcell'><b>" + L + "</b>" + LETTER_BANK[L] + "</span>"; }
-    return "<p class='zz-fine'>" + t("Each dial is a single-digit rotary encoder (0–9) with a detent at every position.") + "</p>" +
+    return "<p>" + t("The Dials do not fire anything — they only route the device's charge into a channel. Firing is centralised at the arming control, since a module that could arm itself would be a gift to anyone with a screwdriver.") + "</p>" +
+      "<p class='zz-fine'>" + t("Each dial is a single-digit rotary encoder (0–9) with a detent at every position.") + "</p>" +
       "<p>" + t("Two dials, A and B (0–9 each).") + "</p>" +
       "<ul class='zz-rules'>" +
       "<li>" + t("<b>Dial A</b> = the serial's LAST TWO digits added together, then keep only the last digit (e.g. 7+8=15 → 5).") + "</li>" +
@@ -852,14 +1016,14 @@
   // The wire-cutting reference (the only wires chapter). Complete rules,
   // including the leftmost tie-break, so it stands on its own.
   function manualWiresRuined() {
-    return "<p>" + t("Five wires, each with a colour and a printed number.") + "</p>" +
+    return "<p>" + t("Every wire is live. Sever one whose charge has nowhere to go and the device fires — a conductor is only safe to cut once you have opened it a path. That path is the CHANNEL, and you steer it with the Dials.") + "</p>" +
+      "<p>" + t("The CHANNEL is where the Dials send the charge: <b>Dial A + Dial B</b>. Set both dials to their targets first (see Dials), then add them — dials on 4 and 5 open channel 9. The wire carrying that channel is now the safe one.") + "</p>" +
       "<ol class='zz-steps'>" +
-      "<li>" + t("Set both dials to their target values and add them together to read the channel.") + "</li>" +
-      "<li>" + t("If a wire's printed number equals the channel, cut it — if several match, the leftmost.") + "</li>" +
-      "<li>" + t("If no number matches, use the colour-priority order: cut the highest-ranked colour present; ties go to the leftmost.") + "</li>" +
-      "<li>" + t("Confirm the cut against the firing order before severing the wire.") + "</li>" +
+      "<li>" + t("Cut the wire whose printed number equals the channel. If several carry it, only the leftmost is truly discharged — cut that one.") + "</li>" +
+      "<li>" + t("If no wire's number matches the channel, the charge overflows onto the colour bus: cut the highest-ranked colour on the Decoder's priority list (1 = highest). Ties go to the leftmost.") + "</li>" +
+      "<li>" + t("Check the firing order before you cut — a wire severed out of sequence jams the interlock (a strike). See Firing order.") + "</li>" +
       "</ol>" +
-      "<p class='zz-fine'>" + t("The cut reads the dials LIVE, so the dials must be set even if Wires comes first in the order.") + "</p>";
+      "<p class='zz-fine'>" + t("The cut reads the dials live, so leave them on their targets even when Wires comes first in the order.") + "</p>";
   }
   function manualWarranty() {
     return "<p class='zz-fine'>" + t("This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.") + "</p>" +
@@ -870,15 +1034,18 @@
   }
   function manualKeypad() {
     var rows = DECODER_LETTERS.map(function (L) { return "<tr><td><b>" + L + "</b></td><td class='zz-glyphs'>" + SYMBOL_TABLE[L].map(function (g) { return "<span>" + g + "</span>"; }).join("") + "</td></tr>"; }).join("");
-    return "<p class='zz-fine'>" + t("The keypad uses a non-standard glyph set for tamper resistance; positions are randomised per unit. Identify glyphs by shape, not location.") + "</p>" +
-      "<p>" + t("Nine glyphs, scrambled. Press the sequence, then fire it from the arming control (see Arming).") + "</p>" +
-      "<ul class='zz-rules'>" +
-      "<li>" + t("Read the Decoder LETTER. Find its row in the Sequence table → press those glyphs in order.") + "</li>" +
-      "<li class='zz-warn'>⚠ " + t("If indicator SIG is lit, press them in REVERSE order.") + "</li>" +
-      "<li class='zz-warn'>⚠ " + t("Then read the serial's LAST DIGIT and press ONE final glyph by its grid position (table below).") + "</li>" +
-      "</ul>" +
-      "<table class='zz-table'><thead><tr><th>" + t("Last digit") + "</th><th>" + t("Final key") + "</th></tr></thead><tbody>" + keypadSuffixRows() + "</tbody></table>" +
-      "<table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>";
+    return "<p>" + t("The keypad stages a code but never fires it — that is left to the arming control, so no thief who reaches the keys alone can arm the device. Its nine glyphs are shuffled into a fresh layout on every unit, which means a memorised position is worthless: read each glyph by its shape, never by where it sits.") + "</p>" +
+      "<p class='zz-fine'>" + t("Build the code in four steps, then hand it to the arming control.") + "</p>" +
+      "<ol class='zz-steps'>" +
+      "<li>" + t("Read the Decoder LETTER and find its row in the Sequence table below. Press those glyphs in order.") + "</li>" +
+      "<li>" + t("If indicator SIG is lit, press that same sequence in REVERSE order instead.") + "</li>" +
+      "<li>" + t("Read the LAST DIGIT of the serial and press ONE more glyph, chosen by its position in the grid (Final key table below).") + "</li>" +
+      "<li>" + t("Fire the finished code from the arming control (see Arming).") + "</li>" +
+      "</ol>" +
+      "<p class='zz-fine'>" + t("Sequence — the glyphs each Decoder letter calls for:") + "</p>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Letter") + "</th><th>" + t("Sequence") + "</th></tr></thead><tbody>" + rows + "</tbody></table>" +
+      "<p class='zz-fine'>" + t("Final key — the grid position the last serial digit adds:") + "</p>" +
+      "<table class='zz-table'><thead><tr><th>" + t("Last digit") + "</th><th>" + t("Final key") + "</th></tr></thead><tbody>" + keypadSuffixRows() + "</tbody></table>";
   }
   // Build the serial-suffix table straight from KEYPAD_SUFFIX so the manual can
   // never drift from the solver: group consecutive last-digits with the same key.
@@ -964,7 +1131,7 @@
   }
   function manualFaq() {
     var data = [
-      ["Which wire do I cut?", "The correct one. See Chapter 6, if there is time."],
+      ["Which wire do I cut?", "The correct one. See Chapter 4, if there is time."],
       ["How much time do I have?", "Less than is being spent reading this page."],
       ["Is it supposed to make that noise?", "Yes. Right up until it isn't."],
       ["Can I undo a mistake?", "You may learn from it, briefly."],
@@ -992,16 +1159,27 @@
     if (!settings || !settings.sound) return;
     var AC = global.AudioContext || global.webkitAudioContext; if (!AC) return;
     try { audio = { ctx: new AC() }; } catch (e) { audio = null; }
+    resumeAudio();
+  }
+  // Browsers hand back a suspended AudioContext until a user gesture unlocks it.
+  // The bomb is always reached by a tap, so nudge it awake on setup and again on
+  // the first beep — otherwise every tick/blip is silently swallowed.
+  function resumeAudio() {
+    if (audio && audio.ctx && audio.ctx.state === "suspended") {
+      try { audio.ctx.resume(); } catch (e) { /* ignore */ }
+    }
   }
   function teardownAudio() { if (audio && audio.ctx) { try { audio.ctx.close(); } catch (e) { /* ignore */ } } audio = null; }
   function beep(freq, dur, gain, type) {
     if (!audio || !audio.ctx) return;
+    resumeAudio();
     var ac = audio.ctx, now = ac.currentTime, osc = ac.createOscillator(), g = ac.createGain();
     osc.type = type || "square"; osc.frequency.value = freq;
     g.gain.setValueAtTime(gain, now); g.gain.exponentialRampToValueAtTime(0.0001, now + dur);
     osc.connect(g).connect(ac.destination); osc.start(now); osc.stop(now + dur + 0.02);
   }
   function tick() { beep(1500, 0.04, 0.12, "square"); }
+  function tock() { beep(1120, 0.04, 0.08, "square"); }
   function blip(f) { beep(f || 800, 0.04, 0.06, "triangle"); }
   function clack() { beep(280, 0.05, 0.08, "square"); }
   function chime() { beep(700, 0.12, 0.12, "sine"); setTimeout(function () { beep(1050, 0.16, 0.12, "sine"); }, 110); }

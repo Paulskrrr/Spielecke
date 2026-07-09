@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/wavelength.js — Wavelength (one device, pass-around, multiplayer)
  *
@@ -48,8 +49,12 @@
   var gi = 0;            // index of the guesser currently holding the phone
   var guesses = [];      // [{ name, value }] locked in by each guesser
   var timer = null;      // pending reveal-animation timeout
+  var spin = null;       // pending clue-giver spinner rAF handle
 
-  function clearTimer() { if (timer) { clearTimeout(timer); timer = null; } }
+  function clearTimer() {
+    if (timer) { clearTimeout(timer); timer = null; }
+    if (spin) { global.cancelAnimationFrame(spin); spin = null; }
+  }
 
   var module = {
     meta: {
@@ -84,7 +89,7 @@
 
     var enough = roster.length >= MIN_PLAYERS;
     var note = enough
-      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      ? ""
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
@@ -117,11 +122,90 @@
     guesses = [];
     gi = 0;
 
-    var g = Math.floor(Math.random() * names.length);
-    giver = names[g];
-    guessers = names.filter(function (_, i) { return i !== g; });
+    // Pre-pick a random clue-giver; the spinner animates toward this one, but the
+    // players can override it before confirming. Guessers are derived at confirm
+    // time (below) since the pick can still change.
+    giver = names[Math.floor(Math.random() * names.length)];
+    guessers = [];
 
-    renderGiverHandover();
+    renderPickGiver(names);
+  }
+
+  // --- Clue-giver spinner: a highlight sweeps the names, decelerates and lands
+  // on the pre-picked giver (≤ ~2.4s). You confirm it, or tap any name to pick
+  // the clue-giver yourself. Honours reduced-motion by settling instantly.
+  function renderPickGiver(names) {
+    clearTimer();
+    var chosen = names.indexOf(giver);
+    if (chosen < 0) chosen = 0;
+
+    els.innerHTML =
+      '<section class="screen wl-pick">' +
+      '  <h2 class="screen-title pop">📡 ' + t("Who sets the wavelength?") + "</h2>" +
+      '  <p class="muted small wl-pick-sub" id="wl-pick-sub">' + t("Spinning for a clue-giver…") + "</p>" +
+      '  <div class="wl-pick-list" id="wl-pick-list">' +
+      names.map(function (n, i) {
+        return '<button class="wl-pick-name" data-i="' + i + '">' + esc(n) + "</button>";
+      }).join("") +
+      "  </div>" +
+      '  <button id="wl-pick-confirm" class="btn btn-primary btn-block btn-xl" disabled>' + t("Picking…") + "</button>" +
+      '  <p class="muted small wl-pick-hint">' + t("Tap any name to pick the clue-giver yourself.") + "</p>" +
+      "</section>";
+
+    var list = els.querySelector("#wl-pick-list");
+    var nodes = Array.prototype.slice.call(list.querySelectorAll(".wl-pick-name"));
+    var confirmBtn = els.querySelector("#wl-pick-confirm");
+    var sub = els.querySelector("#wl-pick-sub");
+    var settled = false;
+
+    function paint(i) {
+      for (var k = 0; k < nodes.length; k++) nodes[k].classList.toggle("is-hot", k === i);
+    }
+    function settle(i) {
+      clearTimer();
+      settled = true;
+      giver = names[i];
+      for (var k = 0; k < nodes.length; k++) {
+        nodes[k].classList.toggle("is-hot", k === i);
+        nodes[k].classList.toggle("is-chosen", k === i);
+      }
+      if (sub) sub.textContent = t("Tap a name to pick someone else.");
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = t("{name} sets it — continue 📡").replace("{name}", giver);
+    }
+
+    nodes.forEach(function (n, k) {
+      n.addEventListener("click", function () { settle(k); });
+    });
+    confirmBtn.addEventListener("click", function () {
+      if (!settled) return;
+      clearTimer();
+      guessers = names.filter(function (n) { return n !== giver; });
+      renderGiverHandover();
+    });
+
+    var reduced = false;
+    try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
+    if (reduced || names.length < 2) { settle(chosen); return; }
+
+    // Time-based ease-out so the spin always lasts the same ~2.4s no matter how
+    // many players there are. Total travel = a couple of full loops plus the
+    // offset to the chosen index, so it lands exactly on the pre-pick.
+    var DUR = 2400;
+    var len = names.length;
+    var loops = len <= 4 ? 3 : 2;
+    var dist = loops * len + ((chosen % len) + len) % len;
+    var t0 = 0;
+    function frame(ts) {
+      if (!els || settled) { spin = null; return; }
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / DUR);
+      var e = 1 - Math.pow(1 - p, 3); // easeOutCubic
+      paint(Math.floor(e * dist) % len);
+      if (p < 1) spin = global.requestAnimationFrame(frame);
+      else { spin = null; settle(chosen); }
+    }
+    spin = global.requestAnimationFrame(frame);
   }
 
   function renderGiverHandover() {
@@ -165,7 +249,7 @@
       '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", gi + 1).replace("{n}", guessers.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
-      '  <p class="muted">' + t("Read the clue, then place your line where you think the target is.") + "</p>" +
+      '  <p class="muted">' + t("Place your line where you'd put the clue on the spectrum.") + "</p>" +
       '  <button id="wl-go" class="btn btn-primary btn-block btn-xl">' + t("I'm {name} — go").replace("{name}", esc(name)) + "</button>" +
       "</section>";
     els.querySelector("#wl-go").addEventListener("click", renderGuesserGuess);

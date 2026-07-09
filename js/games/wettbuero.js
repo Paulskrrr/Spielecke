@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/wettbuero.js — Wettbüro (bet on your friends)
  *
@@ -73,8 +74,7 @@
     var r = roster();
     var enough = r.length >= module.meta.minPlayers;
     var note = enough
-      ? '<p class="muted small">' + t("Players ({n}): {names}")
-          .replace("{n}", r.length).replace("{names}", esc(r.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      ? ""
       : '<div class="roster-warn" style="display:block">' +
         t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", module.meta.minPlayers) + "</div>";
 

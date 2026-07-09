@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * roster.js — Players / Roster screen (spec §1.1)
  *
@@ -19,8 +20,13 @@
 
     container.innerHTML =
       '<section class="screen roster-screen">' +
-      '  <h2 class="screen-title neon">' + t("Players") + "</h2>" +
+      '  <div class="roster-head">' +
+      '    <h2 class="screen-title neon">' + t("Players") + "</h2>" +
+      '    <button id="roster-secret" class="secret-btn" ' +
+      '            aria-label="' + t("Geheimauftrag") + '" title="' + t("Geheimauftrag") + '">🕶️</button>' +
+      "  </div>" +
       '  <p class="muted">' + t("Entered once, used by every game.") + "</p>" +
+      '  <p class="muted small secret-hint">' + t("🕶️ Geheimauftrag: deal each player a secret mission that runs quietly all evening — tap the shades to start.") + "</p>" +
       '  <form id="roster-add" class="roster-add" autocomplete="off">' +
       '    <input id="roster-input" class="text-input" type="text" ' +
       '           inputmode="text" placeholder="' + t("Add a player…") + '" ' +
@@ -114,6 +120,16 @@
     container.querySelector("#roster-done").addEventListener("click", function () {
       ctx.goHome();
     });
+
+    // Discreet launcher for Geheimauftrag — the all-evening secret-mission layer
+    // you deal once at the start of a real games night. It's not on the shelf
+    // (see registry.js), so this square 🕶️ button is its only entry point.
+    var secretBtn = container.querySelector("#roster-secret");
+    if (secretBtn && ctx.launchGame) {
+      secretBtn.addEventListener("click", function () {
+        ctx.launchGame("geheimauftrag");
+      });
+    }
 
     container.querySelectorAll("#lang-chips .chip").forEach(function (c) {
       c.addEventListener("click", function () {

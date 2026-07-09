@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/geschmacklos.js — Geschmacklos (Cards-Against-Humanity mode)
  *
@@ -220,7 +221,6 @@
     els.innerHTML =
       '<section class="screen gk-hand">' +
       '  <div class="gk-hand-bar">' + t("Seat {s} · code {c}").replace("{s}", slot).replace("{c}", esc(code)) + "</div>" +
-      '  <p class="muted small">' + t("Read the host's prompt, tap your best card, read it out.") + "</p>" +
       '  <div class="gk-cards">' + tiles + "</div>" +
       '  <div class="gk-progress">' + t("{n}/{m} played this hand").replace("{n}", played.length).replace("{m}", need) + "</div>" +
       (roundDone

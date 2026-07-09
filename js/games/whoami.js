@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/whoami.js — Who Am I? (Heads-Up style)
  *
@@ -94,7 +95,6 @@
     var body;
     if (settings.mode === "custom") {
       body =
-        '  <p class="muted small">' + t("No sticky notes handy? Type a character for your mate, hand them the phone, and they hold it to their forehead while you give clues.") + "</p>" +
         '  <input id="wa-custom" class="text-input" type="text" maxlength="60" placeholder="' + attr(t("Type a character / thing…")) + '" />' +
         '  <button id="wa-show" class="btn btn-primary btn-block btn-xl">' + t("Show on sticky note 🪧") + "</button>";
     } else {
@@ -103,7 +103,6 @@
         return '<button class="chip" data-secs="' + s + '">' + s + "s</button>";
       }).join("");
       body =
-        '  <p class="muted small">' + t("Hold the phone to your forehead so you can't see it. The table shouts clues. Tap") + ' <strong>' + t("GOT IT ✅") + '</strong> ' + t("when you guess,") + ' <strong>' + t("SKIP ⏭️") + '</strong> ' + t("to pass.") + '</p>' +
         '  <h3 class="sub">' + t("Category") + "</h3>" +
         '  <div class="chip-row" id="wa-pools">' + poolChips + "</div>" +
         '  <h3 class="sub">' + t("Round length") + "</h3>" +

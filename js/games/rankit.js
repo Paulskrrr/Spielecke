@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/rankit.js — Rank It
  *
@@ -58,7 +59,7 @@
     // Mitspieler mode the selected pools just decide the flavour of the axis.
     var chips = Pools().chipsHtml(sets(), t);
     var note = enough
-      ? '<p class="muted small">' + t("Players ({n}): {names}").replace("{n}", roster.length).replace("{names}", esc(roster.map(function (p) { return p.name; }).join(", "))) + "</p>"
+      ? ""
       : '<div class="roster-warn" style="display:block">' + t("⚠ Needs at least {n} players. Add them from the header (👥).").replace("{n}", MIN_PLAYERS) + "</div>";
 
     els.innerHTML =
@@ -110,7 +111,7 @@
       '  <div class="pass-step">' + t("Player {i} of {n}").replace("{i}", idx + 1).replace("{n}", players.length) + "</div>" +
       '  <div class="pass-emoji">📲</div>' +
       '  <h2 class="pass-name pop">' + t("Pass to {name}").replace("{name}", esc(name)) + "</h2>" +
-      '  <p class="muted">' + t("Build your ranking in private — don\'t let the others copy.") + "</p>" +
+      '  <p class="muted">' + t("Build your ranking in private.") + "</p>" +
       '  <button id="ri-go" class="btn btn-primary btn-block btn-xl">' + t("I\'m {name} — reveal").replace("{name}", esc(name)) + "</button>" +
       "</section>";
     els.querySelector("#ri-go").addEventListener("click", function () {

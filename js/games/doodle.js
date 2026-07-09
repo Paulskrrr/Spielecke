@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * games/doodle.js — Doodle Drama (drawing telephone)
  *
@@ -20,12 +21,21 @@
 
   var MIN_PLAYERS = 2;
   var DRAW_SECONDS = 60; // drawing time limit — starts when the draw screen opens
+  var REPLAY_MS = 5000;  // timelapse length when a drawing is revealed
+  var REPLAY_DELAY = 400; // small beat before the timelapse starts
 
   var els = null, ctx = null, settings = null;
   var players = [], secretWord = "", chain = [], step = 0, revealStep = 0;
   // active drawing state
   var canvas = null, cctx = null, drawing = false, lastX = 0, lastY = 0;
   var drawTimer = null, drawTimeLeft = 0;
+  // stroke recording for the reveal timelapse: ops are [0,x,y] pen-down,
+  // [1,x,y] line-to, [2] clear — coordinates in the draw canvas's CSS px space.
+  // Cleared strokes stay in the recording on purpose: the replay shows the
+  // false starts too, that's half the drama.
+  var rec = null;
+  // active replay state (one at a time)
+  var replayRaf = null, replayTimer = null;
 
   var module = {
     meta: {
@@ -123,7 +133,10 @@
       "  </div>" +
       "</section>";
     setupCanvas();
-    els.querySelector("#dd-clear").addEventListener("click", clearCanvas);
+    els.querySelector("#dd-clear").addEventListener("click", function () {
+      if (rec && rec.ops.length) rec.ops.push([2]); // an empty canvas cleared is a no-op
+      clearCanvas();
+    });
     els.querySelector("#dd-done").addEventListener("click", finishDrawing);
     startDrawTimer();
   }
@@ -134,7 +147,8 @@
     if (!canvas) return;
     stopDrawTimer();
     var data = canvas.toDataURL("image/png");
-    chain.push({ kind: "drawing", by: players[step], value: data });
+    var recording = rec && rec.ops.length ? { ops: rec.ops, w: rec.w, h: rec.h } : null;
+    chain.push({ kind: "drawing", by: players[step], value: data, rec: recording });
     advance();
   }
 
@@ -162,14 +176,17 @@
 
   // --- Guess step ----------------------------------------------------------
   function renderGuess() {
-    var prevImg = chain[chain.length - 1].value; // a drawing dataURL
+    var prev = chain[chain.length - 1]; // a drawing entry
+    var replayable = !!(prev.rec && prev.rec.ops && prev.rec.ops.length);
     els.innerHTML =
       '<section class="screen dd-guess">' +
       '  <div class="dd-target">' + t("What is this?") + "</div>" +
-      '  <img class="doodle-show" src="' + prevImg + '" alt="drawing to guess" />' +
+      '  <canvas id="dd-replay" class="doodle-show"></canvas>' +
+      (replayable ? '<p class="muted small dd-replay-hint">' + t("👆 Tap the drawing to replay it") + "</p>" : "") +
       '  <input id="dd-input" class="text-input" type="text" placeholder="' + t("Your guess…") + '" maxlength="40" />' +
       '  <button id="dd-submit" class="btn btn-primary btn-block btn-xl">' + t("Lock guess 🔒") + "</button>" +
       "</section>";
+    playTimelapse(els.querySelector("#dd-replay"), prev);
     var input = els.querySelector("#dd-input");
     input.focus();
     els.querySelector("#dd-submit").addEventListener("click", function () {
@@ -208,7 +225,7 @@
     } else if (e.kind === "drawing") {
       card =
         '<div class="dd-step-kicker">' + t("{name} drew:").replace("{name}", esc(e.by)) + "</div>" +
-        '<img class="doodle-show dd-stepimg" src="' + e.value + '" alt="drawing" />';
+        '<canvas class="doodle-show dd-stepcanvas" id="dd-step-replay"></canvas>';
     } else {
       card =
         '<div class="dd-step-kicker">' + t("{name} guessed:").replace("{name}", esc(e.by)) + "</div>" +
@@ -227,6 +244,9 @@
           (atLast ? t("Unveil the artwork 🖼️") : t("Next →")) + "</button>" +
       "  </div>" +
       "</section>";
+
+    var replayCv = els.querySelector("#dd-step-replay");
+    if (replayCv) playTimelapse(replayCv, e);
 
     var prev = els.querySelector("#dd-prev");
     if (prev) prev.addEventListener("click", function () { revealStep--; renderRevealStep(); });
@@ -288,6 +308,7 @@
     cctx.lineCap = "round";
     cctx.lineWidth = 4;
     cctx.strokeStyle = "#241b4d";
+    rec = { ops: [], w: w, h: h };
     clearCanvas();
 
     canvas.addEventListener("pointerdown", onDown);
@@ -308,6 +329,7 @@
     drawing = true;
     try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
     var p = pos(e); lastX = p.x; lastY = p.y;
+    if (rec) rec.ops.push([0, Math.round(p.x), Math.round(p.y)]);
     // a dot for taps
     cctx.beginPath();
     cctx.arc(lastX, lastY, cctx.lineWidth / 2, 0, Math.PI * 2);
@@ -318,6 +340,7 @@
     if (!drawing) return;
     e.preventDefault();
     var p = pos(e);
+    if (rec) rec.ops.push([1, Math.round(p.x), Math.round(p.y)]);
     cctx.beginPath();
     cctx.moveTo(lastX, lastY);
     cctx.lineTo(p.x, p.y);
@@ -339,6 +362,7 @@
   }
   function teardownCanvas() {
     stopDrawTimer();
+    stopReplay();
     if (canvas) {
       canvas.removeEventListener("pointerdown", onDown);
       canvas.removeEventListener("pointermove", onMove);
@@ -346,7 +370,108 @@
       canvas.removeEventListener("pointercancel", onUp);
       canvas.removeEventListener("pointerleave", onUp);
     }
-    canvas = null; cctx = null; drawing = false;
+    canvas = null; cctx = null; drawing = false; rec = null;
+  }
+
+  // --- Reveal timelapse ------------------------------------------------------
+  // Replays a drawing's recorded ops over ~REPLAY_MS on a display canvas, ending
+  // on the finished picture. Cleared phases replay too — the false starts are
+  // part of the show. Tapping the canvas replays it. Falls back to the static
+  // PNG when there's no recording (or reduced motion is preferred).
+  function stopReplay() {
+    if (replayRaf !== null) { global.cancelAnimationFrame(replayRaf); replayRaf = null; }
+    if (replayTimer !== null) { global.clearTimeout(replayTimer); replayTimer = null; }
+  }
+
+  function paintFinal(cv, c2, entry) {
+    var img = new Image();
+    img.onload = function () {
+      var W = cv.clientWidth || 300, H = cv.clientHeight || 340;
+      var s = Math.min(W / img.width * (global.devicePixelRatio || 1), H / img.height * (global.devicePixelRatio || 1));
+      // contain-fit the PNG (its bitmap is the draw canvas at its own dpr)
+      var dw = img.width * s, dh = img.height * s;
+      c2.setTransform(1, 0, 0, 1, 0, 0);
+      c2.drawImage(img, (cv.width - dw) / 2, (cv.height - dh) / 2, dw, dh);
+    };
+    img.src = entry.value;
+  }
+
+  function playTimelapse(cv, entry) {
+    stopReplay();
+    var dpr = global.devicePixelRatio || 1;
+    var W = cv.clientWidth || 300, H = cv.clientHeight || 340;
+    cv.width = Math.round(W * dpr);
+    cv.height = Math.round(H * dpr);
+    var c2 = cv.getContext("2d");
+
+    function whiteout() {
+      c2.setTransform(1, 0, 0, 1, 0, 0);
+      c2.fillStyle = "#ffffff";
+      c2.fillRect(0, 0, cv.width, cv.height);
+    }
+    whiteout();
+
+    var r = entry.rec;
+    var reduced = false;
+    try { reduced = global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { /* ignore */ }
+    if (!r || !r.ops || !r.ops.length || reduced) { paintFinal(cv, c2, entry); return; }
+
+    // contain-fit the recording's coordinate space into the display canvas
+    var s = Math.min(W / r.w, H / r.h);
+    var ox = (W - r.w * s) / 2, oy = (H - r.h * s) / 2;
+    function toBase() { c2.setTransform(dpr * s, 0, 0, dpr * s, dpr * ox, dpr * oy); }
+    toBase();
+    c2.lineJoin = "round";
+    c2.lineCap = "round";
+    c2.lineWidth = 4;
+    c2.strokeStyle = "#241b4d";
+    c2.fillStyle = "#241b4d";
+
+    var ops = r.ops, n = ops.length, idx = 0, lx = 0, ly = 0, t0 = 0;
+
+    function exec(op) {
+      if (op[0] === 2) {
+        whiteout();
+        toBase();
+        c2.fillStyle = "#241b4d";
+        return;
+      }
+      var x = op[1], y = op[2];
+      if (op[0] === 0) {
+        c2.beginPath();
+        c2.arc(x, y, c2.lineWidth / 2, 0, Math.PI * 2);
+        c2.fill();
+      } else {
+        c2.beginPath();
+        c2.moveTo(lx, ly);
+        c2.lineTo(x, y);
+        c2.stroke();
+      }
+      lx = x; ly = y;
+    }
+
+    function frame(now) {
+      replayRaf = null;
+      if (!t0) t0 = now;
+      var target = Math.min(n, Math.floor(((now - t0) / REPLAY_MS) * n));
+      while (idx < target) { exec(ops[idx]); idx++; }
+      if (idx < n) replayRaf = global.requestAnimationFrame(frame);
+    }
+
+    function start() {
+      stopReplay();
+      whiteout();
+      toBase();
+      c2.fillStyle = "#241b4d";
+      idx = 0; t0 = 0;
+      replayTimer = global.setTimeout(function () {
+        replayTimer = null;
+        replayRaf = global.requestAnimationFrame(frame);
+      }, REPLAY_DELAY);
+    }
+
+    cv.addEventListener("click", start);
+    start();
   }
 
   // --- Utils ---------------------------------------------------------------

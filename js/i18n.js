@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * i18n.js — language switcher (DE / EN)
  *
@@ -27,6 +28,7 @@
     // ── Roster ─────────────────────────────────────────────────────────────
     "Players": "Spieler",
     "Entered once, used by every game.": "Einmal eingeben, für alle Spiele.",
+    "🕶️ Geheimauftrag: deal each player a secret mission that runs quietly all evening — tap the shades to start.": "🕶️ Geheimauftrag: verteilt an jeden eine geheime Mission, die den ganzen Abend nebenbei läuft — tipp die Sonnenbrille zum Starten.",
     "Add a player…": "Spieler hinzufügen…",
     "Add": "Hinzufügen",
     "Move up": "Nach oben",
@@ -53,8 +55,12 @@
     "Owning up is the easy part. The stories aren't.": "Das Zugeben ist das Einfachste. Die Geschichten nicht.",
     "Most Likely To": "Most Likely To",
     "Point on three. No takebacks.": "Auf drei zeigen. Kein Zurück.",
-    // Liar's Numbers: name + tagline intentionally have NO German entry, so t()
-    // falls back to the English key — this game always shows as "Liar's Numbers".
+    // Ballpark (formerly "Liar's Numbers"): EN keeps the "in the ballpark" idiom,
+    // DE uses the equivalent "Pi mal Daumen". Both say "rough estimate" — which
+    // is the actual mechanic (closest guess wins), not the bluff the old name
+    // implied.
+    "Ballpark": "Pi mal Daumen",
+    "Everyone estimates a number. Closest wins, furthest drinks.": "Jeder schätzt eine Zahl. Am nächsten dran gewinnt, am weitesten weg säuft.",
     "Princess Treatment": "Princess Treatment",
     "Going above and beyond, or just the bare minimum? Discuss.": "Mehr als nötig oder nur das Minimum? Diskutiert.",
     "Doodle Drama": "Doodle Drama",
@@ -192,11 +198,17 @@
     // ── Wavelength ─────────────────────────────────────────────────────────
     "Spectrum pool": "Spektrum-Kategorie",
     "Start round 🎯": "Runde starten 🎯",
+    "Who sets the wavelength?": "Wer gibt die Wavelength vor?",
+    "Spinning for a clue-giver…": "Es wird ausgelost…",
+    "Picking…": "Wird ausgelost…",
+    "Tap any name to pick the clue-giver yourself.": "Tippe einen Namen an, um selbst zu bestimmen, wer vorgibt.",
+    "Tap a name to pick someone else.": "Tippe einen Namen an, um jemand anderen zu wählen.",
+    "{name} sets it — continue 📡": "{name} gibt vor — weiter 📡",
     "Clue-giver only": "Nur für den Tipp-Geber",
     "Show me the target 🎯": "Zeig mir das Ziel 🎯",
     "{name} sets the wavelength": "{name} gibt die Wavelength vor",
     "I'm {name} — show the target 🎯": "Ich bin {name} — Ziel zeigen 🎯",
-    "Read the clue, then place your line where you think the target is.": "Lies den Tipp und platzier deine Linie da, wo du das Ziel vermutest.",
+    "Place your line where you'd put the clue on the spectrum.": "Platzier deine Linie da, wo du den Begriff auf dem Spektrum einordnen würdest.",
     "Give a clue!": "Gib einen Tipp!",
     "Your clue…": "Dein Tipp…",
     "The clue": "Der Tipp",
@@ -228,7 +240,7 @@
     "Most fingers drinks 🍺": "Die meisten Finger trinken 🍺",
     "Most fingers takes the crown 👑": "Die meisten Finger gewinnen die Krone 👑",
 
-    // ── Liars Numbers ──────────────────────────────────────────────────────
+    // ── Ballpark (formerly Liar's Numbers) ───────────────────────────────────
     "Question pool": "Fragen-Kategorie",
     "Start round ▶️": "Runde starten ▶️",
     "Your number": "Deine Zahl",
@@ -240,11 +252,11 @@
     // ── Princess ───────────────────────────────────────────────────────────
     "For the girls": "Für die Mädels",
     "For the guys": "Für die Jungs",
-    "Princess treatment, or bare minimum?": "Prinzessinnen-Behandlung oder Minimum?",
-    "King treatment, or bare minimum?": "König-Behandlung oder Minimum?",
-    "👑 Princess treatment": "👑 Prinzessinnen-Behandlung",
-    "🤴 King treatment": "🤴 König-Behandlung",
-    "😐 Bare minimum": "😐 Minimum",
+    "Princess treatment, or bare minimum?": "Princess Treatment oder Bare Minimum?",
+    "King treatment, or bare minimum?": "King Treatment oder Bare Minimum?",
+    "👑 Princess treatment": "👑 Princess Treatment",
+    "🤴 King treatment": "🤴 King Treatment",
+    "😐 Bare minimum": "😐 Bare Minimum",
 
     // ── Doodle Drama ───────────────────────────────────────────────────────
     "Chain order ({n}): {names}": "Kettenreihenfolge ({n}): {names}",
@@ -256,6 +268,7 @@
     "Clear 🧹": "Löschen 🧹",
     "Done ✅": "Fertig ✅",
     "What is this?": "Was ist das?",
+    "👆 Tap the drawing to replay it": "👆 Tipp aufs Bild, um den Zeitraffer nochmal zu sehen",
     "Your guess…": "Dein Tipp…",
     "Lock guess 🔒": "Tipp abschicken 🔒",
     "⚠ Needs at least {n} players. Add them from the header (👥).": "⚠ Mindestens {n} Spieler nötig. Oben (👥) hinzufügen.",
@@ -334,6 +347,13 @@
     "SPIN 🎯": "DREHEN 🎯",
     "SPIN AGAIN 🎯": "NOCHMAL DREHEN 🎯",
     "⚠ Add some players from the header (👥) to spin.": "⚠ Füge oben Spieler hinzu (👥).",
+    "🎯 Elimination": "🎯 Rauswurf-Modus",
+    "Last one standing:": "Wer übrig bleibt:",
+    "🏆 wins": "🏆 gewinnt",
+    "💀 loses": "💀 verliert",
+    "{name} is out!": "{name} ist raus!",
+    "{name} survives — winner!": "{name} bleibt übrig — gewonnen!",
+    "{name} is the last one left!": "{name} bleibt übrig — verloren!",
 
     // ── Reaction Duel ──────────────────────────────────────────────────────
     "Match length": "Spiel bis",
@@ -366,7 +386,7 @@
     "🧑‍🤝‍🧑 Rank the players": "🧑‍🤝‍🧑 Mitspieler ranken",
     "The categories set the spectrum — e.g. Party → who throws up first. The players get ranked, not items.": "Die Kategorien bestimmen das Spektrum — z. B. Party → wer kotzt zuerst. Geordnet werden die Mitspieler, nicht Begriffe.",
     "Most → least likely to cause chaos": "Sorgt am ehesten → am wenigsten für Chaos",
-    "Build your ranking in private — don't let the others copy.": "Bau dein Ranking heimlich — keiner darf abschauen.",
+    "Build your ranking in private.": "Bau dein Ranking heimlich.",
     "{name}'s ranking": "{name}s Ranking",
     "Drag the items into order — the top is your #1.": "Zieh die Dinge in deine Reihenfolge — ganz oben ist dein Platz 1.",
     "Drag the players into order — the top is your #1.": "Zieh die Mitspieler in deine Reihenfolge — ganz oben ist dein Platz 1.",
@@ -412,8 +432,8 @@
     "Make one up!": "Denk dir was aus!",
     "👑 PRINCESS": "👑 PRINZESSIN",
     "🤴 KING": "🤴 KÖNIG",
-    // Liar's Numbers
-    "Lock your guess in private — don't let the others copy.": "Tippe deine Zahl heimlich ein — keiner darf abschauen.",
+    // Ballpark
+    "Lock your guess in private.": "Tippe deine Zahl heimlich ein.",
     "{name}'s guess": "{name}s Tipp",
     "(off {n})": "({n} daneben)",
     "Pick a number 1–100": "Wähle eine Zahl von 1–100",
@@ -450,6 +470,8 @@
     "No standing rules yet.": "Noch keine Hofgesetze.",
     "No Trumps yet. Gold cards stay face-up with their holder.": "Noch keine Trümpfe. Gold-Karten liegen offen vor ihrem Halter.",
     "Tap to activate ⚡": "Tippen zum Auslösen ⚡",
+    "ends this turn": "endet mit diesem Zug",
+    "{n} turns left": "noch {n} Züge",
     "↺ Reset game": "↺ Spiel zurücksetzen",
     "Instant Action": "Sofort-Aktion",
     "Passive / Rule": "Passiv / Regel",
@@ -598,8 +620,7 @@
     "Fuse length": "Zündschnur-Länge",
     "🔊 Ticking & alarms": "🔊 Ticken & Alarm",
     "Tip: works best with 2 players to learn it, then add experts and split the manual between them.": "Tipp: zum Lernen am besten mit 2 Spielern, dann Experten dazu und das Handbuch unter ihnen aufteilen.",
-    "🌿 Rookie": "🌿 Anfänger",
-    "💣 Standard": "💣 Standard",
+    "💣 Normal": "💣 Normal",
     "💀 Lethal": "💀 Tödlich",
     "Flip the cube with the buttons or ← → ↑ ↓. Read what you see out loud — your expert has the rules.": "Dreh den Würfel mit den Tasten oder ← → ↑ ↓. Lies laut vor, was du siehst — dein Experte hat die Regeln.",
     "Abort · back to setup": "Abbrechen · zurück zum Setup",
@@ -693,7 +714,7 @@
     "(This chapter contains no defusal information. It is here to waste your time. The clock is still running.)": "(Dieses Kapitel enthält keine Entschärfungs-Infos. Es ist hier, um deine Zeit zu verschwenden. Die Uhr läuft weiter.)",
     "This device is sold AS-IS with no warranty of merchantability or fitness for a particular detonation. The manufacturer is not liable for incidental, consequential, or pyrotechnic damages.": "Dieses Gerät wird OHNE MÄNGELGEWÄHR verkauft, ohne Zusicherung der Marktgängigkeit oder Eignung für eine bestimmte Detonation. Der Hersteller haftet nicht für beiläufige, Folge- oder pyrotechnische Schäden.",
     "Warranty void if device is opened, submerged, defused, or detonated.": "Garantie erlischt, wenn das Gerät geöffnet, untergetaucht, entschärft oder gezündet wird.",
-    "For support, please hold. Estimated wait time: longer than you have.": "Für Support bitte warten. Voraussichtliche Wartezeit: länger als du hast.",
+    "For support, please hold. Estimated wait time: longer than you have.": "Für Support bleiben Sie bitte in der Leitung. Voraussichtliche Wartezeit: länger, als Ihnen bleibt.",
     "Some assembly was required. We did not do it.": "Eine gewisse Montage war erforderlich. Wir haben sie nicht durchgeführt.",
     "(Still no defusal information here. Flip back two chapters.)": "(Auch hier keine Entschärfungs-Infos. Blättere zwei Kapitel zurück.)",
 
@@ -720,6 +741,7 @@
     "Flip right": "Nach rechts kippen",
     "Flip down": "Nach unten kippen",
     "Rotate 90° clockwise": "90° im Uhrzeigersinn drehen",
+    "Rotate 90° clockwise (Spacebar)": "90° im Uhrzeigersinn drehen (Leertaste)",
 
     // ── Zeitzünder v4 — expanded manual (annexes + filler) ─────────────────
     "Annex I — Foreword & Legal Notice": "Anhang I — Vorwort & Rechtliche Hinweise",
@@ -729,9 +751,10 @@
     "Ch. 3 — Dials": "Kapitel 3 — Regler",
     "Annex IV — Maintenance & Care": "Anhang IV — Wartung & Pflege",
     "Wire-Cutting Reference Card": "Drahtschneide-Kurzkarte",
-    "Ch. 4 — Keypad": "Kapitel 4 — Tastenfeld",
+    "Ch. 4 — Wires": "Kapitel 4 — Drähte",
+    "Ch. 5 — Keypad": "Kapitel 5 — Tastenfeld",
     "Annex V — Warranty & Liability": "Anhang V — Garantie & Haftung",
-    "Ch. 5 — Reading the bomb": "Kapitel 5 — Die Bombe lesen",
+    "Ch. 6 — Reading the bomb": "Kapitel 6 — Die Bombe lesen",
     "Annex VI — Troubleshooting": "Anhang VI — Fehlerbehebung",
     "Ch. 6 — Wires (full procedure)": "Kapitel 6 — Drähte (vollständige Prozedur)",
     "Annex VII — Disposal, Conformity & Index": "Anhang VII — Entsorgung, Konformität & Index",
@@ -763,7 +786,7 @@
     "The device has stopped ticking.": "Das Gerät tickt nicht mehr.",
     "Seek cover.": "In Deckung gehen.",
     "A wire was cut and nothing happened.": "Ein Draht wurde geschnitten und nichts passierte.",
-    "Congratulations, or wait.": "Glückwunsch, oder warten Sie.",
+    "Congratulations, or wait.": "Glückwunsch. Oder warten Sie noch einen Moment.",
     "This manual is unhelpful.": "Dieses Handbuch ist nicht hilfreich.",
     "See Annex VI.": "Siehe Anhang VI.",
     "Dispose of this device only at an authorised collection point. Do not place in household recycling.": "Entsorgen Sie dieses Gerät nur an einer autorisierten Sammelstelle. Nicht in den Hausmüll geben.",
@@ -773,6 +796,14 @@
     // ── Zeitzünder v5 — keypad serial-suffix table ────────────────────────
     "Read the Decoder LETTER. Find its row in the Sequence table → press those glyphs in order.": "Den Decoder-BUCHSTABEN ablesen. Seine Zeile in der Folge-Tabelle gibt die Glyphen vor; diese sind der Reihe nach zu drücken.",
     "Then read the serial's LAST DIGIT and press ONE final glyph by its grid position (table below).": "Anschließend die LETZTE Ziffer der Seriennummer ablesen und EINE abschließende Glyphe nach ihrer Rasterposition drücken (Tabelle unten).",
+    "The keypad stages a code but never fires it — that is left to the arming control, so no thief who reaches the keys alone can arm the device. Its nine glyphs are shuffled into a fresh layout on every unit, which means a memorised position is worthless: read each glyph by its shape, never by where it sits.": "Das Tastenfeld stellt einen Code bereit, löst ihn aber nie selbst aus — das übernimmt die Scharfschaltung, damit niemand die Bombe allein über die Tasten scharf stellen kann. Die neun Glyphen sitzen bei jedem Gerät in einer anderen Anordnung; eine auswendig gelernte Position ist damit wertlos: Jede Glyphe an ihrer Form ablesen, nie an ihrem Platz.",
+    "Build the code in four steps, then hand it to the arming control.": "Der Code entsteht in vier Schritten und wird dann an die Scharfschaltung übergeben.",
+    "Read the Decoder LETTER and find its row in the Sequence table below. Press those glyphs in order.": "Den Decoder-BUCHSTABEN ablesen und seine Zeile in der Folge-Tabelle unten suchen. Diese Glyphen der Reihe nach drücken.",
+    "If indicator SIG is lit, press that same sequence in REVERSE order instead.": "Leuchtet die Anzeige SIG, stattdessen dieselbe Folge in UMGEKEHRTER Reihenfolge drücken.",
+    "Read the LAST DIGIT of the serial and press ONE more glyph, chosen by its position in the grid (Final key table below).": "Die LETZTE Ziffer der Seriennummer ablesen und EINE weitere Glyphe drücken, bestimmt durch ihre Position im Raster (Tabelle „Letzte Taste“ unten).",
+    "Fire the finished code from the arming control (see Arming).": "Den fertigen Code über die Scharfschaltung auslösen (siehe Scharfschalten).",
+    "Sequence — the glyphs each Decoder letter calls for:": "Folge — die Glyphen, die jeder Decoder-Buchstabe verlangt:",
+    "Final key — the grid position the last serial digit adds:": "Letzte Taste — die Rasterposition, die die letzte Ziffer der Seriennummer ergänzt:",
     "Last digit": "Letzte Ziffer",
     "Final key": "Letzte Taste",
     "(none)": "(keine)",
@@ -800,22 +831,22 @@
     "Ch. 7 — Wiring Maze": "Kapitel 7 — Kabel-Labyrinth",
     "Four modules live on the device: <b>Wires</b>, <b>Keypad</b>, <b>Dials</b> and the <b>Maze</b>. They must be committed in the right ORDER — see Firing Order.": "Die Bombe umfasst vier Module: <b>Drähte</b>, <b>Tastenfeld</b>, <b>Regler</b> und das <b>Labyrinth</b>. Sie sind ausnahmslos in der vorgeschriebenen Reihenfolge abzuarbeiten.",
     "One face shows a row of symbols. Each symbol maps in the table below to a module; read them left to right for the order.": "Eine Seite der Bombe trägt eine Reihe von Symbolen. Jedes Symbol steht in der Tabelle unten für ein Modul; von links nach rechts gelesen ergeben sie die Reihenfolge.",
-    "The grid is etched with channels the operator's probe must follow; the channel walls are not visible on the operator's side.": "In das Gitter sind Kanäle geätzt, denen die Sonde des Entschärfers folgen muss; die Kanalwände sind auf der Seite des Entschärfers nicht sichtbar.",
+    "The grid is etched with guide grooves the probe must follow; their walls are invisible from outside the casing.": "In das Gitter sind Führungsrillen geätzt, denen die Sonde folgen muss; ihre Wände sind von außen nicht einsehbar.",
     "One face is a 6×6 grid with a lit cell that moves, a red target cell and two ringed marker cells.": "Eine Seite ist ein 6×6-Gitter mit einer leuchtenden Zelle, die sich bewegt, einer roten Zielzelle und zwei umringten Markierungszellen.",
     "Have the operator read out the two ringed marker cells. Find the diagram below with rings in the SAME two cells — that is the active maze.": "Lass dir die beiden umringten Markierungszellen ansagen. Suche unten das Diagramm mit Ringen in denselben zwei Zellen — das ist das aktive Labyrinth.",
-    "Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.": "Führe dann die leuchtende Zelle Schritt für Schritt (hoch/runter/links/rechts) zur roten Zielzelle und umgehe dabei die Wände, die nur du siehst.",
-    "Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.": "Die Sonde gegen eine Wand zu fahren, schlägt am Manipulationsschutz an. Bestätige jeden Schritt, bevor du ihn ansagst.",
+    "Then guide the lit cell to the red target ONE step at a time (up/down/left/right), routing around the walls only you can see.": "Die leuchtende Zelle Schritt für Schritt (hoch/runter/links/rechts) zur roten Zielzelle dirigieren — vorbei an den Wänden, die nur der Leser dieses Handbuchs sieht.",
+    "Driving the probe into a wall trips the tamper protection. Confirm each step before calling it.": "Die Sonde gegen eine Wand zu fahren, schlägt am Manipulationsschutz an. Jeder Schritt ist erst zu prüfen, dann anzusagen.",
 
     // ── Zeitzünder v9 — timed commit / arming control ──────────────────────
     "ARM": "SCHARF",
     "Ch. 8 — Arming the detonator": "Kapitel 8 — Zünder scharf schalten",
-    "The Dials do not take on their own face — once set, fire them from the arming control (see Arming).": "Die Regler übernehmen nicht auf ihrer eigenen Seite — sind sie eingestellt, werden sie über die Scharfschaltung ausgelöst (siehe Scharfschalten).",
-    "Nine glyphs, scrambled. Press the sequence, then fire it from the arming control (see Arming).": "Neun Glyphen, gemischt. Gib die Folge ein und löse sie dann über die Scharfschaltung aus (siehe Scharfschalten).",
+    "The Dials do not take on their own face — once set, fire them from the arming control (see Arming).": "Auf ihrer eigenen Seite bestätigen die Regler nichts — einmal eingestellt, werden sie über die Scharfschaltung ausgelöst (siehe Scharfschalten).",
+    "Nine glyphs, scrambled. Press the sequence, then fire it from the arming control (see Arming).": "Neun Glyphen, gemischt. Die Folge eingeben, dann über die Scharfschaltung auslösen (siehe Scharfschalten).",
     "The Keypad and the Dials cannot be committed on their own faces. Once set, they are fired from the round arming control on the readout face.": "Tastenfeld und Regler lassen sich nicht auf ihrer eigenen Seite bestätigen. Einmal eingestellt, werden sie über die runde Scharfschaltung auf der Anzeigenseite ausgelöst.",
-    "Work out the ARMING DIGIT: count the LIT indicators, ADD the number of batteries, and keep only the last digit.": "Ermittle die SCHARF-ZIFFER: zähle die LEUCHTENDEN Anzeigen, ADDIERE die Anzahl der Batterien und behalte nur die letzte Ziffer.",
-    "Have the operator hold the arming control and RELEASE it the moment the timer's last digit equals the arming digit.": "Lass den Entschärfer die Scharfschaltung halten und GENAU dann loslassen, wenn die letzte Ziffer der Uhr der Scharf-Ziffer entspricht.",
+    "Work out the ARMING DIGIT: count the LIT indicators, ADD the number of batteries, and keep only the last digit.": "Die SCHARF-ZIFFER ermitteln: die LEUCHTENDEN Anzeigen zählen, die Anzahl der Batterien ADDIEREN, nur die letzte Ziffer behalten.",
+    "Have the operator hold the arming control and RELEASE it the moment the timer's last digit equals the arming digit.": "Der Entschärfer hält die Scharfschaltung gedrückt und lässt GENAU in dem Moment los, in dem die letzte Ziffer der Uhr der Scharf-Ziffer entspricht.",
     "Released at the wrong instant it simply will not fire — keep holding and take the next pass. A wrong Keypad or Dials value still trips the tamper protection.": "Zum falschen Zeitpunkt losgelassen, löst sie einfach nicht aus — weiter halten und den nächsten Durchlauf abwarten. Ein falscher Tastenfeld- oder Reglerwert schlägt weiterhin am Manipulationsschutz an.",
-    "Counted, with the lit indicators, into the arming digit.": "Zählt zusammen mit den leuchtenden Anzeigen in die Scharf-Ziffer.",
+    "Counted, with the lit indicators, into the arming digit.": "Geht zusammen mit den leuchtenden Anzeigen in die Scharf-Ziffer ein.",
 
     // ── Zeitzünder v10 — fuller spam annexes + three new closing annexes ───
     "Read all safety instructions before first detonation. Failure to observe these warnings may void the warranty and the afternoon.": "Lesen Sie alle Sicherheitshinweise vor der ersten Detonation. Ein Missachten dieser Warnungen kann die Garantie und den Nachmittag erlöschen lassen.",
@@ -842,11 +873,11 @@
     "Question": "Frage",
     "Answer": "Antwort",
     "Which wire do I cut?": "Welchen Draht schneide ich?",
-    "The correct one. See Chapter 6, if there is time.": "Den richtigen. Siehe Kapitel 6, falls noch Zeit ist.",
+    "The correct one. See Chapter 4, if there is time.": "Den richtigen. Siehe Kapitel 4, falls noch Zeit ist.",
     "How much time do I have?": "Wie viel Zeit habe ich?",
-    "Less than is being spent reading this page.": "Weniger, als für das Lesen dieser Seite aufgewendet wird.",
+    "Less than is being spent reading this page.": "Weniger, als das Lesen dieser Seite gerade gekostet hat.",
     "Is it supposed to make that noise?": "Soll es dieses Geräusch machen?",
-    "Yes. Right up until it isn't.": "Ja. Genau bis zu dem Moment, in dem nicht.",
+    "Yes. Right up until it isn't.": "Ja. Bis genau zu dem Moment, in dem es das nicht mehr sollte.",
     "Can I undo a mistake?": "Kann ich einen Fehler rückgängig machen?",
     "You may learn from it, briefly.": "Sie dürfen kurz daraus lernen.",
     "The manual contradicts itself.": "Das Handbuch widerspricht sich.",
@@ -863,6 +894,20 @@
 
     // ── Zeitzünder v11 — single wires chapter (full-procedure page removed) ─
     "Ch. 6 — Wires": "Kapitel 6 — Drähte",
+    // v13 — manual pages given in-fiction rationale (why the modules interlock)
+    "Every wire is live. Sever one whose charge has nowhere to go and the device fires — a conductor is only safe to cut once you have opened it a path. That path is the CHANNEL, and you steer it with the Dials.": "Jeder Draht steht unter Spannung. Wird ein Leiter getrennt, dessen Ladung nirgendwohin kann, zündet das Gerät — schneidsicher ist ein Draht erst, wenn seine Ladung einen Abfluss hat. Dieser Abfluss ist der KANAL, und gestellt wird er über die Regler.",
+    "The CHANNEL is where the Dials send the charge: <b>Dial A + Dial B</b>. Set both dials to their targets first (see Dials), then add them — dials on 4 and 5 open channel 9. The wire carrying that channel is now the safe one.": "Der KANAL ist schlicht die Summe der Regler: <b>Regler A + Regler B</b>. Zuerst beide Regler auf ihre Zielwerte stellen (siehe Regler) — stehen sie auf 4 und 5, ist Kanal 9 geöffnet. Der Draht, der diesen Kanal führt, ist der sichere.",
+    "Cut the wire whose printed number equals the channel. If several carry it, only the leftmost is truly discharged — cut that one.": "Zu durchtrennen ist der Draht, dessen aufgedruckte Zahl dem Kanal entspricht. Führen ihn mehrere, ist nur der am weitesten links liegende tatsächlich entladen — die übrigen sehen nur so aus.",
+    "If no wire's number matches the channel, the charge overflows onto the colour bus: cut the highest-ranked colour on the Decoder's priority list (1 = highest). Ties go to the leftmost.": "Trägt kein Draht die Kanalzahl, läuft die Ladung auf den Farb-Bus über: zu durchtrennen ist dann die in der Farb-Priorität des Decoders höchstplatzierte Farbe (1 = höchste); bei Gleichstand der am weitesten links liegende Draht.",
+    "Check the firing order before you cut — a wire severed out of sequence jams the interlock (a strike). See Firing order.": "Vor dem Schnitt ist die Zünd-Reihenfolge zu prüfen — ein außer der Reihe getrennter Draht verkantet die Verriegelung (Manipulationsschutz). Siehe Zünd-Reihenfolge.",
+    "The cut reads the dials live, so leave them on their targets even when Wires comes first in the order.": "Der Schnitt liest die Regler in Echtzeit; sie bleiben daher auf ihren Zielwerten stehen, auch wenn die Drähte in der Reihenfolge an erster Stelle kommen.",
+    // in-fiction leads for Dials, Firing order and Arming
+    "The Dials do not fire anything — they only route the device's charge into a channel. Firing is centralised at the arming control, since a module that could arm itself would be a gift to anyone with a screwdriver.": "Die Regler zünden nichts — sie leiten nur die Ladung des Geräts in einen Kanal. Ausgelöst wird zentral über die Scharfschaltung, denn ein Modul, das sich selbst scharf schalten könnte, wäre ein Geschenk für jeden mit einem Schraubenzieher.",
+    "The four modules are interlocked in series at the factory: each stage physically unlocks the next, so the device cannot be undone by luck or in the wrong order. Force a stage out of sequence and the interlock jams — that is a strike. The order is set at manufacture and cannot be changed in the field.": "Die vier Module sind werkseitig in Reihe verriegelt: Jede Stufe entriegelt erst die nächste, damit sich das Gerät weder durch Glück noch in falscher Reihenfolge lösen lässt. Wird eine Stufe außer der Reihe erzwungen, verkantet die Verriegelung — der Manipulationsschutz schlägt an. Die Reihenfolge ist werkseitig festgelegt und im Feld nicht änderbar.",
+    "The detonator's safety only lifts for a single clock-tick each cycle — a deliberately narrow window, so a panicking operator can't just mash the button. Bleed the charge on the Dials, authorise it on the Keypad, then release on the tick.": "Die Sicherung des Zünders hebt sich pro Zyklus nur für einen einzigen Tick der Uhr — ein bewusst schmales Fenster, damit panisches Dauerdrücken ins Leere geht. Der Ablauf: Ladung über die Regler ableiten, am Tastenfeld autorisieren, exakt auf den Tick loslassen.",
+    // Maze — keyed corner for orientation
+    "One corner of the grid is clipped — a factory alignment key. Have the operator turn the bomb until that amber corner sits TOP-LEFT, so their grid matches the diagrams below (which carry the same mark).": "Eine Ecke des Gitters ist abgeschrägt — die werkseitige Ausrichtmarke. Der Entschärfer ist anzuweisen, die Bombe zu drehen, bis die gelbe Ecke OBEN LINKS sitzt; erst dann deckt sich sein Gitter mit den Diagrammen unten (gleiche Marke).",
+    "Now have them read out the two ringed cells and find the diagram with rings in the SAME two cells — that is the active maze.": "Anschließend die beiden umringten Zellen ansagen lassen; das Diagramm mit Ringen in denselben zwei Zellen ist das aktive Labyrinth.",
     "If a wire's printed number equals the channel, cut it — if several match, the leftmost.": "Trägt ein Draht die Zahl des Kanals, ist er zu durchtrennen — bei mehreren Treffern der am weitesten links liegende.",
     "If no number matches, use the colour-priority order: cut the highest-ranked colour present; ties go to the leftmost.": "Passt keine Zahl, gilt die Farb-Priorität: zu durchtrennen ist die höchstplatzierte vorhandene Farbe; bei Gleichstand die am weitesten links liegende.",
     "The cut reads the dials LIVE, so the dials must be set even if Wires comes first in the order.": "Der Schnitt liest die Regler in Echtzeit; sie müssen daher eingestellt sein, auch wenn die Drähte in der Reihenfolge zuerst dran sind.",
@@ -912,20 +957,20 @@
     "Two minds, two words. Say the same thing — fewest tries wins.": "Zwei Köpfe, zwei Wörter. Sagt dasselbe — wer am wenigsten braucht, gewinnt.",
     "Team {n}": "Team {n}",
     "🔀 Reshuffle teams": "🔀 Teams neu mischen",
-    "Start melding 🔗": "Losmelden 🔗",
+    "Start melding 🔗": "Meld starten 🔗",
     "Team {n} — pass them the phone": "Team {n} — gebt ihnen das Handy",
     "Show our words 🔗": "Unsere Wörter zeigen 🔗",
     "Say a new word together each round. Tap +1 every time you miss.": "Sagt jede Runde gleichzeitig ein neues Wort. Tippt +1, wenn ihr danebenliegt.",
     "👆 Tap the number when you don't match": "👆 Tippe die Zahl, wenn ihr nicht übereinstimmt",
     "MELD! 🎉": "MELD! 🎉",
     "rounds": "Runden",
-    "Melded!": "Gemeldet!",
+    "Melded!": "Meld geschafft!",
     "🍺 Slowest to meld drinks — bottoms up!": "🍺 Wer am längsten brauchte, trinkt — auf ex!",
-    "🐌 Slowest to meld this round.": "🐌 Am langsamsten gemeldet diese Runde.",
+    "🐌 Slowest to meld this round.": "🐌 Am langsamsten zum Meld diese Runde.",
     "A perfect tie — nobody drinks.": "Perfektes Unentschieden — keiner trinkt.",
     "New teams 🔁": "Neue Teams 🔁",
     "Your word": "Dein Wort",
-    "Everyone's seen theirs — meld! 🔗": "Alle haben ihres gesehen — meldet euch! 🔗",
+    "Everyone's seen theirs — meld! 🔗": "Alle haben ihres gesehen — Meld! 🔗",
     "On 3, say your word at the same time. Then a new word each round until you match.": "Auf 3 sagt ihr gleichzeitig euer Wort. Dann jede Runde ein neues, bis ihr euch trefft.",
 
     // ── Geheimauftrag ──────────────────────────────────────────────────────

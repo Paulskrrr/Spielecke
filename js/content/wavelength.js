@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/wavelength.js — content for Wavelength (NSFW, adults only)
  *
@@ -103,6 +104,51 @@
           { left: "Symbolpolitik", right: "Echte Macht" },
         ],
       },
+      marvel: {
+        label: "🦸 Marvel",
+        pairs: [
+          { left: "Astreiner Held", right: "Astreiner Schurke" },
+          { left: "Nutzlose Superkraft", right: "Völlig OP" },
+          { left: "Würde für mich sterben", right: "Verrät mich sofort" },
+          { left: "Vergessene Randfigur", right: "Popkultur-Ikone" },
+          { left: "Schwächster Avenger", right: "Stärkster Avenger" },
+          { left: "Peinlicher Möchtegern-Bösewicht", right: "Kosmische Bedrohung" },
+          { left: "Reiner Comic Relief", right: "Zum Heulen tragisch" },
+          { left: "Vom MCU verhunzt", right: "Perfekt besetzt" },
+          { left: "Verdient keinen eigenen Film", right: "Schreit nach Solofilm" },
+          { left: "Marvel-Frau: absolut nicht", right: "Marvel-Frau: brandheiß" },
+        ],
+      },
+      starwars: {
+        label: "⭐ Star Wars",
+        pairs: [
+          { left: "Tief in der hellen Seite", right: "Tief in der dunklen Seite" },
+          { left: "Nerviger Charakter", right: "Absoluter Fan-Liebling" },
+          { left: "Reines Kanonenfutter", right: "Praktisch unaufhaltbar" },
+          { left: "Prequel-Cringe", right: "Ikonischer Moment" },
+          { left: "Sinnloser Tod", right: "Episches Opfer" },
+          { left: "In der Cantina meiden", right: "Sofort anheuern" },
+          { left: "Verrät dich sofort", right: "Loyal bis zum Tod" },
+          { left: "Spürt die Macht kaum", right: "Meister der Macht" },
+          { left: "Verhunztes Sequel-Chaos", right: "Perfekt erzählt" },
+          { left: "Star-Wars-Frau: absolut nicht", right: "Star-Wars-Frau: brandheiß" },
+        ],
+      },
+      minecraft: {
+        label: "⛏️ Minecraft",
+        pairs: [
+          { left: "Harmloser Mob", right: "Albtraum-Mob" },
+          { left: "Nutzloses Item", right: "Game-Changer" },
+          { left: "Anfänger-Move", right: "Pro-Gamer-Move" },
+          { left: "Peinlicher Tod", right: "Ehrenvoller Tod" },
+          { left: "Reine Zeitverschwendung", right: "Jeden Klick wert" },
+          { left: "Dirt House", right: "Architektonisches Meisterwerk" },
+          { left: "Kriegt jeder Anfänger hin", right: "Endgame-Flex" },
+          { left: "Völlig sicher", right: "Lebensgefährlich" },
+          { left: "Nur zur Deko", right: "Überlebenswichtig" },
+          { left: "Langweiliges Biom", right: "Bestes Spawn-Biom" },
+        ],
+      },
     },
     en: {
       general: {
@@ -193,6 +239,51 @@
           { left: "Boring school stuff", right: "Pure drama" },
           { left: "Best forgotten", right: "Never forget" },
           { left: "Symbolic gesture", right: "Real power" },
+        ],
+      },
+      marvel: {
+        label: "🦸 Marvel",
+        pairs: [
+          { left: "Pure hero", right: "Pure villain" },
+          { left: "Useless power", right: "Totally OP" },
+          { left: "Would die for me", right: "Betrays me instantly" },
+          { left: "Forgotten side character", right: "Pop-culture icon" },
+          { left: "Weakest Avenger", right: "Strongest Avenger" },
+          { left: "Cringe wannabe villain", right: "Cosmic-level threat" },
+          { left: "Pure comic relief", right: "Tragic to the bone" },
+          { left: "Butchered by the MCU", right: "Perfectly cast" },
+          { left: "Needs no solo film", right: "Begging for a solo film" },
+          { left: "Marvel woman: absolutely not", right: "Marvel woman: red hot" },
+        ],
+      },
+      starwars: {
+        label: "⭐ Star Wars",
+        pairs: [
+          { left: "Deep light side", right: "Deep dark side" },
+          { left: "Annoying character", right: "Total fan favourite" },
+          { left: "Pure cannon fodder", right: "Basically unstoppable" },
+          { left: "Prequel cringe", right: "Iconic moment" },
+          { left: "Pointless death", right: "Epic sacrifice" },
+          { left: "Avoid in the cantina", right: "Recruit on sight" },
+          { left: "Betrays you instantly", right: "Loyal to the death" },
+          { left: "Barely Force-sensitive", right: "Master of the Force" },
+          { left: "Butchered sequel mess", right: "Perfectly told" },
+          { left: "Star Wars woman: absolutely not", right: "Star Wars woman: red hot" },
+        ],
+      },
+      minecraft: {
+        label: "⛏️ Minecraft",
+        pairs: [
+          { left: "Harmless mob", right: "Nightmare mob" },
+          { left: "Useless item", right: "Game-changer" },
+          { left: "Noob move", right: "Pro-gamer move" },
+          { left: "Embarrassing death", right: "Honourable death" },
+          { left: "Pure waste of time", right: "Worth every click" },
+          { left: "Dirt house", right: "Architectural masterpiece" },
+          { left: "Any noob can do it", right: "Endgame flex" },
+          { left: "Totally safe", right: "Deadly" },
+          { left: "Just for decoration", right: "Essential for survival" },
+          { left: "Boring biome", right: "Best biome to spawn in" },
         ],
       },
     },

@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/activity.js — content for Activity (NSFW, adults only)
  *
@@ -22,6 +23,8 @@
           "Bier", "Hund", "Pizza", "Selfie", "Kuss", "Klo", "Kondom", "Handy",
           "Dusche", "Zahnbürste", "Gitarre", "Regenschirm", "Pinguin", "Roboter",
           "Skateboard", "Einhorn", "Burger", "Sonnenbrille", "Achterbahn", "Vampir",
+          "Beer Pong", "Shisha", "Jägermeister", "Flunkyball", "Dartscheibe",
+          "Katerfrühstück",
         ],
       },
       3: {
@@ -32,6 +35,8 @@
           "Sonnenbrand", "Vorstellungsgespräch", "Erstes Date", "Karaoke",
           "Stau", "Influencer", "Festival", "Bungee-Jumping",
           "Zombie", "Astronaut", "Ghosting", "Roadtrip",
+          "Vorglühen", "Blackout", "Spring Break", "Bierdusche",
+          "Flitterwochen", "Absturz",
         ],
       },
       4: {
@@ -44,6 +49,8 @@
           "Künstliche Intelligenz", "Verschwörungstheorie", "Inflation",
           "Burnout", "Déjà-vu", "Schadenfreude", "FOMO",
           "Helikopter-Eltern", "Mansplaining",
+          "Keuschheitsgürtel", "Liebesschaukel", "Zwangsjacke",
+          "Dudelsack", "Lügendetektor", "Wünschelrute",
         ],
       },
     },
@@ -54,6 +61,8 @@
           "Beer", "Dog", "Pizza", "Selfie", "Kiss", "Toilet", "Condom", "Phone",
           "Shower", "Toothbrush", "Guitar", "Umbrella", "Penguin", "Robot",
           "Skateboard", "Unicorn", "Burger", "Sunglasses", "Roller coaster", "Vampire",
+          "Beer pong", "Hookah", "Jägermeister", "Flunkyball", "Dartboard",
+          "Hangover breakfast",
         ],
       },
       3: {
@@ -64,6 +73,8 @@
           "Sunburn", "Job interview", "First date", "Karaoke",
           "Traffic jam", "Influencer", "Festival", "Bungee jumping",
           "Zombie", "Astronaut", "Ghosting", "Road trip",
+          "Pre-gaming", "Blackout", "Spring break", "Beer shower",
+          "Honeymoon", "Bender",
         ],
       },
       4: {
@@ -76,6 +87,8 @@
           "Artificial intelligence", "Conspiracy theory", "Inflation",
           "Burnout", "Déjà vu", "Schadenfreude", "FOMO",
           "Helicopter parents", "Mansplaining",
+          "Chastity belt", "Sex swing", "Straitjacket",
+          "Bagpipes", "Lie detector", "Divining rod",
         ],
       },
     },

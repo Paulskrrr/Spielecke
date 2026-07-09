@@ -42,8 +42,8 @@ A **real 3D cube of grey industrial panels** — screws in the corners, bevelled
 digital readout for the timer/strikes. Six faces, one job each. You **physically flip the
 cube** to reach them: drag to grab-and-turn, arrow keys, or four sleek directional arrows laid
 out around the cube (browser-friendly), with a 3D flip animation. A top-left **↻ roll button**
-turns the whole cube 90° clockwise about the viewing axis, for when it's handed over sideways or
-upside down. There is **no face menu / shortcut nav** — none of these name a face, so they don't
+(also the **Spacebar**) turns the whole cube 90° clockwise about the viewing axis, for when it's
+handed over sideways or upside down. On the expert's side, **← / →** page through the manual. There is **no face menu / shortcut nav** — none of these name a face, so they don't
 orient you; you're still meant to be lost.
 
 - **Random arrangement every game.** The six logical faces are dealt to the six physical sides
@@ -101,8 +101,12 @@ Dials, the Firing order **and** the Keypad, so the defuser keeps having to read 
 the "ask → relay the serial → read back the step" loop the room runs on. The wire-cut reads the
 dials **live**, so the dials must be set correctly even when Wires comes first.
 
-**Fail:** 3 strikes (wrong action or out-of-order; each also burns 15s) or the clock → 💥.
-**Win:** all three lamps green → defused. Fuse length is the difficulty (Rookie/Standard/Lethal).
+**Fail:** 3 strikes (wrong action or out-of-order) or the clock → 💥. Strikes cost no time — the
+running clock is pressure enough, and a time penalty on top just punished the losing team twice.
+**Win:** all three lamps green → defused. Fuse length is the difficulty — two tiers only,
+**Normal 10:00** (the default) and **Lethal 5:00**. Tuned from playtesting: even a solo player
+holding both screens barely cleared the first module inside the old ~6 min, so a separated team
+needs far more air.
 
 ## 5. Rule tables = single source of truth
 

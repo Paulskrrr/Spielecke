@@ -26,7 +26,7 @@ next.
 - ✅ **Who Am I?** — Heads-Up / forehead guessing
 - ✅ **Imposter** — hidden-role secret word (+ optional hints & a 🔔 Buzzer seconds-guess mode) *(drinking-capable)*
 - ✅ **Wavelength** — spectrum/dial guessing
-- ✅ **Liar's Numbers** — numeric bluff *(drinking-capable)*
+- ✅ **Ballpark** (DE: *Pi mal Daumen*) — numeric estimation; closest guess wins *(drinking-capable)*
 - ✅ **Princess Treatment** — King/Princess debate deck
 - ✅ **Doodle Drama** — drawing telephone (canvas)
 - ✅ **Activity** — two-team board race (explain / draw / charade) *(drinking-capable)*
@@ -44,8 +44,8 @@ next.
 - ✅ **Ballon** — push-your-luck pump-or-pass, hidden burst point scaled to the table *(drinking-capable)*
 - ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
 - ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
-- ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next *(drinking-capable)*
-- ✅ **Simon Says** (DE: *Der Chef sagt*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
+- ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next; dealt from a 🕶️ button on the Players screen, not a shelf tile *(drinking-capable)*
+- ✅ **Simon Says** (DE: *Kommando*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
 - ✅ **Geschmacklos** — a Cards Against Humanity mode: host shows the prompt, every phone deals itself a disjoint hand off one shared table code *(drinking-capable)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
@@ -115,16 +115,18 @@ Players screen.
   on touch-down (delegated once in `ui.js`, `Spielecke.haptic`); the shelf tiles cascade in
   on a capped per-tile stagger; native checkboxes are restyled as toy switches; buttons/chips/
   cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
-  each game has a **fixed colour** (Hochadel yellow, Doodle Drama blue, …) set in the registry
-  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The 27
-  colours are laid out as **three consecutive sweeps of the full 9-colour palette** — every run
-  of 9 tiles shows each hue exactly once — so no colour repeats before the whole palette has
-  appeared (yellow leads from tile 1), and within that no two neighbours (distance 1–3, i.e.
+  each game has a **fixed colour** — three pinned by preference (Hochadel yellow, Doodle Drama
+  blue, Imposter red) — set in the registry
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The **26 shelf tiles**
+  (Geheimauftrag isn't on the shelf — see §3.25) sweep the full 9-colour palette in blocks of
+  **9 / 9 / 8**, each block showing every hue at most once, so no colour repeats before the
+  whole palette has appeared; within that no two neighbours (distance 1–3, i.e.
   horizontal + the 2/3-column verticals) share a hue *or a close family* (teal/green,
-  indigo/purple, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
+  blue/indigo, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
   same spot every visit. It stays **one continuous grid — no section headers** — but games are
-  grouped by vibe so related ones cluster as you scroll (quick social → party guessing →
-  longer sit-down & team → simple card/luck drinking games → reflex → co-op). The home bar is a
+  grouped by vibe, with the boozier/active games first so a drinking night finds them up top
+  (quick social → party guessing → simple card/luck drinking → reflex → longer sit-down &
+  team → co-op); **BETA games sink to the bottom** (Kommando is the last tile). The home bar is a
   solid-purple app-bar lifted with a soft drop shadow. All of the above honours
   `prefers-reduced-motion`.
 - **Intro splash:** on **every** open the logo shows in a game-tile-style card on a yellow
@@ -145,7 +147,9 @@ game module implements.
    tagline, player-count hint, drinking-game marker). Tap a card → that game.
 2. **Players / Roster (app-level, shared by all games)** — add / remove / reorder (up/down
    buttons) players by name. Persists to localStorage, reused by every game. Soft
-   minimum-count warning (warn, don't block). The single most important shared piece.
+   minimum-count warning (warn, don't block). The single most important shared piece. Also
+   hosts the DE/EN language toggle and a discreet 🕶️ launcher for **Geheimauftrag** (§3.25),
+   the one game that isn't on the shelf.
 3. **Game screens** — owned by each game module (see contract).
 4. **Settings** — not built yet (language toggle, reset stats). Stub later.
 
@@ -171,7 +175,7 @@ js/
     hotpotato-prompts.js   Hot Potato's category prompts
     wavelength.js          Wavelength's opposite pairs
     nhie.js / most-likely.js / truth.js   sentence-predicate decks
-    numbers.js             Liar's Numbers question/answer bank
+    numbers.js             Ballpark (Pi mal Daumen) question/answer bank
     princess.js            Princess Treatment prompts (by category × gender)
     activity.js            Activity words, tiered by points (2/3/4)
     quiz.js                Quiz Out questions, an array of difficulty levels
@@ -226,7 +230,7 @@ Rules:
   (future Paul, half-drunk).
 - **Turn order:** the roster on `context.players` keeps the order players were *entered* (it's
   the canonical list). Games where play follows a fixed sequence of turns/roles down the roster
-  (Doodle, Quiz, Wavelength, Liar's Numbers, Imposter, Rank It) **must randomise that order when
+  (Doodle, Quiz, Wavelength, Ballpark, Imposter, Rank It) **must randomise that order when
   a round starts** — call `Spielecke.shuffle(arr)` (pure Fisher-Yates, returns a new array) so
   the same five players don't get the identical sequence every round. Games that already pick at
   random (Truth, Chooser, Reaction Duel) or let the host choose the seat (Busfahrt, Fuck the
@@ -266,7 +270,7 @@ Two shapes of content, by what the game needs:
   - Wavelength → *opposite pairs* (`wavelength.js`, `{ label, pairs:[{left,right}] }`).
   - Never Have I Ever / Most Likely To → *sentence predicates* (`nhie.js`, `most-likely.js`,
     `{ label, prompts }`) — separate because the grammar differs from each other.
-  - Liar's Numbers → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
+  - Ballpark → *numeric Q&A* (`numbers.js`, `{ label, questions:[{q,a}] }`).
   - Princess Treatment → *gendered prompts* (`princess.js`, `{ label, princess:[], king:[] }`).
   - Activity → *point-tiered words* (`activity.js`, `{ 2:{label,words}, 3:…, 4:… }`),
     type-agnostic — the field decides how you perform, the points decide difficulty.
@@ -284,7 +288,7 @@ Two shapes of content, by what the game needs:
     at deal time (`geheimauftrag.js`, `{ solo:[...], coop:[...] }`) — no category pools; every
     mission is bound to a specific other player, never a prop or a difficulty tag.
   - Simon Says → *bare imperative commands* (`simon.js`, `{ label, commands:[...] }`); the
-    authority prefix ("Simon says" / German "Der Chef sagt") is added at runtime, not stored.
+    authority prefix ("Simon says" / German "Kommando") is added at runtime, not stored.
   - Geschmacklos → *prompts + answers*, one **fixed set, no category pools** (`geschmacklos.js`,
     `{ prompts:[...], answers:[...] }`) — a single shared deck keeps the seeded-deal math in
     §0 simple (every phone shuffles the same list).
@@ -367,9 +371,12 @@ target band and gives a clue; the rest slide a dial to guess.
 - **Config:** spectrum pool.
 - **Outcome:** closeness **score** (0–100). Bullseye ±10, miss beyond ±30.
 
-### 3.7 Liar's Numbers 🔢 (`liars`, 2+) — drinking-capable
+### 3.7 Ballpark 🔢 (`liars`, 2+) — drinking-capable
 
-Numeric guessing on one device. A question with a number answer shows; the phone passes
+*(DE: Pi mal Daumen. Internal id stays `liars`; the old name "Liar's Numbers" over-promised
+a bluff mechanic — the game is pure closest-estimate.)*
+
+Numeric estimation on one device. A question with a number answer shows; the phone passes
 round and each player privately locks a guess; reveal sorts by distance. Uses the roster.
 
 - **Config:** question pool, 🍻 drinking mode.
@@ -395,6 +402,11 @@ the whole chain at the end.
 - **Draw timer:** each draw step is capped at **60s** (counts down from the moment the draw
   screen opens, turns red under 10s); at zero the drawing auto-submits. Cleared on every
   screen change / unmount.
+- **Timelapse reveal:** every stroke — and each *Clear* — is recorded as a compact op list
+  alongside the final PNG, so when a drawing is shown (to the next guesser, and again on each
+  drawing beat of the chain reveal) a canvas **replays it over ~5s**, ending on the finished
+  picture. Cleared false starts replay too — that's half the drama. Tap the drawing to replay;
+  falls back to the still PNG when there's no recording or `prefers-reduced-motion` is set.
 - **Config:** word pool.
 - **Outcome:** none — reveal the carnage for laughs.
 
@@ -552,7 +564,7 @@ generated bombs: order always four stages, every maze reachable, arming digit in
 solvable; the timed arming commit driven end-to-end through the real UI headlessly). Currently a
 single bomb solvable by one expert; designed so the manual's pages can be *dealt out* across
 several experts later (forcing expert-to-expert talk), with more modules to follow. Difficulty
-sets the fuse (Rookie 6:00 / Standard 4:30 / Lethal 3:00). The countdown interval, Web-Audio
+sets the fuse (Normal 10:00 / Lethal 5:00). The countdown interval, Web-Audio
 alarms and key handler are all torn down on unmount.
 
 ### 3.22 Ballon 🎈 (`ballon`, 2+) — drinking-capable
@@ -600,11 +612,13 @@ count; the next team takes the phone.
 
 ### 3.25 Geheimauftrag 🕶️ (`geheimauftrag`, 4+) — drinking-capable
 
-A meta-layer, not a stand-alone round: dealt once, then it runs quietly **alongside**
-whatever else you play that evening. Every mission is bound to a specific other player via a
-`{target}` token (never a prop, never impossible) — "Bring **{target}** to say...", "Toast
-three times with **{target}**...". Re-open the tile any time for a private "peek" or to cash a
-mission in.
+A meta-layer, not a stand-alone round — so it **isn't on the shelf**. You deal it from a
+discreet 🕶️ button on the **Players screen** (with a one-line primer next to it); it then runs
+quietly **alongside** whatever else you play that evening. Every mission is bound to a specific
+other player via a `{target}` token (never a prop, never impossible) — "Bring **{target}** to
+say...", "Toast three times with **{target}**...". Re-open it any time for a private "peek" or
+to cash a mission in. The mission pool is deliberately hand-curated (quality over quantity)
+rather than padded out.
 
 - **No "caught" flow (by design):** there is deliberately no accuse/bust path. At the table it
   collapsed into everyone denying every accusation ("you only say that because it's *your*
@@ -623,12 +637,12 @@ mission in.
 
 ### 3.26 Simon Says 🗣️ (`simon`, 3+, beta) — drinking-capable
 
-*German name: "Der Chef sagt" — the English "Simon says" reads as a translation in German, so
-the DE build uses a native command-giver; the game id stays `simon`.*
+*German name: "Kommando" — the English "Simon says" has no natural German equivalent, so the
+DE build uses a native command-giver; the game id stays `simon`.*
 
 Voice-driven, not screen-driven. The phone is the announcer: it **reads commands aloud**
 (Web Speech `speechSynthesis`, falling back to a big on-screen phrase + beep if unsupported),
-randomly prefixing the authority phrase ("Simon says:" / "Der Chef sagt:") — obey only the
+randomly prefixing the authority phrase ("Simon says:" / "Kommando:") — obey only the
 prefixed ones. The calling cadence **accelerates** every command, and the built-up speed
 **carries across knockouts and pauses** — only a genuinely new round restarts at the slow
 cadence, so the last two players are getting rapid-fire calls. The app can't see who reacted
@@ -678,7 +692,7 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
 2. **Not every game is a drinking game.** Games are plain by default; drinking-capable ones
    expose a 🍻 toggle (off by default) that swaps the resolution to drinks. Don't add drink
    penalties where they don't fit. Games with a 🍻 toggle: Hot Potato, Most Likely To, Never
-   Have I Ever, Imposter, Liar's Numbers, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
+   Have I Ever, Imposter, Ballpark, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
    Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race, Ballon, Wettbüro,
    Mind Meld, Geheimauftrag, Simon Says, Geschmacklos.
 3. **Hot Potato pass model** → pure physical pass (no turn tracking).
@@ -722,10 +736,78 @@ Each a distinct mechanic so the night doesn't feel samey. Confirm / reorder / re
   and from Zeitzünder (which has no traitor).
 - **NSFW knowledge round** — Quiz Out is deliberately family-friendly trivia; there's no adult
   equivalent yet (a spicy true/false or estimate-the-number format would fit the gap without
-  cannibalising Liar's Numbers).
+  cannibalising Ballpark).
 - **Anonymous-writing game** — considered and shelved in favour of Geschmacklos (see history:
   the earlier "Ghostwriter" pitch had no clear winner and made the after-round discussion
   pointless); if revisited, needs a sharper resolution mechanic than "guess who wrote it."
+- **Password / Captcha builder** — a party-ified *Password Game*. Full design exploration
+  parked below (§Design note); to be revisited.
+
+### Design note — "Password / Captcha" party game (not built yet)
+
+A group/drinking translation of **The Password Game** (the solo browser game where you build one
+password against an ever-growing pile of absurd, self-contradicting rules). Paul's steer: it must
+**not be a separate mini-thing bolted on** — the captcha/password idea should *be* the game, run
+at the table. This note captures the shared understanding so we can pick it straight back up.
+
+**What carries from the original (keep):**
+- **Escalation** — rules stack, absurdity grows.
+- **Rule maintenance** — new rules break old ones; the password becomes a monster you must keep
+  feeding.
+- **The checklist moment** — the ✓/✗ list re-cascades after every edit; that's the visible drama
+  beat.
+- **Attachment comedy** — "Paul the chicken 🐔" (the original's egg 🥚 you're forbidden to delete).
+
+**What to replace (doesn't survive contact with a drunk group):**
+- Knowledge rules (Wordle answer, chess move, sponsors) → swap for **group- and room-referential**
+  rules the table can supply.
+- Solo typing with no audience → needs **relay structure + spectator beats**.
+
+**Core structure — "One password, everyone suffers" (relay):** one shared password; the phone
+passes around the table. Each turn reveals **one new rule**; the holder must edit the password so
+**all** rules are ✓ again, under a shrinking timer (~45s, less later). After the turn, a big
+**checklist reveal** for the table. Timer blown or give-up → drink + lose a life (Quiz-Out-style,
+last survivor wins). The hook: your predecessor hands you a wreck, and your fix inevitably
+sabotages the next player.
+
+**Building blocks (pick-list, numbered so we can reference them later):**
+- **B1 — Roster rules:** the app knows the players → "must contain your left neighbour's name",
+  "…everyone's initials", "…{name} backwards". Makes it *your* group's password.
+- **B2 — Table rules (the table is the regex):** rules the app can't check but the table can —
+  "must contain something currently on the table", "…a word the table unanimously declares filthy".
+  A **"table says ✓" button**, same as Mäxchen/Kommando handing the verdict to the room. This is the
+  single biggest lever that turns a regex puzzle into a *party* game.
+- **B3 — Captcha speed-bumps:** before each submit, prove you're not a robot — tap all the 🍺 in a
+  3×3 emoji grid, retype a distorted word, a slider puzzle. Fast, flustered, and **the others watch
+  you fumble**. Captcha fail = "robot detected" = drink. This is how the captcha lives *inside* the
+  game instead of being a separate screen (per Paul's ask).
+- **B4 — Physical verification:** some captchas leave the screen — "Verification: make two people at
+  the table laugh — the table confirms." Use sparingly (2–3), else it drifts into Activity.
+- **B5 — Paul the chicken 🐔:** an emoji pet moves into the password early and **must survive** (and
+  occasionally be fed: insert a 🐛 next to it). Deleting Paul = double drink. Perfect running gag for
+  "Pauls Spielecke".
+- **B6 — Sabotage choice:** instead of a random rule, the **previous player secretly picks** which of
+  3 rule cards hits you. Malice with agency — Wettbüro energy; the table howls at the reveal.
+- **B7 — Memory rules:** a rule shows for ~5s, then **hides** — it still applies and is still checked,
+  but is no longer on screen. Punishes exactly the state you play this in. Drinking-game gold.
+- **B8 — Fire events:** a character randomly catches 🔥 (replaced by junk every few seconds); the
+  holder must put it out before doing their actual rule. Panic comedy, straight from the original.
+- **B9 — Pot economy instead of lives:** softer alternative to knockout — each rule you hand over
+  broken = 1 sip into the pot; whoever fully fails drinks it (Ballon mechanic). Nobody sits out.
+
+**Round-feel sketch:** R1 "at least 5 characters" (easy, laughs still relaxed) → R4 "must contain a
+prime number" → R6 🐔 Paul moves in → R8 *(table rule)* "a drink someone's currently holding" →
+captcha: retype "xX_bIeRkÖn1g_Xx" distorted → R11 *(secretly chosen by grinning Ben)* → 🔥 FIRE →
+timer → 💀.
+
+**Recommended build:** relay skeleton + **B1, B2, B3, B5, B7** as the core; **B6** and **B8** as a
+second stage; **B4** sparingly.
+
+**Open design questions (Paul to decide before build):**
+1. **Knockout** (lives, last standing wins) or **Pot** (B9, nobody's eliminated)?
+2. How **NSFW** should the rules themselves get (e.g. "include a body part" vs. tame)?
+3. Naming/theme: **bureaucratic satire** ("Amt für Passwortsicherheit" — fits the Zeitzünder GDPR
+   humour) or **bouncer/club** framing?
 
 ### Open content TODO (Paul)
 

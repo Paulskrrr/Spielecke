@@ -1,3 +1,4 @@
+// © 2026 Paul Spieker — All rights reserved. Proprietary; do not copy or redistribute.
 /*
  * content/rankit.js — content for Rank It (NSFW, adults only)
  *
@@ -113,12 +114,7 @@
           { title: "Toxischste → chilligste Community", items: ["League of Legends", "Counter-Strike", "Overwatch", "Dark Souls", "Stardew Valley"] },
           { title: "Bester → schlechtester Gaming-Snack", items: ["Tiefkühlpizza", "Chips", "Energy Drink", "Schokoriegel", "Kalte Pommes von gestern"] },
           { title: "Größter → kleinster Flex beim Zocken", items: ["1v5-Clutch", "Ranked Top 500", "Seltener Skin", "Speedrun-Rekord", "Teurer Gaming-Stuhl"] },
-          // ── Minecraft ──
-          { title: "Gruseligster → harmlosester Mob", items: ["Der Warden", "Enderman", "Creeper", "Zombie", "Huhn"] },
-          { title: "Beste → schlechteste Art in Minecraft zu sterben", items: ["Creeper von hinten", "In Lava gefallen", "Vom hohen Gerüst gefallen", "Im Wasser ertrunken", "Beim Bauen verhungert"] },
-          { title: "Wertvollstes → wertlosestes Erz", items: ["Netherite", "Diamant", "Smaragd", "Redstone", "Kohle"] },
-          { title: "Erste → letzte Priorität an Nacht 1", items: ["Holz farmen", "Werkzeug craften", "Essen suchen", "Haus bauen", "In ein Loch graben"] },
-          { title: "Beeindruckendster → lahmster Minecraft-Bau", items: ["Riesiges Schloss", "Automatische Farm", "Pixel-Art", "Cobblestone-Turm in den Himmel", "Dirt House"] },
+          // (Minecraft has its own category now — see the ⛏️ pool.)
           // ── Overwatch ──
           { title: "Meist gehasste → am wenigsten gehasste Held:in", items: ["Widowmaker", "Mei", "Sombra", "Hanzo", "Genji"] },
           { title: "Nervigste → harmloseste Ult zum Gegnertreffen", items: ["Genji Blade", "Junkrat Tire", "Pharah Barrage", "Reaper Death Blossom", "Mei Blizzard"] },
@@ -131,6 +127,32 @@
           { title: "Größter → kleinster Tilt-Moment (CS)", items: ["Teamkill in der ersten Sekunde", "16:14 verloren", "Ace vom Teammate geklaut", "Eco-Runde verloren", "Granate ins eigene Team"] },
           { title: "Nervigster → harmlosester Mitspieler (CS)", items: ["Ragequit nach Pistol", "Schreit dauernd Rush B", "Pickt AWP und whiffed alles", "Mic-Spammer mit Musik", "Wirft Flashes ins eigene Team"] },
           { title: "Beste → schlechteste Eco-Waffe", items: ["Deagle", "Tec-9", "P250", "Dual Berettas", "Glock-Spray"] },
+        ],
+      },
+      minecraft: {
+        label: "⛏️ Minecraft",
+        people: [
+          { title: "Überlebt am längsten → am kürzesten die erste Nacht" },
+          { title: "Baut am schönsten → am hässlichsten" },
+          { title: "Gräbt am ehesten → nie direkt nach unten" },
+          { title: "Wird am ehesten → am wenigsten süchtig nach Minecraft" },
+          { title: "Ist am ehesten → am wenigsten der Redstone-Nerd der Gruppe" },
+          { title: "Fällt am ehesten → nie in die eigene Lava" },
+          { title: "Verirrt sich am ehesten → nie im Nether" },
+          { title: "Ragequittet am ehesten → nie, wenn die Base explodiert" },
+        ],
+        sets: [
+          { title: "Gruseligster → harmlosester Mob", items: ["Der Warden", "Enderman", "Creeper", "Zombie", "Huhn"] },
+          { title: "Wertvollstes → wertlosestes Erz", items: ["Netherite", "Diamant", "Smaragd", "Redstone", "Kohle"] },
+          { title: "Beste → schlechteste Art zu sterben", items: ["Creeper von hinten", "In Lava gefallen", "Vom hohen Gerüst gefallen", "Im Wasser ertrunken", "Beim Bauen verhungert"] },
+          { title: "Beeindruckendster → lahmster Bau", items: ["Riesiges Schloss", "Automatische Farm", "Pixel-Art", "Cobblestone-Turm in den Himmel", "Dirt House"] },
+          { title: "Erste → letzte Priorität an Nacht 1", items: ["Holz farmen", "Werkzeug craften", "Essen suchen", "Haus bauen", "In ein Loch graben"] },
+          { title: "Nützlichstes → nutzlosestes Werkzeug", items: ["Diamantspitzhacke", "Elytra", "Wassereimer", "Angel", "Schere"] },
+          { title: "Bestes → schlechtestes Enchantment", items: ["Reparatur", "Schutz", "Effizienz", "Behutsamkeit", "Fluch der Bindung"] },
+          { title: "Gefährlichster → sicherster Ort", items: ["Ancient City", "Nether-Festung", "Woodland Mansion", "Dunkle Höhle", "Dorf"] },
+          { title: "Bester → schlechtester Trank", items: ["Regeneration", "Feuerresistenz", "Nachtsicht", "Sprungkraft", "Trank der Schwäche"] },
+          { title: "Bestes → schlechtestes Biom zum Spawnen", items: ["Ebene", "Wald", "Mesa", "Sumpf", "Eiszapfen-Tundra"] },
+          { title: "Nervigster → harmlosester Moment", items: ["Creeper sprengt den Bau", "Nachts kein Bett", "Im Nether verlaufen", "Werkzeug kaputt beim Minen", "Schaf frisst dein Gras"] },
         ],
       },
       leisure: {
@@ -302,12 +324,7 @@
           { title: "Most toxic → most chill community", items: ["League of Legends", "Counter-Strike", "Overwatch", "Dark Souls", "Stardew Valley"] },
           { title: "Best → worst gaming snack", items: ["Frozen pizza", "Crisps", "Energy drink", "Chocolate bar", "Yesterday's cold fries"] },
           { title: "Biggest → smallest gaming flex", items: ["1v5 clutch", "Ranked top 500", "A rare skin", "Speedrun record", "Expensive gaming chair"] },
-          // ── Minecraft ──
-          { title: "Scariest → most harmless mob", items: ["The Warden", "Enderman", "Creeper", "Zombie", "Chicken"] },
-          { title: "Best → worst way to die in Minecraft", items: ["Creeper from behind", "Fell into lava", "Fell off the scaffolding", "Drowned", "Starved while building"] },
-          { title: "Most → least valuable ore", items: ["Netherite", "Diamond", "Emerald", "Redstone", "Coal"] },
-          { title: "First → last priority on night 1", items: ["Farm wood", "Craft tools", "Find food", "Build a house", "Dig a hole"] },
-          { title: "Most impressive → lamest Minecraft build", items: ["Huge castle", "Automatic farm", "Pixel art", "Cobblestone tower to the sky", "Dirt house"] },
+          // (Minecraft has its own category now — see the ⛏️ pool.)
           // ── Overwatch ──
           { title: "Most → least hated hero", items: ["Widowmaker", "Mei", "Sombra", "Hanzo", "Genji"] },
           { title: "Most → least annoying ult to get hit by", items: ["Genji Blade", "Junkrat Tire", "Pharah Barrage", "Reaper Death Blossom", "Mei Blizzard"] },
@@ -320,6 +337,32 @@
           { title: "Biggest → smallest tilt moment (CS)", items: ["Teamkill in the first second", "Lost 16:14", "Ace stolen by a teammate", "Lost the eco round", "Grenade into your own team"] },
           { title: "Most → least annoying teammate (CS)", items: ["Rage-quits after pistol", "Constantly yells Rush B", "Picks AWP and whiffs everything", "Mic spammer with music", "Throws flashes into your own team"] },
           { title: "Best → worst eco weapon", items: ["Deagle", "Tec-9", "P250", "Dual Berettas", "Glock spray"] },
+        ],
+      },
+      minecraft: {
+        label: "⛏️ Minecraft",
+        people: [
+          { title: "Survives the first night the longest → shortest" },
+          { title: "Builds the prettiest → ugliest" },
+          { title: "Most → least likely to dig straight down" },
+          { title: "Most → least likely to get addicted to Minecraft" },
+          { title: "Most → least likely to be the group's redstone nerd" },
+          { title: "Most → least likely to fall into their own lava" },
+          { title: "Most → least likely to get lost in the Nether" },
+          { title: "Most → least likely to rage-quit when the base blows up" },
+        ],
+        sets: [
+          { title: "Scariest → most harmless mob", items: ["The Warden", "Enderman", "Creeper", "Zombie", "Chicken"] },
+          { title: "Most → least valuable ore", items: ["Netherite", "Diamond", "Emerald", "Redstone", "Coal"] },
+          { title: "Best → worst way to die", items: ["Creeper from behind", "Fell into lava", "Fell off the scaffolding", "Drowned", "Starved while building"] },
+          { title: "Most impressive → lamest build", items: ["Huge castle", "Automatic farm", "Pixel art", "Cobblestone tower to the sky", "Dirt house"] },
+          { title: "First → last priority on night 1", items: ["Farm wood", "Craft tools", "Find food", "Build a house", "Dig a hole"] },
+          { title: "Most → least useful tool", items: ["Diamond pickaxe", "Elytra", "Water bucket", "Fishing rod", "Shears"] },
+          { title: "Best → worst enchantment", items: ["Mending", "Protection", "Efficiency", "Silk Touch", "Curse of Binding"] },
+          { title: "Most dangerous → safest place", items: ["Ancient City", "Nether fortress", "Woodland Mansion", "Dark cave", "Village"] },
+          { title: "Best → worst potion", items: ["Regeneration", "Fire Resistance", "Night Vision", "Jump Boost", "Potion of Weakness"] },
+          { title: "Best → worst biome to spawn in", items: ["Plains", "Forest", "Badlands", "Swamp", "Icy tundra"] },
+          { title: "Most → least annoying moment", items: ["Creeper blows up your build", "No bed at night", "Lost in the Nether", "Tool breaks mid-mine", "A sheep eats your grass"] },
         ],
       },
       leisure: {
