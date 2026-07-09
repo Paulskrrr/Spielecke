@@ -451,7 +451,7 @@
         label: "🎉 Party",
         terms: [
           "Bier-Pong", "Kater", "Tequila-Shot", "Nachtclub", "Karaoke",
-          "Schlafmütze (Fahrer)", "Döner um 4 Uhr", "Vorglühen", "Shots", "Gruppenchat",
+          "Döner um 4 Uhr", "Vorglühen", "Shots", "Gruppenchat",
         ],
       },
       science: {

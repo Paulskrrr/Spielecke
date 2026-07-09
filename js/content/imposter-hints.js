@@ -229,7 +229,7 @@
       },
       party: {
         "Bier-Pong": "Zielen", "Kater": "Reue", "Tequila-Shot": "Mut", "Nachtclub": "Anonymität",
-        "Karaoke": "Peinlichkeit", "Schlafmütze (Fahrer)": "Opfer", "Döner um 4 Uhr": "Vergebung",
+        "Karaoke": "Peinlichkeit", "Döner um 4 Uhr": "Vergebung",
         "Vorglühen": "Vorfreude", "Shots": "Leichtsinn", "Gruppenchat": "Zugehörigkeit"
       },
       science: {
