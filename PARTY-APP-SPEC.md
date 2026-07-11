@@ -430,7 +430,7 @@ finish 🏆 wins.
 - **Outcome:** first team to complete the map wins. Drinking mode — fail a round → your
   team drinks; succeed → the other team drinks.
 
-### 3.11 Quiz Out 🧠 (`quiz`, 2+) — drinking-capable
+### 3.11 Quiz Out ❓ (`quiz`, 2+) — drinking-capable
 
 Turn-based knockout quiz. Players take turns answering a 4-option question; a wrong answer
 costs a life. After every full round (each survivor has answered once) the difficulty climbs
@@ -600,7 +600,7 @@ starts, everyone else sets a bet on each other name — ✅ they'll nail it or �
 - **Outcome:** right bettors **hand out** their stake, wrong bettors **drink** it; the
   candidate hands out 3 on success or drinks 3 on failure.
 
-### 3.24 Mind Meld 🔗 (`mindmeld`, 4+) — drinking-capable
+### 3.24 Mind Meld 🧠 (`mindmeld`, 4+) — drinking-capable
 
 Convergence, not competition against the clock. The roster splits into teams of two (an odd
 player joins the last team, making a trio); each teammate secretly gets their own seed word.
