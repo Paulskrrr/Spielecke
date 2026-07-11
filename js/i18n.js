@@ -546,6 +546,8 @@
     "Flat": "Pauschal",
     "Right guess → dealer trinkt {n} sips.": "Richtig → Dealer trinkt {n} Schlücke.",
     "Dealer passes left after the deck empties twice.": "Der Dealer wechselt nach links, wenn das Deck zweimal leer ist.",
+    "Win 3 in a row → the deck passes left too.": "3x in Folge gewonnen → das Deck wandert ebenfalls nach links.",
+    "Dealer won 3 in a row!": "Dealer gewinnt 3x in Folge!",
     "Deal 🃏": "Geben 🃏",
     "Deck emptied twice!": "Deck zweimal leer!",
     "The deck passes left. New dealer:": "Das Deck wandert nach links. Neuer Dealer:",

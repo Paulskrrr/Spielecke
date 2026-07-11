@@ -524,7 +524,8 @@ rotates via the roster.
 A dealer holds the deck; the table guesses the next card's **rank**. First miss → the dealer
 gives a higher/lower hint and you get a second guess; miss twice → you **trinken** (rank gap or
 a flat amount, configurable). Nail it → the dealer drinks. Each card is revealed and added to a
-rank-sorted "drawn" strip (counting help); the dealer passes left after the deck empties twice.
+rank-sorted "drawn" strip (counting help); the dealer passes left after the deck empties twice
+— or as soon as the dealer wins three rounds in a row (rotating reihum through the roster).
 
 ### 3.20 Horse Race 🐎 (`pferderennen`, 1+) — drinking-capable
 

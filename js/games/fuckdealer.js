@@ -29,7 +29,7 @@
 
   var els = null, ctx = null, settings = null;
   var deck = [], discard = [];
-  var dealerIdx = 0, guesserIdx = 0, exhausts = 0;
+  var dealerIdx = 0, guesserIdx = 0, exhausts = 0, dealerWins = 0;
   var current = null;        // the live top card
   var firstGuess = null;     // rank string of the first (wrong) guess
   var phase = "first";       // "first" | "second"
@@ -100,7 +100,8 @@
       '    <button class="chip" data-f="flat">' + t("Flat") + " " + settings.flatWrongSips + " " + t("sips") + "</button>" +
       "  </div>" +
       '  <p class="muted small">' + t("Right guess → dealer trinkt {n} sips.").replace("{n}", settings.dealerHitSips) +
-      " " + t("Dealer passes left after the deck empties twice.") + "</p>" +
+      " " + t("Dealer passes left after the deck empties twice.") +
+      " " + t("Win 3 in a row → the deck passes left too.") + "</p>" +
       '  <button id="fd-start" class="btn btn-primary btn-block btn-xl">' + t("Deal 🃏") + "</button>" +
       "</section>";
 
@@ -126,6 +127,7 @@
     deck = Cards.shuffle(Cards.newDeck());
     discard = [];
     exhausts = 0;
+    dealerWins = 0;
     // First guesser is the player to the dealer's left.
     guesserIdx = (dealerIdx + 1) % names().length;
     nextCard();
@@ -137,10 +139,7 @@
       discard = [];
       exhausts++;
       if (exhausts >= settings.rotateAfterExhausts) {
-        exhausts = 0;
-        var n = names().length;
-        dealerIdx = (dealerIdx + 1) % n;
-        renderDealerPass();
+        rotateDealer();
         return;
       }
     }
@@ -151,18 +150,27 @@
     renderRound();
   }
 
-  function renderDealerPass() {
+  // Advance the deck to the next player (reihum) and reset the run counters.
+  function rotateDealer(reason) {
+    dealerIdx = (dealerIdx + 1) % names().length;
+    exhausts = 0;
+    dealerWins = 0;
+    renderDealerPass(reason);
+  }
+
+  function renderDealerPass(reason) {
+    var title = reason === "streak"
+      ? "🔥 " + t("Dealer won 3 in a row!")
+      : "🔄 " + t("Deck emptied twice!");
     els.innerHTML =
       '<section class="screen fd-screen">' +
-      '  <h2 class="screen-title pop">🔄 ' + t("Deck emptied twice!") + "</h2>" +
+      '  <h2 class="screen-title pop">' + title + "</h2>" +
       '  <p class="bf-q">' + t("The deck passes left. New dealer:") + " <b>" + esc(dealerName()) + "</b></p>" +
       '  <button id="fd-go" class="btn btn-primary btn-block btn-xl">' + t("Deal 🃏") + "</button>" +
       "</section>";
     els.querySelector("#fd-go").addEventListener("click", function () {
       guesserIdx = (dealerIdx + 1) % names().length;
-      current = deck.shift();
-      firstGuess = null; phase = "first"; busy = false;
-      renderRound();
+      nextCard();
     });
   }
 
@@ -241,6 +249,7 @@
   }
 
   function resolveHit(rank) {
+    dealerWins = 0; // guesser nailed it — the dealer's streak is broken
     els.querySelectorAll("#fd-ranks .btn-rank").forEach(function (b) { b.disabled = true; });
     Cards.reveal(els.querySelector("#fd-flip"));
     var resEl = els.querySelector("#fd-result");
@@ -252,6 +261,7 @@
   }
 
   function resolveMiss(secondRank) {
+    dealerWins++; // guesser drank — the dealer wins this round
     els.querySelectorAll("#fd-ranks .btn-rank").forEach(function (b) { b.disabled = true; });
     Cards.reveal(els.querySelector("#fd-flip"));
     var actualV = Cards.value(current);
@@ -291,6 +301,7 @@
     }
     // Tap the just-revealed card itself to move on — no separate button.
     function goNext() {
+      if (dealerWins >= 3) { rotateDealer("streak"); return; } // 3 wins straight → pass the deck on, reihum
       guesserIdx = (guesserIdx + 1) % names().length;
       if (guesserIdx === dealerIdx) guesserIdx = (guesserIdx + 1) % names().length; // dealer doesn't guess
       nextCard();
