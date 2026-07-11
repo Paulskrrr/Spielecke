@@ -205,28 +205,46 @@
     });
   }
 
-  // The scrollable strip of every card drawn since the last shuffle, so the
-  // table can glance at what's already out (counting help). Sorted by rank
-  // (2 → A, left to right) — not chronological — so gaps/open ranks jump out at
-  // a glance; on desktop a dozen show at once, on mobile you swipe the strip.
+  // The scrollable strip is one tile *per rank* (2 → A, left to right), so the
+  // table sees at a glance how many of each rank are already out (counting help).
+  // A tile shows a representative card face plus a small badge with the count
+  // once two-or-more are gone; when all four of a rank are out the face is
+  // replaced by a face-down back — that rank is dead, don't call it.
   var SUIT_RANK = { S: 0, H: 1, D: 2, C: 3 };
-  function sortedDiscard() {
-    return discard.slice().sort(function (a, b) {
-      return Cards.value(a) - Cards.value(b) || (SUIT_RANK[a.suit] - SUIT_RANK[b.suit]);
-    });
+  function rankCounts() {
+    var map = {};
+    discard.forEach(function (c) { (map[c.rank] = map[c.rank] || []).push(c); });
+    return map;
   }
-  function histCardHtml(c, isNew) {
-    return '<div class="fd-histcard' + (isNew ? " fd-histcard--new" : "") + '">' + Cards.faceHtml(c, { small: true }) + "</div>";
+  function histRankHtml(rank, cards, newRank) {
+    var n = cards.length;
+    var isNew = rank === newRank;
+    var body;
+    if (n >= 4) {
+      body = Cards.backHtml({ small: true });
+    } else {
+      // Representative face: the lowest suit-order card of this rank that's out,
+      // stable as more suits appear. The badge carries the real count.
+      var rep = cards.slice().sort(function (a, b) { return SUIT_RANK[a.suit] - SUIT_RANK[b.suit]; })[0];
+      body = Cards.faceHtml(rep, { small: true }) +
+        (n >= 2 ? '<span class="fd-histcount">' + n + "</span>" : "");
+    }
+    return '<div class="fd-histcard' + (isNew ? " fd-histcard--new" : "") +
+      (n >= 4 ? " fd-histcard--dead" : "") + '">' + body + "</div>";
+  }
+  function historyInner(newRank) {
+    var counts = rankCounts();
+    var ranksOut = Cards.RANKS.filter(function (r) { return counts[r] && counts[r].length; });
+    return ranksOut.length
+      ? ranksOut.map(function (r) { return histRankHtml(r, counts[r], newRank); }).join("")
+      : '<div class="fd-history-empty">' + t("No cards drawn yet — the pile builds up here.") + "</div>";
   }
   function historyHtml() {
-    var inner = discard.length
-      ? sortedDiscard().map(function (c) { return histCardHtml(c, false); }).join("")
-      : '<div class="fd-history-empty">' + t("No cards drawn yet — the pile builds up here.") + "</div>";
     return (
       '<div class="fd-history-wrap">' +
       '  <div class="fd-history-head">' + t("Cards drawn") +
       '    <span class="fd-history-count" id="fd-history-count">' + discard.length + "</span></div>" +
-      '  <div class="fd-history" id="fd-history">' + inner + "</div>" +
+      '  <div class="fd-history" id="fd-history">' + historyInner(null) + "</div>" +
       "</div>"
     );
   }
@@ -283,14 +301,12 @@
 
   function advanceAfter() {
     discard.push(current);
-    // Rebuild the history strip live, re-sorted by rank, so the just-revealed
-    // card drops into its right place (it would also be rebuilt by the next
-    // renderRound; this just shows it landing immediately).
+    // Rebuild the history strip live so the just-revealed card bumps its rank's
+    // tile (count badge, or a face-down back once the fourth is out). It would
+    // also be rebuilt by the next renderRound; this just shows it landing now.
     var hist = els.querySelector("#fd-history");
     if (hist) {
-      hist.innerHTML = sortedDiscard().map(function (c) {
-        return histCardHtml(c, c === current); // identity match flags the new card
-      }).join("");
+      hist.innerHTML = historyInner(current.rank); // flags the just-drawn rank as new
       var cnt = els.querySelector("#fd-history-count");
       if (cnt) cnt.textContent = discard.length;
       var fresh = hist.querySelector(".fd-histcard--new");
