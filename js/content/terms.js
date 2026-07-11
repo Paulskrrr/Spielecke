@@ -18,10 +18,12 @@
  * to read the pools a given game should offer (it also filters "mixed").
  *
  * BILINGUAL: TERMS is a { de, en } bundle. Both subtrees have identical pool
- * keys. Proper-noun pools (football, videogames, famous, starwars_*, marvel,
- * onepiece) keep identical `terms` arrays across languages — only labels with
- * English words are translated. Common-word pools (general, party, nsfw,
- * doodle_hard) have their terms translated to natural German.
+ * keys. Proper-noun pools (videogames, famous, starwars_*, marvel, onepiece)
+ * keep identical `terms` arrays across languages — only labels with English
+ * words are translated. Football is mostly proper nouns but mixes in concept
+ * terms (Offside/Abseits, Free kick/Freistoß) that ARE localised per language.
+ * Common-word pools (general, party, nsfw, doodle_hard) have their terms
+ * translated to natural German.
  *
  * (Hot Potato and Wavelength use different content shapes — prompts and opposite
  * pairs — so they keep their own files.)
@@ -43,9 +45,9 @@
           "Liverpool", "Paris Saint-Germain", "Borussia Dortmund",
           "Arsenal", "Juventus", "Chelsea",
           // Begriffe & Konzepte
-          "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
-          "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
-          "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
+          "Hat-trick", "Penalty", "Offside", "Free kick", "Corner",
+          "Header", "Bicycle kick", "Red card", "VAR",
+          "Champions League", "World Cup", "Transfer window", "Relegation",
           // FC Barcelona
           "Remontada", "Camp Nou", "La Masia", "Tiki-Taka",
           "Xavi", "Iniesta", "Puyol", "Guardiola",
@@ -184,16 +186,16 @@
         // Proper nouns — identical to de.
         terms: [
           // Pop & screen icons
-          "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
-          "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
-          "Rihanna", "Billie Eilish", "Justin Bieber", "Ariana Grande",
+          "The Rock", "Shrek", "Harry Potter", "Donald Trump",
+          "Conor McGregor", "Darth Vader", "James Bond",
+          "Justin Bieber", "Ariana Grande",
           "Leonardo DiCaprio", "Keanu Reeves", "Margot Robbie", "Zendaya", "Homer Simpson",
           // Sport
           "Cristiano Ronaldo", "Lionel Messi", "LeBron James",
-          "Lewis Hamilton", "Usain Bolt", "Mike Tyson",
+          "Usain Bolt", "Mike Tyson",
           // Hip-Hop & Rap
           "Drake", "Eminem", "Kanye West", "Snoop Dogg",
-          "Kendrick Lamar", "Nicki Minaj", "Apache 207",
+          
           // Business & tech moguls
           "Elon Musk", "Jeff Bezos", "Mark Zuckerberg", "Steve Jobs", "Bill Gates",
           // Internet & world stage
@@ -217,7 +219,7 @@
           // Boxen
           "Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Manny Pacquiao",
           "Canelo Álvarez", "Tyson Fury", "Anthony Joshua", "Deontay Wilder",
-          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Conor Benn",
+          "Oleksandr Usyk", "Ryan Garcia", "Conor Benn",
           "Wladimir Klitschko", "Evander Holyfield",
           // Rund um den Sport
           "Dana White", "Joe Rogan", "Ariel Helwani", "Bruce Buffer",
@@ -232,7 +234,7 @@
           "Your ex's new partner", "A drunk text you regret",
           "Threesome", "Lap dance", "Handcuffs", "Morning wood", "Quickie",
           "Sugar daddy", "Safe word", "Wet dream", "Dirty talk", "Roleplay",
-          "Friend zone", "Netflix and chill", "Hickey", "Blue balls",
+          "Friend zone", "Netflix and chill", "Hickey", 
           "Whipped cream", "Massage parlour", "Period sex", "Dad bod",
         ],
       },
@@ -270,9 +272,9 @@
           "Obi-Wan Kenobi", "Chewbacca", "R2-D2", "C-3PO", "Emperor Palpatine",
           "Boba Fett", "Jango Fett", "Anakin Skywalker", "Padmé Amidala",
           "Qui-Gon Jinn", "Mace Windu", "Count Dooku", "General Grievous",
-          "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "Poe Dameron", "BB-8",
+          "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "BB-8",
           "Snoke", "Lando Calrissian", "Jabba the Hutt", "Admiral Ackbar",
-          "Darth Maul", "The Mandalorian", "Grogu",
+          "Darth Maul", "The Mandalorian", 
           // Clone Wars (well-known)
           "Ahsoka Tano", "Captain Rex", "Commander Cody", "Asajj Ventress",
           "Cad Bane", "Hondo Ohnaka", "Plo Koon", "Aayla Secura", "Kit Fisto",
@@ -287,18 +289,18 @@
         group: "⭐ Star Wars",
         terms: [
           // Prequel & Original trilogy characters (deep cuts)
-          "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
+          "Greedo", 
           "Bossk", "IG-88", "Grand Moff Tarkin",
           // The Clone Wars (animated)
           "Savage Opress", "Barriss Offee", "Embo",
           // Rogue One
-          "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
+          
           // Planets
           "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
-          "Mustafar", "Kashyyyk", "Ryloth", "Scarif", "Jedha",
+          "Mustafar", "Kashyyyk", "Jedha",
           // Ships & Weapons
-          "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
-          "Star Destroyer", "AT-AT", "Thermal Detonator",
+          "Darksaber", "Holocron", "Slave I",
+          "Star Destroyer", "AT-AT", 
           // Concepts & lore
           "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
           "Force Ghost", "The Clone Wars", "Carbonite", "Sarlacc", "Kessel Run",
@@ -320,14 +322,14 @@
           "Nebula", "Mantis", "Yondu",
           // Villains
           "Thanos", "Loki", "Ultron", "Hela", "Killmonger", "Ego",
-          "Mysterio", "Vulture", "Red Skull", "Ronan", "Aldrich Killian",
-          "Agatha Harkness",
+          "Mysterio", "Ronan", "Aldrich Killian",
+          
           // Supporting
-          "Shuri", "Okoye", "Wong", "Happy Hogan", "Pepper Potts",
-          "Nick Fury", "Phil Coulson", "Agent Hill",
+          "Pepper Potts",
+          
           // Netflix / TV
-          "Daredevil", "Jessica Jones", "Luke Cage", "Punisher",
-          "Kingpin", "Elektra",
+          "Daredevil", 
+          
         ],
       },
 
@@ -338,7 +340,7 @@
           "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Sanji",
           "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe",
           // Red-Hair & Whitebeard crews
-          "Shanks", "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
+          "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
           // Warlords & Allies
           "Trafalgar Law", "Boa Hancock", "Crocodile",
           "Donquixote Doflamingo", "Bartholomew Kuma", "Gecko Moria",
@@ -370,7 +372,7 @@
           "Liverpool", "Paris Saint-Germain", "Borussia Dortmund",
           "Arsenal", "Juventus", "Chelsea",
           // Begriffe & Konzepte
-          "Hat-trick", "Penalty", "Abseits", "Freistoß", "Ecke",
+          "Hattrick", "Elfmeter", "Abseits", "Freistoß", "Ecke",
           "Kopfball", "Fallrückzieher", "Rote Karte", "VAR",
           "Champions League", "Weltmeisterschaft", "Transferfenster", "Abstieg",
           // FC Barcelona
@@ -451,7 +453,7 @@
         label: "🎉 Party",
         terms: [
           "Bier-Pong", "Kater", "Tequila-Shot", "Nachtclub", "Karaoke",
-          "Schlafmütze (Fahrer)", "Döner um 4 Uhr", "Vorglühen", "Shots", "Gruppenchat",
+          "Döner um 4 Uhr", "Vorglühen", "Shots", "Gruppenchat",
         ],
       },
       science: {
@@ -503,16 +505,16 @@
         // Proper nouns — identical to en.
         terms: [
           // Pop & screen icons
-          "Beyoncé", "The Rock", "Shrek", "Harry Potter", "Donald Trump",
-          "Lady Gaga", "Conor McGregor", "Darth Vader", "Taylor Swift", "James Bond",
-          "Rihanna", "Billie Eilish", "Justin Bieber", "Ariana Grande",
+          "The Rock", "Shrek", "Harry Potter", "Donald Trump",
+          "Conor McGregor", "Darth Vader", "James Bond",
+          "Justin Bieber", "Ariana Grande",
           "Leonardo DiCaprio", "Keanu Reeves", "Margot Robbie", "Zendaya", "Homer Simpson",
           // Sport
           "Cristiano Ronaldo", "Lionel Messi", "LeBron James",
-          "Lewis Hamilton", "Usain Bolt", "Mike Tyson",
+          "Usain Bolt", "Mike Tyson",
           // Hip-Hop & Rap
           "Drake", "Eminem", "Kanye West", "Snoop Dogg",
-          "Kendrick Lamar", "Nicki Minaj", "Apache 207",
+          
           // Business & tech moguls
           "Elon Musk", "Jeff Bezos", "Mark Zuckerberg", "Steve Jobs", "Bill Gates",
           // Internet & world stage
@@ -536,7 +538,7 @@
           // Boxen
           "Muhammad Ali", "Mike Tyson", "Floyd Mayweather", "Manny Pacquiao",
           "Canelo Álvarez", "Tyson Fury", "Anthony Joshua", "Deontay Wilder",
-          "Oleksandr Usyk", "Gennady Golovkin", "Ryan Garcia", "Conor Benn",
+          "Oleksandr Usyk", "Ryan Garcia", "Conor Benn",
           "Wladimir Klitschko", "Evander Holyfield",
           // Rund um den Sport
           "Dana White", "Joe Rogan", "Ariel Helwani", "Bruce Buffer",
@@ -551,7 +553,7 @@
           "Neuer Partner deines Ex", "Betrunkene Nachricht, die du bereust",
           "Dreier", "Lapdance", "Handschellen", "Morgenlatte", "Quickie",
           "Sugar Daddy", "Safeword", "Feuchter Traum", "Dirty Talk", "Rollenspiel",
-          "Friendzone", "Netflix and Chill", "Knutschfleck", "Blaue Eier",
+          "Friendzone", "Netflix and Chill", "Knutschfleck", 
           "Schlagsahne", "Massagesalon", "Sex während der Periode", "Dad Bod",
         ],
       },
@@ -590,9 +592,9 @@
           "Obi-Wan Kenobi", "Chewbacca", "R2-D2", "C-3PO", "Emperor Palpatine",
           "Boba Fett", "Jango Fett", "Anakin Skywalker", "Padmé Amidala",
           "Qui-Gon Jinn", "Mace Windu", "Count Dooku", "General Grievous",
-          "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "Poe Dameron", "BB-8",
+          "Jar Jar Binks", "Rey", "Kylo Ren", "Finn", "BB-8",
           "Snoke", "Lando Calrissian", "Jabba the Hutt", "Admiral Ackbar",
-          "Darth Maul", "The Mandalorian", "Grogu",
+          "Darth Maul", "The Mandalorian", 
           // Clone Wars (well-known)
           "Ahsoka Tano", "Captain Rex", "Commander Cody", "Asajj Ventress",
           "Cad Bane", "Hondo Ohnaka", "Plo Koon", "Aayla Secura", "Kit Fisto",
@@ -605,18 +607,18 @@
         // Proper nouns — identical to en.
         terms: [
           // Prequel & Original trilogy characters (deep cuts)
-          "Nute Gunray", "Greedo", "Bib Fortuna", "Wedge Antilles", "Mon Mothma",
+          "Greedo", 
           "Bossk", "IG-88", "Grand Moff Tarkin",
           // The Clone Wars (animated)
           "Savage Opress", "Barriss Offee", "Embo",
           // Rogue One
-          "Cassian Andor", "Jyn Erso", "K-2SO", "Saw Gerrera",
+          
           // Planets
           "Coruscant", "Mandalore", "Dathomir", "Kamino", "Geonosis",
-          "Mustafar", "Kashyyyk", "Ryloth", "Scarif", "Jedha",
+          "Mustafar", "Kashyyyk", "Jedha",
           // Ships & Weapons
-          "Darksaber", "Holocron", "Kyber Crystal", "Slave I",
-          "Star Destroyer", "AT-AT", "Thermal Detonator",
+          "Darksaber", "Holocron", "Slave I",
+          "Star Destroyer", "AT-AT", 
           // Concepts & lore
           "Order 66", "Midi-Chlorians", "Youngling", "Rule of Two",
           "Force Ghost", "The Clone Wars", "Carbonite", "Sarlacc", "Kessel Run",
@@ -639,14 +641,14 @@
           "Nebula", "Mantis", "Yondu",
           // Villains
           "Thanos", "Loki", "Ultron", "Hela", "Killmonger", "Ego",
-          "Mysterio", "Vulture", "Red Skull", "Ronan", "Aldrich Killian",
-          "Agatha Harkness",
+          "Mysterio", "Ronan", "Aldrich Killian",
+          
           // Supporting
-          "Shuri", "Okoye", "Wong", "Happy Hogan", "Pepper Potts",
-          "Nick Fury", "Phil Coulson", "Agent Hill",
+          "Pepper Potts",
+          
           // Netflix / TV
-          "Daredevil", "Jessica Jones", "Luke Cage", "Punisher",
-          "Kingpin", "Elektra",
+          "Daredevil", 
+          
         ],
       },
 
@@ -658,7 +660,7 @@
           "Monkey D. Luffy", "Roronoa Zoro", "Nami", "Usopp", "Sanji",
           "Tony Tony Chopper", "Nico Robin", "Franky", "Brook", "Jinbe",
           // Red-Hair & Whitebeard crews
-          "Shanks", "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
+          "Whitebeard", "Portgas D. Ace", "Sabo", "Marco",
           // Warlords & Allies
           "Trafalgar Law", "Boa Hancock", "Crocodile",
           "Donquixote Doflamingo", "Bartholomew Kuma", "Gecko Moria",

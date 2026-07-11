@@ -86,7 +86,9 @@ Players screen.
   editable data files, never hardcoded into game logic. New content is cheap to add.
 - **Bilingual (DE / EN), German by default.** UI strings live in `i18n.js` (`Spielecke.t`),
   toggled on the Players screen and persisted. Content files are `{ de, en }` bundles read
-  through `Spielecke.L(...)`; language-neutral decks (proper-noun term pools) share one list.
+  through `Spielecke.L(...)`; language-neutral decks (proper-noun term pools) share one list —
+  except where a pool mixes in language-dependent concept terms (e.g. football's *Offside* /
+  *Abseits*), which are localised per language.
   Adding a string or a pool stays a data-only change.
 - **Single responsive build.** One `index.html` + shared CSS/JS, mobile-first. No separate
   mobile/desktop builds — CSS adapts to phone and laptop. Must look right on both.
@@ -294,7 +296,9 @@ Two shapes of content, by what the game needs:
     §0 simple (every phone shuffles the same list).
 
 **Bilingual content:** every content file is a `{ de, en }` bundle read via `Spielecke.L(...)`;
-proper-noun term pools (football, Marvel, …) keep one shared list. **Category pools are
+proper-noun term pools (Marvel, One Piece, …) keep one shared list, while pools that blend in
+language-dependent concept terms (football's *Freistoß* → *Free kick*) localise those entries.
+**Category pools are
 multi-select** (`pools.js`) — toggle several at once, an empty selection means 🎯 Mixed (all)
 — and are resolved at draw time so a stale/empty pick can never start a dry round.
 
