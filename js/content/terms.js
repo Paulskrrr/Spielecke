@@ -18,10 +18,12 @@
  * to read the pools a given game should offer (it also filters "mixed").
  *
  * BILINGUAL: TERMS is a { de, en } bundle. Both subtrees have identical pool
- * keys. Proper-noun pools (football, videogames, famous, starwars_*, marvel,
- * onepiece) keep identical `terms` arrays across languages — only labels with
- * English words are translated. Common-word pools (general, party, nsfw,
- * doodle_hard) have their terms translated to natural German.
+ * keys. Proper-noun pools (videogames, famous, starwars_*, marvel, onepiece)
+ * keep identical `terms` arrays across languages — only labels with English
+ * words are translated. Football is mostly proper nouns but mixes in concept
+ * terms (Offside/Abseits, Free kick/Freistoß) that ARE localised per language.
+ * Common-word pools (general, party, nsfw, doodle_hard) have their terms
+ * translated to natural German.
  *
  * (Hot Potato and Wavelength use different content shapes — prompts and opposite
  * pairs — so they keep their own files.)
