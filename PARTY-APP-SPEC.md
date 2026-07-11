@@ -318,7 +318,7 @@ Hot-potato. A category prompt shows; the device is the potato. Holder names an a
 the big **Pass**, hands the phone on. A hidden fuse counts down.
 
 - **Pass model:** pure physical pass — the app runs the fuse only, doesn't track turns.
-- **Fuse:** always random **20–90s**, hidden. Cosmetic accelerating tick; detonation on a
+- **Fuse:** always random **15–45s**, hidden. Cosmetic accelerating tick; detonation on a
   precise timer. Web Audio explosion + haptics.
 - **Config:** category pool, sound on/off, 🍻 drinking mode. Persisted.
 - **Outcome:** holder at detonation **loses the round** (drinking mode: drinks).
