@@ -355,8 +355,10 @@ Hidden roles on one device. Everyone gets the same secret word except one or mor
 for order + names, randomised each deal), then discuss, vote, unmask.
 
 - **Config:** word pool (shared Terms); **number of imposters** — 1 up to the whole table, or
-  **🎲 Random** (skewed toward fewer). An optional **"give imposters a hint"** toggle hands each
-  imposter a distant, cryptic decoy clue (`content/imposter-hints.js`). Persisted.
+  **🎲 Random**. Random scales with the table (~1 faker per 3.5 players, so 7 ≈ 2) and keeps the
+  count **secret from the imposters themselves** — they never learn how many others there are.
+  An optional **"give imposters a hint"** toggle hands each imposter a distant, cryptic decoy
+  clue (`content/imposter-hints.js`). Persisted.
 - **🔔 Buzzer mode:** a Buzzer chip sits in the category row; picking it swaps the word hunt for
   a seconds-guessing round — no secret word, no clock ever shown. Everyone but the imposter
   secretly sees a target of **1–15 seconds**, then each player buzzes when they think that long
