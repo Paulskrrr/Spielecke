@@ -359,6 +359,10 @@ body::before {
 }
 .badge-drink { background: var(--ink); color: var(--yellow); }
 .badge-beta { background: #a06bff; color: #fff; }
+/* Badges sit inside sticker headings (.pop/.neon) whose white text-shadow
+   outline would smear the tight badge label — cancel it, and keep the badge
+   sitting on the text baseline rather than stretched to the huge title size. */
+.pop .badge, .neon .badge { text-shadow: none; font-size: 0.9rem; vertical-align: middle; }
 
 /* ----- Roster ----------------------------------------------------------- */
 
