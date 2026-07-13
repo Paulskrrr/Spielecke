@@ -552,7 +552,9 @@ the roster).
 
 The four Aces are the horses (♠♥♦♣); the app flips the other 48 cards one at a time and the
 matching-suit horse advances. Six face-down **hurdles** flip as the field clears each level,
-rubber-banding that suit back a step. Players bet a suit (roster); first horse home → backers
+rubber-banding that suit back a step. The hurdle cards are visible as a strip of mini face-down
+card backs under the board, one per section line; each 3D-flips face-up the moment its hurdle
+fires, so the rubber-band is legible at the table. Players bet a suit (roster); first horse home → backers
 **verteilen** sips, the rest **trinken**. The loss penalty is configurable: **flat** with a
 chosen sip count (a 1–5 chip row, default 3; the row dims out while "lengths behind" is on) or
 **"lengths behind"** (sips = how far your horse finished off the pace). The race is animated

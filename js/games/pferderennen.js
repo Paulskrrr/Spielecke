@@ -218,6 +218,13 @@
     els.innerHTML =
       '<section class="screen hr-screen">' +
       '  <div class="hr-board">' + lanes + "</div>" +
+      // The six hurdle cards, face-down under their section lines. Each flips
+      // face-up (3D, shared pkflip component) the moment its hurdle triggers,
+      // so the rubber-band mechanic is visible instead of implicit.
+      '  <div class="hr-lane hr-hcards-row">' +
+      '    <span class="hr-lanetag"></span>' +
+      '    <div class="hr-hcards">' + hurdleCardsHtml() + "</div>" +
+      "  </div>" +
       '  <div class="hr-info">' +
       "    " + topCardHtml +
       '    <div class="hr-commentary" id="hr-commentary">' + esc(commentary || "") + "</div>" +
@@ -247,6 +254,19 @@
         (pos.S + pos.H + pos.D + pos.C === 0 ? t("And… they're off! 🏇") : t("Resume ▶️")) + "</button>";
       c.querySelector("#hr-go").addEventListener("click", startRace);
     }
+  }
+
+  // One flip-card per hurdle, absolutely positioned at the same percentage as
+  // its section line (the strip shares the lane layout, so widths line up).
+  // `revealed` keeps already-flipped cards face-up across full re-renders
+  // (pause/resume); mid-race flips are animated via Cards.reveal in updateTrack.
+  function hurdleCardsHtml() {
+    return hurdles.map(function (h, i) {
+      var leftPct = ((i + 1) / finishPos) * 100;
+      return '<div class="hr-hcard" style="left:' + leftPct.toFixed(2) + '%">' +
+        Cards.flipHtml(h.card, { small: true, revealed: h.flipped, id: "hr-hcard-" + i }) +
+        "</div>";
+    }).join("");
   }
 
   function hurdleMarkers() {
@@ -350,6 +370,11 @@
         }
       });
     }
+    // Flip the strip card of any hurdle that just triggered (reveal() is a
+    // no-op on cards that are already face-up).
+    hurdles.forEach(function (h, i) {
+      if (h.flipped) Cards.reveal(els.querySelector("#hr-hcard-" + i));
+    });
     var topWrap = els.querySelector(".hr-topcard");
     if (topWrap && discard.length) topWrap.innerHTML = Cards.faceHtml(discard[discard.length - 1], { small: true });
     var deckEl = els.querySelector(".hr-deckcount");

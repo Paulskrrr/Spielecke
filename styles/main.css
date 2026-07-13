@@ -2253,6 +2253,16 @@ body::before {
 }
 .hr-hurdle--flipped { border-left-style: solid; border-left-color: var(--ink); }
 .hr-hurdle-suit { font-size: 1.1rem; font-weight: 800; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 6px; padding: 0 4px; }
+/* The hurdle-card strip under the board: shares the lane layout (lanetag +
+   flex track) so its percentage positions line up exactly with the section
+   lines above. Cards are mini pkflips — face-down until their hurdle fires. */
+.hr-hcards-row { margin-top: -4px; }
+.hr-hcards { position: relative; flex: 1; height: 54px; }
+.hr-hcard { position: absolute; top: 2px; transform: translateX(-50%); }
+.hr-hcard .pkflip { width: 34px; height: 50px; }
+.hr-hcard .pkcard { border-width: 2px; border-radius: 6px; box-shadow: 0 2px 0 var(--ink); }
+.hr-hcard .pkcard__pip { font-size: 1.05rem; }
+.hr-hcard .pkcard__corner { display: none; }
 .hr-info { display: flex; align-items: center; gap: 14px; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
 .hr-commentary { font-weight: 800; font-size: 1.1rem; min-height: 1.4em; flex: 1; text-align: center; min-width: 180px; }
 .hr-deckcount { font-size: 0.9rem; color: var(--ink-soft); }
