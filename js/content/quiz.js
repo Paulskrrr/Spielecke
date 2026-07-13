@@ -277,7 +277,6 @@
       ],
     },
 
-    // Special game-night category — gold-highlighted chip (see .chip[data-pool="mcgregor"]).
     mcgregor: {
       label: "🥊 McGregor",
       levels: [
@@ -675,7 +674,6 @@
       ],
     },
 
-    // Spezielle Spieleabend-Kategorie — goldener Chip (siehe .chip[data-pool="mcgregor"]).
     mcgregor: {
       label: "🥊 McGregor",
       levels: [

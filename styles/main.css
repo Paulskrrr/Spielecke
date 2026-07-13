@@ -517,41 +517,6 @@ body::before {
 .chip:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 .chip--active { background: var(--blue); color: #fff; }
 
-/* Special gold chip — the McGregor game-night category stands apart from the
-   regular pools: metallic gold fill, deep-amber outline/shadow and a slow
-   shimmer sweep. Selected state deepens the gold and adds a glow. */
-.chip[data-pool="mcgregor"] {
-  position: relative;
-  overflow: hidden;
-  color: var(--ink);
-  background: linear-gradient(135deg, #ffe27a 0%, #ffcf33 45%, #f2a900 100%);
-  border-color: #b26b00;
-  box-shadow: 0 5px 0 #8a5200, inset 0 0 0 2px #fff3c4;
-}
-.chip[data-pool="mcgregor"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, 0.72) 50%, transparent 66%);
-  transform: translateX(-120%);
-  animation: gold-shimmer 3.4s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes gold-shimmer {
-  0% { transform: translateX(-120%); }
-  55%, 100% { transform: translateX(120%); }
-}
-.chip[data-pool="mcgregor"].chip--active {
-  color: var(--ink);
-  background: linear-gradient(135deg, #ffd94a 0%, #f4a800 55%, #d98a00 100%);
-  border-color: #7a4a00;
-  box-shadow: 0 5px 0 #6b3f00, 0 0 16px rgba(255, 193, 7, 0.75), inset 0 0 0 2px #fff3c4;
-}
-.chip[data-pool="mcgregor"]:active { box-shadow: 0 1px 0 #8a5200, inset 0 0 0 2px #fff3c4; }
-@media (prefers-reduced-motion: reduce) {
-  .chip[data-pool="mcgregor"]::after { animation: none; opacity: 0; }
-}
-
 /* Collapsible pool group (e.g. Star Wars → Easy / Hard). The header is a chip
    with a ▾ arrow; its members fold out below it. Keep siblings top-aligned so an
    expanded group doesn't stretch the rest of the row. */
