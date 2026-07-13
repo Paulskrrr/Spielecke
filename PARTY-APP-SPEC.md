@@ -498,13 +498,22 @@ footrule). Closest to the group is the most in sync; furthest off loses.
 
 Royal-court action-card game (Klattschen-style). Players draw cards in turn; the in-game word
 for "drink" is **dienen**. Four card types, each a heraldic colour: **Sofort** (crimson —
-resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz" that stacks and
-stays on screen), **Aktiv** (gold — face-up with its holder, self-triggered later), **Minispiel**
-(violet — a table mini-game the host completes). Two standing ground rules are always on. The
-deck is data, tagged per edition (active: *Diener & Könige*; *Rapunzel* is a locked stub) and
-reshuffles endlessly. Game state persists; the Sanduhr (keeps its name; its card text says
-"Handy-Timer" so it's clear the phone runs the secret timer) and the space-key shortcut are
-torn down on unmount.
+resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz"), **Aktiv** (gold —
+face-up with its holder, self-triggered later), **Minispiel** (violet — a table mini-game the host
+completes). Two standing ground rules are always on. The deck is data, tagged per edition (active:
+*Diener & Könige*; *Rapunzel* is a locked stub) and reshuffles endlessly. Game state persists; the
+Sanduhr (keeps its name; its card text says "Handy-Timer" so it's clear the phone runs the secret
+timer) and the space-key shortcut are torn down on unmount.
+
+- **Regel cards mostly auto-expire.** Playtesting showed permanent Hofgesetze stack up and become
+  untrackable by the back half of a game, so almost every Regel card is `temp: true` — it lapses
+  after 1–2 laps of the table (`rounds`, default 1) instead of lasting until game's end. Only cards
+  explicitly designed to persist (*Bund auf Lebenszeit*, *Das lebende Bild* — both say "bis
+  Spielende" in their own text) stay permanent.
+- **`noEarlyDraw` late-only cards.** A card flagged `noEarlyDraw` (currently just *Verbotene
+  Artikel* — banning „der/die/das") is barred from the deck's first third: `buildDeck()` shuffles
+  normally, then swaps any such card out of the earliest ~33% of draw positions so it can't hit
+  before the table has warmed up.
 
 ### 3.17 Mia (Mäxchen) 🎩 (`maxchen`, 2+) — drinking-capable
 
