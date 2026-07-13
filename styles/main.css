@@ -2272,6 +2272,53 @@ body::before {
 .hr-pay--win { background: var(--green); color: var(--ink); }
 .hr-pay--lose { background: var(--paper-2); }
 
+/* ----- Lügen / Cheat (luegen.js, beta) --------------------------------- */
+.lg-play, .lg-claim, .lg-accuse, .lg-reveal, .lg-win { text-align: center; }
+.lg-playhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.lg-who { font-size: 1.4rem; font-weight: 900; }
+.lg-handcount { font-weight: 800; color: var(--ink-soft); }
+.lg-pilenote { color: var(--ink-soft); font-weight: 700; margin: 2px 0 10px; }
+.lg-forced { font-size: 1.15rem; margin: 6px 0 12px; }
+.lg-forced b { background: var(--ink); color: var(--yellow); border-radius: 8px; padding: 1px 10px; }
+.lg-leadpick { margin: 6px 0 12px; }
+.lg-leadpick__label { font-weight: 800; margin-bottom: 6px; }
+.lg-leadpick .chip-row { justify-content: center; }
+/* The hand: a wrapping row of tappable mini cards. Selected ones lift + glow. */
+.lg-hand { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
+.lg-card {
+  padding: 0; border: none; background: none; cursor: pointer; line-height: 0;
+  border-radius: 10px; transition: transform 0.12s var(--spring), box-shadow 0.12s ease;
+}
+.lg-card .pkcard { box-shadow: 0 3px 0 var(--ink); }
+.lg-card--sel { transform: translateY(-10px); }
+.lg-card--sel .pkcard { box-shadow: 0 6px 0 var(--blue), 0 0 0 3px var(--blue); }
+.lg-hint { margin-top: 4px; }
+/* Public claim card */
+.lg-claimcard { border: 3px solid var(--ink); border-radius: 16px; padding: 16px; margin: 8px auto 12px; max-width: 360px; box-shadow: var(--pop); background: var(--paper-2); }
+.lg-claimcard__who { font-size: 1.5rem; font-weight: 900; }
+.lg-claimcard__says { color: var(--ink-soft); font-weight: 700; }
+.lg-claimcard__deal { font-size: 2.2rem; font-weight: 900; margin-top: 4px; }
+.lg-lastcard { margin-top: 8px; font-weight: 900; color: #d1004b; }
+/* Live hand-count HUD */
+.lg-hud { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0; }
+.lg-hud__chip { border: 2px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-weight: 800; font-size: 0.9rem; background: var(--paper-2); }
+.lg-hud__chip b { color: var(--blue); }
+.lg-hud__chip--active { background: var(--ink); color: #fff; }
+.lg-hud__chip--active b { color: var(--yellow); }
+.lg-hud__chip--low { border-color: #d1004b; }
+.lg-hud__chip--empty { background: var(--green); }
+.lg-pilebar { font-weight: 800; color: var(--ink-soft); margin: 8px 0; }
+.lg-accuser { background: var(--paper-2); }
+/* Reveal: flip the played cards side by side */
+.lg-flips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0; min-height: 90px; }
+.lg-verdict__line { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
+.lg-verdict__line--truth { color: #0a7d2c; }
+.lg-verdict__line--lie { color: #d1004b; }
+.lg-verdict__pickup { font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
+.lg-standings { list-style: none; padding: 0; margin: 14px auto; max-width: 340px; display: flex; flex-direction: column; gap: 6px; }
+.lg-standing { display: flex; justify-content: space-between; border: 2px solid var(--ink); border-radius: 10px; padding: 8px 12px; font-weight: 800; background: var(--paper-2); }
+.lg-standing--win { background: var(--green); }
+
 /* ----- Mäxchen / Mia ---------------------------------------------------- */
 
 .mx-turn, .mx-reveal { text-align: center; }

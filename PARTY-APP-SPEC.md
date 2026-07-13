@@ -47,6 +47,7 @@ next.
 - ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next; dealt from a 🕶️ button on the Players screen, not a shelf tile *(drinking-capable)*
 - ✅ **Simon Says** (DE: *Kommando*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
 - ✅ **Geschmacklos** — a Cards Against Humanity mode: host shows the prompt, every phone deals itself a disjoint hand off one shared table code *(drinking-capable)*
+- ✅ **Lügen** (Cheat / Bullshit) *(beta)* — bluffing card classic: the app deals every hidden hand, you lie about the cards you lay face down, get caught and eat the pile *(drinking-capable)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
 Players screen.
@@ -710,6 +711,28 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
   simple); 🍻 drinking mode implicit in the scoring flavour.
 - **Outcome:** Card Czar picks the round's best line (tracked on the host); no formal
   end-of-game score cap — play until the room's done.
+
+### 3.28 Lügen 🤥 (`luegen`, 3+, beta) — drinking-capable
+
+The bluffing card classic (Cheat / Bullshit / Mogeln) on one passed-around phone. Deliberately
+built to feel unlike Mia (which hides *one* roll and tracks nothing): Lügen keeps **persistent
+hidden hands** the app deals and tallies, plus a growing face-down **pile** — bookkeeping a
+shared screen does far better than the table.
+
+- **Loop:** the whole deck is dealt round-robin. On your turn you **must claim a fixed rank** —
+  the leader picks the base rank for a fresh pile, then it **climbs by one each turn** (wrapping)
+  — but you lay your cards **face down**, so you can lie. You choose only *how many* (1–4) and
+  *which* cards to sacrifice; since you rarely hold the forced rank, lies are forced.
+- **Challenge:** any other player may call **„Lüge!"** — the table taps **who** accuses, the
+  played cards **flip** (shared `pkflip`), and whoever was wrong — the liar or the accuser —
+  takes the **whole pile** into their hand (drinking mode: they drink ~1 sip per 3 cards). Not a
+  binary next-player believe/lift like Mia; the pickup is a punishment + comeback swing.
+- **Win:** first to **empty their hand**. The last play is the most dangerous — a believed final
+  bluff wins outright, but a *called* final bluff hands the pile back and you're still in.
+- **Config:** deck size (🏃 short 32 / 🎴 full 52), 🍻 drinking mode. A live **hand-count HUD**
+  shows every player's remaining cards so the table sees who's close. No content file (pure deck
+  mechanics); mid-game state is not persisted — a fresh mount starts at setup.
+- **Why beta:** new loop, road-tested with the group before it graduates off the beta shelf.
 
 ---
 

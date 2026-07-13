@@ -84,6 +84,7 @@
     // — co-op —
     { id: "zeitzunder",    color: "pink"   },
     // — BETA sinks to the bottom —
+    { id: "luegen",        color: "teal"   },
     { id: "simon",         color: "indigo" },
   ];
 
