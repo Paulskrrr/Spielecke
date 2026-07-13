@@ -505,11 +505,15 @@ completes). Two standing ground rules are always on. The deck is data, tagged pe
 Sanduhr (keeps its name; its card text says "Handy-Timer" so it's clear the phone runs the secret
 timer) and the space-key shortcut are torn down on unmount.
 
-- **Regel cards mostly auto-expire.** Playtesting showed permanent Hofgesetze stack up and become
-  untrackable by the back half of a game, so almost every Regel card is `temp: true` — it lapses
-  after 1–2 laps of the table (`rounds`, default 1) instead of lasting until game's end. Only cards
-  explicitly designed to persist (*Bund auf Lebenszeit*, *Das lebende Bild* — both say "bis
-  Spielende" in their own text) stay permanent.
+- **A few Regel cards auto-expire.** Playtesting flagged specific standing rules as genuinely
+  exhausting to keep tracking on top of everything else already in play, so those carry
+  `temp: true` and lapse after 1–2 laps of the table (`rounds`, default 1): *Der Spitzname*
+  (nickname), *Der gesenkte Blick* (no eye contact), *Der Trinkspruch* (the toast), *Der Untertan*
+  (apologise before every sentence), plus the pre-existing *Wortkarg bei Hofe*, *Das Plappermaul*,
+  *In Zeitlupe*, *Der Tafelschlag*, *Narrenfreiheit*. Everything else stays permanent, including
+  cards that are naturally self-limiting (`copies: 2` + "a new draw supersedes the old" — Echo,
+  In meiner Hose, Die Erhebung, Der Inquisitor, Der Knabe) and ones explicitly designed to last
+  (*Bund auf Lebenszeit*, *Das lebende Bild*, *Das Austrittsgesuch* — kept permanent by design).
 - **`noEarlyDraw` late-only cards.** A card flagged `noEarlyDraw` (currently just *Verbotene
   Artikel* — banning „der/die/das") is barred from the deck's first third: `buildDeck()` shuffles
   normally, then swaps any such card out of the earliest ~33% of draw positions so it can't hit
