@@ -507,13 +507,17 @@ timer) and the space-key shortcut are torn down on unmount.
 
 - **A few Regel cards auto-expire.** Playtesting flagged specific standing rules as genuinely
   exhausting to keep tracking on top of everything else already in play, so those carry
-  `temp: true` and lapse after 1–2 laps of the table (`rounds`, default 1): *Der Spitzname*
-  (nickname), *Der gesenkte Blick* (no eye contact), *Der Trinkspruch* (the toast), *Der Untertan*
-  (apologise before every sentence), plus the pre-existing *Wortkarg bei Hofe*, *Das Plappermaul*,
-  *In Zeitlupe*, *Der Tafelschlag*, *Narrenfreiheit*. Everything else stays permanent, including
-  cards that are naturally self-limiting (`copies: 2` + "a new draw supersedes the old" — Echo,
-  In meiner Hose, Die Erhebung, Der Inquisitor, Der Knabe) and ones explicitly designed to last
-  (*Bund auf Lebenszeit*, *Das lebende Bild*, *Das Austrittsgesuch* — kept permanent by design).
+  `temp: true` and lapse after one lap of the table (`rounds`, default 1): *Der Spitzname*
+  (nickname, 2 rounds), *Der Knabe*, *Der gesenkte Blick* (no eye contact), *Der Trinkspruch*
+  (the toast), *Verbotene Zustimmung* ("yes" banned), *Verbotene Artikel* ("der/die/das" banned),
+  *Der Untertan* (apologise before every sentence), plus the pre-existing *Wortkarg bei Hofe*,
+  *Das Plappermaul*, *In Zeitlupe*, *Der Tafelschlag*, *Narrenfreiheit*. Everything else stays
+  permanent, including cards that are naturally self-limiting (`copies: 2` + "a new draw
+  supersedes the old" — Echo, In meiner Hose, Die Erhebung, Der Inquisitor) and ones explicitly
+  designed to last (*Bund auf Lebenszeit*, *Das lebende Bild*, *Das Austrittsgesuch* — kept
+  permanent by design). *Höfische Anrede* (must address each other formally) and *Höfische
+  Etikette* (no elbows on the table) are distinct rules — one's a speech rule, one's a physical
+  one — and both stay permanent.
 - **`noEarlyDraw` late-only cards.** A card flagged `noEarlyDraw` (currently just *Verbotene
   Artikel* — banning „der/die/das") is barred from the deck's first third: `buildDeck()` shuffles
   normally, then swaps any such card out of the earliest ~33% of draw positions so it can't hit
