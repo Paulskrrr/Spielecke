@@ -426,7 +426,7 @@
         }).join("") +
         losers.map(function (e) {
           return '<li class="hr-pay hr-pay--lose"><b>' + esc(e.player) + "</b> " + Cards.SUITS[e.suit].symbol +
-            " — " + t("trinkt") + " <span class=\"bf-sips\">" + e.sips + " " + t(e.sips === 1 ? "sip" : "sips") + "</span></li>";
+            " — " + t("drinks") + " <span class=\"bf-sips\">" + e.sips + " " + t(e.sips === 1 ? "sip" : "sips") + "</span></li>";
         }).join("") +
         "</ul>"
       : '<p class="muted">' + t("No bets this race — just glory.") + "</p>";

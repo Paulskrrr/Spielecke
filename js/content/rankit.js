@@ -262,6 +262,17 @@
           { title: "Größte → harmloseste Bett-Sünde", items: ["An jemand anderen denken", "Den Namen verwechseln", "Mittendrin aufhören", "Heimlich filmen wollen", "Danach sofort einschlafen"] },
         ],
       },
+      date: {
+        label: "🌹 Date",
+        sets: [
+          { title: "Am heißesten → am harmlosesten", items: ["Hand am Hals", "Haare gepackt", "Gegen die Wand gedrückt", "Festgehalten", "Nägel auf dem Rücken"] },
+          { title: "Würd ich heute Abend am ehesten → am wenigsten machen", items: ["Knutschen", "In den Nacken küssen", "Die Kontrolle abgeben", "Den ersten Schritt machen", "Es beim Reden lassen"] },
+          { title: "So knistert's am meisten → am wenigsten", items: ["Erster Kuss", "Hand auf dem Oberschenkel", "Was ins Ohr flüstern", "Dieser eine Blick", "Wie zufällig berühren"] },
+          { title: "Beim ersten Mal guck ich zuerst → zuletzt auf …", items: ["Augen", "Lächeln", "Stimme", "Hände", "Wie er/sie riecht"] },
+          { title: "Macht mich am meisten → am wenigsten an", items: ["Wer die Führung übernimmt", "Dreckig ins Ohr geflüstert", "Langsam ausgezogen werden", "Festgehalten werden", "Geneckt werden"] },
+          { title: "So soll der Abend am liebsten → am wenigsten enden", items: ["Bei dir", "Bei mir", "Langer Kuss an der Tür", "Noch ein Drink", "Im Taxi schon übereinander her"] },
+        ],
+      },
     },
 
     en: {
@@ -500,6 +511,17 @@
           { title: "Turns you on most → least when sexting", items: ["A nude with no warning", "A detailed description", "A filthy voice note", "Just 'come over'", "Emoji hints"] },
           { title: "Hottest → most boring threesome setup", items: ["Two women", "Two men", "Couple plus one", "Two strangers from the bar", "With close friends"] },
           { title: "Biggest → most harmless sin in bed", items: ["Thinking of someone else", "Saying the wrong name", "Stopping halfway", "Wanting to film it secretly", "Falling asleep right after"] },
+        ],
+      },
+      date: {
+        label: "🌹 Date",
+        sets: [
+          { title: "Hottest → most innocent", items: ["Hand on your throat", "Hair grabbed", "Pushed against the wall", "Held down", "Nails down your back"] },
+          { title: "Most → least likely I'd do tonight", items: ["Make out", "Kiss your neck", "Give up control", "Make the first move", "Keep it to talking"] },
+          { title: "Makes it spark the most → least", items: ["First kiss", "Hand on the thigh", "Whisper in the ear", "That one look", "An 'accidental' touch"] },
+          { title: "First time, I notice first → last …", items: ["Eyes", "Smile", "Voice", "Hands", "How they smell"] },
+          { title: "Turns me on most → least", items: ["When they take the lead", "Filthy whispers", "Being slowly undressed", "Being held down", "Being teased"] },
+          { title: "How I'd most → least want tonight to end", items: ["At yours", "At mine", "A long kiss at the door", "One more drink", "All over each other in the taxi"] },
         ],
       },
     },
