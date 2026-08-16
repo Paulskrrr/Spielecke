@@ -178,7 +178,7 @@
   function renderRound() {
     var hint = "";
     if (phase === "second" && firstGuess) {
-      var dir = Cards.value(current) > rankValue(firstGuess) ? t("⬆️ Höher!") : t("⬇️ Tiefer!");
+      var dir = Cards.value(current) > rankValue(firstGuess) ? t("⬆️ Higher!") : t("⬇️ Lower!");
       hint = '<div class="fd-hint">' + t("Dealer says:") + " <b>" + dir + "</b> " +
         t("than {r}").replace("{r}", firstGuess) + "</div>";
     }
@@ -273,7 +273,7 @@
     var resEl = els.querySelector("#fd-result");
     resEl.innerHTML =
       '<div class="fd-win">✅ ' + t("Spot on!") + " " + Cards.suitSymbol(current) + current.rank + "<br/>" +
-      "<b>" + esc(dealerName()) + "</b> " + t("trinkt") + " " +
+      "<b>" + esc(dealerName()) + "</b> " + t("drinks") + " " +
       '<span class="bf-sips">' + settings.dealerHitSips + " " + t(settings.dealerHitSips === 1 ? "sip" : "sips") + "</span></div>";
     advanceAfter();
   }
@@ -294,7 +294,7 @@
     var resEl = els.querySelector("#fd-result");
     resEl.innerHTML =
       '<div class="fd-lose">❌ ' + t("It was") + " " + Cards.suitSymbol(current) + current.rank + ".<br/>" +
-      "<b>" + esc(guesserName()) + "</b> " + t("trinkt") + " " +
+      "<b>" + esc(guesserName()) + "</b> " + t("drinks") + " " +
       '<span class="bf-sips">' + sips + " " + t(sips === 1 ? "sip" : "sips") + "</span></div>";
     advanceAfter();
   }
