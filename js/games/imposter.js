@@ -100,7 +100,7 @@
       countSection =
         '<h3 class="sub">' + t("How many imposters?") + "</h3>" +
         '<div class="chip-row" id="im-count">' + countChips.join("") + "</div>" +
-        '<p class="muted small">' + t("🎲 Random leans toward fewer imposters — big groups stay tense.") + "</p>";
+        '<p class="muted small">' + t("🎲 Random keeps the count secret — even the imposters won\'t know how many. Bigger tables, more fakers.") + "</p>";
     }
 
     // The buzzer is just another category chip in the same row as the word pools
@@ -214,22 +214,15 @@
     return Math.max(1, Math.min(settings.imposterCount, n));
   }
 
-  // Weighted toward fewer imposters: P(k) ∝ 1/2^(k-1) for k = 1..max(1, n-1).
-  // So 1 imposter is by far the likeliest, 2 next, and large counts get
-  // exponentially rare (e.g. 7-of-9 ≈ 0.8%). Never makes the whole table fakers.
+  // Random count scales with the table: each player is independently a faker with
+  // probability ~2/7, so the average is about one imposter per 3.5 players — e.g.
+  // 7 players ≈ 2 imposters, and bigger groups keep more. Clamped to [1, n-1] so
+  // there's always at least one faker and never the whole table.
+  var RANDOM_IMPOSTER_RATE = 2 / 7;
   function randomImposterCount(n) {
-    var max = Math.max(1, n - 1);
-    var weights = [], total = 0;
-    for (var k = 1; k <= max; k++) {
-      var w = 1 / Math.pow(2, k - 1);
-      weights.push(w); total += w;
-    }
-    var r = Math.random() * total;
-    for (var i = 0; i < weights.length; i++) {
-      r -= weights[i];
-      if (r < 0) return i + 1;
-    }
-    return 1;
+    var k = 0;
+    for (var i = 0; i < n; i++) { if (Math.random() < RANDOM_IMPOSTER_RATE) k++; }
+    return Math.max(1, Math.min(k, n - 1));
   }
 
   function imposterNames() {
@@ -237,6 +230,20 @@
   }
   function imposterTotal() {
     var n = 0; for (var k in imposterSet) if (imposterSet[k]) n++; return n;
+  }
+
+  // What an imposter is told about their allies. With a fixed count the whole
+  // table already agreed on the number at setup, so we name it ("1 of N").
+  // In Random mode the count is a secret — so imposters must NOT learn how many
+  // there are, or even whether they have company. Everyone gets the same coy line.
+  function allyNote() {
+    if (settings.imposterCount === "random") {
+      return t("You might not be the only faker — but you'll never know how many.");
+    }
+    var total = imposterTotal();
+    return total > 1
+      ? t("You're 1 of {n} imposters — but who else?").replace("{n}", total)
+      : t("Blend in. Don't get caught.");
   }
 
   function renderPassTo() {
@@ -258,10 +265,6 @@
     if (settings.mode === "timer") return showTimerRole();
     var isImposter = !!imposterSet[revealIdx];
     var last = revealIdx === players.length - 1;
-    var total = imposterTotal();
-    var allyNote = total > 1
-      ? t("You're 1 of {n} imposters — but who else?").replace("{n}", total)
-      : t("Blend in. Don't get caught.");
     var clueLine = (settings.hints && secretHint)
       ? '  <div class="role-hint role-hint--clue">🧭 ' + t("Your hint") + ": <strong>" + esc(secretHint) + "</strong></div>"
       : "";
@@ -271,7 +274,7 @@
         '  <div class="role-big">' + t("IMPOSTER 🤫") + "</div>" +
         '  <div class="role-hint">' + t("Category") + ": <strong>" + esc(secretCategory) + "</strong></div>" +
         clueLine +
-        '  <div class="role-note">' + allyNote + "</div>" +
+        '  <div class="role-note">' + allyNote() + "</div>" +
         "</div>"
       : '<div class="role-card">' +
         '  <div class="role-label">' + t("The secret word is") + "</div>" +
@@ -297,17 +300,13 @@
   // they're in the dark. Nobody buzzes until everyone has looked.
   function showTimerRole() {
     var isImposter = !!imposterSet[revealIdx];
-    var total = imposterTotal();
-    var allyNote = total > 1
-      ? t("You're 1 of {n} imposters — but who else?").replace("{n}", total)
-      : t("Blend in. Don't get caught.");
     var word = targetTime === 1 ? t("second") : t("seconds");
     var body = isImposter
       ? '<div class="role-card role-card--imposter">' +
         '  <div class="role-label">' + t("You are the") + "</div>" +
         '  <div class="role-big">' + t("IMPOSTER 🤫") + "</div>" +
         '  <div class="role-hint">' + t("You don\'t know the time — buzz on instinct.") + "</div>" +
-        '  <div class="role-note">' + allyNote + "</div>" +
+        '  <div class="role-note">' + allyNote() + "</div>" +
         "</div>"
       : '<div class="role-card">' +
         '  <div class="role-label">' + t("Count exactly") + "</div>" +

@@ -28,7 +28,7 @@
       id: "mindmeld",
       name: "Mind Meld",
       tagline: "Two minds, two words. Say the same thing — fewest tries wins.",
-      icon: "🔗",
+      icon: "🧠",
       minPlayers: 4,
       supportsDrinking: true,
     },
@@ -66,7 +66,7 @@
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🔗 ' + t("Mind Meld") + "</h2>" +
+      '  <h2 class="screen-title pop">🧠 ' + t("Mind Meld") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       note +
       (enough ? '  <div class="mm-teams">' + teamCards + "</div>" +

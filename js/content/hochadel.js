@@ -20,6 +20,21 @@
  *     power    only for type "aktiv": optional engine hook (e.g. "sanduhr")
  *     copies   how many times the card is seeded into the deck (default 1). Set 2
  *              on evergreen basics / mini-games so they can come up twice a night.
+ *     temp     only for type "regel": the rule auto-expires after `rounds` laps of
+ *              the table (default 1) instead of lasting until game's end. Reserve
+ *              this for the handful of rules that get genuinely exhausting to keep
+ *              tracking on top of everything else already in play (nickname,
+ *              no-eye-contact, the toast, apologising before every sentence —
+ *              confirmed by actual playtesting). Cards that are naturally
+ *              self-limiting already (`copies: 2` + "a new draw supersedes the
+ *              old") or explicitly designed to last ("bis Spielende" / "for life")
+ *              stay permanent — they don't stack the same way. The card text must
+ *              say how long it lasts ("eine Runde lang", "zwei Runden lang") so
+ *              players know it's temporary.
+ *     rounds   only with temp: true — how many laps of the table it lasts (default 1).
+ *     noEarlyDraw  only for type "regel": the card is barred from the deck's first
+ *              third (kept out of the earliest ~33% of draws) — for rules disruptive
+ *              enough that they shouldn't hit before the table has warmed up.
  *
  * The in-game word for "drink" is always **dienen** (DE) / **serve** (EN) —
  * never "trinken" / "drink".
@@ -115,10 +130,10 @@
     // --- 5.2 Passiv / Regeln (Saphir) — gelten bis Spielende -------------
     // (Die „Adelsnamen“-Regel ist jetzt eine feste Grundregel, daher keine Karte.)
     { id: "r_trinkspruch", type: "regel", title: "Der Trinkspruch",
-      text: "Vor jedem Dienst spricht man: „Zum Wohl, werte Herrschaften.“ Vergessen = dienen.",
-      editions: ["koenige", "rapunzel"] },
+      text: "Eine Runde lang spricht man vor jedem Dienst: „Zum Wohl, werte Herrschaften.“ Vergessen = dienen.",
+      editions: ["koenige", "rapunzel"], temp: true },
     { id: "r_ja", type: "regel", title: "Verbotene Zustimmung",
-      text: "Das Wort „Ja“ ist fortan verbannt. Verstoß = dienen.", editions: ["koenige", "rapunzel"] },
+      text: "Das Wort „Ja“ ist eine Runde lang verbannt. Verstoß = dienen.", editions: ["koenige", "rapunzel"], temp: true },
     { id: "r_anrede", type: "regel", title: "Höfische Anrede",
       text: "Ab jetzt siezt sich der gesamte Hof. Verstoß = dienen.", editions: ["koenige", "rapunzel"] },
     { id: "r_bund", type: "regel", title: "Bund auf Lebenszeit",
@@ -232,11 +247,11 @@
       text: "Eine Runde lang darf niemand {P} in die Augen sehen. Wer es doch tut, dient.",
       editions: ["koenige", "rapunzel"], copies: 2, temp: true },
     { id: "r_spitzname", type: "regel", title: "Der Spitzname",
-      text: "Der rechte Nachbar gibt {P} einen Spitznamen. Fortan gilt nur noch dieser Name — er übertrumpft sogar die Grundgesetze. Verstoß = dienen. Ein neuer Zug löst den alten ab.",
-      editions: ["koenige", "rapunzel"], copies: 2 },
+      text: "Der rechte Nachbar gibt {P} einen Spitznamen. Zwei Runden lang gilt nur noch dieser Name — er übertrumpft sogar die Grundgesetze. Verstoß = dienen. Ein neuer Zug löst den alten ab.",
+      editions: ["koenige", "rapunzel"], copies: 2, temp: true, rounds: 2 },
     { id: "r_knabe", type: "regel", title: "Der Knabe",
-      text: "Die jüngste Person ist fortan der Knabe und wird nur noch „Knabe“ gerufen. Verstoß = dienen.",
-      editions: ["koenige", "rapunzel"] },
+      text: "Die jüngste Person ist eine Runde lang der Knabe und wird nur noch „Knabe“ gerufen. Verstoß = dienen.",
+      editions: ["koenige", "rapunzel"], temp: true },
     { id: "r_dreiwort", type: "regel", title: "Wortkarg bei Hofe",
       text: "{P} spricht eine Runde lang nur in Drei-Wort-Sätzen. Verstoß = dienen.",
       editions: ["koenige", "rapunzel"], temp: true },
@@ -247,14 +262,14 @@
       text: "{P} beendet fortan jeden Satz mit „… in meiner Hose“. Vergessen = dienen. Ein neuer Zug löst den alten ab.",
       editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "r_untertan", type: "regel", title: "Der Untertan",
-      text: "{P} beginnt fortan jeden Satz mit „Verzeiht die Störung, aber …“. Vergessen = dienen. Ein neuer Zug löst den alten ab.",
-      editions: ["koenige", "rapunzel"], copies: 2 },
+      text: "{P} beginnt eine Runde lang jeden Satz mit „Verzeiht die Störung, aber …“. Vergessen = dienen. Ein neuer Zug löst den alten ab.",
+      editions: ["koenige", "rapunzel"], copies: 2, temp: true },
     { id: "r_erhebung", type: "regel", title: "Die Erhebung",
       text: "Erhebt sich {P} von der Tafel, erhebt sich mit dem Applaus der ganze Hof. Wer nicht klatscht, dient. Ein neuer Zug löst den alten ab.",
       editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "r_artikel", type: "regel", title: "Verbotene Artikel",
-      text: "Die Wörter „der“, „die“ und „das“ sind fortan verbannt. Verstoß = dienen.",
-      editions: ["koenige", "rapunzel"] },
+      text: "Die Wörter „der“, „die“ und „das“ sind eine Runde lang verbannt. Verstoß = dienen.",
+      editions: ["koenige", "rapunzel"], temp: true, noEarlyDraw: true },
     { id: "r_plappermaul", type: "regel", title: "Das Plappermaul",
       text: "{P} darf eine Runde lang keine vier Sekunden am Stück schweigen. Sonst dienen.",
       editions: ["koenige", "rapunzel"], temp: true },
@@ -394,10 +409,10 @@
     // --- 5.2 Passive / Rules (Sapphire) — last until game's end -----------
     // (The „Noble Names“ rule is now a fixed ground rule, hence no card.)
     { id: "r_trinkspruch", type: "regel", title: "The Toast",
-      text: "Before each service one speaks: „To your health, worthy lords and ladies.“ Forgetting = serve.",
-      editions: ["koenige", "rapunzel"] },
+      text: "For one round, before each service one speaks: „To your health, worthy lords and ladies.“ Forgetting = serve.",
+      editions: ["koenige", "rapunzel"], temp: true },
     { id: "r_ja", type: "regel", title: "Forbidden Assent",
-      text: "The word „yes“ is hereby banished. Breach = serve.", editions: ["koenige", "rapunzel"] },
+      text: "The word „yes“ is banished for one round. Breach = serve.", editions: ["koenige", "rapunzel"], temp: true },
     { id: "r_anrede", type: "regel", title: "Courtly Address",
       text: "From now on the whole court addresses one another formally. Breach = serve.", editions: ["koenige", "rapunzel"] },
     { id: "r_bund", type: "regel", title: "A Bond for Life",
@@ -511,11 +526,11 @@
       text: "For one round, no one may look {P} in the eyes. Whoever does anyway serves.",
       editions: ["koenige", "rapunzel"], copies: 2, temp: true },
     { id: "r_spitzname", type: "regel", title: "The Nickname",
-      text: "The right-hand neighbour gives {P} a nickname. Henceforth only this name applies — it trumps even the ground laws. Breach = serve. A new draw supersedes the old.",
-      editions: ["koenige", "rapunzel"], copies: 2 },
+      text: "The right-hand neighbour gives {P} a nickname. For two rounds only this name applies — it trumps even the ground laws. Breach = serve. A new draw supersedes the old.",
+      editions: ["koenige", "rapunzel"], copies: 2, temp: true, rounds: 2 },
     { id: "r_knabe", type: "regel", title: "The Boy",
-      text: "The youngest person is henceforth the Boy and is called nothing but „Boy“. Breach = serve.",
-      editions: ["koenige", "rapunzel"] },
+      text: "The youngest person is the Boy for one round and is called nothing but „Boy“. Breach = serve.",
+      editions: ["koenige", "rapunzel"], temp: true },
     { id: "r_dreiwort", type: "regel", title: "Sparing of Words at Court",
       text: "{P} speaks for one round only in three-word sentences. Breach = serve.",
       editions: ["koenige", "rapunzel"], temp: true },
@@ -526,14 +541,14 @@
       text: "{P} henceforth ends every sentence with „… in my trousers“. Forgetting = serve. A new draw supersedes the old.",
       editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "r_untertan", type: "regel", title: "The Humble Subject",
-      text: "{P} henceforth begins every sentence with „Forgive the intrusion, but …“. Forgetting = serve. A new draw supersedes the old.",
-      editions: ["koenige", "rapunzel"], copies: 2 },
+      text: "{P} begins every sentence with „Forgive the intrusion, but …“ for one round. Forgetting = serve. A new draw supersedes the old.",
+      editions: ["koenige", "rapunzel"], copies: 2, temp: true },
     { id: "r_erhebung", type: "regel", title: "The Rising",
       text: "Whenever {P} rises from the table, the whole court rises with applause. Whoever doesn't clap serves. A new draw supersedes the old.",
       editions: ["koenige", "rapunzel"], copies: 2 },
     { id: "r_artikel", type: "regel", title: "Forbidden Articles",
-      text: "The words „the“, „a“ and „an“ are hereby banished. Breach = serve.",
-      editions: ["koenige", "rapunzel"] },
+      text: "The words „the“, „a“ and „an“ are banished for one round. Breach = serve.",
+      editions: ["koenige", "rapunzel"], temp: true, noEarlyDraw: true },
     { id: "r_plappermaul", type: "regel", title: "The Chatterbox",
       text: "{P} may not stay silent for four seconds at a stretch for one round. Otherwise serve.",
       editions: ["koenige", "rapunzel"], temp: true },

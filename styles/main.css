@@ -359,6 +359,10 @@ body::before {
 }
 .badge-drink { background: var(--ink); color: var(--yellow); }
 .badge-beta { background: #a06bff; color: #fff; }
+/* Badges sit inside sticker headings (.pop/.neon) whose white text-shadow
+   outline would smear the tight badge label — cancel it, and keep the badge
+   sitting on the text baseline rather than stretched to the huge title size. */
+.pop .badge, .neon .badge { text-shadow: none; font-size: 0.9rem; vertical-align: middle; }
 
 /* ----- Roster ----------------------------------------------------------- */
 
@@ -516,41 +520,6 @@ body::before {
 .chip:active { transform: translateY(4px); box-shadow: 0 1px 0 var(--ink); transition-duration: 0.05s, 0.05s, 0.15s, 0.15s; }
 .chip:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; }
 .chip--active { background: var(--blue); color: #fff; }
-
-/* Special gold chip — the McGregor game-night category stands apart from the
-   regular pools: metallic gold fill, deep-amber outline/shadow and a slow
-   shimmer sweep. Selected state deepens the gold and adds a glow. */
-.chip[data-pool="mcgregor"] {
-  position: relative;
-  overflow: hidden;
-  color: var(--ink);
-  background: linear-gradient(135deg, #ffe27a 0%, #ffcf33 45%, #f2a900 100%);
-  border-color: #b26b00;
-  box-shadow: 0 5px 0 #8a5200, inset 0 0 0 2px #fff3c4;
-}
-.chip[data-pool="mcgregor"]::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(115deg, transparent 34%, rgba(255, 255, 255, 0.72) 50%, transparent 66%);
-  transform: translateX(-120%);
-  animation: gold-shimmer 3.4s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes gold-shimmer {
-  0% { transform: translateX(-120%); }
-  55%, 100% { transform: translateX(120%); }
-}
-.chip[data-pool="mcgregor"].chip--active {
-  color: var(--ink);
-  background: linear-gradient(135deg, #ffd94a 0%, #f4a800 55%, #d98a00 100%);
-  border-color: #7a4a00;
-  box-shadow: 0 5px 0 #6b3f00, 0 0 16px rgba(255, 193, 7, 0.75), inset 0 0 0 2px #fff3c4;
-}
-.chip[data-pool="mcgregor"]:active { box-shadow: 0 1px 0 #8a5200, inset 0 0 0 2px #fff3c4; }
-@media (prefers-reduced-motion: reduce) {
-  .chip[data-pool="mcgregor"]::after { animation: none; opacity: 0; }
-}
 
 /* Collapsible pool group (e.g. Star Wars → Easy / Hard). The header is a chip
    with a ▾ arrow; its members fold out below it. Keep siblings top-aligned so an
@@ -2232,8 +2201,17 @@ body::before {
   border: 3px solid var(--ink); border-radius: 14px;
   -webkit-overflow-scrolling: touch;
 }
-.fd-histcard { flex: 0 0 auto; }
+.fd-histcard { flex: 0 0 auto; position: relative; }
 .fd-histcard--new { animation: fd-cardpop 0.32s cubic-bezier(0.2, 1.4, 0.4, 1); }
+.fd-histcard--dead { opacity: 0.72; }
+.fd-histcount {
+  position: absolute; top: -7px; right: -7px;
+  min-width: 20px; height: 20px; padding: 0 5px; box-sizing: border-box;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--ink); color: var(--yellow);
+  border: 2px solid var(--paper, #fff); border-radius: 999px;
+  font-size: 0.8rem; font-weight: 900; line-height: 1;
+}
 @keyframes fd-cardpop { from { transform: translateY(8px) scale(0.78); opacity: 0; } to { transform: none; opacity: 1; } }
 .fd-history-empty { color: var(--ink-soft); font-size: 0.95rem; padding: 16px 6px; }
 .fd-history::-webkit-scrollbar { height: 10px; }
@@ -2279,6 +2257,16 @@ body::before {
 }
 .hr-hurdle--flipped { border-left-style: solid; border-left-color: var(--ink); }
 .hr-hurdle-suit { font-size: 1.1rem; font-weight: 800; background: var(--paper-2); border: 2px solid var(--ink); border-radius: 6px; padding: 0 4px; }
+/* The hurdle-card strip under the board: shares the lane layout (lanetag +
+   flex track) so its percentage positions line up exactly with the section
+   lines above. Cards are mini pkflips — face-down until their hurdle fires. */
+.hr-hcards-row { margin-top: -4px; }
+.hr-hcards { position: relative; flex: 1; height: 54px; }
+.hr-hcard { position: absolute; top: 2px; transform: translateX(-50%); }
+.hr-hcard .pkflip { width: 34px; height: 50px; }
+.hr-hcard .pkcard { border-width: 2px; border-radius: 6px; box-shadow: 0 2px 0 var(--ink); }
+.hr-hcard .pkcard__pip { font-size: 1.05rem; }
+.hr-hcard .pkcard__corner { display: none; }
 .hr-info { display: flex; align-items: center; gap: 14px; justify-content: center; margin: 10px 0; flex-wrap: wrap; }
 .hr-commentary { font-weight: 800; font-size: 1.1rem; min-height: 1.4em; flex: 1; text-align: center; min-width: 180px; }
 .hr-deckcount { font-size: 0.9rem; color: var(--ink-soft); }
@@ -2287,6 +2275,53 @@ body::before {
 .hr-pay { font-size: 1.1rem; font-weight: 700; border: 2px solid var(--ink); border-radius: 10px; padding: 8px 12px; }
 .hr-pay--win { background: var(--green); color: var(--ink); }
 .hr-pay--lose { background: var(--paper-2); }
+
+/* ----- Lügen / Cheat (luegen.js, beta) --------------------------------- */
+.lg-play, .lg-claim, .lg-accuse, .lg-reveal, .lg-win { text-align: center; }
+.lg-playhead { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+.lg-who { font-size: 1.4rem; font-weight: 900; }
+.lg-handcount { font-weight: 800; color: var(--ink-soft); }
+.lg-pilenote { color: var(--ink-soft); font-weight: 700; margin: 2px 0 10px; }
+.lg-forced { font-size: 1.15rem; margin: 6px 0 12px; }
+.lg-forced b { background: var(--ink); color: var(--yellow); border-radius: 8px; padding: 1px 10px; }
+.lg-leadpick { margin: 6px 0 12px; }
+.lg-leadpick__label { font-weight: 800; margin-bottom: 6px; }
+.lg-leadpick .chip-row { justify-content: center; }
+/* The hand: a wrapping row of tappable mini cards. Selected ones lift + glow. */
+.lg-hand { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 10px 0; }
+.lg-card {
+  padding: 0; border: none; background: none; cursor: pointer; line-height: 0;
+  border-radius: 10px; transition: transform 0.12s var(--spring), box-shadow 0.12s ease;
+}
+.lg-card .pkcard { box-shadow: 0 3px 0 var(--ink); }
+.lg-card--sel { transform: translateY(-10px); }
+.lg-card--sel .pkcard { box-shadow: 0 6px 0 var(--blue), 0 0 0 3px var(--blue); }
+.lg-hint { margin-top: 4px; }
+/* Public claim card */
+.lg-claimcard { border: 3px solid var(--ink); border-radius: 16px; padding: 16px; margin: 8px auto 12px; max-width: 360px; box-shadow: var(--pop); background: var(--paper-2); }
+.lg-claimcard__who { font-size: 1.5rem; font-weight: 900; }
+.lg-claimcard__says { color: var(--ink-soft); font-weight: 700; }
+.lg-claimcard__deal { font-size: 2.2rem; font-weight: 900; margin-top: 4px; }
+.lg-lastcard { margin-top: 8px; font-weight: 900; color: #d1004b; }
+/* Live hand-count HUD */
+.lg-hud { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 8px 0; }
+.lg-hud__chip { border: 2px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-weight: 800; font-size: 0.9rem; background: var(--paper-2); }
+.lg-hud__chip b { color: var(--blue); }
+.lg-hud__chip--active { background: var(--ink); color: #fff; }
+.lg-hud__chip--active b { color: var(--yellow); }
+.lg-hud__chip--low { border-color: #d1004b; }
+.lg-hud__chip--empty { background: var(--green); }
+.lg-pilebar { font-weight: 800; color: var(--ink-soft); margin: 8px 0; }
+.lg-accuser { background: var(--paper-2); }
+/* Reveal: flip the played cards side by side */
+.lg-flips { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 16px 0; min-height: 90px; }
+.lg-verdict__line { font-size: 1.3rem; font-weight: 900; margin-bottom: 6px; }
+.lg-verdict__line--truth { color: #0a7d2c; }
+.lg-verdict__line--lie { color: #d1004b; }
+.lg-verdict__pickup { font-weight: 700; color: var(--ink-soft); margin-bottom: 14px; }
+.lg-standings { list-style: none; padding: 0; margin: 14px auto; max-width: 340px; display: flex; flex-direction: column; gap: 6px; }
+.lg-standing { display: flex; justify-content: space-between; border: 2px solid var(--ink); border-radius: 10px; padding: 8px 12px; font-weight: 800; background: var(--paper-2); }
+.lg-standing--win { background: var(--green); }
 
 /* ----- Mäxchen / Mia ---------------------------------------------------- */
 

@@ -64,6 +64,8 @@
           "schwört, dass das das letzte Bier war",
           "fängt an, Fremden den Sinn des Lebens zu erklären",
           "wettet betrunken um Geld und verliert",
+          "verschwindet heimlich um 23 Uhr, ohne Tschüss zu sagen",
+          "räumt auf der Hausparty heimlich schon mal auf",
         ],
       },
       leisure: {
@@ -77,6 +79,8 @@
           "will jede Sehenswürdigkeit an einem Tag abklappern",
           "bekommt am ersten Tag den schlimmsten Sonnenbrand",
           "redet die ganze Busfahrt mit Fremden",
+          "hat die Reiseapotheke für die ganze Gruppe dabei",
+          "plant den Trip mit Excel-Tabelle und Plan B",
         ],
       },
       history: {
@@ -110,6 +114,8 @@
           "hat hier die höchste Bodycount",
           "geht heute Abend mit jemandem nach Hause",
           "hat einen One-Night-Stand und fängt Gefühle",
+          "hatte schon ein Date, von dem hier niemand je erfahren hat",
+          "würde bei einem Lapdance knallrot werden",
         ],
       },
     },
@@ -164,6 +170,8 @@
           "swear that was the last beer",
           "start explaining the meaning of life to strangers",
           "make a drunk bet for money and lose",
+          "sneak out at 11pm without saying goodbye",
+          "quietly start cleaning up mid-house-party",
         ],
       },
       leisure: {
@@ -177,6 +185,8 @@
           "try to see every sight in one day",
           "get the worst sunburn on day one",
           "talk to strangers the whole bus ride",
+          "carry the first-aid kit for the whole group",
+          "plan the trip with a spreadsheet and a plan B",
         ],
       },
       history: {
@@ -210,6 +220,8 @@
           "have the highest body count here",
           "go home with someone tonight",
           "have a one-night stand and catch feelings",
+          "have been on a date nobody here ever found out about",
+          "blush bright red during a lap dance",
         ],
       },
     },

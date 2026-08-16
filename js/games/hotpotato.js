@@ -21,8 +21,8 @@
   function t(k) { return global.Spielecke.t(k); }
 
   // --- Fixed fuse: always random in this range, hidden from players -------
-  var FUSE_MIN = 20;  // seconds
-  var FUSE_MAX = 90;  // seconds
+  var FUSE_MIN = 15;  // seconds
+  var FUSE_MAX = 45;  // seconds
 
   // --- Configurable defaults (spec §2.4); persisted per-game via context.store
   var DEFAULTS = {

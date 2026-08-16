@@ -34,7 +34,7 @@
       id: "quiz",
       name: "Quiz Out",
       tagline: "Answer or lose a heart. Last one standing wins.",
-      icon: "🧠",
+      icon: "❓",
       minPlayers: MIN_PLAYERS,
       supportsDrinking: true,
     },
@@ -67,7 +67,7 @@
 
     els.innerHTML =
       '<section class="screen game-setup">' +
-      '  <h2 class="screen-title pop">🧠 ' + t("Quiz Out") + "</h2>" +
+      '  <h2 class="screen-title pop">❓ ' + t("Quiz Out") + "</h2>" +
       '  <p class="muted">' + esc(t(module.meta.tagline)) + "</p>" +
       note +
       '  <h3 class="sub">' + t("Categories") + "</h3>" +
@@ -159,7 +159,7 @@
       '  <div class="qz-hud"><span class="badge">' + t("Round {n}").replace("{n}", round + 1) + "</span>" +
       (settings.drinking ? '<span class="badge badge-drink">' + t("🍻 drink") + "</span>" : "") +
       "  </div>" +
-      '  <div class="pass-emoji">🧠</div>' +
+      '  <div class="pass-emoji">❓</div>' +
       '  <h2 class="pass-name pop">' + esc(currentPlayer.name) + "</h2>" +
       '  <div class="qz-lives">' + hearts(currentPlayer) + "</div>" +
       '  <p class="muted">' + t("Difficulty: {level}").replace("{level}", "<strong>" + esc(levelName()) + "</strong>") + " · " +

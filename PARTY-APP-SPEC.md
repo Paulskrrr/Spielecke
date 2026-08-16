@@ -47,6 +47,7 @@ next.
 - ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next; dealt from a 🕶️ button on the Players screen, not a shelf tile *(drinking-capable)*
 - ✅ **Simon Says** (DE: *Kommando*) *(beta)* — a speaking, accelerating Simon-Says caller; the table judges who slipped *(drinking-capable)*
 - ✅ **Geschmacklos** — a Cards Against Humanity mode: host shows the prompt, every phone deals itself a disjoint hand off one shared table code *(drinking-capable)*
+- ✅ **Lügen** (Cheat / Bullshit) *(beta)* — bluffing card classic: the app deals every hidden hand, you lie about the cards you lay face down, get caught and eat the pile *(drinking-capable)*
 
 **Bilingual:** the whole UI + content runs in German (default) or English, toggled on the
 Players screen.
@@ -318,7 +319,7 @@ Hot-potato. A category prompt shows; the device is the potato. Holder names an a
 the big **Pass**, hands the phone on. A hidden fuse counts down.
 
 - **Pass model:** pure physical pass — the app runs the fuse only, doesn't track turns.
-- **Fuse:** always random **20–90s**, hidden. Cosmetic accelerating tick; detonation on a
+- **Fuse:** always random **15–45s**, hidden. Cosmetic accelerating tick; detonation on a
   precise timer. Web Audio explosion + haptics.
 - **Config:** category pool, sound on/off, 🍻 drinking mode. Persisted.
 - **Outcome:** holder at detonation **loses the round** (drinking mode: drinks).
@@ -355,8 +356,10 @@ Hidden roles on one device. Everyone gets the same secret word except one or mor
 for order + names, randomised each deal), then discuss, vote, unmask.
 
 - **Config:** word pool (shared Terms); **number of imposters** — 1 up to the whole table, or
-  **🎲 Random** (skewed toward fewer). An optional **"give imposters a hint"** toggle hands each
-  imposter a distant, cryptic decoy clue (`content/imposter-hints.js`). Persisted.
+  **🎲 Random**. Random scales with the table (~1 faker per 3.5 players, so 7 ≈ 2) and keeps the
+  count **secret from the imposters themselves** — they never learn how many others there are.
+  An optional **"give imposters a hint"** toggle hands each imposter a distant, cryptic decoy
+  clue (`content/imposter-hints.js`). Persisted.
 - **🔔 Buzzer mode:** a Buzzer chip sits in the category row; picking it swaps the word hunt for
   a seconds-guessing round — no secret word, no clock ever shown. Everyone but the imposter
   secretly sees a target of **1–15 seconds**, then each player buzzes when they think that long
@@ -430,7 +433,7 @@ finish 🏆 wins.
 - **Outcome:** first team to complete the map wins. Drinking mode — fail a round → your
   team drinks; succeed → the other team drinks.
 
-### 3.11 Quiz Out 🧠 (`quiz`, 2+) — drinking-capable
+### 3.11 Quiz Out ❓ (`quiz`, 2+) — drinking-capable
 
 Turn-based knockout quiz. Players take turns answering a 4-option question; a wrong answer
 costs a life. After every full round (each survivor has answered once) the difficulty climbs
@@ -496,13 +499,30 @@ footrule). Closest to the group is the most in sync; furthest off loses.
 
 Royal-court action-card game (Klattschen-style). Players draw cards in turn; the in-game word
 for "drink" is **dienen**. Four card types, each a heraldic colour: **Sofort** (crimson —
-resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz" that stacks and
-stays on screen), **Aktiv** (gold — face-up with its holder, self-triggered later), **Minispiel**
-(violet — a table mini-game the host completes). Two standing ground rules are always on. The
-deck is data, tagged per edition (active: *Diener & Könige*; *Rapunzel* is a locked stub) and
-reshuffles endlessly. Game state persists; the Sanduhr (keeps its name; its card text says
-"Handy-Timer" so it's clear the phone runs the secret timer) and the space-key shortcut are
-torn down on unmount.
+resolve once, discard), **Regel** (sapphire — becomes a standing „Hofgesetz"), **Aktiv** (gold —
+face-up with its holder, self-triggered later), **Minispiel** (violet — a table mini-game the host
+completes). Two standing ground rules are always on. The deck is data, tagged per edition (active:
+*Diener & Könige*; *Rapunzel* is a locked stub) and reshuffles endlessly. Game state persists; the
+Sanduhr (keeps its name; its card text says "Handy-Timer" so it's clear the phone runs the secret
+timer) and the space-key shortcut are torn down on unmount.
+
+- **A few Regel cards auto-expire.** Playtesting flagged specific standing rules as genuinely
+  exhausting to keep tracking on top of everything else already in play, so those carry
+  `temp: true` and lapse after one lap of the table (`rounds`, default 1): *Der Spitzname*
+  (nickname, 2 rounds), *Der Knabe*, *Der gesenkte Blick* (no eye contact), *Der Trinkspruch*
+  (the toast), *Verbotene Zustimmung* ("yes" banned), *Verbotene Artikel* ("der/die/das" banned),
+  *Der Untertan* (apologise before every sentence), plus the pre-existing *Wortkarg bei Hofe*,
+  *Das Plappermaul*, *In Zeitlupe*, *Der Tafelschlag*, *Narrenfreiheit*. Everything else stays
+  permanent, including cards that are naturally self-limiting (`copies: 2` + "a new draw
+  supersedes the old" — Echo, In meiner Hose, Die Erhebung, Der Inquisitor) and ones explicitly
+  designed to last (*Bund auf Lebenszeit*, *Das lebende Bild*, *Das Austrittsgesuch* — kept
+  permanent by design). *Höfische Anrede* (must address each other formally) and *Höfische
+  Etikette* (no elbows on the table) are distinct rules — one's a speech rule, one's a physical
+  one — and both stay permanent.
+- **`noEarlyDraw` late-only cards.** A card flagged `noEarlyDraw` (currently just *Verbotene
+  Artikel* — banning „der/die/das") is barred from the deck's first third: `buildDeck()` shuffles
+  normally, then swaps any such card out of the earliest ~33% of draw positions so it can't hit
+  before the table has warmed up.
 
 ### 3.17 Mia (Mäxchen) 🎩 (`maxchen`, 2+) — drinking-capable
 
@@ -523,14 +543,19 @@ rotates via the roster.
 
 A dealer holds the deck; the table guesses the next card's **rank**. First miss → the dealer
 gives a higher/lower hint and you get a second guess; miss twice → you **trinken** (rank gap or
-a flat amount, configurable). Nail it → the dealer drinks. Each card is revealed and added to a
-rank-sorted "drawn" strip (counting help); the dealer passes left after the deck empties twice.
+a flat amount, configurable). Nail it → the dealer drinks. Each card is revealed and folded into a
+per-rank "drawn" strip (counting help): one tile per rank, a small count badge once two-or-more of
+that rank are out, and a face-down back once all four are gone. The dealer passes left after the
+deck empties twice — or as soon as the dealer wins three rounds in a row (rotating reihum through
+the roster).
 
 ### 3.20 Horse Race 🐎 (`pferderennen`, 1+) — drinking-capable
 
 The four Aces are the horses (♠♥♦♣); the app flips the other 48 cards one at a time and the
 matching-suit horse advances. Six face-down **hurdles** flip as the field clears each level,
-rubber-banding that suit back a step. Players bet a suit (roster); first horse home → backers
+rubber-banding that suit back a step. The hurdle cards are visible as a strip of mini face-down
+card backs under the board, one per section line; each 3D-flips face-up the moment its hurdle
+fires, so the rubber-band is legible at the table. Players bet a suit (roster); first horse home → backers
 **verteilen** sips, the rest **trinken**. The loss penalty is configurable: **flat** with a
 chosen sip count (a 1–5 chip row, default 3; the row dims out while "lengths behind" is on) or
 **"lengths behind"** (sips = how far your horse finished off the pace). The race is animated
@@ -600,7 +625,7 @@ starts, everyone else sets a bet on each other name — ✅ they'll nail it or �
 - **Outcome:** right bettors **hand out** their stake, wrong bettors **drink** it; the
   candidate hands out 3 on success or drinks 3 on failure.
 
-### 3.24 Mind Meld 🔗 (`mindmeld`, 4+) — drinking-capable
+### 3.24 Mind Meld 🧠 (`mindmeld`, 4+) — drinking-capable
 
 Convergence, not competition against the clock. The roster splits into teams of two (an odd
 player joins the last team, making a trio); each teammate secretly gets their own seed word.
@@ -686,6 +711,28 @@ screen, the table) or **🃏 Spieler** (your own hand). The two never talk to ea
   simple); 🍻 drinking mode implicit in the scoring flavour.
 - **Outcome:** Card Czar picks the round's best line (tracked on the host); no formal
   end-of-game score cap — play until the room's done.
+
+### 3.28 Lügen 🤥 (`luegen`, 3+, beta) — drinking-capable
+
+The bluffing card classic (Cheat / Bullshit / Mogeln) on one passed-around phone. Deliberately
+built to feel unlike Mia (which hides *one* roll and tracks nothing): Lügen keeps **persistent
+hidden hands** the app deals and tallies, plus a growing face-down **pile** — bookkeeping a
+shared screen does far better than the table.
+
+- **Loop:** the whole deck is dealt round-robin. On your turn you **must claim a fixed rank** —
+  the leader picks the base rank for a fresh pile, then it **climbs by one each turn** (wrapping)
+  — but you lay your cards **face down**, so you can lie. You choose only *how many* (1–4) and
+  *which* cards to sacrifice; since you rarely hold the forced rank, lies are forced.
+- **Challenge:** any other player may call **„Lüge!"** — the table taps **who** accuses, the
+  played cards **flip** (shared `pkflip`), and whoever was wrong — the liar or the accuser —
+  takes the **whole pile** into their hand (drinking mode: they drink ~1 sip per 3 cards). Not a
+  binary next-player believe/lift like Mia; the pickup is a punishment + comeback swing.
+- **Win:** first to **empty their hand**. The last play is the most dangerous — a believed final
+  bluff wins outright, but a *called* final bluff hands the pile back and you're still in.
+- **Config:** deck size (🏃 short 32 / 🎴 full 52), 🍻 drinking mode. A live **hand-count HUD**
+  shows every player's remaining cards so the table sees who's close. No content file (pure deck
+  mechanics); mid-game state is not persisted — a fresh mount starts at setup.
+- **Why beta:** new loop, road-tested with the group before it graduates off the beta shelf.
 
 ---
 

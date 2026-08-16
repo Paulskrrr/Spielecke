@@ -29,7 +29,7 @@
 
   var els = null, ctx = null, settings = null;
   var deck = [], discard = [];
-  var dealerIdx = 0, guesserIdx = 0, exhausts = 0;
+  var dealerIdx = 0, guesserIdx = 0, exhausts = 0, dealerWins = 0;
   var current = null;        // the live top card
   var firstGuess = null;     // rank string of the first (wrong) guess
   var phase = "first";       // "first" | "second"
@@ -100,7 +100,8 @@
       '    <button class="chip" data-f="flat">' + t("Flat") + " " + settings.flatWrongSips + " " + t("sips") + "</button>" +
       "  </div>" +
       '  <p class="muted small">' + t("Right guess → dealer trinkt {n} sips.").replace("{n}", settings.dealerHitSips) +
-      " " + t("Dealer passes left after the deck empties twice.") + "</p>" +
+      " " + t("Dealer passes left after the deck empties twice.") +
+      " " + t("Win 3 in a row → the deck passes left too.") + "</p>" +
       '  <button id="fd-start" class="btn btn-primary btn-block btn-xl">' + t("Deal 🃏") + "</button>" +
       "</section>";
 
@@ -126,6 +127,7 @@
     deck = Cards.shuffle(Cards.newDeck());
     discard = [];
     exhausts = 0;
+    dealerWins = 0;
     // First guesser is the player to the dealer's left.
     guesserIdx = (dealerIdx + 1) % names().length;
     nextCard();
@@ -137,10 +139,7 @@
       discard = [];
       exhausts++;
       if (exhausts >= settings.rotateAfterExhausts) {
-        exhausts = 0;
-        var n = names().length;
-        dealerIdx = (dealerIdx + 1) % n;
-        renderDealerPass();
+        rotateDealer();
         return;
       }
     }
@@ -151,18 +150,27 @@
     renderRound();
   }
 
-  function renderDealerPass() {
+  // Advance the deck to the next player (reihum) and reset the run counters.
+  function rotateDealer(reason) {
+    dealerIdx = (dealerIdx + 1) % names().length;
+    exhausts = 0;
+    dealerWins = 0;
+    renderDealerPass(reason);
+  }
+
+  function renderDealerPass(reason) {
+    var title = reason === "streak"
+      ? "🔥 " + t("Dealer won 3 in a row!")
+      : "🔄 " + t("Deck emptied twice!");
     els.innerHTML =
       '<section class="screen fd-screen">' +
-      '  <h2 class="screen-title pop">🔄 ' + t("Deck emptied twice!") + "</h2>" +
+      '  <h2 class="screen-title pop">' + title + "</h2>" +
       '  <p class="bf-q">' + t("The deck passes left. New dealer:") + " <b>" + esc(dealerName()) + "</b></p>" +
       '  <button id="fd-go" class="btn btn-primary btn-block btn-xl">' + t("Deal 🃏") + "</button>" +
       "</section>";
     els.querySelector("#fd-go").addEventListener("click", function () {
       guesserIdx = (dealerIdx + 1) % names().length;
-      current = deck.shift();
-      firstGuess = null; phase = "first"; busy = false;
-      renderRound();
+      nextCard();
     });
   }
 
@@ -197,28 +205,46 @@
     });
   }
 
-  // The scrollable strip of every card drawn since the last shuffle, so the
-  // table can glance at what's already out (counting help). Sorted by rank
-  // (2 → A, left to right) — not chronological — so gaps/open ranks jump out at
-  // a glance; on desktop a dozen show at once, on mobile you swipe the strip.
+  // The scrollable strip is one tile *per rank* (2 → A, left to right), so the
+  // table sees at a glance how many of each rank are already out (counting help).
+  // A tile shows a representative card face plus a small badge with the count
+  // once two-or-more are gone; when all four of a rank are out the face is
+  // replaced by a face-down back — that rank is dead, don't call it.
   var SUIT_RANK = { S: 0, H: 1, D: 2, C: 3 };
-  function sortedDiscard() {
-    return discard.slice().sort(function (a, b) {
-      return Cards.value(a) - Cards.value(b) || (SUIT_RANK[a.suit] - SUIT_RANK[b.suit]);
-    });
+  function rankCounts() {
+    var map = {};
+    discard.forEach(function (c) { (map[c.rank] = map[c.rank] || []).push(c); });
+    return map;
   }
-  function histCardHtml(c, isNew) {
-    return '<div class="fd-histcard' + (isNew ? " fd-histcard--new" : "") + '">' + Cards.faceHtml(c, { small: true }) + "</div>";
+  function histRankHtml(rank, cards, newRank) {
+    var n = cards.length;
+    var isNew = rank === newRank;
+    var body;
+    if (n >= 4) {
+      body = Cards.backHtml({ small: true });
+    } else {
+      // Representative face: the lowest suit-order card of this rank that's out,
+      // stable as more suits appear. The badge carries the real count.
+      var rep = cards.slice().sort(function (a, b) { return SUIT_RANK[a.suit] - SUIT_RANK[b.suit]; })[0];
+      body = Cards.faceHtml(rep, { small: true }) +
+        (n >= 2 ? '<span class="fd-histcount">' + n + "</span>" : "");
+    }
+    return '<div class="fd-histcard' + (isNew ? " fd-histcard--new" : "") +
+      (n >= 4 ? " fd-histcard--dead" : "") + '">' + body + "</div>";
+  }
+  function historyInner(newRank) {
+    var counts = rankCounts();
+    var ranksOut = Cards.RANKS.filter(function (r) { return counts[r] && counts[r].length; });
+    return ranksOut.length
+      ? ranksOut.map(function (r) { return histRankHtml(r, counts[r], newRank); }).join("")
+      : '<div class="fd-history-empty">' + t("No cards drawn yet — the pile builds up here.") + "</div>";
   }
   function historyHtml() {
-    var inner = discard.length
-      ? sortedDiscard().map(function (c) { return histCardHtml(c, false); }).join("")
-      : '<div class="fd-history-empty">' + t("No cards drawn yet — the pile builds up here.") + "</div>";
     return (
       '<div class="fd-history-wrap">' +
       '  <div class="fd-history-head">' + t("Cards drawn") +
       '    <span class="fd-history-count" id="fd-history-count">' + discard.length + "</span></div>" +
-      '  <div class="fd-history" id="fd-history">' + inner + "</div>" +
+      '  <div class="fd-history" id="fd-history">' + historyInner(null) + "</div>" +
       "</div>"
     );
   }
@@ -241,6 +267,7 @@
   }
 
   function resolveHit(rank) {
+    dealerWins = 0; // guesser nailed it — the dealer's streak is broken
     els.querySelectorAll("#fd-ranks .btn-rank").forEach(function (b) { b.disabled = true; });
     Cards.reveal(els.querySelector("#fd-flip"));
     var resEl = els.querySelector("#fd-result");
@@ -252,6 +279,7 @@
   }
 
   function resolveMiss(secondRank) {
+    dealerWins++; // guesser drank — the dealer wins this round
     els.querySelectorAll("#fd-ranks .btn-rank").forEach(function (b) { b.disabled = true; });
     Cards.reveal(els.querySelector("#fd-flip"));
     var actualV = Cards.value(current);
@@ -273,14 +301,12 @@
 
   function advanceAfter() {
     discard.push(current);
-    // Rebuild the history strip live, re-sorted by rank, so the just-revealed
-    // card drops into its right place (it would also be rebuilt by the next
-    // renderRound; this just shows it landing immediately).
+    // Rebuild the history strip live so the just-revealed card bumps its rank's
+    // tile (count badge, or a face-down back once the fourth is out). It would
+    // also be rebuilt by the next renderRound; this just shows it landing now.
     var hist = els.querySelector("#fd-history");
     if (hist) {
-      hist.innerHTML = sortedDiscard().map(function (c) {
-        return histCardHtml(c, c === current); // identity match flags the new card
-      }).join("");
+      hist.innerHTML = historyInner(current.rank); // flags the just-drawn rank as new
       var cnt = els.querySelector("#fd-history-count");
       if (cnt) cnt.textContent = discard.length;
       var fresh = hist.querySelector(".fd-histcard--new");
@@ -291,6 +317,7 @@
     }
     // Tap the just-revealed card itself to move on — no separate button.
     function goNext() {
+      if (dealerWins >= 3) { rotateDealer("streak"); return; } // 3 wins straight → pass the deck on, reihum
       guesserIdx = (guesserIdx + 1) % names().length;
       if (guesserIdx === dealerIdx) guesserIdx = (guesserIdx + 1) % names().length; // dealer doesn't guess
       nextCard();

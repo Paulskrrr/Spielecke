@@ -109,11 +109,13 @@
   function buildDeck(edition) {
     var cards = data.deck.filter(function (c) { return c.editions.indexOf(edition) !== -1; });
     var regel = [], rest = [];
+    var lateOnly = {}; // id -> true: may not appear before the deck's first third is spent
     cards.forEach(function (c) {
       // `copies` (default 1) seeds a card more than once — evergreen basics and
       // mini-games are set to 2 so they can come up twice a night.
       var bucket = c.type === "regel" ? regel : rest;
       for (var k = 0; k < (c.copies || 1); k++) bucket.push(c.id);
+      if (c.noEarlyDraw) lateOnly[c.id] = true;
     });
 
     // Bias: a „regel" card ("the word ‚yes‘ is banished from now on") only bites
@@ -129,7 +131,23 @@
     var fillCount = frontSize - regel.length;
     var front = shuffle(regel.concat(shuffledRest.slice(0, fillCount)));
     var back = shuffledRest.slice(fillCount);
-    return front.concat(back);
+    var deck = front.concat(back);
+
+    // Some rule cards are heavy enough (e.g. banishing „der/die/das") that they
+    // shouldn't even be drawable until the table has warmed up: push any
+    // `noEarlyDraw` card out of the deck's first third by swapping it with a
+    // later slot. The swap target is picked at random so it doesn't skew the
+    // rest of the ordering.
+    var lateThreshold = Math.ceil(total / 3);
+    if (lateThreshold > 0 && lateThreshold < deck.length) {
+      for (var i = 0; i < lateThreshold; i++) {
+        if (lateOnly[deck[i]]) {
+          var swapWith = lateThreshold + Math.floor(Math.random() * (deck.length - lateThreshold));
+          var tmp = deck[i]; deck[i] = deck[swapWith]; deck[swapWith] = tmp;
+        }
+      }
+    }
+    return deck;
   }
 
   function rosterOrder() {

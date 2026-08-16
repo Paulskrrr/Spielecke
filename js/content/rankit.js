@@ -17,8 +17,8 @@
  *
  * The title MUST contain a "→": the game splits on it to label the top/bottom
  * poles of the rail. Keep the DE and EN pool keys
- * (general/party/videogames/leisure/history/nsfw) in sync so the category chips line
- * up in both languages.
+ * (general/party/videogames/minecraft/leisure/history/football/nsfw) in sync so the
+ * category chips line up in both languages.
  */
 (function (global) {
   "use strict";
@@ -195,6 +195,36 @@
           { title: "Coolste → langweiligste Epoche zum Zeitreisen", items: ["Antikes Rom", "Wilder Westen", "Die 80er", "Mittelalter", "Steinzeit"] },
           { title: "Glaubwürdigste → absurdeste Verschwörungstheorie", items: ["Mondlandung gefakt", "Echsenmenschen", "Flache Erde", "Aliens in Area 51", "Vögel sind Drohnen"] },
           { title: "Mächtigste → machtloseste Position", items: ["US-Präsident", "Großkonzern-CEO", "Influencer", "Bürgermeister", "Klassensprecher"] },
+        ],
+      },
+      football: {
+        label: "⚽ Fußball (WM)",
+        people: [
+          { title: "Würde am ehesten → am wenigsten Nationalspieler:in" },
+          { title: "Feiert ein Tor am wildesten → am nüchternsten" },
+          { title: "Würde am ehesten → am wenigsten schwalben" },
+          { title: "Verpasst am ehesten → nie ein WM-Spiel wegen Arbeit" },
+          { title: "Schreit am lautesten → am leisesten beim Elfmeter" },
+          { title: "Hat das meiste → wenigste Trikot-Sammlung" },
+          { title: "Würde am ehesten → am wenigsten Schiri werden" },
+          { title: "Kennt die meisten → wenigsten Nationalhymnen" },
+        ],
+        sets: [
+          { title: "Beste → schlechteste Nationalmannschaft bei der WM", items: ["Brasilien", "Argentinien", "Frankreich", "Deutschland", "England"] },
+          { title: "Größter → kleinster Superstar dieser WM", items: ["Mbappé", "Messi", "Haaland", "Bellingham", "Vinícius Júnior"] },
+          { title: "Bester → schlechtester WM-Gastgeber", items: ["USA", "Mexiko", "Kanada", "Katar 2022", "Brasilien 2014"] },
+          { title: "Wichtigste → unnötigste Regel im Fußball", items: ["Abseits", "VAR", "Gelbe Karte", "Einwurf", "Vorteilsregel"] },
+          { title: "Bester → schlechtester Elfmeterschütze-Typ", items: ["Eiskalter Panenka", "Volle Wucht ins Eck", "Kurzer Anlauf, sicher", "Der Zitterer", "Der Rebound-Verschwender"] },
+          { title: "Legendärster → vergessenster WM-Moment", items: ["Hand Gottes", "Zidane-Kopfstoß", "Deutschland 7:1 Brasilien", "Elfmeterkrimi im Finale", "Last-Minute-Ausgleich"] },
+          { title: "Beste → schlechteste Fanausstattung", items: ["Trikot", "Schminke im Landesfarben", "Vuvuzela", "Riesenflagge", "Perücke in Landesfarben"] },
+          { title: "Nervigster → harmlosester Stadion-Nachbar beim Public Viewing", items: ["Der Alles-Besserwisser", "Der Dauerschreier", "Der, der ständig aufs Klo muss", "Der Handy-Dauerglotzer", "Der, der jedes Foul überzieht"] },
+          { title: "Bester → schlechtester Job auf dem Platz", items: ["Torschütze", "Torwart", "Kapitän", "Ersatzbank", "Linienrichter"] },
+          { title: "Größtes → kleinstes WM-Drama", items: ["Frühes Ausscheiden der Favoriten", "Verletzter Superstar", "Elfmeterschießen im Finale", "Skandal um den Schiri", "Wetterchaos im Stadion"] },
+          { title: "Bestes → schlechtestes Public-Viewing-Essen", items: ["Bratwurst vom Grill", "Chips & Dip", "Pizza-Lieferservice", "Popcorn", "Kalter Toast"] },
+          { title: "Beeindruckendstes → überflüssigstes Tor-Jubel", items: ["Salto", "Trikot ausziehen", "Zur Bank sprinten", "Baby-Wiege-Geste", "Einfach nur laufen"] },
+          { title: "Bester → schlechtester Kommentatoren-Spruch", items: ["'Das Runde muss ins Eckige'", "Übertriebenes Gebrüll beim Tor", "Statistik-Overkill", "Falscher Spielername", "Stille nach dem Tor"] },
+          { title: "Größte → kleinste Fußball-Rivalität", items: ["Deutschland – Niederlande", "Argentinien – Brasilien", "England – Deutschland", "Frankreich – Italien", "Nachbardorf-Derby"] },
+          { title: "Bester → schlechtester Ort, ein WM-Spiel zu schauen", items: ["Public Viewing mit der ganzen Stadt", "Kneipe mit Kumpels", "Zuhause auf dem Sofa", "Stadion live", "Handy heimlich bei der Arbeit"] },
         ],
       },
       nsfw: {
@@ -405,6 +435,36 @@
           { title: "Coolest → most boring era to time-travel to", items: ["Ancient Rome", "Wild West", "The 80s", "The Middle Ages", "The Stone Age"] },
           { title: "Most believable → most absurd conspiracy theory", items: ["Faked moon landing", "Lizard people", "Flat earth", "Aliens in Area 51", "Birds are drones"] },
           { title: "Most → least powerful position", items: ["US President", "Megacorp CEO", "Influencer", "Mayor", "Class president"] },
+        ],
+      },
+      football: {
+        label: "⚽ Football (World Cup)",
+        people: [
+          { title: "Most → least likely to go pro" },
+          { title: "Celebrates a goal the wildest → most reserved" },
+          { title: "Most → least likely to flop for a penalty" },
+          { title: "Most → least likely to miss a World Cup match for work" },
+          { title: "Screams the loudest → quietest at a penalty" },
+          { title: "Owns the biggest → smallest jersey collection" },
+          { title: "Most → least likely to become a referee" },
+          { title: "Knows the most → fewest national anthems" },
+        ],
+        sets: [
+          { title: "Best → worst national team at the World Cup", items: ["Brazil", "Argentina", "France", "Germany", "England"] },
+          { title: "Biggest → smallest superstar of this World Cup", items: ["Mbappé", "Messi", "Haaland", "Bellingham", "Vinícius Júnior"] },
+          { title: "Best → worst World Cup host", items: ["USA", "Mexico", "Canada", "Qatar 2022", "Brazil 2014"] },
+          { title: "Most → least necessary rule in football", items: ["Offside", "VAR", "Yellow card", "Throw-in", "Advantage rule"] },
+          { title: "Best → worst penalty-taker type", items: ["Ice-cold Panenka", "Blast it in the corner", "Short run-up, sure thing", "The shaky one", "The rebound-waster"] },
+          { title: "Most legendary → most forgotten World Cup moment", items: ["The Hand of God", "Zidane's headbutt", "Germany 7:1 Brazil", "Penalty shootout in the final", "Last-minute equaliser"] },
+          { title: "Best → worst fan gear", items: ["Jersey", "Face paint in national colours", "Vuvuzela", "Giant flag", "Wig in national colours"] },
+          { title: "Most → least annoying person next to you at a public viewing", items: ["The know-it-all", "The nonstop screamer", "The one who's always in the bathroom", "The phone zombie", "The one who oversells every foul"] },
+          { title: "Best → worst job on the pitch", items: ["Goalscorer", "Goalkeeper", "Captain", "Substitute bench", "Linesman"] },
+          { title: "Biggest → smallest World Cup drama", items: ["A favourite gets knocked out early", "A superstar gets injured", "Penalty shootout in the final", "A referee scandal", "Weather chaos in the stadium"] },
+          { title: "Best → worst public-viewing food", items: ["Grilled sausage", "Chips & dip", "Delivery pizza", "Popcorn", "Cold toast"] },
+          { title: "Most impressive → most pointless goal celebration", items: ["A backflip", "Ripping off the jersey", "Sprinting to the bench", "The baby-rocking gesture", "Just running"] },
+          { title: "Best → worst commentator moment", items: ["The classic goaaal scream", "Over-the-top roaring at a goal", "Stat overkill", "Getting the player's name wrong", "Dead silence after a goal"] },
+          { title: "Biggest → smallest football rivalry", items: ["Germany – Netherlands", "Argentina – Brazil", "England – Germany", "France – Italy", "The next-town derby"] },
+          { title: "Best → worst place to watch a World Cup match", items: ["A public viewing with the whole city", "A pub with mates", "Home on the sofa", "Live in the stadium", "Sneaking a look at work"] },
         ],
       },
       nsfw: {

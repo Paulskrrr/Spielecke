@@ -179,7 +179,11 @@
 
   function diceHtml(roll, opts) {
     var sm = opts && opts.small ? " mx-dice--sm" : "";
-    return '<span class="mx-dice' + sm + '">' + dieHtml(roll.a) + dieHtml(roll.b) + "</span>";
+    // In Mäxchen the pair reads as a two-digit number with the HIGHER die as the
+    // tens (6+5 → 65, 2+1 → 21 = Mäxchen). So always show the higher die on the
+    // left, whatever order it was actually rolled.
+    var hi = Math.max(roll.a, roll.b), lo = Math.min(roll.a, roll.b);
+    return '<span class="mx-dice' + sm + '">' + dieHtml(hi) + dieHtml(lo) + "</span>";
   }
 
   // A friendly badge for the special hands (purely informational, not judging).
