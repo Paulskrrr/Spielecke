@@ -37,6 +37,9 @@
     "No players yet.": "Noch keine Spieler.",
     "Done": "Fertig",
     "Language": "Sprache",
+    "Family Mode": "Familienmodus",
+    "Hide 🔞 18+ and 🌹 Date categories": "🔞 18+ und 🌹 Date ausblenden",
+    "Switches back on every time you reopen the app.": "Ist bei jedem Öffnen der App wieder an.",
     "⚠ Most games are better with {n}+ players.": "⚠ Die meisten Spiele sind besser mit {n}+ Spielern.",
 
     // ── Shelf ──────────────────────────────────────────────────────────────
@@ -1119,7 +1122,12 @@
     if (!bundle || typeof bundle !== "object") return bundle;
     if (!bundle.de && !bundle.en) return bundle; // not a {de,en} bundle
     var lang = getLang();
-    return bundle[lang] || bundle.en || bundle.de;
+    var sub = bundle[lang] || bundle.en || bundle.de;
+    // Family Mode (pools.js) hides the grown-up pools app-wide. Looked up
+    // lazily rather than captured: pools.js loads after this file, but L() only
+    // ever runs at render/draw time, long after every script is in.
+    var P = global.Spielecke.Pools;
+    return P && P.familyFilter ? P.familyFilter(sub) : sub;
   }
 
   global.Spielecke = global.Spielecke || {};

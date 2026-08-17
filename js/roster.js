@@ -17,6 +17,7 @@
   function render(container, ctx) {
     var players = ctx.getRoster();
     var lang = global.Spielecke.getLang();
+    var familyOn = global.Spielecke.Pools.isFamilyMode();
 
     container.innerHTML =
       '<section class="screen roster-screen">' +
@@ -42,6 +43,11 @@
       '      <button class="chip' + (lang === "de" ? " chip--active" : "") + '" data-lang="de">🇩🇪 Deutsch</button>' +
       '      <button class="chip' + (lang === "en" ? " chip--active" : "") + '" data-lang="en">🇬🇧 English</button>' +
       "    </div>" +
+      "  </div>" +
+      '  <div class="roster-family">' +
+      '    <h3 class="sub">' + t("Family Mode") + "</h3>" +
+      '    <label class="toggle"><input type="checkbox" id="family-toggle"' + (familyOn ? " checked" : "") + " /><span>" + t("Hide 🔞 18+ and 🌹 Date categories") + "</span></label>" +
+      '    <p class="muted small">' + t("Switches back on every time you reopen the app.") + "</p>" +
       "  </div>" +
       "</section>";
 
@@ -137,6 +143,15 @@
         render(container, ctx); // re-render roster in new language
       });
     });
+
+    // Checked = Family Mode on = the grown-up pools stay hidden. Session-only
+    // by design (see pools.js), so there's nothing to persist here.
+    var familyEl = container.querySelector("#family-toggle");
+    if (familyEl) {
+      familyEl.addEventListener("change", function (e) {
+        global.Spielecke.Pools.setFamilyMode(e.target.checked);
+      });
+    }
 
     renderList();
   }
