@@ -28,6 +28,48 @@
   var esc = global.Spielecke.esc;
   var attr = global.Spielecke.attr;
 
+  // ── Family Mode ───────────────────────────────────────────────────────────
+  // Hides the grown-up category pools (🔞 18+, 🌹 Date) across every game.
+  //
+  // Deliberately SESSION-ONLY: the flag lives in this variable and is never
+  // written to the store, so every fresh load of the app starts family-safe
+  // again. Handing someone the phone should never surface last night's
+  // categories — you opt in each time, on purpose.
+  //
+  // The filtering itself happens in i18n.js's L(), the single choke point every
+  // content game reads its bundle through, so the pools disappear from the chip
+  // row, from gather() and from resolve() all at once. resolve() already drops
+  // selected keys the current content no longer has, so a selection persisted
+  // while the mode was off can't leak content back in.
+  var ADULT_POOLS = { nsfw: true, spicy: true, date: true };
+  var familyMode = true; // ON on every single load, by design
+
+  function isFamilyMode() { return familyMode; }
+  function setFamilyMode(on) { familyMode = !!on; }
+
+  // Strip the adult pools out of a content subtree. Only keys that actually
+  // look like a pool (an object carrying a `label`) are touched, so non-pool
+  // bundles (Hochadel's editions/deck, Geheimauftrag's solo/coop, Activity's
+  // numeric tiers …) pass through untouched.
+  //
+  // Never mutates the caller's object — content bundles are module-level
+  // globals reused on every render, so we copy before deleting. Every game
+  // keeps at least one non-adult pool, so this can never empty a game out.
+  function familyFilter(content) {
+    if (!familyMode || !content || typeof content !== "object") return content;
+    var out = null;
+    Object.keys(ADULT_POOLS).forEach(function (k) {
+      var pool = content[k];
+      if (!pool || typeof pool !== "object" || !pool.label) return;
+      if (!out) {
+        out = {};
+        Object.keys(content).forEach(function (ck) { out[ck] = content[ck]; });
+      }
+      delete out[k];
+    });
+    return out || content;
+  }
+
   // Resolve a stored selection into valid, currently-available keys.
   // Empty/invalid selection → ALL keys. This is the draw-time correctness gate.
   function resolve(selected, available) {
@@ -162,5 +204,8 @@
     save: save,
     chipsHtml: chipsHtml,
     bind: bind,
+    isFamilyMode: isFamilyMode,
+    setFamilyMode: setFamilyMode,
+    familyFilter: familyFilter,
   };
 })(window);
