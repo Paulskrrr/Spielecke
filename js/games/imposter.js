@@ -33,9 +33,9 @@
   var roleShown = false;
 
   // Timer-mode state. In Timer mode there is no secret word: everyone but the
-  // imposter(s) is shown a flat target of 1–15 seconds, then each player buzzes
-  // when they think that many seconds have passed (no clock is ever shown).
-  var targetTime = 0;     // the hidden target in whole seconds (1..15)
+  // imposter(s) is shown a flat target, then each player buzzes when they
+  // think that many seconds have passed (no clock is ever shown).
+  var targetTime = 0;     // the hidden target in seconds, one decimal place
   var buzzes = [];        // [{ name, seconds, isImposter }] locked in per player
   var buzzIdx = 0;        // whose turn it is in the buzzer pass (phase 2)
   var revealTimer = null; // pending reveal-drip timeout
@@ -193,8 +193,7 @@
 
     revealIdx = 0;
     if (settings.mode === "timer") {
-      // Flat target: a whole number of seconds, 1..15.
-      targetTime = 1 + Math.floor(Math.random() * 15);
+      targetTime = randomTargetTime();
       buzzes = [];
       renderPassTo();
       return;
@@ -205,6 +204,14 @@
     secretCategory = picked.category;
     secretHint = picked.hint || "";
     renderPassTo();
+  }
+
+  // Flat target for Timer mode, one decimal place. Mostly a comfortable
+  // 5–20s (rounding usually calls for real counting, not a snap guess), with
+  // an occasional short 2–5s target to keep people honest.
+  function randomTargetTime() {
+    var t = Math.random() < 0.9 ? 5 + Math.random() * 15 : 2 + Math.random() * 3;
+    return Math.round(t * 10) / 10;
   }
 
   // Resolve the configured count for a table of n players. A fixed number is
@@ -300,7 +307,6 @@
   // they're in the dark. Nobody buzzes until everyone has looked.
   function showTimerRole() {
     var isImposter = !!imposterSet[revealIdx];
-    var word = targetTime === 1 ? t("second") : t("seconds");
     var body = isImposter
       ? '<div class="role-card role-card--imposter">' +
         '  <div class="role-label">' + t("You are the") + "</div>" +
@@ -310,7 +316,7 @@
         "</div>"
       : '<div class="role-card">' +
         '  <div class="role-label">' + t("Count exactly") + "</div>" +
-        '  <div class="role-big">' + targetTime + '<span class="tz-unit">' + word + "</span></div>" +
+        '  <div class="role-big">' + fmt(targetTime) + '<span class="tz-unit">' + t("seconds") + "</span></div>" +
         '  <div class="role-note">' + t("No clock will show — count it in your head.") + "</div>" +
         "</div>";
 
@@ -449,8 +455,8 @@
 
     els.innerHTML =
       '<section class="screen imposter-reveal tz-reveal">' +
-      '  <h2 class="result-title pop tz-target-title">⏱️ ' + target + '<span class="tz-unit">s</span></h2>' +
-      '  <p class="result-sub">' + t("The time was {n}s").replace("{n}", target) + "</p>" +
+      '  <h2 class="result-title pop tz-target-title">⏱️ ' + fmt(target) + '<span class="tz-unit">s</span></h2>' +
+      '  <p class="result-sub">' + t("The time was {n}s").replace("{n}", fmt(target)) + "</p>" +
       '  <div class="tz-track" id="tz-track">' +
       '    <div class="tz-target" style="--pos:' + pos(target).toFixed(2) + '%"><span class="tz-target-flag">🎯</span></div>' +
            pins +
@@ -496,7 +502,7 @@
   }
 
   // Whole number when it's whole, else one decimal (buzz times are fractional).
-  function fmt(x) { return String(Math.round(x * 10) / 10); }
+  function fmt(x) { return (Math.round(x * 10) / 10).toFixed(1); }
   function vibrate(pattern) {
     try { if (global.navigator && typeof global.navigator.vibrate === "function") global.navigator.vibrate(pattern); }
     catch (e) { /* ignore */ }
