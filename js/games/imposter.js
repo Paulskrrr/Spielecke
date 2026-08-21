@@ -206,11 +206,19 @@
     renderPassTo();
   }
 
-  // Flat target for Timer mode, one decimal place. Mostly a comfortable
-  // 5–20s (rounding usually calls for real counting, not a snap guess), with
-  // an occasional short 2–5s target to keep people honest.
+  // Flat target for Timer mode, one decimal place. Drawn from three bands —
+  // short/mid/long — picked with equal odds so consecutive rounds jump
+  // around (a 5 then a 19, not two neighbors like 16 and 17), with only an
+  // occasional dip below 5 to keep people honest.
+  var TARGET_BANDS = [[5, 9], [10, 15], [16, 22]];
   function randomTargetTime() {
-    var t = Math.random() < 0.9 ? 5 + Math.random() * 15 : 2 + Math.random() * 3;
+    var t;
+    if (Math.random() < 0.08) {
+      t = 2 + Math.random() * 3;
+    } else {
+      var band = TARGET_BANDS[Math.floor(Math.random() * TARGET_BANDS.length)];
+      t = band[0] + Math.random() * (band[1] - band[0]);
+    }
     return Math.round(t * 10) / 10;
   }
 
