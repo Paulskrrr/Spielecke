@@ -755,11 +755,7 @@ body::before {
   transition: transform .08s ease, background .15s ease;
 }
 .tz-buzzer:active { transform: translateY(4px) scale(0.98); box-shadow: 0 3px 0 var(--ink); }
-.tz-buzzer.is-live { background: var(--red); animation: tz-pulse 0.9s ease-in-out infinite; }
-@keyframes tz-pulse {
-  0%, 100% { box-shadow: var(--pop-lg); }
-  50% { box-shadow: 0 8px 0 var(--ink), 0 0 0 12px rgba(255, 77, 94, 0.22); }
-}
+.tz-buzzer.is-live { background: var(--red); }
 .tz-buzz-hint { min-height: 1.4em; font-weight: 800; color: var(--ink-soft); }
 
 /* Reveal: a timeline with the hidden target marked and every buzz pinned. */
