@@ -64,14 +64,26 @@
 
   // --- Rendering -----------------------------------------------------------
 
+  // Size variants: `small` for reference strips, `hero` for the one card a
+  // screen is actually about. A hero face leads with the RANK in the middle —
+  // that's the value every guess is read off — with the suit beneath it, so it
+  // stays legible at arm's length. Ordinary faces keep the classic big pip.
+  function sizeCls(opts) {
+    return (opts.small ? " pkcard--sm" : "") + (opts.hero ? " pkcard--hero" : "");
+  }
+
   function faceHtml(card, opts) {
     opts = opts || {};
     var sym = SUITS[card.suit].symbol;
-    var cls = "pkcard pkcard--" + SUITS[card.suit].colour + (opts.small ? " pkcard--sm" : "") + (opts.cls ? " " + opts.cls : "");
+    var cls = "pkcard pkcard--" + SUITS[card.suit].colour + sizeCls(opts) + (opts.cls ? " " + opts.cls : "");
+    var centre = opts.hero
+      ? '<span class="pkcard__hero"><b class="pkcard__rank">' + card.rank + '</b>' +
+        '<i class="pkcard__suit">' + sym + "</i></span>"
+      : '<span class="pkcard__pip">' + sym + "</span>";
     return (
       '<div class="' + cls + '">' +
       '  <span class="pkcard__corner pkcard__corner--tl"><b>' + card.rank + "</b><i>" + sym + "</i></span>" +
-      '  <span class="pkcard__pip">' + sym + "</span>" +
+      "  " + centre +
       '  <span class="pkcard__corner pkcard__corner--br"><b>' + card.rank + "</b><i>" + sym + "</i></span>" +
       "</div>"
     );
@@ -79,7 +91,7 @@
 
   function backHtml(opts) {
     opts = opts || {};
-    var cls = "pkcard pkcard--back" + (opts.small ? " pkcard--sm" : "") + (opts.cls ? " " + opts.cls : "");
+    var cls = "pkcard pkcard--back" + sizeCls(opts) + (opts.cls ? " " + opts.cls : "");
     return '<div class="' + cls + '"><span class="pkcard__crest">♣♦<br/>♥♠</span></div>';
   }
 
@@ -89,12 +101,13 @@
     opts = opts || {};
     var idAttr = opts.id ? ' id="' + opts.id + '"' : "";
     var flipped = opts.revealed ? " is-flipped" : "";
-    var sizeCls = opts.small ? " pkflip--sm" : "";
+    var size = (opts.small ? " pkflip--sm" : "") + (opts.hero ? " pkflip--hero" : "");
+    var faceOpts = { small: opts.small, hero: opts.hero };
     return (
-      '<div class="pkflip' + sizeCls + flipped + '"' + idAttr + ">" +
+      '<div class="pkflip' + size + flipped + '"' + idAttr + ">" +
       '  <div class="pkflip__inner">' +
-      '    <div class="pkflip__face pkflip__back">' + backHtml({ small: opts.small }) + "</div>" +
-      '    <div class="pkflip__face pkflip__front">' + faceHtml(card, { small: opts.small }) + "</div>" +
+      '    <div class="pkflip__face pkflip__back">' + backHtml(faceOpts) + "</div>" +
+      '    <div class="pkflip__face pkflip__front">' + faceHtml(card, faceOpts) + "</div>" +
       "  </div>" +
       "</div>"
     );

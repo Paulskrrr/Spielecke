@@ -2026,21 +2026,9 @@ body::before {
   /* the board on result / win screens, centred and roomy */
   .act-result .act-board-wrap, .act-win .act-board-wrap { max-width: 880px; margin: 0 auto; }
 
-  /* Ride the Bus: on a phone the four little cards + two buttons sit fine, but
-     on desktop they stranded a tiny strip at the very top of a tall empty
-     column. Centre the rung vertically and scale the cards, question and
-     guess buttons up so it actually fills the screen. */
-  .bf-screen {
-    max-width: 720px; margin: 0 auto;
-    min-height: 68vh; display: flex; flex-direction: column; justify-content: center;
-  }
-  .bf-screen .pkcard--sm, .bf-screen .pkflip--sm { width: 84px; height: 120px; }
-  .bf-screen .pkcard--sm .pkcard__pip { font-size: 2.3rem; }
-  .bf-screen .pkcard--sm .pkcard__corner { font-size: 0.78rem; }
-  .bf-screen .pkcard--sm .pkcard__crest { font-size: 1.15rem; }
-  .bf-row { gap: 18px; min-height: 132px; margin: 14px 0 26px; }
-  .bf-q { font-size: 1.7rem; margin: 12px 0 22px; }
-  .btn-guess { font-size: 1.4rem; padding: 18px 12px; }
+  /* Ride the Bus: desktop sizing lives with the .bf-* rules further down, so it
+     lands after the base declarations it overrides. */
+  .bf-screen { max-width: 720px; margin: 0 auto; }
 
   /* Fuck the Dealer: same story — single big card + rank buttons. Centre it and
      give the focal card and buttons more presence. */
@@ -2124,6 +2112,29 @@ body::before {
 .pkflip__face .pkcard { width: 100%; height: 100%; box-shadow: 0 3px 0 var(--ink); }
 .pkflip__front { transform: rotateY(180deg); }
 
+/* ── Hero card ───────────────────────────────────────────────────────────
+   The one card a screen is actually about. It leads with the RANK — the value
+   every guess is read off — instead of a big suit pip, because "K" at 8px in a
+   corner is exactly what nobody can see across a table. Size comes from the
+   host screen (a height + this ratio); these rules only set the look.
+   Declared after the base .pkcard/.pkflip sizes so they win without !important. */
+.pkcard--hero, .pkflip--hero { aspect-ratio: 5 / 7; width: auto; }
+.pkflip--hero { perspective: 1400px; flex: none; }
+.pkcard--hero { border-width: 4px; border-radius: 18px; }
+.pkflip--hero .pkcard, .pkcard--hero { box-shadow: 0 7px 0 var(--ink); }
+.pkcard--hero .pkcard__corner { font-size: 1.1rem; }
+.pkcard--hero .pkcard__corner--tl { top: 10px; left: 12px; }
+/* The mirrored corner is dropped at this size: rotated 180° a 9♥ reads as a
+   6♠, and on a card this big the giant centre rank makes it redundant anyway. */
+.pkcard--hero .pkcard__corner--br { display: none; }
+.pkcard--hero .pkcard__crest { font-size: 2.2rem; }
+/* Rank stacked over suit. Both scale off --pk-rank so one variable resizes the
+   whole face wherever a hero card is reused. */
+.pkcard--hero { --pk-rank: 3.6rem; }
+.pkcard__hero { display: flex; flex-direction: column; align-items: center; line-height: 0.92; }
+.pkcard__rank { font-size: var(--pk-rank); font-weight: 900; letter-spacing: -0.04em; }
+.pkcard__suit { font-style: normal; font-size: calc(var(--pk-rank) * 0.54); margin-top: 0.12em; }
+
 /* ── Ride the Bus (busfahrt.js) ─────────────────────────────────────────── */
 .bf-screen { text-align: center; }
 .bf-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
@@ -2155,19 +2166,69 @@ body::before {
 }
 @media (prefers-reduced-motion: reduce) { .bf-line__bus { transition: none; } }
 
-.bf-row { display: flex; justify-content: center; gap: 10px; margin: 8px 0 18px; min-height: 90px; }
-.bf-slot { display: flex; align-items: flex-start; justify-content: center; }
-.bf-slot--live { transform: translateY(-4px); }
-.bf-q { font-size: 1.25rem; font-weight: 800; margin: 6px 0 16px; }
+/* Ride and escape both fill the screen below the sticky header + app padding,
+   so the cards own the middle and the buttons sit on the floor under the thumb. */
+.bf-ride, .bf-escape {
+  display: flex; flex-direction: column;
+  min-height: calc(100dvh - 160px);
+}
+/* Cards already turned over: a compact reference strip, rank-forward like the
+   hero so steps 2 and 3 can actually be read off them. Rendered only once
+   there's something in it — an empty band above the card is the dead space
+   this layout exists to get rid of. The card keeps its size either way because
+   it's sized off the viewport, not off the stage. */
+.bf-refs {
+  display: flex; justify-content: center; align-items: center; gap: 8px;
+  height: 82px;
+}
+.bf-refs .pkcard--hero { height: 78px; border-width: 3px; border-radius: 10px; box-shadow: 0 3px 0 var(--ink); --pk-rank: 1.75rem; }
+.bf-refs .pkcard--hero .pkcard__corner { display: none; }
+/* The escape screen shows all four as the record of the run, so it can afford
+   a bigger row — there's no live card competing for the space. */
+.bf-refs--final { height: auto; gap: 10px; margin: 6px 0 4px; }
+.bf-refs--final .pkcard--hero { height: 104px; --pk-rank: 2.3rem; }
+
+.bf-stage {
+  flex: 1; min-height: 0;
+  display: flex; align-items: center; justify-content: center; padding: 6px 0;
+}
+/* The escape screen puts its headline in the stage instead of a card. */
+.bf-stage--msg { flex-direction: column; text-align: center; }
+/* The card is sized off the viewport, not off the stage: a flip has no
+   intrinsic height (its faces are absolutely positioned), so a percentage
+   height against a flex-grown parent collapses it to nothing. 440px is the
+   fixed chrome around the stage — header, bus line, reference strip, question
+   and guess buttons — so this never overflows on a short phone, and the cap
+   keeps it sane on a tall one. */
+.bf-stage .pkflip--hero { height: clamp(170px, calc(100dvh - 440px), 370px); }
+.bf-stage .pkcard--hero { --pk-rank: clamp(3.2rem, 15vh, 5.6rem); }
+.bf-foot { margin-top: auto; }
+.bf-q { font-size: 1.35rem; font-weight: 800; margin: 4px 0 12px; }
 .bf-guesses { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
-.btn-guess { flex: 1 1 40%; min-width: 120px; background: var(--blue); color: #fff; font-size: 1.2rem; }
+.bf-guesses[hidden] { display: none; }
+.btn-guess { flex: 1 1 40%; min-width: 120px; background: var(--blue); color: #fff; font-size: 1.25rem; padding: 18px 12px; }
+/* Four single-glyph suit buttons, side by side on one row. */
+.bf-guesses--quad .btn-guess { flex: 1 1 0; min-width: 0; font-size: 1.7rem; padding: 16px 4px; }
 .bf-guesses .btn-guess:nth-child(2) { background: var(--ink); }
 .bf-guesses .btn-guess:nth-child(3) { background: var(--green); color: var(--ink); }
 .bf-guesses .btn-guess:nth-child(4) { background: var(--pink); }
-.bf-result { margin: 16px 0; min-height: 24px; }
+/* Empty until a guess lands, so it must not reserve dead space under the buttons. */
+.bf-result:not(:empty) { margin: 16px 0 0; }
 .bf-fail { font-size: 1.2rem; font-weight: 800; color: var(--red); margin-bottom: 12px; }
 .bf-sips { background: var(--yellow); color: var(--ink); border-radius: 6px; padding: 1px 8px; }
 .bf-escape .bf-q { font-size: 1.15rem; font-weight: 600; }
+
+/* Desktop: a taller, wider column, so the card and the reference strip grow.
+   Must sit after the rules above — same specificity, so source order decides. */
+@media (min-width: 820px) {
+  .bf-stage .pkflip--hero { height: clamp(280px, calc(100dvh - 495px), 430px); }
+  .bf-stage .pkcard--hero { --pk-rank: clamp(4.2rem, 17vh, 6.8rem); }
+  .bf-refs { height: 118px; gap: 14px; }
+  .bf-refs .pkcard--hero { height: 112px; --pk-rank: 2.5rem; }
+  .bf-refs--final .pkcard--hero { height: 140px; --pk-rank: 3.1rem; }
+  .bf-q { font-size: 1.7rem; margin: 12px 0 22px; }
+  .btn-guess { font-size: 1.4rem; padding: 18px 12px; }
+}
 
 /* ── Fuck the Dealer (fuckdealer.js) ────────────────────────────────────── */
 .fd-screen { text-align: center; }
