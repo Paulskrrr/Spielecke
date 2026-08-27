@@ -155,46 +155,47 @@
   }
 
   // ── Ride screen ───────────────────────────────────────────────────────────
+  // The rung badge in the header already reads "Step n/4", so the question
+  // itself stays short — it has to fit on one line under a full-height card.
   var STEPS = [
-    { key: "colour", q: "Step 1 — Red or black?",
+    { key: "colour", q: "Red or black?",
       opts: [{ v: "red", label: "🔴 Red" }, { v: "black", label: "⚫️ Black" }] },
-    { key: "highlow", q: "Step 2 — Higher or lower?",
+    { key: "highlow", q: "Higher or lower?",
       opts: [{ v: "high", label: "⬆️ Higher" }, { v: "low", label: "⬇️ Lower" }] },
-    { key: "inout", q: "Step 3 — Inside or outside?",
+    { key: "inout", q: "Inside or outside?",
       opts: [{ v: "in", label: "↔️ Inside" }, { v: "out", label: "⤢ Outside" }] },
-    { key: "suit", q: "Step 4 — Which suit exactly?",
+    { key: "suit", q: "Which suit exactly?",
       opts: [{ v: "S", label: "♠" }, { v: "H", label: "♥" }, { v: "D", label: "♦" }, { v: "C", label: "♣" }] },
   ];
 
   function renderRide() {
     var def = STEPS[step];
-    // The row: positions < step revealed, position == step is the live flip card,
-    // positions > step stay as plain backs.
-    var cardsHtml = "";
-    for (var i = 0; i < 4; i++) {
-      var live = i === step;
-      if (i < step) {
-        cardsHtml += '<div class="bf-slot bf-slot--done">' + Cards.faceHtml(row[i], { small: true }) + "</div>";
-      } else if (live) {
-        cardsHtml += '<div class="bf-slot bf-slot--live">' + Cards.flipHtml(row[i], { id: "bf-flip", small: true }) + "</div>";
-      } else {
-        cardsHtml += '<div class="bf-slot">' + Cards.backHtml({ small: true }) + "</div>";
-      }
-    }
+    // Only the card being guessed is on stage, big enough to read across the
+    // table. Cards already turned over stay as a small strip above it (steps 2
+    // and 3 are read off them); the ones still face-down carry no information at
+    // all — the bus timeline already shows how many stops are left — so they go.
+    var refs = "";
+    for (var i = 0; i < step; i++) refs += Cards.faceHtml(row[i], { hero: true });
 
     var optBtns = def.opts.map(function (o) {
       return '<button class="btn btn-guess" data-v="' + esc(o.v) + '">' + esc(t(o.label)) + "</button>";
     }).join("");
 
     els.innerHTML =
-      '<section class="screen bf-screen">' +
+      '<section class="screen bf-screen bf-ride">' +
       '  <div class="bf-head"><span class="bf-driver">🚌 ' + esc(driverName()) + "</span>" +
       '    <span class="bf-rung">' + t("Step") + " " + (step + 1) + "/4</span></div>" +
       busLineHtml() +
-      '  <div class="bf-row">' + cardsHtml + "</div>" +
-      '  <p class="bf-q">' + t(def.q) + "</p>" +
-      '  <div class="bf-guesses" id="bf-guesses">' + optBtns + "</div>" +
-      '  <div class="bf-result" id="bf-result">&nbsp;</div>' +
+      (refs ? '  <div class="bf-refs">' + refs + "</div>" : "") +
+      '  <div class="bf-stage">' + Cards.flipHtml(row[step], { id: "bf-flip", hero: true }) + "</div>" +
+      '  <div class="bf-foot">' +
+      '    <p class="bf-q">' + t(def.q) + "</p>" +
+      // Step 4's four options are single suit glyphs — they go on one row, or
+      // the second row pushes the card off the bottom of the screen.
+      '    <div class="bf-guesses' + (def.opts.length > 2 ? " bf-guesses--quad" : "") +
+      '" id="bf-guesses">' + optBtns + "</div>" +
+      '    <div class="bf-result" id="bf-result"></div>' +
+      "  </div>" +
       "</section>";
 
     els.querySelectorAll("#bf-guesses .btn-guess").forEach(function (b) {
@@ -268,6 +269,10 @@
   function fail() {
     var sips = STEP_SIPS[step];
     totalSips += sips;
+    // The guess row has done its job — swap it out for the verdict so the
+    // retry button lands under the thumb instead of below the fold.
+    var guesses = els.querySelector("#bf-guesses");
+    if (guesses) guesses.hidden = true;
     var resEl = els.querySelector("#bf-result");
     if (resEl) {
       resEl.innerHTML =
@@ -294,13 +299,17 @@
     els.innerHTML =
       '<section class="screen bf-screen bf-escape">' +
       busLineHtml() +
-      '  <div class="bf-row">' +
-      row.map(function (c) { return '<div class="bf-slot bf-slot--done">' + Cards.faceHtml(c, { small: true }) + "</div>"; }).join("") +
+      '  <div class="bf-refs bf-refs--final">' +
+      row.map(function (c) { return Cards.faceHtml(c, { hero: true }); }).join("") +
       "  </div>" +
-      '  <h2 class="screen-title pop">🎉 ' + t("Escaped the bus!") + "</h2>" +
-      '  <p class="bf-q"><b>' + esc(driverName()) + "</b> " + resultMsg + "</p>" +
-      '  <button id="bf-next" class="btn btn-primary btn-block btn-xl">' + t("Next driver ▶️") + "</button>" +
-      '  <button id="bf-again" class="btn btn-block">' + t("Same driver, ride again 🔁") + "</button>" +
+      '  <div class="bf-stage bf-stage--msg">' +
+      '    <div><h2 class="screen-title pop">🎉 ' + t("Escaped the bus!") + "</h2>" +
+      '    <p class="bf-q"><b>' + esc(driverName()) + "</b> " + resultMsg + "</p></div>" +
+      "  </div>" +
+      '  <div class="bf-foot">' +
+      '    <button id="bf-next" class="btn btn-primary btn-block btn-xl">' + t("Next driver ▶️") + "</button>" +
+      '    <button id="bf-again" class="btn btn-block">' + t("Same driver, ride again 🔁") + "</button>" +
+      "  </div>" +
       "</section>";
 
     els.querySelector("#bf-next").addEventListener("click", function () {
