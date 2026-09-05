@@ -1293,6 +1293,71 @@ body::before {
   border: 3px solid #6e530c; border-radius: 8px; padding: 8px 24px; box-shadow: 0 5px 0 #5a4711;
 }
 
+/* ----- Know Me (Kennst du mich?) ---------------------------------------- */
+
+.km-ask { text-align: center; }
+/* Live score strip: everyone in seating order, whose turn it is outlined, the
+   leader filled in. Wraps on small screens rather than scrolling. */
+.km-strip { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; margin-bottom: 14px; }
+.km-pill {
+  display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px;
+  font-size: 0.85rem; font-weight: 800; background: #fff;
+  border: 2px solid var(--ink); border-radius: 999px;
+}
+.km-pill b { font-variant-numeric: tabular-nums; }
+.km-pill--lead { background: var(--yellow); }
+.km-pill--turn { border-width: 3px; box-shadow: 0 3px 0 var(--ink); }
+
+/* Who guesses about whom — the mirror between the two names is the whole game. */
+.km-duo { display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.km-guesser, .km-subject {
+  font-size: clamp(1.1rem, 5vw, 1.5rem); font-weight: 900; padding: 6px 14px;
+  border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 3px 0 var(--ink);
+}
+.km-guesser { background: var(--blue); color: #fff; }
+.km-subject { background: var(--pink); color: #fff; }
+.km-arrow { font-size: 1.4rem; }
+
+.km-card {
+  background: #fff; border: 5px solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--pop-lg); padding: 22px 18px; margin-bottom: 12px;
+  animation: pop-in 0.22s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+.km-card.is-revealed { background: var(--yellow); }
+.km-kicker {
+  font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--ink-soft); margin-bottom: 10px;
+}
+.km-question { font-size: clamp(1.3rem, 6vw, 1.9rem); font-weight: 800; line-height: 1.25; margin: 0; }
+.km-hint { margin: 0 0 14px; }
+
+/* Verdict: two big targets, green yes / red no, side by side. */
+.km-verdict { display: flex; gap: 10px; }
+.km-verdict .btn { flex: 1; padding: 18px 8px; }
+.btn-miss { background: var(--red); color: #fff; }
+
+.km-result, .km-win { text-align: center; }
+.km-drink { font-weight: 800; margin: -8px 0 14px; }
+
+/* Standings: the same table on the result and the win screen, the bar showing
+   how far each player is along the road to the target score. */
+.km-standings { max-width: 460px; margin: 4px auto 18px; text-align: left; }
+.km-standings__head {
+  font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  color: var(--ink-soft); margin-bottom: 8px; text-align: center;
+}
+.km-standings ol { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 7px; }
+.km-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 3px 0 var(--ink);
+}
+.km-row--lead { background: var(--yellow); }
+.km-medal { flex: none; width: 28px; font-weight: 900; }
+.km-name { flex: 1; min-width: 0; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.km-bar { flex: 0 0 70px; height: 12px; background: #ece8f8; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; }
+.km-bar i { display: block; height: 100%; background: var(--green); }
+.km-pts { flex: none; min-width: 30px; text-align: right; font-weight: 900; font-variant-numeric: tabular-nums; }
+
 /* ----- Perfect Shape ---------------------------------------------------- */
 
 .ps-pass { text-align: center; }

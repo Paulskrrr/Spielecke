@@ -43,11 +43,13 @@
   // neighbours (distance 1–3, i.e. horizontal + the 2/3-column verticals) share
   // a hue OR a close family (teal/green, blue/indigo, red/pink, yellow/orange).
   // Re-solve with scratch: keep each block of 9 a full permutation and you can't
-  // go wrong. With 28 tiles the blocks run 9/9/9/1 — the last block is a single
-  // tile, so it only has to clear the neighbour rule against the three above it.
+  // go wrong. With 29 tiles the blocks run 9/9/9/2 — the last block is a pair,
+  // so it only has to clear the neighbour rule against the tiles above it.
   // (Perfect Shape landing in block 3 is what pushed Lügenbaron to indigo and
   // Kommando to teal: it took the block's free slot, and those two swapped to
-  // keep every block a full permutation.)
+  // keep every block a full permutation. Know Me then took block 1's free slot —
+  // indigo — and slots at position 5 because that's the only spot in the block
+  // far enough from both Most Likely To's blue and Mind Meld's indigo.)
   // Colours available: yellow blue red teal purple orange green indigo pink.
   //
   // NOT on the shelf: Geheimauftrag. It's an all-evening meta-layer you deal
@@ -61,6 +63,7 @@
     { id: "hotpotato",     color: "pink"   },
     { id: "whoami",        color: "teal"   },
     { id: "truth",         color: "purple" },
+    { id: "knowme",        color: "indigo" },
     { id: "princess",      color: "orange" },
     // — party guessing & deduction —
     { id: "imposter",      color: "red"    },  // anchor

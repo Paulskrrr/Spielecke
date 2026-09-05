@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **28 games**.
+**Shipped (on `main`):** the shell + **29 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -43,6 +43,7 @@ next.
 - ✅ **Zeitzünder** — asymmetric co-op bomb defusal: one screen is the bomb, the others hold the manual *(plain)*
 - ✅ **Ballon** — push-your-luck pump-or-pass, hidden burst point scaled to the table *(drinking-capable)*
 - ✅ **Perfect Shape** — everyone freehands the same shape; a best-fit comparison against the ideal outline ranks them by accuracy *(plain)*
+- ✅ **Know Me** (DE: *Kennst du mich?*) — answer a question about someone the way they would; they judge it, hit +1 / miss −1, first to the target wins *(drinking-capable)*
 - ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
 - ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
 - ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next; dealt from a 🕶️ button on the Players screen, not a shelf tile *(drinking-capable)*
@@ -121,9 +122,9 @@ Players screen.
   cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
   each game has a **fixed colour** — three pinned by preference (Hochadel yellow, Doodle Drama
   blue, Imposter red) — set in the registry
-  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The **28 shelf tiles**
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The **29 shelf tiles**
   (Geheimauftrag isn't on the shelf — see §3.25) sweep the full 9-colour palette in blocks of
-  **9 / 9 / 9 / 1**, each block showing every hue at most once, so no colour repeats before the
+  **9 / 9 / 9 / 2**, each block showing every hue at most once, so no colour repeats before the
   whole palette has appeared; within that no two neighbours (distance 1–3, i.e.
   horizontal + the 2/3-column verticals) share a hue *or a close family* (teal/green,
   blue/indigo, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
@@ -191,6 +192,7 @@ js/
     simon.js               Simon Says command pools ({ label, commands:[...] })
     geschmacklos.js        Geschmacklos deck, one fixed set ({ prompts:[...], answers:[...] })
     perfectshape.js        Perfect Shape's shape catalogue, by difficulty ({ label, shapes:[{key,name,hint,gen,…}] })
+    knowme.js              Know Me question bank, by category ({ label, questions:["… {name} …"] })
   games/                   one module per game (logic)
     hotpotato.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
@@ -198,6 +200,7 @@ js/
     ballon.js  wettbuero.js  mindmeld.js  geheimauftrag.js  simon.js  geschmacklos.js
     cards.js  busfahrt.js  fuckdealer.js  pferderennen.js   (card games; cards.js = shared deck)
     shapefit.js  perfectshape.js   (shapefit.js = Perfect Shape's DOM-free accuracy maths)
+    knowme.js
     (chooser, reactionduel, maxchen, zeitzunder & ballon have no content file)
 assets/logo.png            the "Pauls Spielecke" wordmark
 ```
@@ -771,6 +774,34 @@ accuracy.
   bottom up. Tap the stage to skip to the full picture. Honours `prefers-reduced-motion`.
 - **Outcome:** a ranking by accuracy — no drinks, the number is the punishment.
 
+### 3.30 Know Me 🪞 (`knowme`, 3+) — drinking-capable
+
+DE: *Kennst du mich?* — the "how well do you actually know each other" game. Round-robin: one
+player gets a question **about somebody else in the room** and has to answer it **the way that
+person would**. The subject then reveals the truth and rules on it: **hit +1, miss −1**. First
+to the target score wins.
+
+- **No pass-the-phone screen, on purpose.** Nothing here is secret — the question is read out
+  at the table and the guess is said out loud — so the phone is only the scorekeeper. That's a
+  tap fewer per turn than the pass-around games and keeps the group facing each other.
+- **One screen, two states:** the question card stays put and only the button row swaps, from
+  *Auflösen 👀* to the two verdict buttons (*Getroffen ✅* / *Daneben ❌*); the card turns yellow
+  when it flips to judging, so it's obvious the subject is up.
+- **Pairing is spread deliberately:** the subject is drawn from whoever has been asked about
+  least often, skipping an immediate repeat, so nobody sits out the whole game as a spectator
+  and nobody gets grilled twice in a row.
+- **Score furniture:** a compact pill strip above the question (everyone in seating order, the
+  current guesser outlined, the leader filled yellow), and a full standings table on the result
+  and win screens whose bars show how far each player is along the road to the target. Scores
+  can go **negative** — a bad guesser is visibly underwater.
+- **Config:** category pools, target score (3 / 5 / 7 / 10), 🍻 drinking mode (miss → the
+  guesser drinks; hit → *the subject* drinks for being far too predictable).
+- **Content:** `content/knowme.js`, 6 pools × 26 questions per language — 🎲 Allgemein, 🧠
+  Tiefgang, 🎉 Party, 🔮 Was wäre wenn, plus 🔞 18+ and 🌹 Date (both hidden by Family Mode).
+  Every question carries a `{name}` token and is phrased so German needs no genitive-s; the
+  queue is shuffled and only refills once it's exhausted, so a session never repeats.
+- **Outcome:** first to the target score — "wer die anderen am besten kennt".
+
 ---
 
 ## Resolved decisions
@@ -782,7 +813,7 @@ accuracy.
    penalties where they don't fit. Games with a 🍻 toggle: Hot Potato, Most Likely To, Never
    Have I Ever, Imposter, Ballpark, Quiz Out, Truth or Drink, Chooser, Activity, Reaction
    Duel, Rank It, Hochadel, Mia, Ride the Bus, Fuck the Dealer, Horse Race, Ballon, Wettbüro,
-   Mind Meld, Geheimauftrag, Simon Says, Geschmacklos.
+   Mind Meld, Geheimauftrag, Simon Says, Geschmacklos, Know Me.
 3. **Hot Potato pass model** → pure physical pass (no turn tracking).
 4. **Hot Potato fuse** → always random 20–90s, not configurable.
 5. **Mobile vs desktop** → single responsive build, no separate files. Drawing (Doodle
