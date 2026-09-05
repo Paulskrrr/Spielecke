@@ -42,7 +42,7 @@ next.
 - ✅ **Horse Race** — animated suit-betting card race *(drinking-capable)*
 - ✅ **Zeitzünder** — asymmetric co-op bomb defusal: one screen is the bomb, the others hold the manual *(plain)*
 - ✅ **Ballon** — push-your-luck pump-or-pass, hidden burst point scaled to the table *(drinking-capable)*
-- ✅ **Perfect Shape** — everyone freehands the same shape; a best-fit comparison against the ideal outline ranks them by accuracy *(plain)*
+- ✅ **Perfect Shape** — everyone freehands the same shape (32, incl. a 🎨 thematic pool); a best-fit comparison against the ideal outline ranks them by accuracy *(plain)*
 - ✅ **Know Me** (DE: *Kennst du mich?*) — answer a question about someone the way they would; they judge it, hit +1 / miss −1, first to the target wins *(drinking-capable)*
 - ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
 - ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
@@ -763,10 +763,17 @@ accuracy.
 - **Rotation is not free:** a square rotated 45° is a diamond and the game asks for one of them,
   so only ±16° of sloppiness is forgiven. The circle and the straight line, where orientation
   means nothing, may spin freely.
-- **Shapes:** 20, split into 🟢 **Leicht** (circle, square, triangle, line, rectangle, oval,
-  diamond, plus, heart, half circle) and 🔴 **Schwer** (pentagon, hexagon, octagon, star, spiral,
-  infinity, wave, zigzag, arrow, crescent). Each is generated from a parametric outline, so the
-  reference thumbnail, the ghost on the reveal and the scoring all come from one definition.
+- **Shapes:** 32 in three pools — 🟢 **Leicht** (circle, square, triangle, line, rectangle,
+  oval, diamond, plus, heart, half circle), 🔴 **Schwer** (pentagon, hexagon, octagon, star,
+  spiral, infinity, wave, zigzag, arrow, crescent) and 🎨 **Kreativ** (house, fir tree, cloud,
+  sun, lightning bolt, cocktail glass, key, fish, smiley, crown, flower, gem). The creative
+  pool swaps geometry for *things*, and several of them are deliberately **multi-stroke** — the
+  sun is a disc plus eight rays, the smiley a face plus two eyes and a mouth — which the
+  scoring handles natively because it measures the whole set of strokes at once. The badge next
+  to the shape name is colour-coded per pool (green / red / purple). Each shape is generated
+  from a parametric outline, so the reference thumbnail, the ghost on the reveal and the
+  scoring all come from one definition; the cloud's bumps are unioned via circle intersections
+  rather than drawn as overlapping loops.
 - **Config:** difficulty pools, ⏱️ time pressure (20s, off by default — at zero the attempt is
   submitted as it stands, an empty canvas scoring 0 %), 🙈 hardcore (hides the reference).
 - **Reveal:** attempts fade on **worst → best** so the winner's line lands last, each drawing

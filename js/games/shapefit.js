@@ -128,6 +128,112 @@
     arrow: function () {
       return [{ pts: [-1, -0.25, 0.2, -0.25, 0.2, -0.62, 1, 0, 0.2, 0.62, 0.2, 0.25, -1, 0.25], closed: true }];
     },
+    // ── Thematic outlines ────────────────────────────────────────────────
+    // The 🎨 Kreativ pool: recognisable *things* rather than primitives. Some
+    // of them are deliberately multi-stroke (the sun's rays, the smiley's
+    // face) — the scoring measures the whole set of strokes at once, so a
+    // shape that needs the pen lifted is a fair test, just a harder one.
+    house: function () {
+      return [{ pts: [0, -1, 0.8, -0.32, 0.8, 0.88, -0.8, 0.88, -0.8, -0.32], closed: true }];
+    },
+    // Three tiers of branches down to a trunk.
+    tree: function () {
+      return [{ pts: [
+        0, -1, 0.35, -0.42, 0.18, -0.42, 0.55, 0.08, 0.3, 0.08, 0.75, 0.58,
+        0.13, 0.58, 0.13, 0.92, -0.13, 0.92, -0.13, 0.58, -0.75, 0.58,
+        -0.3, 0.08, -0.55, 0.08, -0.18, -0.42, -0.35, -0.42
+      ], closed: true }];
+    },
+    // Three overlapping circles on a flat base: each bump is drawn only as far
+    // as the point where it meets the next one, so the outline is the union of
+    // the circles rather than three loops crossing through each other.
+    cloud: function () {
+      // Outer pair sit on the base line so the bottom comes out flat; the two
+      // in the middle are lifted, which buys height without width and leaves a
+      // visible dip at each junction instead of one smooth dome.
+      var cs = [[-0.62, 0.45, 0.42], [-0.16, 0.2, 0.55], [0.34, 0.28, 0.48], [0.75, 0.45, 0.4]];
+      var pts = [];
+      for (var i = 0; i < cs.length; i++) {
+        var c = cs[i];
+        var a0 = Math.PI, a1 = 2 * Math.PI, p;
+        if (i > 0) {
+          p = circleTop(cs[i - 1], cs[i]);
+          if (p) a0 = upAngle(p[0] - c[0], p[1] - c[1]);
+        }
+        if (i < cs.length - 1) {
+          p = circleTop(c, cs[i + 1]);
+          if (p) a1 = upAngle(p[0] - c[0], p[1] - c[1]);
+        }
+        pts = pts.concat(arc(c[0], c[1], c[2], c[2], a0, a1, 18));
+      }
+      return [{ pts: pts, closed: true }];
+    },
+    // Nine strokes: the disc plus eight rays.
+    sun: function () {
+      var subs = [{ pts: arc(0, 0, 0.45, 0.45, 0, 2 * Math.PI, 40), closed: true }];
+      for (var i = 0; i < 8; i++) {
+        var a = (i * Math.PI) / 4;
+        subs.push({ pts: [0.62 * Math.cos(a), 0.62 * Math.sin(a), Math.cos(a), Math.sin(a)], closed: false });
+      }
+      return subs;
+    },
+    bolt: function () {
+      return [{ pts: [0.1, -1, -0.55, 0.05, -0.1, 0.05, -0.35, 1, 0.55, -0.2, 0.05, -0.2], closed: true }];
+    },
+    // Martini glass: V-bowl, stem, foot — one continuous outline.
+    cocktail: function () {
+      return [{ pts: [
+        -0.8, -0.75, 0.8, -0.75, 0.07, 0.1, 0.07, 0.72, 0.45, 0.9,
+        -0.45, 0.9, -0.07, 0.72, -0.07, 0.1
+      ], closed: true }];
+    },
+    // Ring plus a shaft with two teeth hanging off it.
+    key: function () {
+      return [
+        { pts: arc(-0.62, 0, 0.34, 0.34, 0, 2 * Math.PI, 28), closed: true },
+        { pts: [-0.28, 0, 0.52, 0, 0.52, 0.3, 0.64, 0.3, 0.64, 0, 0.78, 0, 0.78, 0.3, 0.9, 0.3, 0.9, 0, 0.98, 0], closed: false }
+      ];
+    },
+    // Body swelling from the tail joint to a BLUNT nose — the sine raised to a
+    // power below 1 rounds the front off, which is what stops the outline from
+    // reading as a bowtie — then the tail fin off the back.
+    fish: function () {
+      var pts = [], i, u, tail = -0.42, nose = 1.0, span = nose - tail;
+      function edge(u, sign) { return sign * 0.46 * Math.pow(Math.sin(Math.PI * u), 0.55); }
+      for (i = 0; i <= 26; i++) { u = i / 26; pts.push(tail + span * u, edge(u, -1)); }
+      for (i = 1; i <= 26; i++) { u = 1 - i / 26; pts.push(tail + span * u, edge(u, 1)); }
+      pts.push(-0.95, 0.42, -0.95, -0.42);
+      return [{ pts: pts, closed: true }];
+    },
+    // Four strokes: face, two eyes, one smile.
+    smiley: function () {
+      return [
+        { pts: arc(0, 0, 1, 1, 0, 2 * Math.PI, 56), closed: true },
+        { pts: arc(-0.34, -0.3, 0.1, 0.14, 0, 2 * Math.PI, 12), closed: true },
+        { pts: arc(0.34, -0.3, 0.1, 0.14, 0, 2 * Math.PI, 12), closed: true },
+        { pts: arc(0, 0.05, 0.55, 0.55, 0.42, Math.PI - 0.42, 20), closed: false }
+      ];
+    },
+    crown: function () {
+      return [{ pts: [-0.9, 0.6, -0.9, -0.5, -0.45, 0, 0, -0.72, 0.45, 0, 0.9, -0.5, 0.9, 0.6], closed: true }];
+    },
+    // Six petals: |cos(3θ)| pinches the radius to almost nothing six times.
+    flower: function () {
+      var pts = [];
+      for (var i = 0; i <= 120; i++) {
+        var a = (i / 120) * 2 * Math.PI;
+        var r = 0.2 + 0.8 * Math.pow(Math.abs(Math.cos(3 * a)), 0.7);
+        pts.push(r * Math.cos(a), r * Math.sin(a));
+      }
+      return [{ pts: pts, closed: true }];
+    },
+    // Cut gem: table, crown, pavilion — plus the girdle line across the middle.
+    gem: function () {
+      return [
+        { pts: [-0.42, -0.62, 0.42, -0.62, 0.92, -0.12, 0, 0.9, -0.92, -0.12], closed: true },
+        { pts: [-0.92, -0.12, 0.92, -0.12], closed: false }
+      ];
+    },
     // Outer circle minus a smaller one shoved to the right; the two arcs meet
     // at the horns.
     crescent: function () {
@@ -141,6 +247,28 @@
       return [{ pts: outer.concat(inner), closed: true }];
     },
   };
+
+  // Where two overlapping circles [x, y, r] cross, taking the upper of the two
+  // crossings (smallest y). Null when they don't properly overlap.
+  function circleTop(c1, c2) {
+    var dx = c2[0] - c1[0], dy = c2[1] - c1[1];
+    var d = Math.hypot(dx, dy);
+    if (!d || d > c1[2] + c2[2] || d < Math.abs(c1[2] - c2[2])) return null;
+    var a = (d * d + c1[2] * c1[2] - c2[2] * c2[2]) / (2 * d);
+    var h = Math.sqrt(Math.max(0, c1[2] * c1[2] - a * a));
+    var mx = c1[0] + (a * dx) / d, my = c1[1] + (a * dy) / d;
+    var p1 = [mx + (h * dy) / d, my - (h * dx) / d];
+    var p2 = [mx - (h * dy) / d, my + (h * dx) / d];
+    return p1[1] <= p2[1] ? p1 : p2;
+  }
+
+  // Angle of a vector, mapped into [π, 2π] — the half-turn that sweeps left to
+  // right over the TOP in canvas coordinates. Only meaningful for vectors that
+  // point upwards, which is all this is used for.
+  function upAngle(dx, dy) {
+    var a = Math.atan2(dy, dx);
+    return a <= 0 ? a + 2 * Math.PI : a;
+  }
 
   // Sample an (elliptical) arc from a0 to a1 — a1 may be smaller for a
   // clockwise sweep.

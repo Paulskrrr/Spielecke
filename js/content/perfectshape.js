@@ -2,10 +2,11 @@
 /*
  * content/perfectshape.js — the shape catalogue for Perfect Shape
  *
- * EDIT ME. Pure content, no maths. Two pools by difficulty: `easy` are the
- * shapes everybody has drawn a thousand times, `hard` are the ones where the
- * hand starts lying to you. Everyone in a round draws the SAME shape, so the
- * ranking stays fair — difficulty only decides which shapes can come up.
+ * EDIT ME. Pure content, no maths. Three pools: `easy` are the shapes everybody
+ * has drawn a thousand times, `hard` are the ones where the hand starts lying to
+ * you, and `creative` swaps geometry for THINGS — a house, a key, a smiley —
+ * several of which need more than one stroke. Everyone in a round draws the SAME
+ * shape, so the ranking stays fair — the pools only decide what can come up.
  *
  * Each entry:
  *   key   internal id, must be unique across BOTH pools (used to avoid repeats)
@@ -54,6 +55,23 @@
         { key: "arrow",    name: "Pfeil",     hint: "Umriss eines Pfeils nach rechts.",         gen: "arrow",  level: "hard" },
         { key: "crescent", name: "Mondsichel", hint: "Sichel, Öffnung nach rechts.",            gen: "crescent", level: "hard" }
       ]
+    },
+    creative: {
+      label: "🎨 Kreativ",
+      shapes: [
+        { key: "house",    name: "Haus",         hint: "Vier Wände, ein Spitzdach — ein Zug.",        gen: "house",    level: "creative" },
+        { key: "tree",     name: "Tannenbaum",   hint: "Drei Etagen, unten der Stamm.",               gen: "tree",     level: "creative" },
+        { key: "cloud",    name: "Wolke",        hint: "Vier Buckel auf gerader Unterkante.",         gen: "cloud",    level: "creative" },
+        { key: "sun",      name: "Sonne",        hint: "Kreis plus acht Strahlen — neun Striche.",    gen: "sun",      level: "creative" },
+        { key: "bolt",     name: "Blitz",        hint: "Zickzack, oben und unten spitz.",             gen: "bolt",     level: "creative" },
+        { key: "cocktail", name: "Cocktailglas", hint: "V-Kelch, dünner Stiel, breiter Fuß.",         gen: "cocktail", level: "creative" },
+        { key: "key",      name: "Schlüssel",    hint: "Runder Kopf, langer Schaft, zwei Zacken.",    gen: "key",      level: "creative" },
+        { key: "fish",     name: "Fisch",        hint: "Runder Körper, Schwanzflosse hinten links.",  gen: "fish",     level: "creative" },
+        { key: "smiley",   name: "Smiley",       hint: "Kreis, zwei Augen, ein Lächeln — vier Striche.", gen: "smiley", level: "creative" },
+        { key: "crown",    name: "Krone",        hint: "Drei Zacken auf gerader Basis.",              gen: "crown",    level: "creative" },
+        { key: "flower",   name: "Blume",        hint: "Sechs gleich große Blütenblätter.",           gen: "flower",   level: "creative" },
+        { key: "gem",      name: "Diamant",      hint: "Tafel oben, Spitze unten, Linie quer.",       gen: "gem",      level: "creative" }
+      ]
     }
   };
 
@@ -86,6 +104,23 @@
         { key: "zigzag",   name: "Zigzag",    hint: "Five strokes zigzagging, all the same height.",        gen: "zigzag", n: 5, level: "hard" },
         { key: "arrow",    name: "Arrow",     hint: "The outline of an arrow pointing right.",  gen: "arrow",  level: "hard" },
         { key: "crescent", name: "Crescent",  hint: "A crescent moon opening to the right.",    gen: "crescent", level: "hard" }
+      ]
+    },
+    creative: {
+      label: "🎨 Creative",
+      shapes: [
+        { key: "house",    name: "House",         hint: "Four walls and a gable roof — one stroke.",     gen: "house",    level: "creative" },
+        { key: "tree",     name: "Fir tree",      hint: "Three tiers, trunk at the bottom.",             gen: "tree",     level: "creative" },
+        { key: "cloud",    name: "Cloud",         hint: "Four bumps on a flat bottom edge.",             gen: "cloud",    level: "creative" },
+        { key: "sun",      name: "Sun",           hint: "A disc plus eight rays — nine strokes.",        gen: "sun",      level: "creative" },
+        { key: "bolt",     name: "Lightning bolt", hint: "Zigzag, pointed top and bottom.",              gen: "bolt",     level: "creative" },
+        { key: "cocktail", name: "Cocktail glass", hint: "V-shaped bowl, thin stem, wide foot.",         gen: "cocktail", level: "creative" },
+        { key: "key",      name: "Key",           hint: "Round bow, long shaft, two teeth.",             gen: "key",      level: "creative" },
+        { key: "fish",     name: "Fish",          hint: "Round body, tail fin at the back left.",        gen: "fish",     level: "creative" },
+        { key: "smiley",   name: "Smiley",        hint: "Circle, two eyes, one smile — four strokes.",   gen: "smiley",   level: "creative" },
+        { key: "crown",    name: "Crown",         hint: "Three spikes on a straight base.",              gen: "crown",    level: "creative" },
+        { key: "flower",   name: "Flower",        hint: "Six petals, all the same size.",                gen: "flower",   level: "creative" },
+        { key: "gem",      name: "Gem",           hint: "Flat table on top, point below, line across.",  gen: "gem",      level: "creative" }
       ]
     }
   };

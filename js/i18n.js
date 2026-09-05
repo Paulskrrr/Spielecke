@@ -301,6 +301,7 @@
     "Start drawing ✏️": "Losmalen ✏️",
     "The shape:": "Die Form:",
     "Same shape for everyone. Nobody sees the others until the end.": "Für alle dieselbe Form. Die anderen sieht man erst am Ende.",
+    "Creative": "Kreativ",
     "Undo ↩️": "Zurück ↩️",
     "Everyone's attempt, over the ideal shape.": "Alle Versuche über der idealen Form.",
     "👆 Tap to show them all at once": "👆 Tippen, um alle auf einmal zu zeigen",

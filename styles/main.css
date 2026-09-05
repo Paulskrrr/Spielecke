@@ -1371,7 +1371,7 @@ body::before {
 .ps-shapename { font-size: 1.35rem; font-weight: 900; line-height: 1.2; }
 /* The little "this is what you're aiming at" thumbnail. */
 .ps-ref {
-  flex: none; width: 74px; height: 74px; background: #fff;
+  flex: none; width: 82px; height: 82px; background: #fff;
   border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 3px 0 var(--ink);
 }
 .ps-level {
@@ -1381,6 +1381,7 @@ body::before {
 }
 .ps-level--easy { background: var(--green); color: var(--ink); }
 .ps-level--hard { background: var(--red); color: #fff; }
+.ps-level--creative { background: var(--purple); color: #fff; }
 .ps-timer {
   flex: none; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 900;
   font-size: 1.25rem; font-variant-numeric: tabular-nums; color: #fff; background: var(--purple);

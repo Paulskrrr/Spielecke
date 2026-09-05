@@ -136,9 +136,11 @@
 
   // --- Draw ----------------------------------------------------------------
   function renderDraw() {
-    var badge = shape.level === "hard"
-      ? '<span class="ps-level ps-level--hard">' + t("Hard") + "</span>"
-      : '<span class="ps-level ps-level--easy">' + t("Easy") + "</span>";
+    // The pool the shape came from, as a badge: green easy, red hard, purple
+    // creative (the thematic ones, several of which need more than one stroke).
+    var level = shape.level === "hard" || shape.level === "creative" ? shape.level : "easy";
+    var label = level === "hard" ? "Hard" : level === "creative" ? "Creative" : "Easy";
+    var badge = '<span class="ps-level ps-level--' + level + '">' + t(label) + "</span>";
 
     els.innerHTML =
       '<section class="screen ps-draw">' +
