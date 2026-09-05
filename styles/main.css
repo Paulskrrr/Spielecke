@@ -1293,6 +1293,71 @@ body::before {
   border: 3px solid #6e530c; border-radius: 8px; padding: 8px 24px; box-shadow: 0 5px 0 #5a4711;
 }
 
+/* ----- Perfect Shape ---------------------------------------------------- */
+
+.ps-pass { text-align: center; }
+.ps-task {
+  display: inline-block; margin: 10px 0 4px; padding: 8px 18px; font-size: 1.15rem;
+  background: var(--yellow); border: 3px solid var(--ink); border-radius: 14px;
+}
+.ps-draw { text-align: center; }
+.ps-draw-head { display: flex; align-items: center; gap: 12px; margin: 8px 0 10px; }
+.ps-headline { flex: 1; min-width: 0; text-align: left; }
+.ps-shapename { font-size: 1.35rem; font-weight: 900; line-height: 1.2; }
+/* The little "this is what you're aiming at" thumbnail. */
+.ps-ref {
+  flex: none; width: 74px; height: 74px; background: #fff;
+  border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 3px 0 var(--ink);
+}
+.ps-level {
+  display: inline-block; vertical-align: middle; margin-left: 6px; padding: 2px 9px;
+  font-size: 0.7rem; font-weight: 900; text-transform: uppercase; letter-spacing: 1px;
+  border: 2px solid var(--ink); border-radius: 999px;
+}
+.ps-level--easy { background: var(--green); color: var(--ink); }
+.ps-level--hard { background: var(--red); color: #fff; }
+.ps-timer {
+  flex: none; font-family: ui-monospace, "SF Mono", Menlo, monospace; font-weight: 900;
+  font-size: 1.25rem; font-variant-numeric: tabular-nums; color: #fff; background: var(--purple);
+  border: 3px solid var(--ink); border-radius: 12px; box-shadow: 0 3px 0 var(--ink); padding: 4px 12px;
+}
+.ps-timer.is-urgent { background: var(--red); animation: ps-tick 1s steps(2) infinite; }
+@keyframes ps-tick { 50% { opacity: 0.45; } }
+.ps-canvas {
+  display: block; width: 100%; height: min(52vh, 380px);
+  background: #fff; border: 4px solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--pop); touch-action: none; cursor: crosshair;
+}
+.ps-tools { display: flex; gap: 10px; margin-top: 12px; }
+.ps-tools .btn { flex: 1; }
+
+/* Reveal: every attempt laid over the dashed ideal shape, then the ranking. */
+.ps-reveal { text-align: center; }
+.ps-stage {
+  display: block; width: 100%; height: min(46vh, 340px);
+  background: #fff; border: 4px solid var(--ink); border-radius: var(--radius);
+  box-shadow: var(--pop); cursor: pointer;
+}
+.ps-skip-hint { margin: 10px 0 4px; }
+.ps-rank { list-style: none; padding: 0; margin: 8px auto 0; max-width: 520px; display: flex; flex-direction: column; gap: 8px; }
+.ps-row {
+  display: flex; align-items: center; gap: 10px; padding: 8px 12px; text-align: left;
+  background: #fff; border: 3px solid var(--ink); border-radius: 14px; box-shadow: 0 3px 0 var(--ink);
+  opacity: 0; transform: translateY(10px) scale(0.97); transition: opacity 0.22s, transform 0.22s var(--spring);
+}
+.ps-row.is-in { opacity: 1; transform: none; }
+.ps-medal { flex: none; width: 30px; font-weight: 900; font-size: 1.1rem; }
+.ps-dot { flex: none; width: 14px; height: 14px; border: 2px solid var(--ink); border-radius: 50%; }
+.ps-name { flex: 1; min-width: 0; font-weight: 800; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* The bar is the quick read; the number next to it is the exact one. */
+.ps-bar { flex: 0 0 68px; height: 12px; background: #ece8f8; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; }
+.ps-bar i { display: block; height: 100%; }
+.ps-score { flex: none; min-width: 66px; text-align: right; font-weight: 900; font-variant-numeric: tabular-nums; }
+.ps-row[data-rank="0"] { background: var(--yellow); }
+.ps-outro { margin-top: 18px; }
+.ps-verdict { margin-bottom: 12px; }
+.ps-winline { font-size: 1.5rem; font-weight: 900; }
+
 /* ----- Activity --------------------------------------------------------- */
 
 /* type colours shared by tiles, banners, legend */
@@ -2060,6 +2125,22 @@ body::before {
   .dd-reveal--step, .dd-finale {
     min-height: 74vh; display: flex; flex-direction: column; justify-content: center;
   }
+
+  /* Perfect Shape: same treatment as Doodle — the accuracy of an attempt rises
+     and falls with how much room the hand gets, so the drawing surface takes
+     the whole desktop viewport it can. */
+  .ps-draw {
+    width: auto;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+    padding-left: max(24px, 4vw);
+    padding-right: max(24px, 4vw);
+    min-height: 82vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .ps-draw > * { width: 100%; max-width: 1040px; }
+  .ps-draw .ps-canvas { height: min(70vh, 700px); }
+  .ps-stage { height: min(56vh, 520px); }
 }
 
 /* ════════════════════════════════════════════════════════════════════════

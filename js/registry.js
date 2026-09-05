@@ -43,8 +43,11 @@
   // neighbours (distance 1–3, i.e. horizontal + the 2/3-column verticals) share
   // a hue OR a close family (teal/green, blue/indigo, red/pink, yellow/orange).
   // Re-solve with scratch: keep each block of 9 a full permutation and you can't
-  // go wrong. With 26 tiles the blocks run 9/9/8, so the final block shows 8 of
-  // the 9 colours (still no repeat inside it).
+  // go wrong. With 28 tiles the blocks run 9/9/9/1 — the last block is a single
+  // tile, so it only has to clear the neighbour rule against the three above it.
+  // (Perfect Shape landing in block 3 is what pushed Lügenbaron to indigo and
+  // Kommando to teal: it took the block's free slot, and those two swapped to
+  // keep every block a full permutation.)
   // Colours available: yellow blue red teal purple orange green indigo pink.
   //
   // NOT on the shelf: Geheimauftrag. It's an all-evening meta-layer you deal
@@ -72,9 +75,10 @@
     { id: "fuckdealer",    color: "orange" },
     { id: "busfahrt",      color: "green"  },
     { id: "wettbuero",     color: "pink"   },
-    // — fast-twitch reflex —
+    // — fast-twitch reflex & steady hands —
     { id: "reaction",      color: "indigo" },
-    { id: "ballon",        color: "purple" },  // block 3 starts here: 8-colour sweep
+    { id: "ballon",        color: "purple" },  // block 3 starts here
+    { id: "perfectshape",  color: "teal"   },
     // — longer sit-down & team games —
     { id: "activity",      color: "orange" },
     { id: "quiz",          color: "red"    },
@@ -84,8 +88,8 @@
     // — co-op —
     { id: "zeitzunder",    color: "pink"   },
     // — BETA sinks to the bottom —
-    { id: "luegen",        color: "teal"   },
-    { id: "simon",         color: "indigo" },
+    { id: "luegen",        color: "indigo" },
+    { id: "simon",         color: "teal"   },
   ];
 
   // Build a registry entry straight from a module's meta so they never drift.

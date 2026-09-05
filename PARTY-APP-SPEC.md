@@ -15,7 +15,7 @@ next.
 
 ## Status
 
-**Shipped (on `main`):** the shell + **27 games**.
+**Shipped (on `main`):** the shell + **28 games**.
 
 - ✅ The shell — home/game shelf, shared roster, registry, game module contract, persistence
 - ✅ Full "Pauls Spielecke" playground/toy-box visual identity + logo
@@ -42,6 +42,7 @@ next.
 - ✅ **Horse Race** — animated suit-betting card race *(drinking-capable)*
 - ✅ **Zeitzünder** — asymmetric co-op bomb defusal: one screen is the bomb, the others hold the manual *(plain)*
 - ✅ **Ballon** — push-your-luck pump-or-pass, hidden burst point scaled to the table *(drinking-capable)*
+- ✅ **Perfect Shape** — everyone freehands the same shape; a best-fit comparison against the ideal outline ranks them by accuracy *(plain)*
 - ✅ **Wettbüro** — bet sips on a friend's challenge; the app settles the stakes *(drinking-capable)*
 - ✅ **Mind Meld** — 2s (or a trio) silently converge on the same word; slowest team drinks *(drinking-capable)*
 - ✅ **Geheimauftrag** — person-bound secret missions that run quietly alongside whatever you play next; dealt from a 🕶️ button on the Players screen, not a shelf tile *(drinking-capable)*
@@ -120,9 +121,9 @@ Players screen.
   cards/inputs carry focus-visible rings. The **shelf tile palette** is a 9-colour crayon set;
   each game has a **fixed colour** — three pinned by preference (Hochadel yellow, Doodle Drama
   blue, Imposter red) — set in the registry
-  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The **26 shelf tiles**
+  `LAYOUT` (`gc-<colour>` classes) and a 7-step tilt by grid position (`gt-*`, `i % 7`). The **28 shelf tiles**
   (Geheimauftrag isn't on the shelf — see §3.25) sweep the full 9-colour palette in blocks of
-  **9 / 9 / 8**, each block showing every hue at most once, so no colour repeats before the
+  **9 / 9 / 9 / 1**, each block showing every hue at most once, so no colour repeats before the
   whole palette has appeared; within that no two neighbours (distance 1–3, i.e.
   horizontal + the 2/3-column verticals) share a hue *or a close family* (teal/green,
   blue/indigo, red/pink, yellow/orange). The app caps at ~3 columns (`--maxw: 880px`). The **shelf order is fixed** too (the `LAYOUT` array order): tiles land in the
@@ -189,12 +190,14 @@ js/
     geheimauftrag.js       Geheimauftrag mission templates ({ solo:[...], coop:[...] }, {target}/{partner} tokens)
     simon.js               Simon Says command pools ({ label, commands:[...] })
     geschmacklos.js        Geschmacklos deck, one fixed set ({ prompts:[...], answers:[...] })
+    perfectshape.js        Perfect Shape's shape catalogue, by difficulty ({ label, shapes:[{key,name,hint,gen,…}] })
   games/                   one module per game (logic)
     hotpotato.js  whoami.js  imposter.js  wavelength.js  nhie.js  mostlikely.js
     liars.js  princess.js  doodle.js  activity.js  quiz.js  truth.js  chooser.js
     reactionduel.js  rankit.js  hochadel.js  maxchen.js  zeitzunder.js
     ballon.js  wettbuero.js  mindmeld.js  geheimauftrag.js  simon.js  geschmacklos.js
     cards.js  busfahrt.js  fuckdealer.js  pferderennen.js   (card games; cards.js = shared deck)
+    shapefit.js  perfectshape.js   (shapefit.js = Perfect Shape's DOM-free accuracy maths)
     (chooser, reactionduel, maxchen, zeitzunder & ballon have no content file)
 assets/logo.png            the "Pauls Spielecke" wordmark
 ```
@@ -733,6 +736,40 @@ shared screen does far better than the table.
   shows every player's remaining cards so the table sees who's close. No content file (pure deck
   mechanics); mid-game state is not persisted — a fresh mount starts at setup.
 - **Why beta:** new loop, road-tested with the group before it graduates off the beta shelf.
+
+### 3.29 Perfect Shape 📐 (`perfectshape`, 2+) — plain
+
+One shape, one shot, freehand. The round draws a shape from the chosen difficulty pools and
+**everyone draws the same one** on a blank canvas as the phone goes round — no guides on the
+drawing surface, just the name, a one-line rule and a small reference thumbnail. At the end
+every attempt is laid **over the ideal outline, one after another**, and ranked underneath by
+accuracy.
+
+- **Tech:** `<canvas>` + Pointer Events like Doodle Drama (mouse = finger). Multiple strokes
+  allowed (the plus sign needs two) with **undo** and **clear**; attempts live in memory for the
+  round only.
+- **Scoring** (`games/shapefit.js`, DOM-free so it can be exercised standalone): attempt and
+  ideal outline are resampled to evenly spaced points, both normalised (centroid to the origin,
+  RMS radius to 1), then the attempt is fitted onto the ideal one over rotation, a little extra
+  scale and shift. The score is the **two-way average distance** between the curves (symmetric
+  chamfer) — measuring both directions is what stops half a circle, or a scribble that merely
+  covers the shape, from scoring well. So **where and how big you draw is irrelevant; only form
+  counts.** The error maps to a percentage via `100·e^−(err/0.125)^1.13`, calibrated so a traced
+  outline lands ~97, a careful freehand one in the high 80s, a wobbly one ~70, a different shape
+  ~50 and an unrelated one in single digits — 100 % is out of reach on purpose.
+- **Rotation is not free:** a square rotated 45° is a diamond and the game asks for one of them,
+  so only ±16° of sloppiness is forgiven. The circle and the straight line, where orientation
+  means nothing, may spin freely.
+- **Shapes:** 20, split into 🟢 **Leicht** (circle, square, triangle, line, rectangle, oval,
+  diamond, plus, heart, half circle) and 🔴 **Schwer** (pentagon, hexagon, octagon, star, spiral,
+  infinity, wave, zigzag, arrow, crescent). Each is generated from a parametric outline, so the
+  reference thumbnail, the ghost on the reveal and the scoring all come from one definition.
+- **Config:** difficulty pools, ⏱️ time pressure (20s, off by default — at zero the attempt is
+  submitted as it stands, an empty canvas scoring 0 %), 🙈 hardcore (hides the reference).
+- **Reveal:** attempts fade on **worst → best** so the winner's line lands last, each drawing
+  itself on over ~0.5s with the dashed ideal shape held on top; the ranking fills in from the
+  bottom up. Tap the stage to skip to the full picture. Honours `prefers-reduced-motion`.
+- **Outcome:** a ranking by accuracy — no drinks, the number is the punishment.
 
 ---
 
