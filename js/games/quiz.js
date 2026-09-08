@@ -26,7 +26,9 @@
   var players = [];      // [{ name, lives }]
   var roundQueue = [];   // players still to act this round
   var round = -1;        // -> level index after beginRound()
-  var used = {};         // used question indices per level
+  var used = {};         // every question already asked this game (see pickQuestion)
+  var catBag = [];       // categories still owed a turn this cycle
+  var lastCat = null;    // so a bag refill can't repeat the category twice in a row
   var currentPlayer = null, currentQ = null, currentOpts = null;
 
   var module = {
@@ -49,7 +51,7 @@
     },
     unmount: function () {
       if (els) { els.innerHTML = ""; els = null; }
-      ctx = null; settings = null; players = []; roundQueue = []; used = {};
+      ctx = null; settings = null; players = []; roundQueue = []; used = {}; catBag = []; lastCat = null;
     },
   };
 
@@ -101,7 +103,7 @@
   function startGame(roster) {
     // Randomise turn order each game so it isn't the same rotation every time.
     players = shuffle(roster).map(function (p) { return { name: p.name, lives: settings.hearts }; });
-    roundQueue = []; round = -1; used = {};
+    roundQueue = []; round = -1; used = {}; catBag = []; lastCat = null;
     nextTurn();
   }
 
@@ -132,17 +134,6 @@
       if (lv && lv.length > m) m = lv.length;
     });
     return m;
-  }
-
-  // All questions at this difficulty across the chosen categories (each clamped
-  // to its own hardest level so shallow categories still contribute).
-  function levelPool(level) {
-    var c = cats(), pool = [];
-    selectedKeys().forEach(function (k) {
-      var lv = c[k] && c[k].levels;
-      if (lv && lv.length) pool = pool.concat(lv[Math.min(level, lv.length - 1)] || []);
-    });
-    return pool;
   }
 
   function levelIndex() {
@@ -258,16 +249,72 @@
   }
 
   // --- Questions -----------------------------------------------------------
+  // Two rules decide what gets asked, both learned the hard way:
+  //
+  // 1. CATEGORY FIRST, question second. Pooling every chosen category into one
+  //    flat list and drawing from it uniformly looks fair but weights the draw
+  //    by category SIZE — a 50-question category came up ten times as often as
+  //    a 5-question one, so a mixed game served the same category over and over
+  //    before another one had appeared once. Categories now take turns: each is
+  //    drawn from a bag that only refills once every category in it has had a
+  //    turn, and a refill never repeats the category that just played.
+  //
+  // 2. NOTHING REPEATS in a game. The history is keyed by category + the tier
+  //    the question actually sits at + its index, NOT by the round's level: a
+  //    category with fewer levels than the ladder is clamped to its hardest one,
+  //    so two different rounds pull from the same list, and a per-round history
+  //    would happily ask the same question again. Only when every chosen
+  //    category is exhausted does the history clear.
+
+  // The level a category actually serves at this round — its own hardest one
+  // once the ladder has climbed past it, so shallow categories keep playing.
+  function tierOf(c, key, level) {
+    var lv = c[key] && c[key].levels;
+    return !lv || !lv.length ? -1 : Math.min(level, lv.length - 1);
+  }
+  function tierList(c, key, level) {
+    var i = tierOf(c, key, level);
+    return i < 0 ? [] : (c[key].levels[i] || []);
+  }
+  function qid(key, tier, i) { return key + ":" + tier + ":" + i; }
+
+  // Positions in a category's current tier that haven't been asked yet.
+  function unasked(c, key, level) {
+    var tier = tierOf(c, key, level), list = tierList(c, key, level), out = [];
+    for (var i = 0; i < list.length; i++) if (!used[qid(key, tier, i)]) out.push(i);
+    return out;
+  }
+
+  function nextCategory(keys) {
+    while (catBag.length) {
+      var k = catBag.shift();
+      if (keys.indexOf(k) !== -1) return k;   // skip categories that ran dry
+    }
+    catBag = shuffle(keys);
+    if (catBag.length > 1 && catBag[0] === lastCat) catBag.push(catBag.shift());
+    return catBag.shift();
+  }
+
   function pickQuestion(level) {
-    var pool = levelPool(level);
-    if (!pool.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
-    var u = used[level] = used[level] || {};
-    var avail = [];
-    for (var i = 0; i < pool.length; i++) if (!u[i]) avail.push(i);
-    if (!avail.length) { used[level] = u = {}; for (var k = 0; k < pool.length; k++) avail.push(k); }
+    var c = cats();
+    var keys = selectedKeys().filter(function (k) { return tierList(c, k, level).length; });
+    if (!keys.length) return { q: "1 + 1 = ?", options: ["2", "1", "3", "11"], answer: 0 };
+
+    var fresh = keys.filter(function (k) { return unasked(c, k, level).length; });
+    if (!fresh.length) {          // every question at this tier is spent — start over
+      keys.forEach(function (k) {
+        var tier = tierOf(c, k, level), list = tierList(c, k, level);
+        for (var i = 0; i < list.length; i++) delete used[qid(k, tier, i)];
+      });
+      fresh = keys;
+    }
+
+    var key = nextCategory(fresh);
+    var avail = unasked(c, key, level);
     var pick = avail[Math.floor(Math.random() * avail.length)];
-    u[pick] = true;
-    return pool[pick];
+    used[qid(key, tierOf(c, key, level), pick)] = true;
+    lastCat = key;
+    return tierList(c, key, level)[pick];
   }
 
   function shuffleOptions(q) {

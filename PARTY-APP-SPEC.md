@@ -284,7 +284,11 @@ Two shapes of content, by what the game needs:
   - Activity → *point-tiered words* (`activity.js`, `{ 2:{label,words}, 3:…, 4:… }`),
     type-agnostic — the field decides how you perform, the points decide difficulty.
   - Quiz Out → *levelled multiple-choice* (`quiz.js`, an array of levels; each question
-    `{ q, options:[4], answer:index }`). Options are shuffled on screen.
+    `{ q, options:[4], answer:index }`). Options are shuffled on screen. Categories may be any
+    depth — the draw is category-first (see §3.11), so a big category doesn't crowd out a small
+    one. ⭐ Star Wars is the deepest at ~98 questions per language, roughly half of it Clone
+    Wars material drawn from the show's best-liked arcs (Umbara, Mortis, the Citadel, Maul on
+    Mandalore, the Wrong Jedi, the inhibitor chips, the Bad Batch and the Siege of Mandalore).
   - Hochadel → an editable **deck** tagged per edition + ground rules + opening verses
     (`hochadel.js`).
   - The three card games share one honest **52-card deck + card-face** component (`cards.js`),
@@ -446,9 +450,25 @@ costs a life. After every full round (each survivor has answered once) the diffi
 a level. Lose all hearts → out; last player standing wins. Uses the roster for turn order +
 per-player lives.
 
-- **Config:** hearts each (1–5, default 3), 🍻 drinking mode (wrong = drink too). Persisted.
+- **Config:** categories, hearts each (1–5, default 3), 🍻 drinking mode (wrong = drink too).
+  Persisted.
 - **Flow:** "Pass to [Name]" (lives shown) → question + 4 shuffled options → correct = safe,
   wrong = −1 heart (and drink in drinking mode) → next player; difficulty rises each round.
+  A category with fewer levels than the ladder is clamped to its own hardest one, so shallow
+  categories keep contributing at the top end.
+- **Question selection (two rules, both learned from a real game going wrong):**
+  **(1) Category first, question second.** Pooling every chosen category into one flat list
+  and drawing uniformly weights the draw by category *size* — measured on the real content,
+  the largest category took **52 %** of all draws against a fair share of 10 %, so a mixed
+  game served it over and over before another category had appeared once. Categories now take
+  turns: each is drawn from a bag that refills only when every category in it has had a turn,
+  and a refill never repeats the category that just played. Category size therefore has **no**
+  effect on how often it comes up — a category can be expanded freely without distorting a
+  mixed game. **(2) Nothing repeats in a game.** The history is keyed by category + the tier
+  the question actually sits at + its index, *not* by the round's level: a clamped category
+  serves the same list across several rounds, and a per-round history happily asked the same
+  question twice (~0.45 repeats per 30-question game before the fix). Only when every chosen
+  category is exhausted does the history clear.
 - **Outcome:** last survivor wins.
 
 ### 3.12 Truth or Drink 🍸 (`truth`, 2+) — drinking-capable

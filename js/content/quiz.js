@@ -197,6 +197,11 @@
           { q: "What are the Empire's white-armoured soldiers called?", options: ["Stormtroopers", "Droidekas", "Sith guards", "Bounty hunters"], answer: 0 },
           { q: "Which little green Jedi Master trained Luke?", options: ["Yoda", "Obi-Wan", "Mace Windu", "Qui-Gon"], answer: 0 },
           { q: "On which desert planet does Luke grow up?", options: ["Tatooine", "Naboo", "Endor", "Hoth"], answer: 0 },
+          // — The Clone Wars —
+          { q: "What are the Republic's soldiers in The Clone Wars called?", options: ["Clone troopers", "Stormtroopers", "Battle droids", "Rebels"], answer: 0 },
+          { q: "Which cyborg general leads the Separatist droid army?", options: ["General Grievous", "Admiral Ackbar", "Jar Jar Binks", "Boba Fett"], answer: 0 },
+          { q: "On which ocean planet are the clones grown?", options: ["Kamino", "Naboo", "Hoth", "Endor"], answer: 0 },
+          { q: "Which Sith Lord leads the Separatists?", options: ["Count Dooku", "Darth Maul", "Kylo Ren", "Jabba the Hutt"], answer: 0 },
         ],
         // Easy
         [
@@ -209,6 +214,15 @@
           { q: "Which furry creatures help beat the Empire on Endor?", options: ["Ewoks", "Wookiees", "Jawas", "Gungans"], answer: 0 },
           { q: "What is R2-D2?", options: ["An astromech droid", "A protocol droid", "A bounty hunter", "A starfighter"], answer: 0 },
           { q: "Whose Padawan is Anakin Skywalker?", options: ["Obi-Wan Kenobi", "Yoda", "Mace Windu", "Qui-Gon Jinn"], answer: 0 },
+          // — The Clone Wars —
+          { q: "What species is Ahsoka Tano?", options: ["Togruta", "Twi'lek", "Zabrak", "Wookiee"], answer: 0 },
+          { q: "What nickname does Ahsoka give Anakin?", options: ["Skyguy", "Starboy", "Sunny", "Chosen One"], answer: 0 },
+          { q: "And what does Anakin call Ahsoka?", options: ["Snips", "Sparks", "Kiddo", "Little Wing"], answer: 0 },
+          { q: "Every clone trooper is grown from which bounty hunter?", options: ["Jango Fett", "Boba Fett", "Cad Bane", "Aurra Sing"], answer: 0 },
+          { q: "Which clone captain serves at Anakin's side?", options: ["Rex", "Cody", "Wolffe", "Gree"], answer: 0 },
+          { q: "Which legion does Anakin lead?", options: ["The 501st", "The 212th", "The 104th", "The 41st"], answer: 0 },
+          { q: "Which clone commander serves under Obi-Wan?", options: ["Cody", "Rex", "Fox", "Bly"], answer: 0 },
+          { q: "How many seasons does The Clone Wars have?", options: ["7", "5", "6", "9"], answer: 0 },
         ],
         // Medium
         [
@@ -221,6 +235,17 @@
           { q: "What is the forest moon in Return of the Jedi?", options: ["Endor", "Yavin 4", "Kashyyyk", "Takodana"], answer: 0 },
           { q: "Which planet does the Death Star destroy in Episode IV?", options: ["Alderaan", "Naboo", "Corellia", "Jakku"], answer: 0 },
           { q: "What is the ice planet in The Empire Strikes Back?", options: ["Hoth", "Dagobah", "Mustafar", "Ilum"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Which bald assassin serves Count Dooku?", options: ["Asajj Ventress", "Barriss Offee", "Aurra Sing", "Bo-Katan Kryze"], answer: 0 },
+          { q: "Which duchess rules pacifist Mandalore?", options: ["Satine Kryze", "Bo-Katan Kryze", "Padmé Amidala", "Mon Mothma"], answer: 0 },
+          { q: "Maul survives Naboo and returns with which brother?", options: ["Savage Opress", "Feral", "Pre Vizsla", "Gar Saxon"], answer: 0 },
+          { q: "The Nightsisters live on which fog-covered planet?", options: ["Dathomir", "Mustafar", "Umbara", "Lola Sayu"], answer: 0 },
+          { q: "What is Grievous's warship with the huge ion cannon called?", options: ["Malevolence", "Invisible Hand", "Devastator", "Executor"], answer: 0 },
+          { q: "Which bounty hunter takes the Senate hostage to free Ziro the Hutt?", options: ["Cad Bane", "Boba Fett", "Embo", "Bossk"], answer: 0 },
+          { q: "The elite squad Clone Force 99 is better known as?", options: ["The Bad Batch", "The Wolfpack", "Domino Squad", "Torrent Company"], answer: 0 },
+          { q: "Which season is subtitled 'The Lost Missions'?", options: ["6", "4", "5", "7"], answer: 0 },
+          { q: "At the end of which season does Ahsoka walk out on the Jedi Order?", options: ["5", "3", "6", "7"], answer: 0 },
+          { q: "Which planet is the Shadow World, lit only by glowing plants?", options: ["Umbara", "Felucia", "Ryloth", "Kashyyyk"], answer: 0 },
         ],
         // Hard
         [
@@ -234,6 +259,19 @@
           { q: "What metal is Mandalorian armour made of?", options: ["Beskar", "Cortosis", "Phrik", "Durasteel"], answer: 0 },
           { q: "Which Jedi defeats Darth Maul in The Phantom Menace?", options: ["Obi-Wan Kenobi", "Qui-Gon Jinn", "Yoda", "Mace Windu"], answer: 0 },
           { q: "Who is Rey's grandfather in the sequel trilogy?", options: ["Palpatine", "Obi-Wan", "Luke", "Snoke"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Which Jedi general takes over the 501st on Umbara and betrays them?", options: ["Pong Krell", "Even Piell", "Plo Koon", "Kit Fisto"], answer: 0 },
+          { q: "What species is the four-armed traitor Pong Krell?", options: ["Besalisk", "Phindian", "Kaminoan", "Twi'lek"], answer: 0 },
+          { q: "Which clone finally executes Krell?", options: ["Dogma", "Fives", "Rex", "Jesse"], answer: 0 },
+          { q: "Maul beats Pre Vizsla in a duel and claims which weapon?", options: ["The Darksaber", "Vizsla's jetpack", "A beskar spear", "The Mandalorian crown"], answer: 0 },
+          { q: "Who dies in front of Obi-Wan in 'The Lawless'?", options: ["Satine Kryze", "Bo-Katan Kryze", "Barriss Offee", "Adi Gallia"], answer: 0 },
+          { q: "Who kills Savage Opress right in front of Maul?", options: ["Darth Sidious", "Obi-Wan Kenobi", "Count Dooku", "Asajj Ventress"], answer: 0 },
+          { q: "On the Force world Mortis the three beings are the Father, the Son and…?", options: ["The Daughter", "The Mother", "The Sister", "The Keeper"], answer: 0 },
+          { q: "Who really bombed the Jedi Temple hangar and framed Ahsoka?", options: ["Barriss Offee", "Letta Turmond", "Asajj Ventress", "Cad Bane"], answer: 0 },
+          { q: "Which Mandalorian joins Ahsoka for the Siege of Mandalore?", options: ["Bo-Katan Kryze", "Sabine Wren", "Ursa Wren", "Satine Kryze"], answer: 0 },
+          { q: "Which ARC trooper, believed dead since the Citadel, turns up alive in season 7?", options: ["Echo", "Fives", "Hevy", "Cutup"], answer: 0 },
+          { q: "Which clone uncovers the inhibitor chips — and is killed before he can prove it?", options: ["Fives", "Tup", "Dogma", "Jesse"], answer: 0 },
+          { q: "What does Maul call his alliance of Death Watch, Black Sun and the Pykes?", options: ["The Shadow Collective", "Crimson Dawn", "The Hutt Cartel", "The Bane Syndicate"], answer: 0 },
         ],
         // Deep cuts
         [
@@ -249,6 +287,23 @@
           { q: "Which admiral does Vader promote after Force-choking Ozzel?", options: ["Piett", "Tarkin", "Thrawn", "Krennic"], answer: 0 },
           { q: "What is the cantina spaceport city on Tatooine?", options: ["Mos Eisley", "Mos Espa", "Anchorhead", "Bestine"], answer: 0 },
           { q: "Which Sith rule limits their number to two?", options: ["The Rule of Two", "The Sith Code", "The Rule of One", "The Bane Law"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Who is the Phindian warden of the Citadel prison?", options: ["Osi Sobeck", "Wat Tambor", "Lok Durd", "Riff Tamson"], answer: 0 },
+          { q: "Which Jedi Master dies during the escape from the Citadel?", options: ["Even Piell", "Eeth Koth", "Adi Gallia", "Ima-Gun Di"], answer: 0 },
+          { q: "Whose malfunctioning chip makes him gun down Jedi General Tiplar?", options: ["Tup", "Fives", "Dogma", "Jesse"], answer: 0 },
+          { q: "Which clone commander shoots Fives?", options: ["Fox", "Cody", "Thorn", "Thire"], answer: 0 },
+          { q: "Which Jedi Master secretly ordered the clone army on Kamino?", options: ["Sifo-Dyas", "Count Dooku", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "Whose identity does Obi-Wan take on after faking his own death?", options: ["Rako Hardeen", "Moralo Eval", "Cad Bane", "Embo"], answer: 0 },
+          { q: "Which Onderon rebel — later in Rogue One — does Ahsoka help train?", options: ["Saw Gerrera", "Lux Bonteri", "Steela Gerrera", "Ramsis Dendup"], answer: 0 },
+          { q: "The Bad Batch find Echo imprisoned on which Techno Union world?", options: ["Skako Minor", "Anaxes", "Ringo Vinda", "Lola Sayu"], answer: 0 },
+          { q: "What is the title of the very last episode of The Clone Wars?", options: ["Victory and Death", "Shattered", "The Phantom Apprentice", "Old Friends Not Forgotten"], answer: 0 },
+          { q: "The series finale first aired on which fitting date in 2020?", options: ["May 4", "May 25", "April 17", "December 18"], answer: 0 },
+          { q: "Which Nightsister creates Savage Opress?", options: ["Mother Talzin", "Asajj Ventress", "Old Daka", "Merrin"], answer: 0 },
+          { q: "How many episodes does The Clone Wars have in total?", options: ["133", "121", "108", "150"], answer: 0 },
+          { q: "Who is the supervising director behind The Clone Wars?", options: ["Dave Filoni", "Jon Favreau", "Genndy Tartakovsky", "Rian Johnson"], answer: 0 },
+          { q: "In 'The Phantom Apprentice' Maul demands the Republic hand over which Jedi?", options: ["Anakin Skywalker", "Obi-Wan Kenobi", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "What colour are Ahsoka's blades after Anakin returns her lightsabers in season 7?", options: ["Blue", "Green", "White", "Yellow"], answer: 0 },
+          { q: "Which giant beast is dug up on Malastare and hauled to Coruscant?", options: ["The Zillo Beast", "A rancor", "A sarlacc", "A krayt dragon"], answer: 0 },
         ],
       ],
     },
@@ -594,6 +649,11 @@
           { q: "Wie heißen die weiß gepanzerten Soldaten des Imperiums?", options: ["Sturmtruppen", "Droidekas", "Sith-Wachen", "Kopfgeldjäger"], answer: 0 },
           { q: "Welcher kleine grüne Jedi-Meister bildete Luke aus?", options: ["Yoda", "Obi-Wan", "Mace Windu", "Qui-Gon"], answer: 0 },
           { q: "Auf welchem Wüstenplaneten wächst Luke auf?", options: ["Tatooine", "Naboo", "Endor", "Hoth"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Wie heißen die Soldaten der Republik in The Clone Wars?", options: ["Klonkrieger", "Sturmtruppler", "Kampfdroiden", "Rebellen"], answer: 0 },
+          { q: "Welcher Cyborg-General führt die Droidenarmee der Separatisten?", options: ["General Grievous", "Admiral Ackbar", "Jar Jar Binks", "Boba Fett"], answer: 0 },
+          { q: "Auf welchem Ozeanplaneten werden die Klone gezüchtet?", options: ["Kamino", "Naboo", "Hoth", "Endor"], answer: 0 },
+          { q: "Welcher Sith-Lord führt die Separatisten an?", options: ["Graf Dooku", "Darth Maul", "Kylo Ren", "Jabba der Hutt"], answer: 0 },
         ],
         // Leicht
         [
@@ -606,6 +666,15 @@
           { q: "Welche pelzigen Wesen helfen, das Imperium auf Endor zu besiegen?", options: ["Ewoks", "Wookiees", "Jawas", "Gungans"], answer: 0 },
           { q: "Was ist R2-D2?", options: ["Ein Astromech-Droide", "Ein Protokoll-Droide", "Ein Kopfgeldjäger", "Ein Sternjäger"], answer: 0 },
           { q: "Wessen Padawan ist Anakin Skywalker?", options: ["Obi-Wan Kenobi", "Yoda", "Mace Windu", "Qui-Gon Jinn"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Welcher Spezies gehört Ahsoka Tano an?", options: ["Togruta", "Twi'lek", "Zabrak", "Wookiee"], answer: 0 },
+          { q: "Welchen Spitznamen gibt Ahsoka Anakin?", options: ["Skyguy", "Starboy", "Sunny", "Auserwählter"], answer: 0 },
+          { q: "Und wie nennt Anakin Ahsoka?", options: ["Snips", "Sparks", "Kleine", "Little Wing"], answer: 0 },
+          { q: "Jeder Klonkrieger stammt von welchem Kopfgeldjäger ab?", options: ["Jango Fett", "Boba Fett", "Cad Bane", "Aurra Sing"], answer: 0 },
+          { q: "Welcher Klon-Captain kämpft an Anakins Seite?", options: ["Rex", "Cody", "Wolffe", "Gree"], answer: 0 },
+          { q: "Welche Legion führt Anakin an?", options: ["Die 501.", "Die 212.", "Die 104.", "Die 41."], answer: 0 },
+          { q: "Welcher Klon-Commander dient unter Obi-Wan?", options: ["Cody", "Rex", "Fox", "Bly"], answer: 0 },
+          { q: "Wie viele Staffeln hat The Clone Wars?", options: ["7", "5", "6", "9"], answer: 0 },
         ],
         // Mittel
         [
@@ -618,6 +687,17 @@
           { q: "Wie heißt der Waldmond in Die Rückkehr der Jedi-Ritter?", options: ["Endor", "Yavin 4", "Kashyyyk", "Takodana"], answer: 0 },
           { q: "Welchen Planeten zerstört der Todesstern in Episode IV?", options: ["Alderaan", "Naboo", "Corellia", "Jakku"], answer: 0 },
           { q: "Wie heißt der Eisplanet in Das Imperium schlägt zurück?", options: ["Hoth", "Dagobah", "Mustafar", "Ilum"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Welche kahle Attentäterin dient Graf Dooku?", options: ["Asajj Ventress", "Barriss Offee", "Aurra Sing", "Bo-Katan Kryze"], answer: 0 },
+          { q: "Welche Herzogin regiert das pazifistische Mandalore?", options: ["Satine Kryze", "Bo-Katan Kryze", "Padmé Amidala", "Mon Mothma"], answer: 0 },
+          { q: "Maul überlebt Naboo und kehrt mit welchem Bruder zurück?", options: ["Savage Opress", "Feral", "Pre Vizsla", "Gar Saxon"], answer: 0 },
+          { q: "Auf welchem Nebelplaneten leben die Nachtschwestern?", options: ["Dathomir", "Mustafar", "Umbara", "Lola Sayu"], answer: 0 },
+          { q: "Wie heißt Grievous' Kriegsschiff mit der riesigen Ionenkanone?", options: ["Malevolence", "Invisible Hand", "Devastator", "Executor"], answer: 0 },
+          { q: "Welcher Kopfgeldjäger nimmt den Senat als Geisel, um Ziro den Hutten zu befreien?", options: ["Cad Bane", "Boba Fett", "Embo", "Bossk"], answer: 0 },
+          { q: "Die Eliteeinheit Clone Force 99 kennt man besser als?", options: ["Bad Batch", "Wolfpack", "Domino Squad", "Torrent Company"], answer: 0 },
+          { q: "Welche Staffel trägt den Untertitel „The Lost Missions“?", options: ["6", "4", "5", "7"], answer: 0 },
+          { q: "Am Ende welcher Staffel verlässt Ahsoka den Jedi-Orden?", options: ["5", "3", "6", "7"], answer: 0 },
+          { q: "Welcher Planet ist die Schattenwelt, die nur durch leuchtende Pflanzen hell wird?", options: ["Umbara", "Felucia", "Ryloth", "Kashyyyk"], answer: 0 },
         ],
         // Schwer
         [
@@ -631,6 +711,19 @@
           { q: "Aus welchem Metall besteht die Rüstung der Mandalorianer?", options: ["Beskar", "Cortosis", "Phrik", "Durastahl"], answer: 0 },
           { q: "Welcher Jedi besiegt Darth Maul in Episode I?", options: ["Obi-Wan Kenobi", "Qui-Gon Jinn", "Yoda", "Mace Windu"], answer: 0 },
           { q: "Wer ist Reys Großvater in der Sequel-Trilogie?", options: ["Palpatine", "Obi-Wan", "Luke", "Snoke"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Welcher Jedi-General übernimmt auf Umbara die 501. und verrät sie?", options: ["Pong Krell", "Even Piell", "Plo Koon", "Kit Fisto"], answer: 0 },
+          { q: "Welcher Spezies gehört der vierarmige Verräter Pong Krell an?", options: ["Besalisk", "Phindian", "Kaminoaner", "Twi'lek"], answer: 0 },
+          { q: "Welcher Klon richtet Krell am Ende hin?", options: ["Dogma", "Fives", "Rex", "Jesse"], answer: 0 },
+          { q: "Maul besiegt Pre Vizsla im Duell und nimmt welche Waffe an sich?", options: ["Das Darksaber", "Vizslas Jetpack", "Einen Beskar-Speer", "Die Krone von Mandalore"], answer: 0 },
+          { q: "Wer stirbt in „The Lawless“ vor Obi-Wans Augen?", options: ["Satine Kryze", "Bo-Katan Kryze", "Barriss Offee", "Adi Gallia"], answer: 0 },
+          { q: "Wer tötet Savage Opress direkt vor Mauls Augen?", options: ["Darth Sidious", "Obi-Wan Kenobi", "Graf Dooku", "Asajj Ventress"], answer: 0 },
+          { q: "Auf der Machtwelt Mortis sind die drei Wesen der Vater, der Sohn und…?", options: ["Die Tochter", "Die Mutter", "Die Schwester", "Die Wächterin"], answer: 0 },
+          { q: "Wer hat den Hangar des Jedi-Tempels wirklich gesprengt und Ahsoka reingelegt?", options: ["Barriss Offee", "Letta Turmond", "Asajj Ventress", "Cad Bane"], answer: 0 },
+          { q: "Welche Mandalorianerin schließt sich Ahsoka für die Belagerung von Mandalore an?", options: ["Bo-Katan Kryze", "Sabine Wren", "Ursa Wren", "Satine Kryze"], answer: 0 },
+          { q: "Welcher ARC-Trooper gilt seit der Zitadelle als tot und taucht in Staffel 7 lebend auf?", options: ["Echo", "Fives", "Hevy", "Cutup"], answer: 0 },
+          { q: "Welcher Klon deckt die Inhibitor-Chips auf — und wird getötet, bevor er es beweisen kann?", options: ["Fives", "Tup", "Dogma", "Jesse"], answer: 0 },
+          { q: "Wie nennt Maul sein Bündnis aus Death Watch, Black Sun und den Pykes?", options: ["Shadow Collective", "Crimson Dawn", "Hutten-Kartell", "Bane-Syndikat"], answer: 0 },
         ],
         // Für Kenner
         [
@@ -646,6 +739,23 @@
           { q: "Welchen Admiral befördert Vader, nachdem er Ozzel mit der Macht erwürgt?", options: ["Piett", "Tarkin", "Thrawn", "Krennic"], answer: 0 },
           { q: "Wie heißt die Raumhafenstadt mit der Cantina auf Tatooine?", options: ["Mos Eisley", "Mos Espa", "Anchorhead", "Bestine"], answer: 0 },
           { q: "Welche Sith-Regel begrenzt ihre Zahl auf zwei?", options: ["Die Regel der Zwei", "Der Sith-Kodex", "Die Regel des Einen", "Das Bane-Gesetz"], answer: 0 },
+          // — The Clone Wars —
+          { q: "Wer ist der phindianische Aufseher des Zitadellen-Gefängnisses?", options: ["Osi Sobeck", "Wat Tambor", "Lok Durd", "Riff Tamson"], answer: 0 },
+          { q: "Welcher Jedi-Meister stirbt bei der Flucht aus der Zitadelle?", options: ["Even Piell", "Eeth Koth", "Adi Gallia", "Ima-Gun Di"], answer: 0 },
+          { q: "Wessen defekter Chip lässt ihn Jedi-Generalin Tiplar erschießen?", options: ["Tup", "Fives", "Dogma", "Jesse"], answer: 0 },
+          { q: "Welcher Klon-Commander erschießt Fives?", options: ["Fox", "Cody", "Thorn", "Thire"], answer: 0 },
+          { q: "Welcher Jedi-Meister hat die Klonarmee auf Kamino heimlich bestellt?", options: ["Sifo-Dyas", "Graf Dooku", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "Wessen Identität nimmt Obi-Wan an, nachdem er seinen Tod vorgetäuscht hat?", options: ["Rako Hardeen", "Moralo Eval", "Cad Bane", "Embo"], answer: 0 },
+          { q: "Welchen Rebellen von Onderon — später in Rogue One — bildet Ahsoka mit aus?", options: ["Saw Gerrera", "Lux Bonteri", "Steela Gerrera", "Ramsis Dendup"], answer: 0 },
+          { q: "Auf welcher Techno-Union-Welt finden die Bad Batch den gefangenen Echo?", options: ["Skako Minor", "Anaxes", "Ringo Vinda", "Lola Sayu"], answer: 0 },
+          { q: "Wie heißt die allerletzte Folge von The Clone Wars?", options: ["Victory and Death", "Shattered", "The Phantom Apprentice", "Old Friends Not Forgotten"], answer: 0 },
+          { q: "An welchem passenden Datum lief das Serienfinale 2020 zuerst?", options: ["4. Mai", "25. Mai", "17. April", "18. Dezember"], answer: 0 },
+          { q: "Welche Nachtschwester erschafft Savage Opress?", options: ["Mutter Talzin", "Asajj Ventress", "Die alte Daka", "Merrin"], answer: 0 },
+          { q: "Wie viele Folgen hat The Clone Wars insgesamt?", options: ["133", "121", "108", "150"], answer: 0 },
+          { q: "Wer ist der Supervising Director hinter The Clone Wars?", options: ["Dave Filoni", "Jon Favreau", "Genndy Tartakovsky", "Rian Johnson"], answer: 0 },
+          { q: "In „The Phantom Apprentice“ fordert Maul die Auslieferung welches Jedi?", options: ["Anakin Skywalker", "Obi-Wan Kenobi", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "Welche Farbe haben Ahsokas Klingen, nachdem Anakin ihr die Lichtschwerter in Staffel 7 zurückgibt?", options: ["Blau", "Grün", "Weiß", "Gelb"], answer: 0 },
+          { q: "Welche Riesenbestie wird auf Malastare ausgegraben und nach Coruscant geschafft?", options: ["Die Zillo-Bestie", "Ein Rancor", "Ein Sarlacc", "Ein Krayt-Drache"], answer: 0 },
         ],
       ],
     },
