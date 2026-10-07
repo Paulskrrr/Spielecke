@@ -218,6 +218,108 @@
     },
   };
 
+  var ES = {
+    general: {
+      label: "🎲 General",
+      questions: [
+        { q: "¿Cuántas teclas tiene un piano estándar?", a: 88 },
+        { q: "¿Cuántos huesos tiene el cuerpo humano adulto?", a: 206 },
+        { q: "¿Cuántos países hay en la UE (2024)?", a: 27 },
+        { q: "¿Cuántos minutos tiene una semana entera? (vale en miles)", a: 10080 },
+        { q: "¿Cuántos corazones tiene un pulpo?", a: 3 },
+        { q: "¿En qué año salió el primer iPhone?", a: 2007 },
+        { q: "¿Cuántas cartas tiene una baraja francesa, sin comodines?", a: 52 },
+        { q: "¿Cuántos segundos tiene una hora?", a: 3600 },
+        { q: "¿Cuántas cuerdas tiene una guitarra estándar?", a: 6 },
+        { q: "¿Cuántas casillas tiene un tablero de ajedrez?", a: 64 },
+        { q: "¿Cuántos grados tiene un círculo completo?", a: 360 },
+      ],
+    },
+    body: {
+      label: "🧠 Cuerpo y ciencia",
+      questions: [
+        { q: "¿Temperatura corporal media del ser humano en °C?", a: 37 },
+        { q: "¿Cuántos dientes tiene un adulto?", a: 32 },
+        { q: "¿Cuántos cromosomas tiene el ser humano?", a: 46 },
+        { q: "¿Litros de sangre de un adulto medio?", a: 5 },
+        { q: "¿Cuántos músculos hacen falta para sonreír? (aprox.)", a: 12 },
+        { q: "¿Pulsaciones por minuto en reposo (aprox.)?", a: 70 },
+        { q: "¿Cuántos sentidos tiene tradicionalmente el ser humano?", a: 5 },
+        { q: "¿Cuántos pares de costillas tiene el ser humano?", a: 12 },
+        { q: "¿Cuántos planetas hay en nuestro sistema solar?", a: 8 },
+        { q: "¿Cuántas semanas dura un embarazo a término?", a: 40 },
+      ],
+    },
+    world: {
+      label: "🌍 Mundo",
+      questions: [
+        { q: "¿Altura de la Torre Eiffel en metros?", a: 330 },
+        { q: "¿Cuántos husos horarios abarca Rusia?", a: 11 },
+        { q: "¿Número de lunas de Júpiter (conocidas, aprox.)?", a: 95 },
+        { q: "¿Cuántos jugadores hay en total en un campo de fútbol?", a: 22 },
+        { q: "¿En qué año cayó el Muro de Berlín?", a: 1989 },
+        { q: "¿Cuántos continentes hay?", a: 7 },
+        { q: "¿Cuántos países hay en el mundo (aprox.)?", a: 195 },
+        { q: "¿Cuántos estados tiene EE. UU.?", a: 50 },
+        { q: "¿En qué año se hundió el Titanic?", a: 1912 },
+        { q: "¿Altura del Everest en metros?", a: 8849 },
+      ],
+    },
+    money: {
+      label: "💰 Dinero y poder",
+      questions: [
+        { q: "¿Cuántos ceros tiene mil millones?", a: 9 },
+        { q: "¿En qué año empezaron a circular los billetes y monedas de euro?", a: 2002 },
+        { q: "¿Cuántos países usan el euro? (2024)", a: 20 },
+        { q: "¿Cuántos países miembros tiene el G7?", a: 7 },
+        { q: "¿Edad mínima para ser presidente de EE. UU.?", a: 35 },
+        { q: "¿Tipo general de IVA en Alemania, en porcentaje?", a: 19 },
+        { q: "¿Cuántos billetes de euro de distinto valor hay?", a: 7 },
+        { q: "¿Cuántos Estados miembros tiene la ONU?", a: 193 },
+      ],
+    },
+    sport: {
+      label: "⚽ Deporte",
+      questions: [
+        { q: "¿Cuántos jugadores de un equipo hay en una pista de baloncesto?", a: 5 },
+        { q: "¿Cuántos aros tiene la bandera olímpica?", a: 5 },
+        { q: "¿Longitud de un maratón en kilómetros (redondeada)?", a: 42 },
+        { q: "¿Cuántos torneos de Grand Slam de tenis hay al año?", a: 4 },
+        { q: "¿Minutos de un partido de fútbol, sin el tiempo añadido?", a: 90 },
+        { q: "¿Puntuación máxima en una partida de bolos?", a: 300 },
+        { q: "¿Cuántos hoyos tiene un recorrido completo de golf?", a: 18 },
+        { q: "¿Cuántos puntos vale un touchdown, sin la patada extra?", a: 6 },
+      ],
+    },
+    chronicle: {
+      label: "🏛️ Historia",
+      questions: [
+        { q: "¿En qué año empezó la Primera Guerra Mundial?", a: 1914 },
+        { q: "¿En qué año llegó el ser humano a la Luna por primera vez?", a: 1969 },
+        { q: "¿Cuántas esposas tuvo Enrique VIII?", a: 6 },
+        { q: "¿En qué año empezó la Revolución francesa?", a: 1789 },
+        { q: "¿Cuántos presidentes ha tenido EE. UU.? (hasta 2024)", a: 46 },
+        { q: "¿En qué año cayó el Imperio romano de Occidente?", a: 476 },
+        { q: "¿En qué año terminó la Segunda Guerra Mundial?", a: 1945 },
+        { q: "¿Cuántos años estuvo en pie el Muro de Berlín?", a: 28 },
+      ],
+    },
+    party: {
+      label: "🍺 Fiesta",
+      questions: [
+        { q: "¿Tasa máxima de alcohol en sangre para conducir en Alemania, en gramos por litro?", a: 0.5 },
+        { q: "¿Cuántos litros de cerveza bebe un alemán medio al año?", a: 88 },
+        { q: "¿Cuántos millones de litros de cerveza se sirvieron en el Oktoberfest de 2023 (aprox.)?", a: 6.5 },
+        { q: "¿Cuántas calorías tiene medio litro de cerveza (aprox.)?", a: 210 },
+        { q: "¿Cuántas botellas tiene una caja de cerveza alemana?", a: 20 },
+        { q: "¿Cuánto alcohol tiene el Jägermeister, en porcentaje?", a: 35 },
+        { q: "¿De qué año es la Ley de Pureza de la cerveza alemana?", a: 1516 },
+        { q: "¿Cuántos ingredientes permite la Ley de Pureza de la cerveza?", a: 4 },
+        { q: "¿Cuántos chupitos de 2 cl caben en una botella de 0,7 litros?", a: 35 },
+      ],
+    },
+  };
+
   global.Spielecke = global.Spielecke || {};
-  global.Spielecke.NumberQuestions = { de: DE, en: EN };
+  global.Spielecke.NumberQuestions = { de: DE, en: EN, es: ES };
 })(window);

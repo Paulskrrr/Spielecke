@@ -569,7 +569,7 @@
 
   function pct(score) {
     var s = score.toFixed(1);
-    return (global.Spielecke.getLang() === "de" ? s.replace(".", ",") : s) + "%";
+    return (global.Spielecke.getLang() !== "en" ? s.replace(".", ",") : s) + "%";
   }
   function prefersReducedMotion() {
     try { return global.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) { return false; }

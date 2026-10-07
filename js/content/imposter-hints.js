@@ -197,6 +197,180 @@
         "Don King": "Hairdo", "Eddie Hearn": "Suit"
       }
     },
+    es: {
+      football: {
+        "Messi": "Pulga", "Ronaldo": "Vanidad", "Neymar": "Drama", "Mbappé": "Aceleración",
+        "Haaland": "Maquinaria", "Lewandowski": "Paciencia", "Salah": "Devoción", "De Bruyne": "Precisión",
+        "Kimmich": "Diligencia", "Müller": "Intuición", "Neuer": "Líbero", "Kroos": "Metrónomo",
+        "FC Bayern": "Dominio", "Real Madrid": "Realeza", "FC Barcelona": "Filosofía", "Manchester City": "Riqueza",
+        "Liverpool": "Himno", "Paris Saint-Germain": "Glamour", "Borussia Dortmund": "Juventud", "Arsenal": "Cañón",
+        "Juventus": "Rayas", "Chelsea": "Sala de juntas", "Hat-trick": "Triplete", "Penalti": "Nervios",
+        "VAR": "Duda", "Champions League": "Prestigio", "Remontada": "Resurgir", "Camp Nou": "Catedral",
+        "La Masia": "Cantera", "Tiki-Taka": "Hipnosis", "Xavi": "Director de orquesta", "Iniesta": "Susurro",
+        "Puyol": "Melena", "Guardiola": "Obsesión", "Pedri": "Madurez", "Lamine Yamal": "Prodigio",
+        "Fuera de juego": "Margen", "Tiro libre": "Muro", "Córner": "Enjambre", "Cabezazo": "Altitud",
+        "Chilena": "Acróbata", "Tarjeta roja": "Destierro", "Mundial": "Patriotismo", "Mercado de fichajes": "Fecha límite",
+        "Descenso": "Desesperación"
+      },
+      videogames: {
+        "Respawn": "Mercy", "Jefe final": "Pavor", "Easter Egg": "Susurro", "Noob": "Burla",
+        "Speedrun": "Obsesión", "Caja de botín": "Tentación", "Truco": "Culpa", "LAN party": "Fiesta de pijamas",
+        "Creeper": "Sobresalto", "Steve": "Corriente", "Enderman": "Evitación", "Pico de diamante": "Rutina machacona",
+        "Portal del Nether": "Umbral", "Dragón del End": "Final", "Herobrine": "Paranoia", "Redstone": "Trastear",
+        "Casa de tierra": "Vergüenza", "AWP": "Paciencia", "Headshot": "Precisión", "Rush B": "Imprudencia",
+        "Granada cegadora": "Desorientación", "Ronda de cuchillos": "Calentamiento", "Granada de humo": "Ocultación", "Desactivar la bomba": "Suspense",
+        "Bastion": "Soledad", "Tracer": "Ánimo", "Reinhardt": "Caballerosidad", "Mercy": "Devoción",
+        "D.Va": "Fanfarronería", "Genji": "Disciplina", "Widowmaker": "Frialdad", "Carga": "Lastre",
+        "Yasuo": "Deambular", "Teemo": "Fastidio", "Jungla": "Soledad", "Barón Nashor": "Codicia",
+        "Dragón": "Tesoro escondido", "Nexus": "Derrumbe", "Gank": "Emboscada", "Agente 47": "Desapego",
+        "Dragón eléctrico": "Oleada", "Ayuntamiento": "Jerarquía"
+      },
+      general: {
+        "Cepillo de dientes": "Rutina", "Despertador": "Pavor", "Paraguas": "Pronóstico", "Gafas de sol": "Anonimato",
+        "Mando a distancia": "Pereza", "Tijeras": "Confianza", "Microondas": "Impaciencia", "Lavadora": "Zumbido",
+        "Grapadora": "Burocracia", "Mechero": "Rebeldía", "Pizza": "Compartir", "Sushi": "Precisión",
+        "Helado": "Infancia", "Hamburguesa": "Capricho", "Palomitas": "Expectación", "Café": "Supervivencia",
+        "Cerveza": "Pertenencia", "Nutella": "Tentación", "Aguacate": "Estatus", "Bacon": "Chisporroteo",
+        "Pingüino": "Formalidad", "Delfín": "Ingenio", "Flamenco": "Equilibrio", "Perezoso": "Paciencia",
+        "Pulpo": "Misterio", "Panda": "Diplomacia", "Canguro": "Rebote", "Hámster": "Inutilidad",
+        "Jirafa": "Incomodidad", "Cuervo": "Presagio", "Sauna": "Resistencia", "Dentista": "Confesión",
+        "Aeropuerto": "Limbo", "Casino": "Delirio", "Gimnasio": "Propósito", "Montaña rusa": "Rendición",
+        "Mercadillo": "Nostalgia", "Atasco": "Impotencia", "Apagón": "Quietud", "Hospital": "Fragilidad",
+        "Primera cita": "Actuación", "Entrevista de trabajo": "Fingimiento", "Resaca": "Remordimiento", "Mudanza": "Agitación",
+        "Fiesta sorpresa": "Conspiración", "Road trip": "Libertad", "Noche en vela": "Fecha límite", "Quemadura solar": "Negligencia"
+      },
+      party: {
+        "Beer pong": "Puntería", "Resaca": "Arrepentimiento", "Chupito de tequila": "Valor", "Discoteca": "Anonimato",
+        "Karaoke": "Bochorno", "Conductor designado": "Sacrificio", "Kebab a las 4 de la mañana": "Perdón", "Precopeo": "Expectación",
+        "Chupitos": "Imprudencia", "Grupo de WhatsApp": "Pertenencia"
+      },
+      science: {
+        "Robot": "Obediencia", "Cohete": "Despedida", "Dinosaurio": "Obsoleto", "Volcán": "Presión",
+        "Telescopio": "Paciencia", "Imán": "Lealtad", "Bombilla": "Polilla", "Pila": "Aguante",
+        "Astronauta": "Soledad", "Extraterrestre": "Pertenencia", "Agujero negro": "Rendición", "Submarino": "Secretismo",
+        "Dron": "Vigilancia", "Microscopio": "Detalle", "Esqueleto": "Mortalidad", "Cerebro": "Arrugas",
+        "Tornado": "Caos", "Placa solar": "Idealismo", "Coche autónomo": "Confianza", "Inteligencia artificial": "Sustituto",
+        "Vacuna": "Mercy", "Átomo": "Indivisible", "Satélite": "Escuchar a escondidas", "Impresora 3D": "Capas"
+      },
+      history: {
+        "Napoleón": "Ambición", "Cleopatra": "Atractivo", "Julio César": "Traición", "Albert Einstein": "Curiosidad",
+        "Abraham Lincoln": "Sinceridad", "Gandhi": "Paciencia", "La reina Isabel II": "Deber", "El Muro de Berlín": "Separación",
+        "Las pirámides": "Permanencia", "El Titanic": "Soberbia", "La Revolución francesa": "Hambre", "La Guerra Fría": "Sospecha",
+        "La llegada a la Luna": "Asombro", "Un vikingo": "Ganas de viajar", "Un caballero": "Lealtad", "Un faraón": "Eternidad",
+        "El Imperio romano": "Orden", "Un dictador": "Miedo", "La Edad de Piedra": "Supervivencia", "La Estatua de la Libertad": "Bienvenida",
+        "La Torre Eiffel": "Romance", "La Segunda Guerra Mundial": "Racionamiento", "El Lejano Oeste": "Anarquía", "Una corona": "Lastre"
+      },
+      leisure: {
+        "Playa": "Horizonte", "Maleta": "Indecisión", "Crema solar": "Previsión", "Tumbona": "Ociosidad",
+        "Pasaporte": "Identidad", "Tienda de campaña": "Improvisación", "Crucero": "Encierro", "Avión": "Paciencia",
+        "Tubo de buceo": "Silencio", "Cóctel en la piscina": "Capricho", "Souvenir": "Nostalgia", "Botas de montaña": "Persistencia",
+        "Quemadura solar": "Descuido", "Bufé del hotel": "Gula", "Festival": "Caos", "Road trip": "Espontaneidad",
+        "Hamaca": "Rendición", "Pelota de playa": "Flotabilidad", "Chanclas": "Desenfado", "Autocaravana": "Libertad",
+        "Telesilla": "Suspense", "Mapa": "Duda", "Palo selfie": "Vanidad", "Resort todo incluido": "Exceso"
+      },
+      power: {
+        "Milmillonario": "Ceros", "Corona": "Peso", "Lingote de oro": "Contundencia", "Maletín de dinero": "Anonimato",
+        "Trono": "Soledad", "Diamante": "Frialdad", "Bolsa": "Ansiedad", "Presidente": "Soledad",
+        "Cámara acorazada": "Silencio", "Dictador": "Paranoia", "Soborno": "Susurro", "Lobista": "Persuasión",
+        "Herencia": "Rencor", "Jet privado": "Huida", "Yate": "Aburrimiento", "Paraíso fiscal": "Secretismo",
+        "Casino": "Desesperación", "Cripto": "Volatilidad", "CEO": "Insomnio", "Alfombra roja": "Escrutinio",
+        "Guardaespaldas": "Alerta", "Ático de lujo": "Desapego"
+      },
+      famous: {
+        "The Rock": "Ajetreo", "Shrek": "Soledad", "Harry Potter": "Huérfano", "Donald Trump": "Sala de juntas",
+        "Conor McGregor": "Chulería", "Darth Vader": "Redención", "James Bond": "Compostura", "Justin Bieber": "Prodigio",
+        "Ariana Grande": "Coleta", "Leonardo DiCaprio": "Clima", "Keanu Reeves": "Humilde", "Margot Robbie": "Plástico",
+        "Zendaya": "Aplomo", "Homer Simpson": "Dónut", "Cristiano Ronaldo": "Vanidad", "Lionel Messi": "Tranquilo",
+        "LeBron James": "Longevidad", "Usain Bolt": "Relajado", "Mike Tyson": "Palomas", "Drake": "Sensible",
+        "Eminem": "Rencor", "Kanye West": "Ego", "Snoop Dogg": "Pausado", "Elon Musk": "Memes",
+        "Jeff Bezos": "Almacén", "Mark Zuckerberg": "Privacidad", "Steve Jobs": "Minimalismo", "Bill Gates": "Filantropía",
+        "MrBeast": "Generosidad", "Kim Kardashian": "Contorno", "Barack Obama": "Esperanza"
+      },
+      nsfw: {
+        "Rollo de una noche": "Arrepentimiento", "Club de striptease": "Tentación", "Sexting": "Distracción", "Paseo de la vergüenza": "Luz del día",
+        "Llamada para echar un polvo": "Comodidad", "Follamigos": "Confusión", "Bañarse desnudo": "Liberación", "La nueva pareja de tu ex": "Comparación",
+        "Un mensaje de borracho del que te arrepientes": "Cringe", "Trío": "Celos", "Lap dance": "Tensión", "Esposas": "Rendición",
+        "Erección mañanera": "Molestia", "Rapidito": "Eficiencia", "Sugar daddy": "Dependencia", "Palabra de seguridad": "Confianza",
+        "Sueño húmedo": "Subconsciente", "Hablar sucio": "Imaginación", "Juego de rol": "Apariencia", "Friendzone": "Rechazo",
+        "Netflix and chill": "Pretexto", "Chupetón": "Prueba", "Nata montada": "Desorden", "Salón de masajes": "Discreción",
+        "Sexo con la regla": "Aprensión", "Fofisano": "Confort"
+      },
+      starwars_easy: {
+        "Darth Vader": "Asma", "Luke Skywalker": "Lloriqueo", "Yoda": "Pantano", "Princesa Leia": "Especia",
+        "Han Solo": "Deuda", "Obi-Wan Kenobi": "Ermitaño", "Chewbacca": "Lealtad", "R2-D2": "Valiente",
+        "C-3PO": "Quisquilloso", "Emperador Palpatine": "Paciencia", "Boba Fett": "Herencia", "Jango Fett": "Plantilla",
+        "Anakin Skywalker": "Arena", "Padmé Amidala": "Desamor", "Qui-Gon Jinn": "Rebelde", "Mace Windu": "Compostura",
+        "Conde Dooku": "Deserción", "General Grievous": "Tos", "Jar Jar Binks": "Torpeza", "Rey": "Rebuscar",
+        "Kylo Ren": "Berrinche", "Finn": "Conciencia", "BB-8": "Voltereta", "Snoke": "Marioneta",
+        "Lando Calrissian": "Encanto", "Jabba el Hutt": "Gula", "Almirante Ackbar": "Advertencia", "Darth Maul": "Venganza",
+        "El Mandaloriano": "Credo", "Ahsoka Tano": "Partida", "Capitán Rex": "Hermandad", "Comandante Cody": "Obediencia",
+        "Asajj Ventress": "Recompensa", "Cad Bane": "Sombrero", "Hondo Ohnaka": "Oportunismo", "Plo Koon": "Máscara",
+        "Aayla Secura": "Emboscada", "Kit Fisto": "Sonrisa burlona"
+      },
+      starwars_hard: {
+        "Greedo": "Fallo de tiro", "Bossk": "Regeneración", "IG-88": "Soledad", "Gran Moff Tarkin": "Arrogancia",
+        "Savage Opress": "Transformación", "Barriss Offee": "Desilusión", "Embo": "Acróbata", "Coruscant": "Expansión",
+        "Mandalore": "Tradición", "Dathomir": "Brujería", "Kamino": "Lluvia", "Geonosis": "Colmena",
+        "Mustafar": "Arrepentimiento", "Kashyyyk": "Copa de los árboles", "Jedha": "Peregrinación", "Sable oscuro": "Reliquia familiar",
+        "Holocrón": "Conocimiento", "Slave I": "Heredado", "Destructor Estelar": "Cuña", "AT-AT": "Tropiezo",
+        "Orden 66": "Traición", "Midiclorianos": "Torrente sanguíneo", "Iniciado Jedi": "Inocencia", "Regla de Dos": "Escasez",
+        "Fantasma de la Fuerza": "Persistir", "Las Guerras Clon": "Desgaste", "Carbonita": "Congelado", "Sarlacc": "Digestión",
+        "Carrera de Kessel": "Fanfarronear"
+      },
+      marvel: {
+        "Iron Man": "Sacrificio", "Capitán América": "Lealtad", "Thor": "Indigno", "Viuda Negra": "Expiación",
+        "Hulk": "Contención", "Ojo de Halcón": "Familia", "Nick Fury": "Secretos", "Spider-Man": "Culpa",
+        "Doctor Strange": "Humillado", "Pantera Negra": "Tradición", "Ant-Man": "Libertad condicional", "Capitana Marvel": "Borrado",
+        "Máquina de Guerra": "Deber", "Halcón": "Herencia", "Soldado de Invierno": "Lavado de cerebro", "Bruja Escarlata": "Duelo",
+        "Visión": "Mortalidad", "Mercurio": "Breve", "Valquiria": "Superviviente", "Star-Lord": "Secuestrado",
+        "Gamora": "Adoptado", "Drax": "Literal", "Groot": "Altruista", "Rocket Raccoon": "Experimento",
+        "Nebula": "Rencor", "Mantis": "Empatía", "Yondu": "Redención", "Thanos": "Equilibrio",
+        "Loki": "Pertenencia", "Ultron": "Equivocado", "Hela": "Primogénito", "Killmonger": "Abandonado",
+        "Ego": "Vanidad", "Mysterio": "Ignorado", "Ronan": "Fanatismo", "Aldrich Killian": "Menospreciado",
+        "Pepper Potts": "Firme", "Daredevil": "Penitencia"
+      },
+      onepiece: {
+        "Monkey D. Luffy": "Berrinche", "Roronoa Zoro": "Perdido", "Nami": "Pronóstico", "Usopp": "Miedo escénico",
+        "Sanji": "Caballerosidad", "Tony Tony Chopper": "Marginado", "Nico Robin": "Superviviente", "Franky": "Trastear",
+        "Brook": "Soledad", "Jinbe": "Expiación", "Barbablanca": "Orfanato", "Portgas D. Ace": "Valía",
+        "Sabo": "Amnesia", "Marco": "Lealtad", "Trafalgar Law": "Venganza personal", "Boa Hancock": "Tímido",
+        "Crocodile": "Sequía", "Donquixote Doflamingo": "Hilos", "Bartholomew Kuma": "Altruismo", "Gecko Moria": "Insomnio",
+        "Buggy": "Incomprendido", "Mihawk": "Aburrimiento", "Monkey D. Garp": "Deber", "Akainu": "Absoluto",
+        "Aokiji": "Vago", "Kizaru": "Capricho", "Sengoku": "Resignación", "Smoker": "Testarudo",
+        "Tashigi": "Torpe", "Coby": "Formal", "Arlong": "Rencor", "Enel": "Megalomanía",
+        "Rob Lucci": "Frialdad", "Katakuri": "Previsión", "Big Mom": "Hambre", "Kaido": "Desesperación",
+        "Barbanegra": "Paciencia", "King": "Extinción", "Queen": "Showman", "Jack": "Devoción",
+        "Yamato": "Herencia", "Nefertari Vivi": "Derecho de nacimiento", "Bon Clay": "Sacrificio", "Perona": "Negatividad",
+        "Ivankov": "Transformación", "Silvers Rayleigh": "Jubilación", "Gol D. Roger": "Aceptación"
+      },
+      minecraft: {
+        "Creeper": "Mina terrestre", "Enderman": "Contacto visual", "Zombi": "Lunes por la mañana", "Esqueleto": "Rayos X",
+        "Araña": "Bañera", "Ghast": "Medusa", "Blaze": "Pirómano", "Wither": "La Parca",
+        "Dragón del End": "Final", "Warden": "Escuchar a escondidas", "Piglin": "Joyas llamativas", "Aldeano": "Bazar",
+        "Gólem de hierro": "Portero de discoteca", "Slime": "Gelatina", "Pico de diamante": "Martillo neumático", "Netherita": "Ignífugo",
+        "Redstone": "Electricista", "TNT": "Bola de demolición", "Obsidiana": "Puerta de cámara acorazada", "Élitros": "Ícaro",
+        "Tótem de la inmortalidad": "Desfibrilador", "Mesa de encantamientos": "Galimatías", "Faro": "Símbolo de estatus", "Caja de shulker": "Caja de mudanza",
+        "Perla de Ender": "Teletransporte", "Manzana dorada": "Bebida energética", "Tridente": "Poseidón", "Bloque de césped": "Césped",
+        "Roca": "Casco antiguo", "Roca madre": "Cristal blindado", "Mesa de trabajo": "IKEA", "Portal del Nether": "Agencia de viajes",
+        "El Nether": "Barrio rojo", "El End": "Créditos", "Aldea": "Pueblo perdido", "Ciudad antigua": "Catacumbas",
+        "Mansión del bosque": "Casa encantada", "Modo creativo": "Caja de Lego", "Speedrun": "Cronómetro", "Steve": "Hombre corriente",
+        "Alex": "Plan B", "Herobrine": "Pie Grande", "Notch": "Premio de lotería"
+      },
+      kampfsport: {
+        "Conor McGregor": "Whisky", "Khabib Nurmagomedov": "Águila", "Jon Jones": "Control antidoping", "Israel Adesanya": "Anime",
+        "Alex Pereira": "Cara de póker", "Islam Makhachev": "Heredero", "Charles Oliveira": "Favela", "Dustin Poirier": "Salsa picante",
+        "Justin Gaethje": "Pisar a fondo", "Max Holloway": "Hawaii", "Sean O'Malley": "Cera de colores", "Ilia Topuria": "Matador",
+        "Kamaru Usman": "Pesadilla", "Leon Edwards": "Londres", "Nate Diaz": "Porro", "Jorge Masvidal": "Patio trasero",
+        "Amanda Nunes": "Leona", "Valentina Shevchenko": "Tango", "Zhang Weili": "Pekín", "Francis Ngannou": "Arenero",
+        "Stipe Miocic": "Bombero", "Georges St-Pierre": "Caballero", "Anderson Silva": "Matrix", "Tom Aspinall": "Exprés",
+        "Merab Dvalishvili": "Duracell", "Paddy Pimblett": "Yoyó", "Muhammad Ali": "Mariposa", "Mike Tyson": "Tatuaje en la cara",
+        "Floyd Mayweather": "Saldo bancario", "Manny Pacquiao": "Senador", "Canelo Álvarez": "Especia", "Tyson Fury": "Resurgir",
+        "Anthony Joshua": "Juegos Olímpicos", "Deontay Wilder": "Dinamita", "Oleksandr Usyk": "Ajedrez", "Ryan Garcia": "Instagram",
+        "Conor Benn": "Linaje", "Wladimir Klitschko": "Doctorado", "Evander Holyfield": "Oreja", "Dana White": "Blackjack",
+        "Joe Rogan": "Pódcast", "Ariel Helwani": "Micrófono", "Bruce Buffer": "Anuncio", "Michael Buffer": "Marca registrada",
+        "Don King": "Peinado", "Eddie Hearn": "Traje"
+      }
+    },
     de: {
       football: {
         "Messi": "Floh", "Ronaldo": "Bauchmuskeln", "Neymar": "Theater", "Mbappé": "Schildkröte",

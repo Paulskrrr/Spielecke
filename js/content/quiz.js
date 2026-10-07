@@ -474,6 +474,463 @@
     },
   };
 
+  var ES = {
+    general: {
+      label: "🎲 General",
+      levels: [
+        // Warm-up
+        [
+          { q: "¿De qué color es un plátano?", options: ["Amarillo", "Azul", "Rojo", "Verde"], answer: 0 },
+          { q: "¿Cuántas patas tiene una araña?", options: ["8", "6", "4", "10"], answer: 0 },
+          { q: "¿Cómo se conoce comúnmente al H₂O?", options: ["Agua", "Sal", "Oro", "Aire"], answer: 0 },
+          { q: "¿Qué animal ladra?", options: ["Perro", "Gato", "Vaca", "Pez"], answer: 0 },
+          { q: "¿En qué planeta vivimos?", options: ["La Tierra", "Marte", "Venus", "Júpiter"], answer: 0 },
+        ],
+        // Easy
+        [
+          { q: "¿Capital de Francia?", options: ["París", "Londres", "Roma", "Berlín"], answer: 0 },
+          { q: "¿Cuántos continentes hay?", options: ["7", "5", "6", "8"], answer: 0 },
+          { q: "¿Cuántos lados tiene un hexágono?", options: ["6", "5", "7", "8"], answer: 0 },
+          { q: "¿Cuál es el océano más grande?", options: ["Pacífico", "Atlántico", "Índico", "Ártico"], answer: 0 },
+          { q: "¿Qué gas absorben las plantas?", options: ["CO₂", "Oxígeno", "Helio", "Nitrógeno"], answer: 0 },
+        ],
+        // Medium
+        [
+          { q: "¿Quién pintó la Mona Lisa?", options: ["Da Vinci", "Picasso", "Van Gogh", "Monet"], answer: 0 },
+          { q: "¿Símbolo químico del oro?", options: ["Au", "Ag", "Gd", "Go"], answer: 0 },
+          { q: "¿Cuántos huesos tiene el cuerpo humano adulto?", options: ["206", "201", "210", "196"], answer: 0 },
+          { q: "¿Capital de Australia?", options: ["Canberra", "Sydney", "Melbourne", "Perth"], answer: 0 },
+          { q: "¿País más poblado (2024)?", options: ["India", "China", "EE. UU.", "Indonesia"], answer: 0 },
+        ],
+        // Hard
+        [
+          { q: "¿En qué año terminó la Segunda Guerra Mundial?", options: ["1945", "1944", "1939", "1948"], answer: 0 },
+          { q: "¿Elemento con número atómico 1?", options: ["Hidrógeno", "Helio", "Oxígeno", "Carbono"], answer: 0 },
+          { q: "¿Quién escribió «Romeo y Julieta»?", options: ["Shakespeare", "Dickens", "Tolstoy", "Austen"], answer: 0 },
+          { q: "¿El número primo más pequeño?", options: ["2", "1", "3", "0"], answer: 0 },
+          { q: "¿Planeta más caliente del sistema solar?", options: ["Venus", "Mercurio", "Marte", "Júpiter"], answer: 0 },
+        ],
+        // Brutal
+        [
+          { q: "¿Año en que cayó el Muro de Berlín?", options: ["1989", "1991", "1987", "1990"], answer: 0 },
+          { q: "¿Raíz cuadrada de 144?", options: ["12", "14", "11", "13"], answer: 0 },
+          { q: "¿El más raro de los grupos sanguíneos principales?", options: ["AB−", "O−", "B−", "A−"], answer: 0 },
+          { q: "¿Quién desarrolló la relatividad general?", options: ["Einstein", "Newton", "Bohr", "Hawking"], answer: 0 },
+          { q: "¿Material natural más duro?", options: ["Diamante", "Cuarzo", "Acero", "Titanio"], answer: 0 },
+        ],
+      ],
+    },
+
+    science: {
+      label: "🔬 Ciencia y tecnología",
+      levels: [
+        [
+          { q: "¿Qué gas necesitan los humanos para respirar?", options: ["Oxígeno", "Dióxido de carbono", "Helio", "Hidrógeno"], answer: 0 },
+          { q: "¿Cuántos planetas hay en nuestro sistema solar?", options: ["8", "9", "7", "10"], answer: 0 },
+          { q: "¿Qué órgano bombea la sangre por el cuerpo?", options: ["Corazón", "Pulmones", "Hígado", "Cerebro"], answer: 0 },
+          { q: "¿Cuál es la estrella más cercana a la Tierra?", options: ["El Sol", "La Estrella Polar", "Alfa Centauri", "La Luna"], answer: 0 },
+        ],
+        [
+          { q: "¿Qué fuerza atrae los objetos hacia la Tierra?", options: ["Gravedad", "Magnetismo", "Fricción", "Presión"], answer: 0 },
+          { q: "¿Cuál es la «central energética» de la célula?", options: ["Mitocondria", "Núcleo", "Ribosoma", "Membrana"], answer: 0 },
+          { q: "¿Qué planeta es el planeta rojo?", options: ["Marte", "Venus", "Júpiter", "Saturno"], answer: 0 },
+          { q: "¿Qué gas forma la mayor parte de la atmósfera terrestre?", options: ["Nitrógeno", "Oxígeno", "CO₂", "Hidrógeno"], answer: 0 },
+        ],
+        [
+          { q: "¿Símbolo químico del sodio?", options: ["Na", "So", "Sd", "Nm"], answer: 0 },
+          { q: "¿Qué partícula tiene carga negativa?", options: ["Electrón", "Protón", "Neutrón", "Fotón"], answer: 0 },
+          { q: "¿A qué velocidad viaja la luz, aproximadamente?", options: ["300.000 km/s", "30.000 km/s", "3.000 km/s", "3 millones de km/s"], answer: 0 },
+          { q: "¿Quién propuso la evolución por selección natural?", options: ["Darwin", "Newton", "Mendel", "Pasteur"], answer: 0 },
+        ],
+      ],
+    },
+
+    history: {
+      label: "🏛️ Política e historia",
+      levels: [
+        [
+          { q: "¿Qué civilización construyó las pirámides de Guiza?", options: ["Los egipcios", "Los romanos", "Los griegos", "Los aztecas"], answer: 0 },
+          { q: "¿Quién fue el primer presidente de EE. UU.?", options: ["George Washington", "Abraham Lincoln", "Thomas Jefferson", "John Adams"], answer: 0 },
+          { q: "¿En qué país está la Gran Muralla?", options: ["China", "Japón", "India", "Mongolia"], answer: 0 },
+          { q: "¿Qué barco se hundió en 1912?", options: ["Titanic", "Lusitania", "Bismarck", "Mayflower"], answer: 0 },
+        ],
+        [
+          { q: "¿En qué año terminó la Segunda Guerra Mundial?", options: ["1945", "1918", "1939", "1950"], answer: 0 },
+          { q: "¿Quién pintó el techo de la Capilla Sixtina?", options: ["Miguel Ángel", "Da Vinci", "Rafael", "Donatello"], answer: 0 },
+          { q: "¿En qué año empezó la Revolución francesa?", options: ["1789", "1689", "1815", "1848"], answer: 0 },
+          { q: "¿Qué muro cayó en 1989?", options: ["El Muro de Berlín", "La Gran Muralla", "El Muro de Adriano", "Wall Street"], answer: 0 },
+        ],
+        [
+          { q: "¿Quién fue primer ministro británico durante la mayor parte de la Segunda Guerra Mundial?", options: ["Winston Churchill", "Neville Chamberlain", "Clement Attlee", "Margaret Thatcher"], answer: 0 },
+          { q: "¿Quién fue el último zar de Rusia?", options: ["Nicolás II", "Alejandro III", "Pedro el Grande", "Iván IV"], answer: 0 },
+          { q: "¿En qué año se disolvió la URSS?", options: ["1991", "1989", "1985", "1993"], answer: 0 },
+          { q: "¿Qué reino gobernó Cleopatra?", options: ["Egipto", "Roma", "Grecia", "Persia"], answer: 0 },
+        ],
+      ],
+    },
+
+    leisure: {
+      label: "🏖️ Ocio y viajes",
+      levels: [
+        [
+          { q: "¿En qué ciudad está la Torre Eiffel?", options: ["París", "Londres", "Roma", "Madrid"], answer: 0 },
+          { q: "¿Qué país es famoso por la pizza y la pasta?", options: ["Italia", "España", "Grecia", "Francia"], answer: 0 },
+          { q: "¿Cómo se llaman unas vacaciones en un barco grande?", options: ["Crucero", "Safari", "Road trip", "Trekking"], answer: 0 },
+          { q: "¿Qué océano cruzas volando de Londres a Nueva York?", options: ["Atlántico", "Pacífico", "Índico", "Ártico"], answer: 0 },
+        ],
+        [
+          { q: "¿En qué ciudad está el Coliseo?", options: ["Roma", "Atenas", "El Cairo", "Estambul"], answer: 0 },
+          { q: "¿En qué país está el Taj Mahal?", options: ["India", "Pakistán", "Irán", "Nepal"], answer: 0 },
+          { q: "¿Qué ciudad es famosa por sus canales y góndolas?", options: ["Venecia", "Ámsterdam", "Hamburgo", "Brujas"], answer: 0 },
+          { q: "El Everest hace frontera entre Nepal y ¿qué país?", options: ["China", "India", "Bután", "Pakistán"], answer: 0 },
+        ],
+        [
+          { q: "¿Qué país tiene más sitios Patrimonio de la Humanidad de la UNESCO?", options: ["Italia", "Francia", "España", "China"], answer: 0 },
+          { q: "¿La moneda de Japón es el…?", options: ["Yen", "Won", "Yuan", "Ringgit"], answer: 0 },
+          { q: "¿Cuál es la montaña más alta de África?", options: ["Kilimanjaro", "Monte Kenia", "Atlas", "Montaña de la Mesa"], answer: 0 },
+          { q: "¿En qué país está Machu Picchu?", options: ["Perú", "México", "Bolivia", "Chile"], answer: 0 },
+        ],
+      ],
+    },
+
+    videogames: {
+      label: "🎮 Videojuegos",
+      levels: [
+        [
+          { q: "¿Qué hace la seta roja en Super Mario?", options: ["Le hace crecer", "Le mata", "Le hace volar", "Nada"], answer: 0 },
+          { q: "¿Qué empresa fabrica la PlayStation?", options: ["Sony", "Microsoft", "Nintendo", "Sega"], answer: 0 },
+          { q: "¿Qué mob de Minecraft explota?", options: ["Creeper", "Zombi", "Esqueleto", "Vaca"], answer: 0 },
+          { q: "¿De qué color es Sonic?", options: ["Azul", "Rojo", "Verde", "Amarillo"], answer: 0 },
+        ],
+        [
+          { q: "¿Qué empresa fabrica la Xbox?", options: ["Microsoft", "Sony", "Nintendo", "Valve"], answer: 0 },
+          { q: "¿De qué tipo es Pikachu en Pokémon?", options: ["Eléctrico", "Fuego", "Agua", "Planta"], answer: 0 },
+          { q: "¿Videojuego más vendido de todos los tiempos?", options: ["Minecraft", "Tetris", "GTA V", "Wii Sports"], answer: 0 },
+          { q: "En Counter-Strike, la «AWP» es un/una…", options: ["Rifle de francotirador", "Pistola", "Granada", "Cuchillo"], answer: 0 },
+        ],
+        [
+          { q: "¿Qué estudio creó The Legend of Zelda?", options: ["Nintendo", "Capcom", "Square Enix", "Sega"], answer: 0 },
+          { q: "En League of Legends, ¿qué se destruye al final?", options: ["Nexus", "Inhibidor", "Barón", "Torreta"], answer: 0 },
+          { q: "¿En qué año salió el primer Super Mario Bros?", options: ["1985", "1990", "1981", "1995"], answer: 0 },
+          { q: "¿Qué juego transcurre en «Pandora» con «Buscacámaras»?", options: ["Borderlands", "Fallout", "Destiny", "Halo"], answer: 0 },
+        ],
+      ],
+    },
+
+    football: {
+      label: "⚽ Fútbol",
+      levels: [
+        [
+          { q: "¿Cuántos jugadores por equipo hay en el campo?", options: ["11", "9", "10", "12"], answer: 0 },
+          { q: "¿Cuántos puntos vale un gol?", options: ["1", "2", "3", "0"], answer: 0 },
+          { q: "¿Qué jugador es conocido como «CR7»?", options: ["Cristiano Ronaldo", "Lionel Messi", "Neymar", "Mbappé"], answer: 0 },
+          { q: "¿De qué color es la tarjeta que expulsa a un jugador?", options: ["Rojo", "Amarillo", "Verde", "Azul"], answer: 0 },
+        ],
+        [
+          { q: "¿Qué país ganó el Mundial de 2022?", options: ["Argentina", "Francia", "Brasil", "Alemania"], answer: 0 },
+          { q: "¿Qué club marcó la famosa era de Messi?", options: ["FC Barcelona", "Real Madrid", "Juventus", "Chelsea"], answer: 0 },
+          { q: "¿Cuánto dura un partido (sin el tiempo añadido)?", options: ["90 minutos", "60 minutos", "120 minutos", "100 minutos"], answer: 0 },
+          { q: "¿Qué país ha ganado más Mundiales?", options: ["Brasil", "Alemania", "Italia", "Argentina"], answer: 0 },
+        ],
+        [
+          { q: "¿Qué país ganó el primer Mundial, en 1930?", options: ["Uruguay", "Brasil", "Argentina", "Italia"], answer: 0 },
+          { q: "¿Quién ha ganado más Balones de Oro?", options: ["Lionel Messi", "Cristiano Ronaldo", "Michel Platini", "Johan Cruyff"], answer: 0 },
+          { q: "¿Qué club tiene más Champions League?", options: ["Real Madrid", "AC Milan", "Bayern de Múnich", "Liverpool"], answer: 0 },
+          { q: "¿Cuándo ganó Alemania su último Mundial?", options: ["2014", "2010", "2006", "2018"], answer: 0 },
+        ],
+      ],
+    },
+
+    starwars: {
+      label: "⭐ Star Wars",
+      levels: [
+        // Warm-up
+        [
+          { q: "¿Qué arma usan los Jedi?", options: ["Sable láser", "Bláster", "Arco", "Lanza"], answer: 0 },
+          { q: "¿Quién es el padre de Luke Skywalker?", options: ["Darth Vader", "Obi-Wan", "Yoda", "Han Solo"], answer: 0 },
+          { q: "¿Qué tipo de criatura es Chewbacca?", options: ["Wookiee", "Ewok", "Hutt", "Droide"], answer: 0 },
+          { q: "Completa: «Que la ___ te acompañe».", options: ["Fuerza", "Potencia", "Luz", "Senda"], answer: 0 },
+          { q: "¿De qué color son los sables láser Sith?", options: ["Rojo", "Azul", "Verde", "Morado"], answer: 0 },
+          { q: "¿Cómo se llaman los soldados de armadura blanca del Imperio?", options: ["Soldados de asalto", "Droidekas", "Guardias Sith", "Cazarrecompensas"], answer: 0 },
+          { q: "¿Qué pequeño Maestro Jedi verde entrenó a Luke?", options: ["Yoda", "Obi-Wan", "Mace Windu", "Qui-Gon"], answer: 0 },
+          { q: "¿En qué planeta desértico crece Luke?", options: ["Tatooine", "Naboo", "Endor", "Hoth"], answer: 0 },
+          // — The Clone Wars —
+          { q: "¿Cómo se llaman los soldados de la República en The Clone Wars?", options: ["Soldados clon", "Soldados de asalto", "Droides de combate", "Rebeldes"], answer: 0 },
+          { q: "¿Qué general cíborg dirige el ejército droide separatista?", options: ["General Grievous", "Almirante Ackbar", "Jar Jar Binks", "Boba Fett"], answer: 0 },
+          { q: "¿En qué planeta oceánico se crían los clones?", options: ["Kamino", "Naboo", "Hoth", "Endor"], answer: 0 },
+          { q: "¿Qué Lord Sith lidera a los separatistas?", options: ["Conde Dooku", "Darth Maul", "Kylo Ren", "Jabba el Hutt"], answer: 0 },
+        ],
+        // Easy
+        [
+          { q: "¿De qué color es el sable láser de Yoda?", options: ["Verde", "Azul", "Rojo", "Morado"], answer: 0 },
+          { q: "¿Quién queda congelado en carbonita en el Episodio V?", options: ["Han Solo", "Luke", "Lando", "Boba Fett"], answer: 0 },
+          { q: "¿Cómo se llama la nave de Han Solo?", options: ["Halcón Milenario", "Ala-X", "Slave I", "Destructor Estelar"], answer: 0 },
+          { q: "¿De qué color es el sable láser de Mace Windu?", options: ["Morado", "Verde", "Azul", "Rojo"], answer: 0 },
+          { q: "¿A qué princesa rescata Luke en el Episodio IV?", options: ["Leia", "Padmé", "Rey", "Mon Mothma"], answer: 0 },
+          { q: "¿Cómo se llama la gigantesca estación del Imperio que destruye planetas?", options: ["Estrella de la Muerte", "Base Starkiller", "Destructor Estelar", "La Ciudadela"], answer: 0 },
+          { q: "¿Qué criaturas peludas ayudan a vencer al Imperio en Endor?", options: ["Ewoks", "Wookiees", "Jawas", "Gungans"], answer: 0 },
+          { q: "¿Qué es R2-D2?", options: ["Un droide astromecánico", "Un droide de protocolo", "Un cazarrecompensas", "Un caza estelar"], answer: 0 },
+          { q: "¿De quién es Padawan Anakin Skywalker?", options: ["Obi-Wan Kenobi", "Yoda", "Mace Windu", "Qui-Gon Jinn"], answer: 0 },
+          // — The Clone Wars —
+          { q: "¿De qué especie es Ahsoka Tano?", options: ["Togruta", "Twi'lek", "Zabrak", "Wookiee"], answer: 0 },
+          { q: "¿Qué mote le pone Ahsoka a Anakin?", options: ["Skyguy", "Starboy", "Sunny", "El Elegido"], answer: 0 },
+          { q: "¿Y cómo llama Anakin a Ahsoka?", options: ["Snips", "Chispas", "Peque", "Alita"], answer: 0 },
+          { q: "¿De qué cazarrecompensas se clonan todos los soldados clon?", options: ["Jango Fett", "Boba Fett", "Cad Bane", "Aurra Sing"], answer: 0 },
+          { q: "¿Qué capitán clon sirve junto a Anakin?", options: ["Rex", "Cody", "Wolffe", "Gree"], answer: 0 },
+          { q: "¿Qué legión dirige Anakin?", options: ["La 501", "La 212", "La 104", "La 41"], answer: 0 },
+          { q: "¿Qué comandante clon sirve a las órdenes de Obi-Wan?", options: ["Cody", "Rex", "Fox", "Bly"], answer: 0 },
+          { q: "¿Cuántas temporadas tiene The Clone Wars?", options: ["7", "5", "6", "9"], answer: 0 },
+        ],
+        // Medium
+        [
+          { q: "¿Cuál es el nombre Sith del Emperador?", options: ["Darth Sidious", "Darth Plagueis", "Darth Maul", "Darth Tyranus"], answer: 0 },
+          { q: "¿En qué planeta se esconde Yoda?", options: ["Dagobah", "Tatooine", "Endor", "Hoth"], answer: 0 },
+          { q: "¿Qué es la Orden 66?", options: ["La orden de matar a los Jedi", "Un batallón clon", "Una ley del Senado", "Una estación espacial"], answer: 0 },
+          { q: "¿Quién es la Padawan de Anakin en The Clone Wars?", options: ["Ahsoka Tano", "Rey", "Barriss Offee", "Padmé"], answer: 0 },
+          { q: "¿De qué especie es Jabba?", options: ["Hutt", "Wookiee", "Twi'lek", "Toydariano"], answer: 0 },
+          { q: "¿Qué cazarrecompensas captura a Han Solo para Jabba?", options: ["Boba Fett", "Jango Fett", "Greedo", "Bossk"], answer: 0 },
+          { q: "¿Cuál es la luna boscosa de El retorno del Jedi?", options: ["Endor", "Yavin 4", "Kashyyyk", "Takodana"], answer: 0 },
+          { q: "¿Qué planeta destruye la Estrella de la Muerte en el Episodio IV?", options: ["Alderaan", "Naboo", "Corellia", "Jakku"], answer: 0 },
+          { q: "¿Cuál es el planeta helado de El Imperio contraataca?", options: ["Hoth", "Dagobah", "Mustafar", "Ilum"], answer: 0 },
+          // — The Clone Wars —
+          { q: "¿Qué asesina calva sirve al Conde Dooku?", options: ["Asajj Ventress", "Barriss Offee", "Aurra Sing", "Bo-Katan Kryze"], answer: 0 },
+          { q: "¿Qué duquesa gobierna el Mandalore pacifista?", options: ["Satine Kryze", "Bo-Katan Kryze", "Padmé Amidala", "Mon Mothma"], answer: 0 },
+          { q: "Maul sobrevive a Naboo y regresa con ¿qué hermano?", options: ["Savage Opress", "Feral", "Pre Vizsla", "Gar Saxon"], answer: 0 },
+          { q: "¿En qué planeta cubierto de niebla viven las Hermanas de la Noche?", options: ["Dathomir", "Mustafar", "Umbara", "Lola Sayu"], answer: 0 },
+          { q: "¿Cómo se llama la nave de guerra de Grievous con el enorme cañón de iones?", options: ["Malevolencia", "Mano Invisible", "Devastador", "Ejecutor"], answer: 0 },
+          { q: "¿Qué cazarrecompensas toma como rehén al Senado para liberar a Ziro el Hutt?", options: ["Cad Bane", "Boba Fett", "Embo", "Bossk"], answer: 0 },
+          { q: "¿Con qué nombre se conoce mejor al escuadrón de élite Clone Force 99?", options: ["The Bad Batch", "La Manada de Lobos", "Escuadrón Dominó", "Compañía Torrente"], answer: 0 },
+          { q: "¿Qué temporada lleva el subtítulo «Las misiones perdidas»?", options: ["6", "4", "5", "7"], answer: 0 },
+          { q: "¿Al final de qué temporada abandona Ahsoka la Orden Jedi?", options: ["5", "3", "6", "7"], answer: 0 },
+          { q: "¿Qué planeta es el Mundo de las Sombras, iluminado solo por plantas que brillan?", options: ["Umbara", "Felucia", "Ryloth", "Kashyyyk"], answer: 0 },
+        ],
+        // Hard
+        [
+          { q: "¿Qué cristal da energía a un sable láser?", options: ["Cristal kyber", "Dilitio", "Beskar", "Aurodium"], answer: 0 },
+          { q: "¿Cuál es el planeta natal de los wookiees?", options: ["Kashyyyk", "Kamino", "Geonosis", "Felucia"], answer: 0 },
+          { q: "¿Cuántos sables láser empuña a la vez el General Grievous?", options: ["Cuatro", "Dos", "Tres", "Seis"], answer: 0 },
+          { q: "¿Cuál es el nombre real del Mandaloriano?", options: ["Din Djarin", "Boba Fett", "Cobb Vanth", "Paz Vizsla"], answer: 0 },
+          { q: "¿Cómo se llama la nave de Boba Fett?", options: ["Slave I", "Ghost", "Razor Crest", "Outrider"], answer: 0 },
+          { q: "¿En qué planeta volcánico se convierte Anakin en Vader?", options: ["Mustafar", "Mygeeto", "Utapau", "Sullust"], answer: 0 },
+          { q: "¿En qué planeta capital se alza el Templo Jedi?", options: ["Coruscant", "Naboo", "Corellia", "Chandrila"], answer: 0 },
+          { q: "¿De qué metal está hecha la armadura mandaloriana?", options: ["Beskar", "Cortosis", "Phrik", "Duracero"], answer: 0 },
+          { q: "¿Qué Jedi derrota a Darth Maul en La amenaza fantasma?", options: ["Obi-Wan Kenobi", "Qui-Gon Jinn", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "¿Quién es el abuelo de Rey en la trilogía de secuelas?", options: ["Palpatine", "Obi-Wan", "Luke", "Snoke"], answer: 0 },
+          // — The Clone Wars —
+          { q: "¿Qué general Jedi toma el mando de la 501 en Umbara y la traiciona?", options: ["Pong Krell", "Even Piell", "Plo Koon", "Kit Fisto"], answer: 0 },
+          { q: "¿De qué especie es el traidor de cuatro brazos Pong Krell?", options: ["Besalisco", "Phindiano", "Kaminoano", "Twi'lek"], answer: 0 },
+          { q: "¿Qué clon ejecuta finalmente a Krell?", options: ["Dogma", "Fives", "Rex", "Jesse"], answer: 0 },
+          { q: "Maul vence a Pre Vizsla en un duelo y se queda con ¿qué arma?", options: ["El sable oscuro", "La mochila propulsora de Vizsla", "Una lanza de beskar", "La corona mandaloriana"], answer: 0 },
+          { q: "¿Quién muere delante de Obi-Wan en «Los sin ley»?", options: ["Satine Kryze", "Bo-Katan Kryze", "Barriss Offee", "Adi Gallia"], answer: 0 },
+          { q: "¿Quién mata a Savage Opress justo delante de Maul?", options: ["Darth Sidious", "Obi-Wan Kenobi", "Conde Dooku", "Asajj Ventress"], answer: 0 },
+          { q: "En el mundo de la Fuerza de Mortis, los tres seres son el Padre, el Hijo y…", options: ["La Hija", "La Madre", "La Hermana", "La Guardiana"], answer: 0 },
+          { q: "¿Quién atentó realmente en el hangar del Templo Jedi e incriminó a Ahsoka?", options: ["Barriss Offee", "Letta Turmond", "Asajj Ventress", "Cad Bane"], answer: 0 },
+          { q: "¿Qué mandaloriana se une a Ahsoka para el Asedio de Mandalore?", options: ["Bo-Katan Kryze", "Sabine Wren", "Ursa Wren", "Satine Kryze"], answer: 0 },
+          { q: "¿Qué soldado ARC, dado por muerto desde la Ciudadela, reaparece vivo en la temporada 7?", options: ["Echo", "Fives", "Hevy", "Cutup"], answer: 0 },
+          { q: "¿Qué clon descubre los chips inhibidores — y muere antes de poder demostrarlo?", options: ["Fives", "Tup", "Dogma", "Jesse"], answer: 0 },
+          { q: "¿Cómo llama Maul a su alianza de la Guardia de la Muerte, el Sol Negro y los Pykes?", options: ["El Colectivo Sombra", "Amanecer Carmesí", "El Cártel Hutt", "El Sindicato Bane"], answer: 0 },
+        ],
+        // Deep cuts
+        [
+          { q: "¿Quién fue el maestro Sith del propio Palpatine?", options: ["Darth Plagueis", "Darth Bane", "Darth Maul", "Darth Tyranus"], answer: 0 },
+          { q: "¿Cuál es el título Sith del Conde Dooku?", options: ["Darth Tyranus", "Darth Sidious", "Darth Nihilus", "Darth Revan"], answer: 0 },
+          { q: "¿Cómo se llama la madre de Anakin?", options: ["Shmi Skywalker", "Padmé Amidala", "Beru Lars", "Mon Mothma"], answer: 0 },
+          { q: "¿Qué Jedi entrena a Grogu al final de la segunda temporada de The Mandalorian?", options: ["Luke Skywalker", "Ahsoka Tano", "Ezra Bridger", "Obi-Wan Kenobi"], answer: 0 },
+          { q: "¿Cuál es el planeta de la Primera Orden convertido en superarma?", options: ["Base Starkiller", "Estrella de la Muerte III", "El Eclipse", "Malevolencia"], answer: 0 },
+          { q: "¿Quién dirigió la película original de Star Wars de 1977?", options: ["George Lucas", "Irvin Kershner", "Richard Marquand", "J.J. Abrams"], answer: 0 },
+          { q: "¿Cuál es la designación del capitán clon Rex?", options: ["CT-7567", "CC-2224", "CT-5555", "CC-1010"], answer: 0 },
+          { q: "¿Quién fue el maestro Jedi del propio Qui-Gon Jinn?", options: ["Conde Dooku", "Yoda", "Mace Windu", "Ki-Adi-Mundi"], answer: 0 },
+          { q: "¿De qué especie es Darth Maul?", options: ["Zabrak", "Twi'lek", "Chiss", "Nautolano"], answer: 0 },
+          { q: "¿A qué almirante asciende Vader después de estrangular con la Fuerza a Ozzel?", options: ["Piett", "Tarkin", "Thrawn", "Krennic"], answer: 0 },
+          { q: "¿Cuál es la ciudad puerto espacial de la cantina en Tatooine?", options: ["Mos Eisley", "Mos Espa", "Anchorhead", "Bestine"], answer: 0 },
+          { q: "¿Qué regla Sith limita su número a dos?", options: ["La Regla de Dos", "El Código Sith", "La Regla de Uno", "La Ley de Bane"], answer: 0 },
+          // — The Clone Wars —
+          { q: "¿Quién es el alcaide phindiano de la prisión de la Ciudadela?", options: ["Osi Sobeck", "Wat Tambor", "Lok Durd", "Riff Tamson"], answer: 0 },
+          { q: "¿Qué Maestro Jedi muere durante la huida de la Ciudadela?", options: ["Even Piell", "Eeth Koth", "Adi Gallia", "Ima-Gun Di"], answer: 0 },
+          { q: "¿Por culpa de qué clon con el chip averiado acaba abatida la general Jedi Tiplar?", options: ["Tup", "Fives", "Dogma", "Jesse"], answer: 0 },
+          { q: "¿Qué comandante clon dispara a Fives?", options: ["Fox", "Cody", "Thorn", "Thire"], answer: 0 },
+          { q: "¿Qué Maestro Jedi encargó en secreto el ejército clon en Kamino?", options: ["Sifo-Dyas", "Conde Dooku", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "¿Qué identidad adopta Obi-Wan tras fingir su propia muerte?", options: ["Rako Hardeen", "Moralo Eval", "Cad Bane", "Embo"], answer: 0 },
+          { q: "¿A qué rebelde de Onderon — que luego sale en Rogue One — ayuda a entrenar Ahsoka?", options: ["Saw Gerrera", "Lux Bonteri", "Steela Gerrera", "Ramsis Dendup"], answer: 0 },
+          { q: "¿En qué mundo de la Tecno Unión encuentra The Bad Batch a Echo prisionero?", options: ["Skako Minor", "Anaxes", "Ringo Vinda", "Lola Sayu"], answer: 0 },
+          { q: "¿Cuál es el título del último episodio de The Clone Wars?", options: ["Victoria y muerte", "Destrozada", "El aprendiz fantasma", "Viejos amigos no olvidados"], answer: 0 },
+          { q: "¿En qué fecha tan apropiada de 2020 se estrenó el final de la serie?", options: ["4 de mayo", "25 de mayo", "17 de abril", "18 de diciembre"], answer: 0 },
+          { q: "¿Qué Hermana de la Noche crea a Savage Opress?", options: ["Madre Talzin", "Asajj Ventress", "Vieja Daka", "Merrin"], answer: 0 },
+          { q: "¿Cuántos episodios tiene The Clone Wars en total?", options: ["133", "121", "108", "150"], answer: 0 },
+          { q: "¿Quién es el director supervisor detrás de The Clone Wars?", options: ["Dave Filoni", "Jon Favreau", "Genndy Tartakovsky", "Rian Johnson"], answer: 0 },
+          { q: "En «El aprendiz fantasma», ¿qué Jedi exige Maul que le entregue la República?", options: ["Anakin Skywalker", "Obi-Wan Kenobi", "Yoda", "Mace Windu"], answer: 0 },
+          { q: "¿De qué color son las hojas de Ahsoka después de que Anakin le devuelva sus sables en la temporada 7?", options: ["Azul", "Verde", "Blanco", "Amarillo"], answer: 0 },
+          { q: "¿Qué bestia gigante se desentierra en Malastare y se lleva a Coruscant?", options: ["La Bestia Zillo", "Un rancor", "Un sarlacc", "Un dragón krayt"], answer: 0 },
+        ],
+      ],
+    },
+
+    marvel: {
+      label: "🦸 Marvel",
+      levels: [
+        [
+          { q: "¿Cuál es el alter ego de Iron Man?", options: ["Tony Stark", "Steve Rogers", "Bruce Banner", "Peter Parker"], answer: 0 },
+          { q: "¿De qué color es Hulk?", options: ["Verde", "Azul", "Rojo", "Gris"], answer: 0 },
+          { q: "¿Quién empuña el martillo Mjolnir?", options: ["Thor", "Loki", "Odin", "Hela"], answer: 0 },
+          { q: "¿Cuál es el alter ego de Spider-Man?", options: ["Peter Parker", "Tony Stark", "Clark Kent", "Bruce Wayne"], answer: 0 },
+        ],
+        [
+          { q: "¿Villano principal de Vengadores: Infinity War?", options: ["Thanos", "Ultron", "Loki", "Kang"], answer: 0 },
+          { q: "¿De qué está hecho el escudo del Capitán América?", options: ["Vibranio", "Adamantium", "Titanio", "Acero"], answer: 0 },
+          { q: "¿De qué nación es rey Pantera Negra?", options: ["Wakanda", "Sokovia", "Latveria", "Genosha"], answer: 0 },
+          { q: "¿Cuántas Gemas del Infinito hay?", options: ["6", "5", "7", "4"], answer: 0 },
+        ],
+        [
+          { q: "¿En qué ciudad está el Sanctum del Doctor Strange?", options: ["Nueva York", "Londres", "Hong Kong", "Kamar-Taj"], answer: 0 },
+          { q: "¿Quién es Star-Lord?", options: ["Peter Quill", "Peter Parker", "Scott Lang", "Stephen Strange"], answer: 0 },
+          { q: "¿Cómo se llama el mundo natal de Thor?", options: ["Asgard", "Vanaheim", "Jotunheim", "Midgard"], answer: 0 },
+          { q: "¿Qué gema está escondida en Vormir?", options: ["Gema del Alma", "Gema del Poder", "Gema de la Mente", "Gema del Tiempo"], answer: 0 },
+        ],
+      ],
+    },
+
+    mcgregor: {
+      label: "🥊 McGregor",
+      levels: [
+        // Tier 1 — Basic (casual fan)
+        [
+          { q: "¿Cuál es el apodo de Conor McGregor?", options: ["The Notorious", "The Eagle", "Iron", "The Spider"], answer: 0 },
+          { q: "¿De qué ciudad es McGregor?", options: ["Dublin", "Cork", "Belfast", "Limerick"], answer: 0 },
+          { q: "¿En qué organización pelea principalmente McGregor?", options: ["UFC", "Bellator", "ONE Championship", "PFL"], answer: 0 },
+          { q: "¿Cuántos títulos de la UFC tuvo McGregor a la vez — algo inédito en la historia de la UFC?", options: ["Dos", "Tres", "Uno", "Cuatro"], answer: 0 },
+          { q: "Los dos cinturones de McGregor en la UFC fueron en peso pluma y ¿qué otra categoría?", options: ["Peso ligero", "Peso wélter", "Peso gallo", "Peso medio"], answer: 0 },
+          { q: "¿En cuántos segundos noqueó McGregor a José Aldo?", options: ["13", "6", "20", "40"], answer: 0 },
+          { q: "¿A qué leyenda del boxeo se enfrentó McGregor en un combate de boxeo en 2017?", options: ["Floyd Mayweather", "Manny Pacquiao", "Canelo Álvarez", "Anthony Joshua"], answer: 0 },
+          { q: "¿Qué tipo de bebida es el «Proper No. Twelve» de McGregor?", options: ["Whisky irlandés", "Vodka", "Cerveza", "Bebida energética"], answer: 0 },
+          { q: "¿Qué mano es el arma característica de McGregor?", options: ["Izquierda", "Derecha", "Las dos por igual", "Sus codos"], answer: 0 },
+          { q: "¿Por qué comportamiento antes de los combates es famoso McGregor?", options: ["Trash talk y predicciones", "Silencio y meditación", "Rechazar todas las entrevistas", "Leer poesía"], answer: 0 },
+          { q: "¿Qué país representa McGregor con orgullo, a menudo envuelto en su bandera?", options: ["Irlanda", "Escocia", "Inglaterra", "Gales"], answer: 0 },
+          { q: "¿A qué campeón del peso pluma noqueó McGregor en segundos?", options: ["José Aldo", "Max Holloway", "Chad Mendes", "Frankie Edgar"], answer: 0 },
+          { q: "¿En qué película de 2024 debutó McGregor como actor?", options: ["Road House", "The Beekeeper", "Warrior", "Rumble"], answer: 0 },
+          { q: "¿Quién protagonizó Road House (2024) junto a McGregor?", options: ["Jake Gyllenhaal", "Tom Hardy", "Chris Hemsworth", "Matt Damon"], answer: 0 },
+          { q: "En 2021, Forbes nombró a McGregor el ¿qué mejor pagado del mundo?", options: ["Deportista", "Actor", "Músico", "CEO"], answer: 0 },
+          { q: "¿En qué mes es el cumpleaños de McGregor?", options: ["Julio", "Enero", "Marzo", "Octubre"], answer: 0 },
+          { q: "¿En qué gimnasio entrena McGregor?", options: ["SBG Ireland", "Team Alpha Male", "American Top Team", "Jackson-Wink"], answer: 0 },
+          { q: "¿Quién es el entrenador principal de McGregor desde hace años?", options: ["John Kavanagh", "Javier Mendez", "Firas Zahabi", "Dana White"], answer: 0 },
+          { q: "¿Por qué vía llegaron la mayoría de las victorias profesionales de McGregor?", options: ["KO", "Sumisión", "Decisión", "Descalificación"], answer: 0 },
+          { q: "En 2026, McGregor volvió en UFC 329 tras unos 5 años de ausencia para pelear contra ¿quién?", options: ["Max Holloway", "Dustin Poirier", "Michael Chandler", "Nate Diaz"], answer: 0 },
+        ],
+        // Tier 2 — Normal (engaged fan)
+        [
+          { q: "El debut de McGregor en la UFC en 2013 fue un TKO en el primer asalto a ¿quién?", options: ["Marcus Brimage", "Diego Brandão", "Dennis Siver", "Max Holloway"], answer: 0 },
+          { q: "En su victoria de 2013 sobre Max Holloway, ¿qué lesión sufrió McGregor?", options: ["Rotura del ligamento cruzado", "Mano rota", "Pierna rota", "Rotura del bíceps"], answer: 0 },
+          { q: "En UFC 189, McGregor ganó el título interino del peso pluma ante ¿qué sustituto de última hora?", options: ["Chad Mendes", "José Aldo", "Frankie Edgar", "Dennis Siver"], answer: 0 },
+          { q: "¿En qué evento llegó el KO de 13 segundos de McGregor a José Aldo?", options: ["UFC 194", "UFC 189", "UFC 205", "UFC 196"], answer: 0 },
+          { q: "¿Qué rival venció a McGregor en UFC 196 antes de que McGregor igualara el marcador en la revancha?", options: ["Nate Diaz", "Dustin Poirier", "Eddie Alvarez", "Chad Mendes"], answer: 0 },
+          { q: "En UFC 202, ¿cómo venció McGregor a Nate Diaz en la revancha?", options: ["Decisión mayoritaria", "KO", "Sumisión", "Empate dividido"], answer: 0 },
+          { q: "¿A quién noqueó McGregor para ganar el título del peso ligero de la UFC en UFC 205?", options: ["Eddie Alvarez", "Rafael dos Anjos", "Justin Gaethje", "Dustin Poirier"], answer: 0 },
+          { q: "El megacombate de boxeo de McGregor con Floyd Mayweather en 2017 fue uno de los mayores ¿qué de la historia?", options: ["Eventos de pago por visión", "Combates amateur", "Defensas de título", "Empates de exhibición"], answer: 0 },
+          { q: "¿Qué parte, aproximadamente, de las victorias profesionales de McGregor llegan por KO?", options: ["Alrededor del 90 %", "Alrededor del 50 %", "Alrededor del 30 %", "Alrededor del 70 %"], answer: 0 },
+          { q: "¿En cuánto tiempo venció McGregor a Donald «Cowboy» Cerrone en UFC 246?", options: ["40 segundos", "13 segundos", "2 minutos", "4 minutos"], answer: 0 },
+          { q: "La victoria ante Cerrone convirtió a McGregor en el primer luchador de la UFC con KO en ¿cuántas categorías de peso?", options: ["Tres", "Dos", "Cuatro", "Cinco"], answer: 0 },
+          { q: "McGregor ya ha vencido una vez a Max Holloway — ¿en qué año fue su primer combate?", options: ["2013", "2016", "2011", "2019"], answer: 0 },
+          { q: "¿Cuántas veces perdió McGregor en el peso pluma de la UFC?", options: ["Nunca", "Una vez", "Dos veces", "Tres veces"], answer: 0 },
+          { q: "Como primer luchador de la UFC con dos títulos a la vez, ¿qué apodo se ganó McGregor?", options: ["Champ-champ", "Doble K", "Rey gemelo", "Campeón del Grand Slam"], answer: 0 },
+          { q: "¿Por cuánto llegó a valorarse la venta de Proper No. Twelve de McGregor?", options: ["600 millones de $", "100 millones de $", "1.000 millones de $", "250 millones de $"], answer: 0 },
+          { q: "¿A qué villano interpretó McGregor en Road House (2024)?", options: ["Knox", "Dalton", "Brandt", "Wesley"], answer: 0 },
+          { q: "¿Cuántos golpes significativos conecta McGregor por minuto, aproximadamente?", options: ["5+", "Alrededor de 1", "Alrededor de 3", "Alrededor de 10"], answer: 0 },
+          { q: "¿Cuál de estas marcas ha sido patrocinadora de McGregor?", options: ["Monster Energy", "Red Bull", "Coca-Cola", "Gatorade"], answer: 0 },
+          { q: "¿En qué año llegó la primera victoria de McGregor en MMA profesional?", options: ["2008", "2006", "2010", "2013"], answer: 0 },
+          { q: "¿Quién es el agente de McGregor en Paradigm Sports?", options: ["Audie Attar", "Ari Emanuel", "Dana White", "Scott Coker"], answer: 0 },
+        ],
+        // Tier 3 — Hard (deep cuts)
+        [
+          { q: "¿En qué minuto del primer asalto terminó McGregor con Marcus Brimage en su debut en la UFC?", options: ["1:07", "0:40", "2:32", "4:05"], answer: 0 },
+          { q: "La vuelta de McGregor tras la lesión de rodilla (julio de 2014, Dublín) fue un TKO en el primer asalto a ¿quién?", options: ["Diego Brandão", "Dennis Siver", "Marcus Brimage", "Chad Mendes"], answer: 0 },
+          { q: "¿Qué bonus ganó McGregor en su regreso a Dublín en julio de 2014?", options: ["Actuación de la Noche", "Pelea de la Noche", "Sumisión de la Noche", "KO del Año"], answer: 0 },
+          { q: "¿En qué evento de 2014 se enfrentó McGregor por primera vez a Dustin Poirier?", options: ["UFC 178", "UFC 189", "UFC 194", "UFC 196"], answer: 0 },
+          { q: "¿A quién derrotó McGregor en enero de 2015 para ganarse la oportunidad por el título ante Aldo?", options: ["Dennis Siver", "Diego Brandão", "Chad Mendes", "Marcus Brimage"], answer: 0 },
+          { q: "¿En qué evento llegó la victoria por el título interino ante Chad Mendes?", options: ["UFC 189", "UFC 194", "UFC 178", "UFC 205"], answer: 0 },
+          { q: "¿A qué segundo del primer asalto se cronometró oficialmente el KO a José Aldo?", options: ["13 segundos", "6 segundos", "40 segundos", "20 segundos"], answer: 0 },
+          { q: "¿En qué año se convirtió McGregor por primera vez en campeón del peso pluma de la UFC?", options: ["2015", "2013", "2016", "2014"], answer: 0 },
+          { q: "¿En qué asalto llegó el KO de McGregor a Eddie Alvarez?", options: ["Asalto 2", "Asalto 1", "Asalto 3", "Asalto 4"], answer: 0 },
+          { q: "¿En qué estadio emblemático ganó McGregor el título en UFC 205?", options: ["Madison Square Garden", "T-Mobile Arena", "The O2", "Staples Center"], answer: 0 },
+          { q: "La victoria ante Cerrone (UFC 246) llegó en parte con ¿qué golpes en el clinch?", options: ["Golpes con el hombro", "Codazos", "Rodillazos", "Puñetazos de martillo"], answer: 0 },
+          { q: "El KO de 13 segundos a José Aldo fue el final más rápido de la historia en ¿qué tipo de combate de la UFC?", options: ["Un combate por el título", "Un combate estelar", "Un debut", "Una revancha"], answer: 0 },
+          { q: "¿Cuántos KO (KO/TKO) tiene McGregor en su récord profesional?", options: ["19", "12", "22", "8"], answer: 0 },
+          { q: "¿Por qué se canceló el combate previsto de McGregor contra Michael Chandler en UFC 303 en junio de 2024?", options: ["Un dedo del pie roto", "Una mano rota", "Enfermedad", "Una disputa contractual"], answer: 0 },
+          { q: "¿Cuántas victorias seguidas logró McGregor en el peso pluma de la UFC?", options: ["7", "5", "6", "10"], answer: 0 },
+          { q: "¿Cuántas compras de PPV generó aproximadamente el primer combate de McGregor con Nate Diaz (UFC 196)?", options: ["1,3 millones", "500,000", "800,000", "2 millones"], answer: 0 },
+          { q: "¿Qué bolsa, récord en su momento, recibió McGregor por el primer combate ante Diaz?", options: ["1 millón de $", "$500,000", "3 millones de $", "75 millones de $"], answer: 0 },
+          { q: "¿En torno a qué cifra se suelen situar las ganancias declaradas de McGregor en la UFC?", options: ["41,8 millones de $", "600 millones de $", "75 millones de $", "250 millones de $"], answer: 0 },
+          { q: "¿De dónde es Max Holloway, rival de McGregor en 2013 y 2026?", options: ["Hawái", "California", "Irlanda", "Brasil"], answer: 0 },
+          { q: "¿En qué peso se disputa la revancha con Holloway en UFC 329?", options: ["Peso wélter (170 lb)", "Peso pluma (145 lb)", "Peso ligero (155 lb)", "Peso medio (185 lb)"], answer: 0 },
+          { q: "¿En qué mes y año se lanzó el whisky Proper No. Twelve?", options: ["Septiembre de 2018", "Marzo de 2017", "Septiembre de 2016", "Diciembre de 2018"], answer: 0 },
+          { q: "¿A qué zona de Dublín hace referencia el nombre «Proper No. Twelve»?", options: ["Crumlin / «el 12»", "Temple Bar", "The Liberties", "Ballymun"], answer: 0 },
+          { q: "¿Qué empresa de bebidas (dueña de Jose Cuervo y Bushmills) compró la mayor parte de Proper No. Twelve?", options: ["Proximo Spirits", "Diageo", "Pernod Ricard", "Brown-Forman"], answer: 0 },
+          { q: "Según se informó, ¿cuánto se había ganado ya en los dos primeros años, incluido en la venta de 600 M$ de Proper 12?", options: ["250 millones de $", "100 millones de $", "400 millones de $", "50 millones de $"], answer: 0 },
+          { q: "¿En qué año encabezó McGregor la lista Forbes de deportistas mejor pagados?", options: ["2021", "2017", "2019", "2023"], answer: 0 },
+          { q: "¿Cuánto ganó McGregor, aproximadamente, por el combate con Mayweather?", options: ["75 millones de $", "30 millones de $", "100 millones de $", "41,8 millones de $"], answer: 0 },
+          { q: "¿Cuánto costó aproximadamente el «yate Lamborghini» de McGregor (Tecnomar for Lamborghini 63)?", options: ["3,6 millones de $", "$600,000", "10 millones de $", "$250,000"], answer: 0 },
+          { q: "Antes de la UFC, McGregor fue el primer europeo con dos títulos a la vez en ¿qué promotora?", options: ["Cage Warriors", "Bellator", "KSW", "BAMMA"], answer: 0 },
+          { q: "¿En qué mes y año firmó McGregor con la UFC?", options: ["Febrero de 2013", "Abril de 2013", "Febrero de 2012", "Junio de 2013"], answer: 0 },
+          { q: "Los títulos de McGregor en Cage Warriors fueron en peso pluma y ¿qué otro peso?", options: ["Peso ligero", "Peso gallo", "Peso wélter", "Peso medio"], answer: 0 },
+          { q: "¿En qué arte de grappling tiene McGregor cinturón negro?", options: ["Jiu-jitsu brasileño", "Judo", "Lucha libre", "Kárate"], answer: 0 },
+          { q: "¿De dónde viene el apodo «Mystic Mac» que se puso McGregor?", options: ["De predecir resultados de combates", "De sus tatuajes", "De su whisky", "De su yate"], answer: 0 },
+          { q: "¿Quién dirigió Road House (2024)?", options: ["Doug Liman", "Guy Ritchie", "Zack Snyder", "Michael Bay"], answer: 0 },
+          { q: "¿A través de qué servicio se estrenó Road House (2024)?", options: ["Amazon (Prime Video)", "Netflix", "Disney+", "Apple TV+"], answer: 0 },
+          { q: "¿En qué saga de videojuegos apareció McGregor como personaje colaborador (luego retirado)?", options: ["Hitman", "Call of Duty", "EA Sports UFC", "Fortnite"], answer: 0 },
+          { q: "¿Quién es el entrenador de golpeo de McGregor en SBG Ireland?", options: ["Owen Roddy", "Ido Portal", "Trevor Wittman", "Mike Winkeljohn"], answer: 0 },
+          { q: "¿En qué asalto detuvo McGregor a Chad Mendes para ganar el título interino?", options: ["Asalto 2", "Asalto 1", "Asalto 3", "Asalto 4"], answer: 0 },
+          { q: "¿Cuántas de las victorias profesionales de McGregor en MMA han llegado por sumisión?", options: ["Uno", "Ninguna", "Cinco", "Diez"], answer: 0 },
+          { q: "En el media day de UFC 223 (abril de 2018), ¿qué lanzó McGregor contra la ventanilla de un autobús?", options: ["Una carretilla de mano", "Una silla", "Una botella", "Una mancuerna"], answer: 0 },
+          { q: "¿Qué fue McGregor el primero en hacer en la historia de la UFC?", options: ["Tener dos títulos a la vez", "Ganar por sumisión", "Encabezar un evento en Europa", "Pelear en tres pesos"], answer: 0 },
+          { q: "«Who the fook is that guy?» — ¿a qué luchador que le retó en 2015 se lo dedicó McGregor?", options: ["Jeremy Stephens", "Chad Mendes", "Nate Diaz", "Dennis Siver"], answer: 0 },
+          { q: "«The double champ does what the fook he wants!» — ¿en qué evento lo dijo tras su noche de doble campeón?", options: ["UFC 205", "UFC 194", "UFC 229", "UFC 202"], answer: 0 },
+          { q: "«Surprise, surprise… the king is back.» — ¿tras vencer a quién en UFC 202?", options: ["Nate Diaz", "José Aldo", "Eddie Alvarez", "Dustin Poirier"], answer: 0 },
+          { q: "«We're not here to take part, we're here to take over.» — ¿tras vencer a quién en Dublín (2014)?", options: ["Diego Brandão", "Dennis Siver", "Marcus Brimage", "Chad Mendes"], answer: 0 },
+          { q: "«You can call me Mystic Mac…» — McGregor se lo dijo a Joe Rogan tras vencer por primera vez a ¿quién en UFC 178?", options: ["Dustin Poirier", "Nate Diaz", "José Aldo", "Eddie Alvarez"], answer: 0 },
+          { q: "¿A qué luchador iba dirigida la frase de McGregor sobre la «red panty night» (2015)?", options: ["Rafael dos Anjos", "Eddie Alvarez", "José Aldo", "Nate Diaz"], answer: 0 },
+          { q: "«I'm cool with all the gods. Gods recognise gods.» — ¿antes de qué evento de 2016 llegó esta fanfarronada?", options: ["UFC 196", "UFC 194", "UFC 205", "UFC 202"], answer: 0 },
+          { q: "¿A qué rival llamó McGregor «quiet little hillbilly from the back arse of nowhere»?", options: ["Dustin Poirier", "Nate Diaz", "Chad Mendes", "Eddie Alvarez"], answer: 0 },
+          { q: "«Two things I like to do: whoop ass and look good…» — ¿de la previa de su primer combate contra quién (2013)?", options: ["Max Holloway", "Marcus Brimage", "Diego Brandão", "Dustin Poirier"], answer: 0 },
+          { q: "¿A qué división de la UFC aplicó primero McGregor su promesa de «tomar el control»?", options: ["Peso pluma", "Peso ligero", "Peso wélter", "Peso gallo"], answer: 0 },
+        ],
+      ],
+    },
+
+    geography: {
+      label: "🌍 Geografía",
+      levels: [
+        [
+          { q: "¿Cuál es la capital de Francia?", options: ["París", "Londres", "Roma", "Madrid"], answer: 0 },
+          { q: "¿En qué continente está Egipto?", options: ["África", "Asia", "Europa", "Sudamérica"], answer: 0 },
+          { q: "¿Cuál es el océano más grande?", options: ["Pacífico", "Atlántico", "Índico", "Ártico"], answer: 0 },
+          { q: "¿Qué país tiene forma de bota?", options: ["Italia", "España", "Grecia", "Portugal"], answer: 0 },
+        ],
+        [
+          { q: "¿Cuál es la capital de Japón?", options: ["Tokio", "Pekín", "Seúl", "Bangkok"], answer: 0 },
+          { q: "¿Cuántos continentes hay?", options: ["7", "5", "6", "8"], answer: 0 },
+          { q: "El Sáhara es el mayor ¿qué cálido del mundo?", options: ["Desierto", "Selva", "Cañón", "Llanura"], answer: 0 },
+          { q: "¿Qué país tiene más habitantes? (2024)", options: ["India", "China", "EE. UU.", "Indonesia"], answer: 0 },
+        ],
+        [
+          { q: "¿Cuál es la capital de Australia?", options: ["Canberra", "Sydney", "Melbourne", "Perth"], answer: 0 },
+          { q: "¿En qué país está el Kilimanjaro?", options: ["Tanzania", "Kenia", "Uganda", "Etiopía"], answer: 0 },
+          { q: "¿Qué río se suele considerar el más largo?", options: ["Nilo", "Amazonas", "Yangtsé", "Misisipi"], answer: 0 },
+          { q: "¿En qué mar desemboca el Danubio?", options: ["Mar Negro", "Mar Báltico", "Mar del Norte", "Mediterráneo"], answer: 0 },
+        ],
+        [
+          { q: "¿Cuál es la capital de Canadá?", options: ["Ottawa", "Toronto", "Vancouver", "Montreal"], answer: 0 },
+          { q: "¿Qué estrecho separa Europa de África?", options: ["Gibraltar", "Bósforo", "Ormuz", "Bering"], answer: 0 },
+          { q: "¿Qué país africano tiene más habitantes?", options: ["Nigeria", "Egipto", "Etiopía", "RD del Congo"], answer: 0 },
+          { q: "¿En qué país está el lago Baikal?", options: ["Rusia", "Mongolia", "Kazajistán", "China"], answer: 0 },
+        ],
+        [
+          { q: "¿Cuál es la capital de Kazajistán?", options: ["Astaná", "Almaty", "Taskent", "Biskek"], answer: 0 },
+          { q: "¿Qué país tiene la costa más larga?", options: ["Canadá", "Rusia", "Indonesia", "Australia"], answer: 0 },
+          { q: "¿En qué país está la mayor parte del desierto de Atacama?", options: ["Chile", "Perú", "Bolivia", "Argentina"], answer: 0 },
+          { q: "¿Cuál es el país más pequeño del mundo?", options: ["Ciudad del Vaticano", "Mónaco", "San Marino", "Malta"], answer: 0 },
+        ],
+      ],
+    },
+  };
+
   var DE = {
     general: {
       label: "🎲 Allgemein",
@@ -927,5 +1384,5 @@
   };
 
   global.Spielecke = global.Spielecke || {};
-  global.Spielecke.QuizQuestions = { de: DE, en: EN };
+  global.Spielecke.QuizQuestions = { de: DE, en: EN, es: ES };
 })(window);

@@ -7,7 +7,7 @@
  * touch-friendly reorder), persists on every change. It never nags about player
  * count — short-handed play is a deliberate choice; games guard their own floor.
  *
- * Language toggle lives here (DE / EN), stored globally via Spielecke.setLang.
+ * Language toggle lives here (DE / EN / ES), stored globally via Spielecke.setLang.
  */
 (function (global) {
   "use strict";
@@ -42,6 +42,7 @@
       '    <div class="chip-row" id="lang-chips">' +
       '      <button class="chip' + (lang === "de" ? " chip--active" : "") + '" data-lang="de">🇩🇪 Deutsch</button>' +
       '      <button class="chip' + (lang === "en" ? " chip--active" : "") + '" data-lang="en">🇬🇧 English</button>' +
+      '      <button class="chip' + (lang === "es" ? " chip--active" : "") + '" data-lang="es">🇪🇸 Español</button>' +
       "    </div>" +
       "  </div>" +
       '  <div class="roster-family">' +

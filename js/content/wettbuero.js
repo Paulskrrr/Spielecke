@@ -183,6 +183,88 @@
         ],
       },
     },
+
+    es: {
+      kopf: {
+        label: "🧠 Cabeza",
+        challenges: [
+          { text: "Di ocho marcas de cerveza en 20 segundos", timer: 20 },
+          { text: "Cuenta hacia atrás desde 30 de tres en tres – sin fallos", timer: 15 },
+          { text: "Di el abecedario al revés, de la Z a la A", timer: 30 },
+          { text: "Di cinco países que empiecen por B en 15 segundos", timer: 15 },
+          { text: "Di diez marcas de coches en 20 segundos", timer: 20 },
+          { text: "Cuenta en voz alta hasta 20, pero cambia cada número que contenga un 3 por \"Salud\"", timer: 25 },
+          { text: "Di los días de la semana al revés, del domingo al lunes", timer: 15 },
+          { text: "Di ocho cosas que encontrarías en una nevera en 20 segundos", timer: 20 },
+          { text: "Di siete cosas amarillas en 15 segundos", timer: 15 },
+          { text: "Deletrea \"otorrinolaringólogo\" – sin fallos" },
+          { text: "Calcula 17 por 6 de cabeza – respuesta correcta o pierdes" },
+          { text: "Di ocho personas famosas en 20 segundos", timer: 20 },
+          { text: "Di cinco palabras que rimen con \"cerveza\"" },
+          { text: "Di las capitales de cinco países que limiten con el tuyo – sin móvil" },
+        ],
+      },
+
+      geschick: {
+        label: "🎯 Habilidad",
+        challenges: [
+          { text: "Mantén una cuchara en equilibrio sobre la nariz durante 10 segundos", timer: 10 },
+          { text: "Construye una torre de cinco vasos o latas vacíos en 30 segundos", timer: 30 },
+          { text: "Haz malabares con dos móviles o pelotas durante 10 segundos sin que se caigan", timer: 10 },
+          { text: "Aguanta una plancha durante 30 segundos", timer: 30 },
+          { text: "Mantén el equilibrio a la pata coja con los ojos cerrados durante 15 segundos", timer: 15 },
+          { text: "Sujeta tu vaso lleno con el brazo estirado durante 45 segundos — sin derramar ni una gota", timer: 45 },
+          { text: "Da diez vueltas sobre ti mismo y luego ve hasta la puerta y vuelve en 10 segundos", timer: 10 },
+          { text: "Atrapa con la boca cinco patatas o cacahuetes en 20 segundos mientras alguien te los lanza", timer: 20 },
+          { text: "Mete una chapa en un vaso – 3 intentos" },
+          { text: "Mantén un vaso lleno en equilibrio sobre el dorso de la mano y bebe de él – sin usar la otra mano" },
+          { text: "Lanza una moneda al aire y atrápala con la misma mano – 3 intentos" },
+          { text: "Lanza una chapa hacia arriba y atrápala por detrás de la espalda – 3 intentos" },
+          { text: "Haz rodar una moneda por todos los nudillos una vez" },
+          { text: "Frótate la barriga con una mano mientras te das palmaditas en la cabeza con la otra – 15 segundos sin liarte", timer: 15 },
+        ],
+      },
+
+      mut: {
+        label: "🎭 Valor",
+        challenges: [
+          { text: "Convence a la mesa en 20 segundos de por qué TÚ eres la persona más atractiva de aquí – sin reírte", timer: 20 },
+          { text: "Canta una canción infantil durante 15 segundos como si fuera una canción de amor", timer: 15 },
+          { text: "Mantén la mirada a la persona de tu izquierda durante 30 segundos – sin reírte", timer: 30 },
+          { text: "Habla con un acento inventado durante 30 segundos sin salirte", timer: 30 },
+          { text: "Baila 15 segundos sin música como si fuera la mejor fiesta de tu vida", timer: 15 },
+          { text: "Habla con entusiasmo durante 20 segundos de algo aburridísimo, como los enchufes", timer: 20 },
+          { text: "Da un discurso de agradecimiento de 20 segundos como si acabaras de ganar un Óscar", timer: 20 },
+          { text: "Haz 10 flexiones en 20 segundos", timer: 20 },
+          { text: "Cuenta un chiste en 20 segundos – la mesa tiene que reírse al menos una vez", timer: 20 },
+          { text: "Haz tu mejor imitación de alguien de la mesa – los demás tienen que adivinar quién es" },
+          { text: "Canta el estribillo de tu canción favorita lo más alto que puedas" },
+          { text: "Narra durante 15 segundos, como un comentarista deportivo, lo que pasa en la mesa", timer: 15 },
+          { text: "Da un discurso encendido de 20 segundos sobre por qué deberían elegirte presidente", timer: 20 },
+          { text: "Háblale a tu bebida como si fuera tu mejor amigo durante un minuto – sin pausas" },
+        ],
+      },
+
+      nsfw: {
+        label: "🔞 18+",
+        challenges: [
+          { text: "Explica una postura sexual solo con gestos de las manos – la mesa tiene que adivinarla", timer: 30 },
+          { text: "Gime de forma convincente durante 10 segundos como en un porno malo", timer: 10 },
+          { text: "Hazle tu mejor lap dance a una silla durante 20 segundos", timer: 20 },
+          { text: "Susúrrale algo seductor al oído a la persona de tu derecha durante 10 segundos – sin reírte", timer: 10 },
+          { text: "Di ocho palabras para los genitales masculinos en 20 segundos", timer: 20 },
+          { text: "Simula un beso apasionado con tu propia mano durante 10 segundos", timer: 10 },
+          { text: "Di cinco sitios donde lo has hecho o lo harías en 20 segundos", timer: 20 },
+          { text: "Seduce a la persona de enfrente – solo con una bebida y una mirada, 15 segundos", timer: 15 },
+          { text: "Describe una rebanada de pan durante 15 segundos como si fuera lo más erótico del mundo", timer: 15 },
+          { text: "Describe tu primera vez en exactamente tres palabras" },
+          { text: "Describe a la última persona con la que te acostaste en una frase – sin decir su nombre" },
+          { text: "Di la frase más guarra que se te ocurra con la cara totalmente seria" },
+          { text: "Deletrea \"orgasmo\" – pero gimiendo cada letra" },
+          { text: "Enseña a la mesa tu mejor cara de sexo – y aguántala cinco segundos sin reírte" },
+        ],
+      },
+    },
   };
 
   global.Spielecke = global.Spielecke || {};

@@ -222,7 +222,8 @@
       try {
         synth.cancel();
         var u = new global.SpeechSynthesisUtterance(text);
-        u.lang = (global.Spielecke.getLang && global.Spielecke.getLang() === "en") ? "en-US" : "de-DE";
+        var lg = global.Spielecke.getLang ? global.Spielecke.getLang() : "de";
+        u.lang = lg === "en" ? "en-US" : lg === "es" ? "es-ES" : "de-DE";
         u.rate = 1.05;
         u.onend = finish; u.onerror = finish;
         synth.speak(u);

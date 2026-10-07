@@ -118,6 +118,57 @@
         ],
       },
     },
+    es: {
+      2: {
+        label: "Fácil",
+        words: [
+          "Cerveza", "Perro", "Pizza", "Selfie", "Beso", "Váter", "Condón", "Móvil",
+          "Ducha", "Cepillo de dientes", "Guitarra", "Paraguas", "Pingüino", "Robot",
+          "Monopatín", "Unicornio", "Hamburguesa", "Gafas de sol", "Montaña rusa", "Vampiro",
+          "Beer pong", "Cachimba", "Jägermeister", "Botellón", "Diana de dardos",
+          "Desayuno de resaca",
+          "Hoguera", "Tienda de campaña", "Chicle", "Flamenco", "Bola de discoteca",
+          "Cóctel", "Globo", "Carnaval", "Salchicha", "Perezoso",
+          "Piñata", "Yoga", "Cactus", "Muñeco de nieve", "Cama elástica",
+          "Pistola de agua", "Confeti", "Loro", "Tostadora", "Saco de boxeo",
+        ],
+      },
+      3: {
+        label: "Medio",
+        words: [
+          "Resaca", "Cita de Tinder", "Paseo de la vergüenza", "Bañarse desnudo",
+          "Netflix and chill", "Coma de comida", "Pole dance", "Rollo de una noche",
+          "Quemadura solar", "Entrevista de trabajo", "Primera cita", "Karaoke",
+          "Atasco", "Influencer", "Festival", "Puenting",
+          "Zombi", "Astronauta", "Ghosting", "Road trip",
+          "Precopeo", "Laguna mental", "Viaje de fin de curso", "Ducha de cerveza",
+          "Luna de miel", "Juerga de varios días",
+          "La penúltima", "Fiesta de Nochevieja", "Cena de empresa", "Vergüenza ajena",
+          "Colarse en el metro", "Bajón de verano", "Ansiedad de resaca", "Fumador empedernido",
+          "Estrés de mudanza", "Ganas de viajar", "Hueco en el currículum", "Maratón de series",
+          "Encontrarse a uno mismo", "Enero sin alcohol", "Dato curioso", "Discurso de boda",
+          "Darse un tiempo", "Escapada improvisada", "Cañas después del trabajo", "Pensar demasiado",
+        ],
+      },
+      4: {
+        label: "Difícil",
+        words: [
+          "Crisis existencial", "Sexo en un avión", "Follamigos",
+          "Crisis de los cuarenta", "Síndrome de Estocolmo", "Síndrome del impostor",
+          "Kama Sutra", "Hablar sucio", "Juego de rol", "Palabra de seguridad",
+          "Crisis de los veinticinco", "Relación a distancia", "Agujero negro",
+          "Inteligencia artificial", "Teoría de la conspiración", "Inflación",
+          "Burnout", "Déjà vu", "Alegrarse del mal ajeno", "FOMO",
+          "Padres helicóptero", "Mansplaining",
+          "Cinturón de castidad", "Columpio sexual", "Camisa de fuerza",
+          "Gaita", "Detector de mentiras", "Varita de zahorí",
+          "Brecha generacional", "Angustia existencial", "Prejuicio", "Negro literario",
+          "Criptomoneda", "Gaslighting", "Enchufismo", "Año sabático",
+          "Experiencia cercana a la muerte", "Huso horario", "Procrastinación", "Gravedad cero",
+          "Miedo al compromiso", "Conspiración", "Nostalgia", "Autosabotaje",
+        ],
+      },
+    },
   };
 
   global.Spielecke = global.Spielecke || {};

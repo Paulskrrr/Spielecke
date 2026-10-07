@@ -125,6 +125,56 @@
     }
   };
 
+  var ES = {
+    easy: {
+      label: "🟢 Fácil",
+      shapes: [
+        { key: "circle",     name: "Círculo",      hint: "Un solo trazo, de vuelta al punto de partida.",   gen: "circle",   level: "easy" },
+        { key: "square",     name: "Cuadrado",      hint: "Cuatro lados iguales, esquinas marcadas.",         gen: "square",   level: "easy" },
+        { key: "triangle",   name: "Triángulo",    hint: "Equilátero, con la punta hacia arriba.",            gen: "polygon", n: 3, level: "easy" },
+        { key: "line",       name: "Línea recta", hint: "Solo una línea — vale cualquier dirección.",    gen: "line",     level: "easy" },
+        { key: "rect",       name: "Rectángulo",   hint: "El doble de ancho que de alto.",             gen: "rect",     level: "easy" },
+        { key: "oval",       name: "Óvalo",        hint: "Tumbado, el doble de ancho que de alto.",       gen: "oval",     level: "easy" },
+        { key: "diamond",    name: "Rombo",     hint: "Un cuadrado apoyado en una esquina.",          gen: "diamond",  level: "easy" },
+        { key: "cross",      name: "Signo más",   hint: "Dos trazos iguales que se cruzan en el centro.", gen: "cross",   level: "easy" },
+        { key: "heart",      name: "Corazón",       hint: "Dos arcos arriba, una punta abajo.",        gen: "heart",    level: "easy" },
+        { key: "semicircle", name: "Semicírculo", hint: "Medio círculo sobre un borde recto.",            gen: "semicircle", level: "easy" }
+      ]
+    },
+    hard: {
+      label: "🔴 Difícil",
+      shapes: [
+        { key: "pentagon", name: "Pentágono",  hint: "Cinco lados iguales, punta hacia arriba.",              gen: "polygon", n: 5, level: "hard" },
+        { key: "hexagon",  name: "Hexágono",   hint: "Seis lados iguales, punta hacia arriba.",               gen: "polygon", n: 6, level: "hard" },
+        { key: "octagon",  name: "Octógono",   hint: "Ocho lados iguales — la señal de stop.",       gen: "polygon", n: 8, level: "hard" },
+        { key: "star",     name: "Estrella",      hint: "Cinco puntas, todas igual de largas.",        gen: "star",   n: 5, level: "hard" },
+        { key: "spiral",   name: "Espiral",    hint: "Tres vueltas, con la misma separación.",              gen: "spiral", turns: 3, level: "hard" },
+        { key: "infinity", name: "Infinito",  hint: "Un ocho tumbado, los dos lazos iguales.",         gen: "infinity", level: "hard" },
+        { key: "wave",     name: "Onda",      hint: "Dos ondas completas, misma altura.",             gen: "wave",   waves: 2, level: "hard" },
+        { key: "zigzag",   name: "Zigzag",    hint: "Cinco trazos en zigzag, todos de la misma altura.",        gen: "zigzag", n: 5, level: "hard" },
+        { key: "arrow",    name: "Flecha",     hint: "El contorno de una flecha que apunta a la derecha.",  gen: "arrow",  level: "hard" },
+        { key: "crescent", name: "Luna creciente",  hint: "Una media luna abierta hacia la derecha.",    gen: "crescent", level: "hard" }
+      ]
+    },
+    creative: {
+      label: "🎨 Creativo",
+      shapes: [
+        { key: "house",    name: "Casa",         hint: "Cuatro paredes y un tejado a dos aguas — un solo trazo.",     gen: "house",    level: "creative" },
+        { key: "tree",     name: "Abeto",      hint: "Tres pisos, el tronco abajo.",             gen: "tree",     level: "creative" },
+        { key: "cloud",    name: "Nube",         hint: "Cuatro bultos sobre una base recta.",             gen: "cloud",    level: "creative" },
+        { key: "sun",      name: "Sol",           hint: "Un disco y ocho rayos — nueve trazos.",        gen: "sun",      level: "creative" },
+        { key: "bolt",     name: "Rayo", hint: "Zigzag, en punta arriba y abajo.",              gen: "bolt",     level: "creative" },
+        { key: "cocktail", name: "Copa de cóctel", hint: "Copa en V, tallo fino, pie ancho.",         gen: "cocktail", level: "creative" },
+        { key: "key",      name: "Llave",           hint: "Cabeza redonda, caña larga, dos dientes.",             gen: "key",      level: "creative" },
+        { key: "fish",     name: "Pez",          hint: "Cuerpo redondo, aleta caudal detrás a la izquierda.",        gen: "fish",     level: "creative" },
+        { key: "smiley",   name: "Smiley",        hint: "Círculo, dos ojos, una sonrisa — cuatro trazos.",   gen: "smiley",   level: "creative" },
+        { key: "crown",    name: "Corona",         hint: "Tres picos sobre una base recta.",              gen: "crown",    level: "creative" },
+        { key: "flower",   name: "Flor",        hint: "Seis pétalos, todos del mismo tamaño.",                gen: "flower",   level: "creative" },
+        { key: "gem",      name: "Diamante",           hint: "Mesa plana arriba, punta abajo, línea transversal.",  gen: "gem",      level: "creative" }
+      ]
+    }
+  };
+
   global.Spielecke = global.Spielecke || {};
-  global.Spielecke.PerfectShapes = { de: DE, en: EN };
+  global.Spielecke.PerfectShapes = { de: DE, en: EN, es: ES };
 })(window);
